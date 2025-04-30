@@ -31,9 +31,8 @@ class _LoginScreenState extends State<LoginScreen>
   late Animation<double> _kotaMoveUpOnContainerSlideAnimation;
   final AuthController authController = Get.find<AuthController>();
 
-final TextEditingController emailController = TextEditingController();
-final TextEditingController passwordController = TextEditingController();
-
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   void initState() {
@@ -169,7 +168,7 @@ final TextEditingController passwordController = TextEditingController();
                 controller: emailController,
                 label: 'email',
                 hintText: 'Enter your username',
-                isPassword: true,
+                isPassword: false,
               ),
               SizedBox(height: 4.h),
               LabelledTextField(
@@ -198,20 +197,26 @@ final TextEditingController passwordController = TextEditingController();
                 textColor: Colors.white,
                 onPressed: () async {
                   String email = emailController.text.trim();
-    String password =         passwordController.text;
+                  String password = passwordController.text;
 
-    if (email.isEmpty || password.isEmpty) {
-      Get.snackbar("Error", "Please enter both username and password");
-      return;
-    }
+                  if (email.isEmpty || password.isEmpty) {
+                    Get.snackbar(
+                      "Error",
+                      "Please enter both username and password",
+                    );
+                    return;
+                  }
 
-    bool success = await authController.loginAsUser(emailController.text, passwordController.text);
+                  bool success = await authController.loginAsUser(
+                    emailController.text,
+                    passwordController.text,
+                  );
 
-    if (success) {
-      Get.offAll(BaseScreen());
-    }
-  },
-  isGuestButton: false,
+                  if (success) {
+                    Get.offAll(BaseScreen());
+                  }
+                },
+                isGuestButton: false,
               ),
               SizedBox(height: 2.h),
               Align(
