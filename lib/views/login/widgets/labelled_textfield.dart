@@ -1,0 +1,80 @@
+import 'package:flutter/material.dart';
+import 'package:kota/constants/colors.dart';
+import 'package:kota/views/login/widgets/custom_textfield.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
+
+class LabelledTextField extends StatelessWidget {
+  final String? label; // Normal label
+  final String? rightLabel; // Right side label (optional)
+  final VoidCallback? onRightLabelTap; // Right label tap action
+  final String hintText;
+  final IconData? icon;
+  final bool isPassword;
+  final TextEditingController? controller;
+
+  const LabelledTextField({
+    Key? key,
+    this.label,
+    this.rightLabel,
+    this.onRightLabelTap,
+    required this.hintText,
+    this.icon,
+    this.isPassword = false,
+    this.controller
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Widget labelWidget;
+
+    if (rightLabel != null) {
+      labelWidget = Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label ?? '',
+            style: TextStyle(
+              color: Colors.blue.shade900,
+              fontWeight: FontWeight.w600,
+              fontSize: 12,
+            ),
+          ),
+          GestureDetector(
+            onTap: onRightLabelTap,
+            child: Text(
+              rightLabel!,
+              style: TextStyle(
+                color: Colors.blue,
+                fontWeight: FontWeight.w600,
+                fontSize: 12,
+              ),
+            ),
+          ),
+        ],
+      );
+    } else {
+      labelWidget = Text(
+        label ?? '',
+        style: TextStyle(
+          color: AppColors.labelText,
+          fontWeight: FontWeight.w600,
+          fontSize: 12,
+        ),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        labelWidget,
+        SizedBox(height: 0.3.h),
+        CustomTextField(
+          icon: icon,
+          hintText: hintText,
+          controller: controller,
+          isPassword: isPassword,
+        ),
+      ],
+    );
+  }
+}
