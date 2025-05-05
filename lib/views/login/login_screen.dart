@@ -196,25 +196,25 @@ class _LoginScreenState extends State<LoginScreen>
                 backgroundColor: AppColors.primaryButton,
                 textColor: Colors.white,
                 onPressed: () async {
-                  String email = emailController.text.trim();
-                  String password = passwordController.text;
+                  // String email = emailController.text.trim();
+                  // String password = passwordController.text;
 
-                  if (email.isEmpty || password.isEmpty) {
-                    Get.snackbar(
-                      "Error",
-                      "Please enter both username and password",
-                    );
-                    return;
-                  }
+                  // if (email.isEmpty || password.isEmpty) {
+                  //   Get.snackbar(
+                  //     "Error",
+                  //     "Please enter both username and password",
+                  //   );
+                  //   return;
+                  // }
 
-                  bool success = await authController.loginAsUser(
-                    emailController.text,
-                    passwordController.text,
-                  );
+                  // bool success = await authController.loginAsUser(
+                  //   emailController.text,
+                  //   passwordController.text,
+                  // );
 
-                  if (success) {
+                  // if (success) {
                     Get.offAll(BaseScreen());
-                  }
+                //   }
                 },
                 isGuestButton: false,
               ),

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:kota/constants/colors.dart';
+import 'package:kota/controller/home_controller.dart';
 import 'package:kota/views/home/widgets/custom_bottom_nav_bar.dart';
 import 'package:kota/views/home/widgets/home_tab_bar.dart';
 import 'package:kota/views/home/widgets/latest_news_list.dart';
@@ -8,9 +11,15 @@ import 'package:kota/views/home/widgets/search_bar.dart';
 import 'package:kota/views/home/widgets/top_bar.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final HomeController homeController = Get.find<HomeController>();
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -62,24 +71,26 @@ class HomeScreen extends StatelessWidget {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  SizedBox(width: 2.w),
-                                  Container(
-                                    width: 10.w,
-                                    height: 2.5.h,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      color: Color(0xFF0A57C9),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        "250",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 13.sp,
+                                  SizedBox(width: 2.w), Container(
+                                        width: 10.w,
+                                        height: 2.5.h,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(5),
+                                          color: Color(0xFF0A57C9),
                                         ),
-                                      ),
-                                    ),
-                                  ),
+                                        child: Center(
+                                          child: Obx(() {
+                                              return Text(
+                                                homeController.newsItems.length.toString(),
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 13.sp,
+                                                ),
+                                              );
+                                            }
+                                          ),
+                                        ),
+                                      )
                                 ],
                               ),
                             ),

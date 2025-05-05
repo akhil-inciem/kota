@@ -12,6 +12,9 @@ class AuthApiService {
           'email': email,
           'member_password': password,
         },
+        options: Options(
+        contentType: Headers.formUrlEncodedContentType, // Sets content type to x-www-form-urlencoded
+      ),
       );
 
       if (response.statusCode == 200) {

@@ -27,71 +27,82 @@ class UpdatesScreen extends StatelessWidget {
     }).toList();
 
     return Column(
-      children: [
-        SizedBox(height: 4.h),
-         TopBar(),
-        SizedBox(height: 0.5.h),
-        CustomSearchBar(),
-        SizedBox(height: 2.h),
-        Expanded(
-          child: Container(
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
+  children: [
+    SizedBox(height: 4.h),
+    TopBar(),
+    SizedBox(height: 0.5.h),
+    CustomSearchBar(),
+    SizedBox(height: 2.h),
+    Expanded(
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Fixed Notification Title
+            Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                  child: Row(
+                    children: [
+                      const Text(
+                        "Notification",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(width: 2.w),
+                      Container(
+                        width: 6.w,
+                        height: 2.5.h,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: const Color(0xFF0A57C9),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "${notifications.length}",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Divider(
+          color: Colors.grey.shade300,
+          thickness: 1,
+          height: 1,
+        ),
+              ],
             ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 2.h),
+
+            // Scrollable notification list
+            Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Notifications Title
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 6.w),
-                      child: Row(
-                        children: [
-                          const Text(
-                            "Notification",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(width: 2.w),
-                          Container(
-                            width: 6.w,
-                            height: 2.5.h,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: const Color(0xFF0A57C9),
-                            ),
-                            child: Center(
-                              child: Text(
-                                "${notifications.length}",
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 2.h),
-              
                     // TODAY Section
                     if (today.isNotEmpty) ...[
                       Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: AppColors.primaryBackground
+                          color: AppColors.primaryBackground,
                         ),
                         child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 1.h,horizontal: 6.w),
+                          padding: EdgeInsets.symmetric(vertical: 1.h, horizontal: 6.w),
                           child: Text(
                             "Today",
                             style: TextStyle(
@@ -104,16 +115,16 @@ class UpdatesScreen extends StatelessWidget {
                       SizedBox(height: 1.h),
                       ...today.map((item) => NotificationTile(item: item)).toList(),
                     ],
-              
+
                     // OLDER Section
                     if (older.isNotEmpty) ...[
                       Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: AppColors.primaryBackground
+                          color: AppColors.primaryBackground,
                         ),
                         child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 1.h,horizontal: 6.w),
+                          padding: EdgeInsets.symmetric(vertical: 1.h, horizontal: 6.w),
                           child: Text(
                             "Older",
                             style: TextStyle(
@@ -130,10 +141,12 @@ class UpdatesScreen extends StatelessWidget {
                 ),
               ),
             ),
-          ),
+          ],
         ),
-      ],
-    );
+      ),
+    ),
+  ],
+);
   }
 }
 

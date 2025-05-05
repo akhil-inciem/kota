@@ -6,11 +6,11 @@ class UserApiService {
 
   Future<User> fetchUserProfile(String userId) async {
     try {
-      final response = await _dio.get("http://localhost/kbiota/api/news/get-user?id=$userId"); 
+      final response = await _dio.get("http://192.168.48.119/kbiota/api/news/get-user?id=$userId"); 
 
       if (response.statusCode == 200 && response.data['status'] == true) {
         final userResponse = UserResponse.fromJson(response.data);
-        return userResponse.user;
+        return userResponse.user!;
       } else {
         throw Exception("Failed to load user profile");
       }

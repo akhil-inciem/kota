@@ -6,6 +6,7 @@ class FavouriteController extends GetxController {
   Rx<String?> selectedCategory = Rx<String?>(null);
   final isLoading = true.obs;
   final filteredList = <Map<String, dynamic>>[].obs;
+  
 
   @override
   void onInit() {

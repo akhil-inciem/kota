@@ -134,7 +134,7 @@ class DummyData {
   "message": "News fetched successfully",
   "data": [
     {
-      "news_id": "4",
+      "news_id": "5",
       "news_title": "World Occupational Therapy Day",
       "news_sub_title": "World OT Day celebrations on 27th October 2022 at Mascot Hotel, Trivandrum, ",
       "news_description": "Following the grand success of the “world Occupational Therapy Day” celebrations held on the 27th of October 2022 at Mascot Hotel, Trivandrum, I would like to take this opportunity to thank all those who took their time and effort to participate and make this event a memorable one. I would like to extend my sincere gratitude to all the KOTA executive committee members for their relentless efforts in upholding the vision and mission of our Association. My heartfelt ‘Thank you&#39; to all the KOTA members and the organizing committee for their proactive and enthusiastic involvement from the start to the conclusion of the event. I would also like to thank NISH and NIPMR faculties and students and my fellow therapists for their participation. The event is a success thanks to all your involvement and enthusiasm. We hope to have many more such events in the future and hope that you will continue to render your support and encouragement.\r\n\r\n\tFor more PHOTOS check here.\r\n\r\n\tFor VIDEOS check here.\r\n\r\n\tPresident\r\n\r\n\tKOTA\r\n",
@@ -148,7 +148,7 @@ class DummyData {
       "author": null,
       "news_author": "JOSEPH SUNNY",
       "badges": "4",
-      "faverites": "1"
+      "faverites": false
     },
     {
       "news_id": "4",
@@ -165,7 +165,7 @@ class DummyData {
       "author": null,
       "news_author": "JOSEPH SUNNY",
       "badges": "4",
-      "faverites": "1"
+      "faverites": false
     },{
       "news_id": "4",
       "news_title": "World Occupational Therapy Day",
@@ -181,7 +181,7 @@ class DummyData {
       "author": null,
       "news_author": "JOSEPH SUNNY",
       "badges": "4",
-      "faverites": "1"
+      "faverites": false
     },{
       "news_id": "4",
       "news_title": "World Occupational Therapy Day",
@@ -197,7 +197,7 @@ class DummyData {
       "author": null,
       "news_author": "JOSEPH SUNNY",
       "badges": "4",
-      "faverites": "1"
+      "faverites": false
     },{
       "news_id": "4",
       "news_title": "World Occupational Therapy Day",
@@ -213,7 +213,7 @@ class DummyData {
       "author": null,
       "news_author": "JOSEPH SUNNY",
       "badges": "4",
-      "faverites": "1"
+      "faverites": false
     },{
       "news_id": "4",
       "news_title": "World Occupational Therapy Day",
@@ -229,7 +229,7 @@ class DummyData {
       "author": null,
       "news_author": "JOSEPH SUNNY",
       "badges": "4",
-      "faverites": "1"
+      "faverites": false
     },{
       "news_id": "4",
       "news_title": "World Occupational Therapy Day",
@@ -245,7 +245,7 @@ class DummyData {
       "author": null,
       "news_author": "JOSEPH SUNNY",
       "badges": "4",
-      "faverites": "1"
+      "faverites": false
     },{
       "news_id": "4",
       "news_title": "World Occupational Therapy Day",
@@ -261,7 +261,7 @@ class DummyData {
       "author": null,
       "news_author": "JOSEPH SUNNY",
       "badges": "4",
-      "faverites": "1"
+      "faverites": false
     },{
       "news_id": "4",
       "news_title": "World Occupational Therapy Day",
@@ -277,7 +277,7 @@ class DummyData {
       "author": null,
       "news_author": "JOSEPH SUNNY",
       "badges": "4",
-      "faverites": "1"
+      "faverites": true
     },
   ]
 };

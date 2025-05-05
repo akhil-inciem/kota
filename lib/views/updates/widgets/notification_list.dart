@@ -21,12 +21,7 @@ class NotificationList extends StatelessWidget {
       itemBuilder: (context, index) {
         final item = DummyData.recommendedItems[index];
         return GestureDetector(
-          onTap: () {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => DetailScreen(item: item)),
-            // );
-          },
+          onTap: () {},
           child: Column(
             children: [
               Padding(

@@ -5,6 +5,7 @@ import 'package:kota/controller/event_controller.dart';
 import 'package:kota/controller/favorite_controller.dart';
 import 'package:kota/controller/forum_controller.dart';
 import 'package:kota/controller/home_controller.dart';
+import 'package:kota/controller/user_controller.dart';
 import 'package:kota/views/login/login_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'views/splash_screen.dart';
@@ -12,6 +13,7 @@ import 'views/splash_screen.dart';
 void main() {
   Get.lazyPut(() => AuthController());
   Get.lazyPut(() => HomeController());
+  Get.lazyPut(() => UserController());
   Get.lazyPut(() => EventController());
   Get.lazyPut(() => FavouriteController());
   Get.lazyPut(() => ForumController());

@@ -58,7 +58,7 @@ class Datum {
     final dynamic author;
     final String? newsAuthor;
     final dynamic badges;
-    final dynamic faverites;
+    final bool faverites;
 
     factory Datum.fromJson(Map<String, dynamic> json){ 
         return Datum(

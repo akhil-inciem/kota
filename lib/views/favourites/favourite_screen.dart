@@ -81,54 +81,51 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                       topRight: Radius.circular(20),
                     ),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 4.w, top: 1.h),
-                          child: Row(
-                            children: [
-                              const Text(
-                                "Favourites",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 6.w, top: 3.h),
+                        child: Row(
+                          children: [
+                            const Text(
+                              "Favourites",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
                               ),
-                              SizedBox(width: 2.w),
-                              Container(
-                                width: 6.w,
-                                height: 2.5.h,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: const Color(0xFF0A57C9),
-                                ),
-                                child: Center(
-                                  child: Obx(() {
-                                    return Text(
-                                      "${favController.filteredList.length}",
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                      ),
-                                    );
-                                  }),
-                                ),
+                            ),
+                            SizedBox(width: 2.w),
+                            Container(
+                              width: 6.w,
+                              height: 2.5.h,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: const Color(0xFF0A57C9),
                               ),
-                            ],
-                          ),
+                              child: Center(
+                                child: Obx(() {
+                                  return Text(
+                                    "${favController.filteredList.length}",
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                    ),
+                                  );
+                                }),
+                              ),
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 1.h),
-                        Divider(color: Colors.grey.shade200, thickness: 1),
-                        SizedBox(height: 1.h),
-                        SizedBox(
-                          height: 64.h,
-                          child:
-                             FavoriteList(),
-                        ),
-                      ],
-                    ),
+                      ),
+                      SizedBox(height: 1.h),
+                      Divider(color: Colors.grey.shade200, thickness: 1),
+                      SizedBox(height: 1.h),
+                      SizedBox(
+                        height: 64.h,
+                        child:
+                           FavoriteList(),
+                      ),
+                    ],
                   ),
                 ),
               ],

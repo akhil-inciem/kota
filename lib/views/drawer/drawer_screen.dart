@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:get/get.dart';
 import 'package:kota/constants/colors.dart';
+import 'package:kota/views/drawer/executives_screen.dart';
 import 'package:kota/views/drawer/find_screen.dart';
+import 'package:kota/views/drawer/mission_screen.dart';
 import 'package:kota/views/profile/profile_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -23,11 +25,18 @@ class DrawerPage extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 children:  [
                   ViewProfileItem(),
-                  DrawerItem(icon: Icons.track_changes_outlined, title: 'Vision & Mission'),
-                  DrawerItem(icon: Icons.group_outlined, title: 'KOTA Executives'),
-                  DrawerItem(icon: Icons.desktop_windows_outlined, title: 'Membership Benefits'),
-                  DrawerItem(icon: Icons.contact_mail_outlined, title: 'Contact Us'),
-                  DrawerItem(icon: Icons.help_outline, title: 'FAQ'),
+                  DrawerItem(icon: Icons.track_changes_outlined, title: 'Vision & Mission',onPressed: () {
+                    Get.to(()=>MissionPage());
+                  },),
+                  DrawerItem(icon: Icons.group_outlined, title: 'KOTA Executives',onPressed: () {
+                    Get.to(()=>ExecutivePage());
+                  },),
+                  DrawerItem(icon: Icons.contact_mail_outlined, title: 'Contact Us',onPressed: () {
+                    // Get.to(()=>ContactUsPage());
+                  },),
+                  DrawerItem(icon: Icons.help_outline, title: 'FAQ',onPressed: () {
+                    // Get.to(()=>FAQPage());
+                  },),
                   DrawerItem(icon: Icons.send_outlined, title: 'Find',onPressed: ()=> Get.to(()=>FindScreen()),),
                   DrawerItem(icon: Icons.logout, title: 'Logout'),
                 ],

@@ -5,21 +5,29 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 import 'package:kota/constants/colors.dart';
+import 'package:kota/controller/home_controller.dart';
 import 'package:kota/model/news_model.dart';
 import 'package:kota/views/home/widgets/top_bar.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:share_plus/share_plus.dart';
 
-class DetailScreen extends StatelessWidget {
+class DetailScreen extends StatefulWidget {
   final Datum item;
 
   DetailScreen({Key? key, required this.item}) : super(key: key);
 
+  @override
+  State<DetailScreen> createState() => _DetailScreenState();
+}
+
+class _DetailScreenState extends State<DetailScreen> {
+  final HomeController homeController = Get.find<HomeController>();
   final ValueNotifier<double> radiusNotifier = ValueNotifier<double>(30.0);
   final ValueNotifier<double> extentNotifier = ValueNotifier(0.6);
 
   @override
   Widget build(BuildContext context) {
-    final imageUrl = item.newsImage;
+    final imageUrl = widget.item.newsImage;
 
     return SafeArea(
       child: Scaffold(
@@ -59,84 +67,90 @@ class DetailScreen extends StatelessWidget {
                 minChildSize: 0.6, // Minimum when collapsed
                 maxChildSize: 1, // Maximum when expanded
                 builder: (context, scrollController) {
-  return ValueListenableBuilder<double>(
-    valueListenable: radiusNotifier,
-    builder: (context, radius, _) {
-      return AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(radius),
-          ),
-        ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 6.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ValueListenableBuilder<double>(
-      valueListenable: extentNotifier,
-      builder: (context, extent, _) {
-        double topPadding = lerpDouble(
-          4.h,
-          8.h,
-          ((extent - 0.6) / (1.0 - 0.6)).clamp(0.0, 1.0),
-        )!;
-        return SizedBox(height: topPadding);
-      },
-    ),
-              _dateAndIcons(),
-              SizedBox(height: 2.h),
-              _title(),
-              SizedBox(height: 2.h),
-              _profileRow(),
-              SizedBox(height: 2.h),
-              const Divider(
-                color: Colors.grey,
-                thickness: 1,
-                height: 0,
-              ),
-              SizedBox(height: 1.h),
-              // 👉 Now description scrolls separately
-              Expanded(
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  child: _description(),
-                ),
-              ),
-              SizedBox(height: 5.h),
-            ],
-          ),
-        ),
-      );
-    },
-  );
-}
-
+                  return ValueListenableBuilder<double>(
+                    valueListenable: radiusNotifier,
+                    builder: (context, radius, _) {
+                      return AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(radius),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 6.w),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ValueListenableBuilder<double>(
+                                valueListenable: extentNotifier,
+                                builder: (context, extent, _) {
+                                  double topPadding =
+                                      lerpDouble(
+                                        4.h,
+                                        8.h,
+                                        ((extent - 0.6) / (1.0 - 0.6)).clamp(
+                                          0.0,
+                                          1.0,
+                                        ),
+                                      )!;
+                                  return SizedBox(height: topPadding);
+                                },
+                              ),
+                              _dateAndIcons(),
+                              SizedBox(height: 2.h),
+                              _title(),
+                              SizedBox(height: 2.h),
+                              _profileRow(),
+                              SizedBox(height: 2.h),
+                              const Divider(
+                                color: Colors.grey,
+                                thickness: 1,
+                                height: 0,
+                              ),
+                              SizedBox(height: 1.h),
+                              // 👉 Now description scrolls separately
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  controller: scrollController,
+                                  child: _description(),
+                                ),
+                              ),
+                              SizedBox(height: 5.h),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
               ),
             ),
 
             // Back button (Optional: if you want it floating)
             ValueListenableBuilder<double>(
-  valueListenable: extentNotifier,
-  builder: (context, extent, _) {
-    double percentage = ((extent - 0.6) / (1.0 - 0.6)).clamp(0.0, 1.0);
-    Color? iconColor = percentage < 0.2 ? Colors.white : AppColors.primaryButton; // 👈 You can adjust 0.2 threshold
+              valueListenable: extentNotifier,
+              builder: (context, extent, _) {
+                double percentage = ((extent - 0.6) / (1.0 - 0.6)).clamp(
+                  0.0,
+                  1.0,
+                );
+                Color? iconColor =
+                    percentage < 0.2
+                        ? Colors.white
+                        : AppColors
+                            .primaryButton; // 👈 You can adjust 0.2 threshold
 
-    return Positioned(
-      top: 1.h,
-      left: 0,
-      right: 10,
-      child: TopBar(
-        title: "",
-        onTap: ()=> Get.back(),
-      ),
-    );
-  },
-),
-
+                return Positioned(
+                  top: 1.h,
+                  left: 0,
+                  right: 10,
+                  child: TopBar(title: "", onTap: () => Get.back()),
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -162,8 +176,8 @@ class DetailScreen extends StatelessWidget {
               ),
               const SizedBox(width: 4),
               Text(
-                item.newsDate != null
-                    ? DateFormat('dd MMM yyyy').format(item.newsDate!)
+                widget.item.newsDate != null
+                    ? DateFormat('dd MMM yyyy').format(widget.item.newsDate!)
                     : '',
                 style: const TextStyle(fontSize: 10, color: Color(0xFF2640C8)),
               ),
@@ -171,39 +185,49 @@ class DetailScreen extends StatelessWidget {
           ),
         ),
         Row(
-  children: [
-    GestureDetector(
-      onTap: () {
-        // Your share button logic
-      },
-      child: Image.asset(
-        'assets/icons/share.png',
-        height: 2.5.h,
-        width: 2.5.h, // use 2.h for both to maintain aspect ratio
-      ),
-    ),
-    SizedBox(width: 5.w), // spacing between the images
-    GestureDetector(
-      onTap: () {
-        // Your bookmark button logic
-      },
-      child: Image.asset(
-        'assets/icons/saved.png',
-        height: 2.5.h,
-        width: 2.5.h,
-      ),
-    ),
-    SizedBox(width: 3.w),
-  ],
-)
+          children: [
+            GestureDetector(
+              onTap: () {
+                final title = widget.item.newsTitle ?? 'Check this out!';
+                // final link = widget.item.newsCategory ?? ''; // Replace with your actual link
+                final params = ShareParams(title: title,uri: Uri(
+  scheme: 'https',
+  host: 'crash.net',
+));
+                SharePlus.instance.share(params);
+              },
+              child: Image.asset(
+                'assets/icons/share.png',
+                height: 2.5.h,
+                width: 2.5.h, // use 2.h for both to maintain aspect ratio
+              ),
+            ),
+            SizedBox(width: 5.w), // spacing between the images
+            Obx(() {
+              final isBookmarked =
+                  homeController.bookmarkedStatus[widget.item.newsId] ?? false;
 
+              return GestureDetector(
+                onTap: () => homeController.toggleBookmark(widget.item.newsId!),
+                child: Image.asset(
+                  isBookmarked
+                      ? 'assets/icons/saved.png'
+                      : 'assets/icons/favorites_unselected.png',
+                  height: 2.5.h,
+                  width: 2.5.h,
+                ),
+              );
+            }),
+            SizedBox(width: 3.w),
+          ],
+        ),
       ],
     );
   }
 
   Widget _title() {
     return Text(
-      item.newsTitle ?? '',
+      widget.item.newsTitle ?? '',
       style: TextStyle(
         fontSize: 17.sp,
         fontWeight: FontWeight.w700,
@@ -248,7 +272,7 @@ class DetailScreen extends StatelessWidget {
 
   Widget _description() {
     return Text(
-      item.newsDescription ?? '',
+      widget.item.newsDescription ?? '',
       style: TextStyle(fontSize: 15.sp, color: Colors.black54),
     );
   }

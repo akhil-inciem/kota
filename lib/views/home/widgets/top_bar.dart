@@ -9,16 +9,24 @@ import 'package:kota/views/drawer/drawer_screen.dart';
 import 'package:kota/views/login/widgets/custom_button.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class TopBar extends StatelessWidget {
+class TopBar extends StatefulWidget {
   final String? title;
   final Function()? onTap;
   final Color? iconColor;
   final String? leadingIcon;
   final bool? guest;
+  final bool isEvent;
 
-  TopBar({this.title, this.onTap, this.iconColor, this.leadingIcon, this.guest});
+  TopBar({this.title, this.onTap, this.iconColor, this.leadingIcon, this.guest,this.isEvent = false});
 
+  @override
+  State<TopBar> createState() => _TopBarState();
+}
+
+class _TopBarState extends State<TopBar> {
   final HomeController homeController = Get.find<HomeController>();
+  bool showSearch = false;
+  final TextEditingController searchController = TextEditingController();
 
   String _getTitle(int index) {
     switch (index) {
@@ -41,40 +49,126 @@ class TopBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       int currentIndex = homeController.index.value;
+
       return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            if (currentIndex == 0 && title == null)
-              SvgPicture.asset('assets/images/KOTA_Logo.svg', width: 100)
-            else
-              Row(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Stack(
+  children: [
+    Row(
+  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  children: [
+    if (!showSearch)
+      Expanded(
+        child: (currentIndex == 0 && widget.title == null)
+            ? SvgPicture.asset('assets/images/KOTA_Logo.svg', width: 100)
+            : Row(
                 children: [
                   InkWell(
-                    onTap: onTap ?? () => homeController.index.value = 0,
+                    onTap: widget.onTap ?? () => homeController.index.value = 0,
                     child: Image.asset(
-                      leadingIcon ?? 'assets/icons/backbutton.png',
+                      widget.leadingIcon ?? 'assets/icons/backbutton.png',
                       width: 24,
                       height: 24,
-                      color: iconColor ?? Colors.black,
+                      color: widget.iconColor ?? Colors.black,
                     ),
                   ),
                   SizedBox(width: 8),
                   Text(
-                    title ?? _getTitle(currentIndex),
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    widget.title ?? _getTitle(currentIndex),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
-            _buildDrawerButton(context),
-          ],
+      ),
+    Spacer(),
+    // Search Icon
+    widget.isEvent ? InkWell(
+      onTap: () {
+        setState(() {
+          showSearch = !showSearch;
+          if (!showSearch) searchController.clear();
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.all(13.sp),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.white),
+          borderRadius: showSearch
+          ? BorderRadius.horizontal(
+              right: Radius.circular(8),
+              left: Radius.circular(0),
+            )
+          : BorderRadius.circular(8),
+          color: Colors.white
         ),
+        child:
+        Image.asset('assets/icons/search.png',width: 20,
+          height: 20,
+          color: widget.iconColor,),
+      ),
+    ) : SizedBox.shrink(),
+    SizedBox(width: 2.w),
+    _buildDrawerButton(),
+  ],
+),
+
+Positioned(
+  right: 22.w, // Adjust for drawer and search icons
+  child: AnimatedContainer(
+    duration: Duration(milliseconds: 400),
+    curve: Curves.easeInOut,
+    width: showSearch ? 67.w : 0,
+    child: AnimatedOpacity(
+      duration: Duration(milliseconds: 300),
+      opacity: showSearch ? 1 : 0,
+      child: IgnorePointer(
+        ignoring: !showSearch,
+        child: SizedBox(
+  height: 5.h, // Reduced height
+  child: TextField(
+    controller: searchController,
+    autofocus: true,
+    decoration: InputDecoration(
+      hintText: 'Search here',
+      filled: true,
+      fillColor: Colors.white,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.horizontal(
+          left: Radius.circular(8), // Only left side
+          right: Radius.circular(0),
+        ),
+        borderSide: BorderSide.none,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.horizontal(
+          left: Radius.circular(8),
+          right: Radius.circular(0),
+        ),
+        borderSide: BorderSide.none,
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.horizontal(
+          left: Radius.circular(8),
+          right: Radius.circular(0),
+        ),
+        borderSide: BorderSide.none,
+      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      isDense: true, // Ensures more compact height
+    ),
+  ),
+)
+      ),
+    ),
+  ),
+),
+  ],
+),
       );
     });
   }
 
-  Widget _buildDrawerButton(BuildContext context) {
+  Widget _buildDrawerButton() {
     return InkWell(
       onTap: () {
         Get.to(() => DrawerPage());
@@ -89,7 +183,7 @@ class TopBar extends StatelessWidget {
           'assets/icons/drawer_icon.png',
           width: 24,
           height: 24,
-          color: iconColor,
+          color: widget.iconColor,
         ),
       ),
     );

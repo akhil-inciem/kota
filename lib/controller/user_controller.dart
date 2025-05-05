@@ -8,7 +8,7 @@ class UserController extends GetxController {
   var user = Rxn<User>();
   var isLoading = false.obs;
   var error = ''.obs;
-
+  
   Future<void> loadUserProfile(String userId) async {
     isLoading.value = true;
     error.value = '';

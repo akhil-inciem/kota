@@ -1,66 +1,66 @@
 class UserResponse {
-  final bool status;
-  final String message;
-  final User user;
+  final bool? status;
+  final String? message;
+  final User? user;
 
   UserResponse({
-    required this.status,
-    required this.message,
-    required this.user,
+    this.status,
+    this.message,
+    this.user,
   });
 
   factory UserResponse.fromJson(Map<String, dynamic> json) {
     return UserResponse(
       status: json['status'],
       message: json['message'],
-      user: User.fromJson(json['user']),
+      user: json['user'] != null ? User.fromJson(json['user']) : null,
     );
   }
 
   Map<String, dynamic> toJson() => {
         'status': status,
         'message': message,
-        'user': user.toJson(),
+        'user': user?.toJson(),
       };
 }
 
 class User {
-  final String id;
-  final String aiotaMembershipNo;
-  final String kbaiotaMembershipNo;
-  final String firstName;
-  final String lastName;
-  final String birthDate;
-  final String photo;
-  final String primaryNumber;
-  final String secondaryNumber;
-  final String email;
-  final String address;
-  final String pincode;
-  final String idProof;
-  final String signDate;
-  final String graduationCertificate;
-  final String pgCertificate;
-  final String aiotaCertificate;
+  final String? id;
+  final String? aiotaMembershipNo;
+  final String? kbaiotaMembershipNo;
+  final String? firstName;
+  final String? lastName;
+  final String? birthDate;
+  final String? photo;
+  final String? primaryNumber;
+  final String? secondaryNumber;
+  final String? email;
+  final String? address;
+  final String? pincode;
+  final String? idProof;
+  final String? signDate;
+  final String? graduationCertificate;
+  final String? pgCertificate;
+  final String? aiotaCertificate;
 
   User({
-    required this.id,
-    required this.aiotaMembershipNo,
-    required this.kbaiotaMembershipNo,
-    required this.firstName,
-    required this.lastName,
-    required this.birthDate,
-    required this.photo,
-    required this.primaryNumber,
-    required this.secondaryNumber,
-    required this.email,
-    required this.address,
-    required this.pincode,
-    required this.idProof,
-    required this.signDate,
-    required this.graduationCertificate,
-    required this.pgCertificate,
-    required this.aiotaCertificate,
+    this.id,
+    this.aiotaMembershipNo,
+    this.kbaiotaMembershipNo,
+    this.firstName,
+    this.lastName,
+    this.birthDate,
+    this.photo,
+    this.primaryNumber,
+    this.secondaryNumber,
+    this.email,
+    this.address,
+    this.pincode,
+    this.idProof,
+    this.signDate,
+    this.graduationCertificate,
+    this.pgCertificate,
+    this.aiotaCertificate,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {

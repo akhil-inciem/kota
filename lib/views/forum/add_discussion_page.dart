@@ -18,7 +18,10 @@ class NewDiscussionPage extends StatelessWidget {
           child: Column(
             children: [
               SizedBox(height: 2.h,),
-              TopBar(title: "New Discussion",leadingIcon: "assets/icons/close.png",onTap: ()=>Get.back(),),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 4.0),
+                child: TopBar(title: "New Discussion",leadingIcon: "assets/icons/close.png",onTap: ()=>Get.back(),),
+              ),
               SizedBox(height: 2.h,),
               Padding(
                 padding:  EdgeInsets.symmetric(horizontal: 6.w),
