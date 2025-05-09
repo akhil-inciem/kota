@@ -7,13 +7,13 @@ class NewsModel {
 
     final bool? status;
     final String? message;
-    final List<Datum> data;
+    final List<NewsDatum> data;
 
     factory NewsModel.fromJson(Map<String, dynamic> json){ 
         return NewsModel(
             status: json["status"],
             message: json["message"],
-            data: json["data"] == null ? [] : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
+            data: json["data"] == null ? [] : List<NewsDatum>.from(json["data"]!.map((x) => NewsDatum.fromJson(x))),
         );
     }
 
@@ -25,8 +25,8 @@ class NewsModel {
 
 }
 
-class Datum {
-    Datum({
+class NewsDatum {
+    NewsDatum({
         required this.newsId,
         required this.newsTitle,
         required this.newsSubTitle,
@@ -40,8 +40,8 @@ class Datum {
         required this.newsCategory,
         required this.author,
         required this.newsAuthor,
-        required this.badges,
-        required this.faverites,
+        // required this.badges,
+        // required this.faverites,
     });
 
     final String? newsId;
@@ -57,11 +57,11 @@ class Datum {
     final String? newsCategory;
     final dynamic author;
     final String? newsAuthor;
-    final dynamic badges;
-    final bool faverites;
+    // final dynamic badges;
+    // final bool faverites;
 
-    factory Datum.fromJson(Map<String, dynamic> json){ 
-        return Datum(
+    factory NewsDatum.fromJson(Map<String, dynamic> json){ 
+        return NewsDatum(
             newsId: json["news_id"],
             newsTitle: json["news_title"],
             newsSubTitle: json["news_sub_title"],
@@ -75,8 +75,8 @@ class Datum {
             newsCategory: json["news_category"],
             author: json["author"],
             newsAuthor: json["news_author"],
-            badges: json["badges"],
-            faverites: json["faverites"],
+            // badges: json["badges"],
+            // faverites: json["faverites"],
         );
     }
 
@@ -94,8 +94,8 @@ class Datum {
         "news_category": newsCategory,
         "author": author,
         "news_author": newsAuthor,
-        "badges": badges,
-        "faverites": faverites,
+        // "badges": badges,
+        // "faverites": faverites,
     };
 
 }

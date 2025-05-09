@@ -7,13 +7,13 @@ class EventsModel {
 
     final bool? status;
     final String? message;
-    final List<Datum> data;
+    final List<EventsDatum> data;
 
     factory EventsModel.fromJson(Map<String, dynamic> json){ 
         return EventsModel(
             status: json["status"],
             message: json["message"],
-            data: json["data"] == null ? [] : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
+            data: json["data"] == null ? [] : List<EventsDatum>.from(json["data"]!.map((x) => EventsDatum.fromJson(x))),
         );
     }
 
@@ -25,8 +25,8 @@ class EventsModel {
 
 }
 
-class Datum {
-    Datum({
+class EventsDatum {
+    EventsDatum({
         required this.eventId,
         required this.eventTitle,
         required this.eventName,
@@ -43,8 +43,8 @@ class Datum {
         required this.feesPerSeat,
         required this.location,
         required this.onlineBooking,
-        required this.badges,
-        required this.faverites,
+        // required this.badges,
+        // required this.faverites,
     });
 
     final String? eventId;
@@ -63,11 +63,11 @@ class Datum {
     final String? feesPerSeat;
     final String? location;
     final String? onlineBooking;
-    final dynamic badges;
-    final dynamic faverites;
+    // final dynamic badges;
+    // final dynamic faverites;
 
-    factory Datum.fromJson(Map<String, dynamic> json){ 
-        return Datum(
+    factory EventsDatum.fromJson(Map<String, dynamic> json){ 
+        return EventsDatum(
             eventId: json["event_id"],
             eventTitle: json["event_title"],
             eventName: json["event_name"],
@@ -84,8 +84,8 @@ class Datum {
             feesPerSeat: json["fees_per_seat"],
             location: json["location"],
             onlineBooking: json["online_booking"],
-            badges: json["badges"],
-            faverites: json["faverites"],
+            // badges: json["badges"],
+            // faverites: json["faverites"],
         );
     }
 
@@ -106,8 +106,8 @@ class Datum {
         "fees_per_seat": feesPerSeat,
         "location": location,
         "online_booking": onlineBooking,
-        "badges": badges,
-        "faverites": faverites,
+        // "badges": badges,
+        // "faverites": faverites,
     };
 
 }

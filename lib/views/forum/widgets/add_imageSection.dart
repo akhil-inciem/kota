@@ -1,29 +1,27 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kota/constants/colors.dart';
+import 'package:kota/controller/forum_controller.dart';
 import 'package:kota/views/login/widgets/custom_button.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class AddImageSection extends StatefulWidget {
-  const AddImageSection({super.key});
+class AddImageSection extends StatelessWidget {
+  AddImageSection({super.key});
 
-  @override
-  State<AddImageSection> createState() => _AddImageSectionState();
-}
-
-class _AddImageSectionState extends State<AddImageSection> {
+  final ForumController _forumController = Get.find<ForumController>();
   final ImagePicker _picker = ImagePicker();
-      XFile? _image;
 
-  Future getImageFromGallery() async {
-      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    
-      setState(() {
-        _image = image;
-      });
+  Future<void> getImagesFromGallery() async {
+    final List<XFile>? pickedImages = await _picker.pickMultiImage();
+    if (pickedImages != null && pickedImages.isNotEmpty) {
+      for (final image in pickedImages) {
+        _forumController.addImage(image); // using controller method
+      }
     }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,18 +32,18 @@ class _AddImageSectionState extends State<AddImageSection> {
         children: [
           Text(
             "Add Image",
-            style: TextStyle(
-              fontSize: 15.sp,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 2.h),
           Row(
-  children: [
-    GestureDetector(
-                onTap: getImageFromGallery,
+            children: [
+              GestureDetector(
+                onTap: getImagesFromGallery,
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 22.sp, horizontal: 24.sp),
+                  padding: EdgeInsets.symmetric(
+                    vertical: 22.sp,
+                    horizontal: 24.sp,
+                  ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: AppColors.primaryBackground,
@@ -58,50 +56,64 @@ class _AddImageSectionState extends State<AddImageSection> {
                   ),
                 ),
               ),
-    SizedBox(width: 3.w),
-    Stack(
-      clipBehavior: Clip.none, // So close icon can overflow if needed
-      children: [
-        Container(
-          height: 11.h,
-          width: 13.h,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: AppColors.primaryBackground,
-            image: const DecorationImage(
-              image: AssetImage('assets/images/nurse-patient-wheelchair.jpg'),
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-        Positioned(
-          top: -10, // Adjust as per your need
-          right: -10,
-          child: GestureDetector(
-            onTap: () {
-              // TODO: handle remove image logic here
-            },
-            child: Container(
-              height: 3.h,
-              width: 3.h,
-              decoration: BoxDecoration(
-                color: AppColors.primaryButton, // You can change color
-                shape: BoxShape.circle,
-              ),
-              child: const Center(
-                child: Icon(
-                  Icons.close,
-                  color: Colors.white,
-                  size: 16,
+              SizedBox(width: 3.w),
+              Expanded(
+                child: Obx(
+                  () => SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: List.generate(_forumController.selectedImages.length, (index) {
+                        final image = _forumController.selectedImages[index];
+                        return Padding(
+                          padding: EdgeInsets.only(right: 2.w, top: 1.h),
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              Container(
+                                height: 11.h,
+                                width: 13.h,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: AppColors.primaryBackground,
+                                  image: DecorationImage(
+                                    image: FileImage(File(image.path)),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                top: -1.h,
+                                right: -1.w,
+                                child: GestureDetector(
+                                  onTap: () => _forumController.removeImage(index),
+                                  child: Container(
+                                    height: 2.5.h,
+                                    width: 2.5.h,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primaryButton,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Center(
+                                      child: Icon(
+                                        Icons.close,
+                                        color: Colors.white,
+                                        size: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
+                    ),
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
-        ),
-      ],
-    ),
-  ],
-),
           SizedBox(height: 4.h),
           CustomButton(
             text: "Create Discussion",

@@ -5,12 +5,14 @@ import 'package:kota/model/event_model.dart';
 
 class EventController extends GetxController {
   Rx<DateTime> selectedDate = DateTime.now().obs;
-  RxList<Datum> todayEvents = <Datum>[].obs;
-  RxList<Datum> upcomingEvents = <Datum>[].obs;
+  RxList<EventsDatum> todayEvents = <EventsDatum>[].obs;
+  RxList<EventsDatum> upcomingEvents = <EventsDatum>[].obs;
   final Rx<DateTime> focusedDate = DateTime.now().obs;
-  final allEvents = <Datum>[].obs;
+  final RxList<EventsDatum> filteredEventsItems = <EventsDatum>[].obs;
+  final allEvents = <EventsDatum>[].obs;
   RxBool isLoading = false.obs;
   final selectedWeekdayIndex = RxInt(-1);
+  final EventsApiService _eventsApiService = EventsApiService();
 
   @override
   void onInit() {
@@ -20,15 +22,15 @@ class EventController extends GetxController {
 
   Future<void> _initialize() async {
     await fetchEventItems();
-    await filterEvents(); // 👈 Ensure events are filtered only after fetching
+    await filterTodayEvents();
   }
 
   Future<void> fetchEventItems() async {
     isLoading.value = true;
     try {
-      EventsModel events = EventsModel.fromJson(DummyData.events);
-      // final fetchedEvents = await EventsApiService().fetchEvents();
-      allEvents.assignAll(events.data);
+      final fetchedEvents = await _eventsApiService.fetchEvents();
+      allEvents.assignAll(fetchedEvents);
+      filteredEventsItems.assignAll(fetchedEvents);
     } catch (e) {
       print("Error fetching events: $e");
     } finally {
@@ -46,10 +48,10 @@ class EventController extends GetxController {
 
   Future<void> setSelectedDate(DateTime date) async {
     selectedDate.value = date;
-    await filterEvents();
+    await filterTodayEvents();
   }
 
-  Future<void> filterEvents() async {
+  Future<void> filterTodayEvents() async {
     todayEvents.clear();
     upcomingEvents.clear();
 
@@ -74,4 +76,18 @@ class EventController extends GetxController {
            date1.month == date2.month &&
            date1.day == date2.day;
   }
+  
+  void filterEvents(String query) {
+  if (query.isEmpty) {
+    filteredEventsItems.assignAll(allEvents);
+  } else {
+    filteredEventsItems.assignAll(
+      allEvents.where(
+        (item) =>
+            item.eventTitle?.toLowerCase().contains(query.toLowerCase()) == true ||
+            item.eventDescription?.toLowerCase().contains(query.toLowerCase()) == true,
+      ),
+    );
+  }
+}
 }

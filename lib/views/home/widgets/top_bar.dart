@@ -14,16 +14,16 @@ class TopBar extends StatefulWidget {
   final Function()? onTap;
   final Color? iconColor;
   final String? leadingIcon;
-  final bool? guest;
   final bool isEvent;
 
-  TopBar({this.title, this.onTap, this.iconColor, this.leadingIcon, this.guest,this.isEvent = false});
+  TopBar({this.title, this.onTap, this.iconColor, this.leadingIcon,this.isEvent = false});
 
   @override
   State<TopBar> createState() => _TopBarState();
 }
 
 class _TopBarState extends State<TopBar> {
+  final AuthController authController = Get.find<AuthController>();
   final HomeController homeController = Get.find<HomeController>();
   bool showSearch = false;
   final TextEditingController searchController = TextEditingController();
@@ -61,6 +61,7 @@ class _TopBarState extends State<TopBar> {
       Expanded(
         child: (currentIndex == 0 && widget.title == null)
             ? SvgPicture.asset('assets/images/KOTA_Logo.svg', width: 100)
+
             : Row(
                 children: [
                   InkWell(
@@ -69,7 +70,7 @@ class _TopBarState extends State<TopBar> {
                       widget.leadingIcon ?? 'assets/icons/backbutton.png',
                       width: 24,
                       height: 24,
-                      color: widget.iconColor ?? Colors.black,
+                      color: widget.iconColor ?? AppColors.primaryButton,
                     ),
                   ),
                   SizedBox(width: 8),
@@ -82,33 +83,41 @@ class _TopBarState extends State<TopBar> {
       ),
     Spacer(),
     // Search Icon
-    widget.isEvent ? InkWell(
+    if (widget.isEvent)
+  InkWell(
       onTap: () {
         setState(() {
           showSearch = !showSearch;
           if (!showSearch) searchController.clear();
         });
       },
-      child: Container(
-        padding: EdgeInsets.all(13.sp),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.white),
-          borderRadius: showSearch
-          ? BorderRadius.horizontal(
-              right: Radius.circular(8),
-              left: Radius.circular(0),
-            )
-          : BorderRadius.circular(8),
-          color: Colors.white
+      child: Padding(
+        padding: const EdgeInsets.only(right:8.0),
+        child: Container(
+          padding: EdgeInsets.all(13.sp),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.white),
+            borderRadius: showSearch
+            ? BorderRadius.horizontal(
+                right: Radius.circular(8),
+                left: Radius.circular(0),
+              )
+            : BorderRadius.circular(8),
+            color: Colors.white
+          ),
+          child:
+          Image.asset('assets/icons/search.png',width: 20,
+            height: 20,
+            color: widget.iconColor,),
         ),
-        child:
-        Image.asset('assets/icons/search.png',width: 20,
-          height: 20,
-          color: widget.iconColor,),
       ),
-    ) : SizedBox.shrink(),
-    SizedBox(width: 2.w),
-    _buildDrawerButton(),
+    ) ,
+if (currentIndex == 0 && authController.isGuest)
+  Expanded(child: Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 8),
+    child: CustomButton(text: "Register", backgroundColor: AppColors.primaryButton, textColor: Colors.white,height: 5.h,),
+  )),
+_buildDrawerButton(),
   ],
 ),
 

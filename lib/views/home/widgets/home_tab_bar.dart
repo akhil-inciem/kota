@@ -9,34 +9,42 @@ import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class HomeTabBar extends StatelessWidget {
-  const HomeTabBar({Key? key}) : super(key: key);
+  final int selectedIndex;
+  final Function(int) onTabSelected;
+
+  const HomeTabBar({
+    Key? key,
+    required this.selectedIndex,
+    required this.onTabSelected,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final tabs = ['News', 'Events'];
     return Column(
       children: [
         SizedBox(
-          height: 4.5.h, // slightly increased height to accommodate underline + text
-          child: ListView(
+          height: 4.5.h,
+          child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            padding:  EdgeInsets.symmetric(horizontal: 6.w),
-            children: const [
-              TabItem(title: 'News', isSelected: true),
-              TabItem(title: 'Case Studies'),
-              TabItem(title: 'Events'),
-            ],
+            padding: EdgeInsets.symmetric(horizontal: 6.w),
+            itemCount: tabs.length,
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: () => onTabSelected(index),
+                child: TabItem(
+                  title: tabs[index],
+                  isSelected: selectedIndex == index,
+                ),
+              );
+            },
           ),
         ),
-        const Divider(
-          color: Colors.grey,
-          thickness: 1,
-          height: 0, // no extra spacing
-        ),
+        const Divider(color: Colors.grey, thickness: 1, height: 0),
       ],
     );
   }
 }
-
 class TabItem extends StatelessWidget {
   final String title;
   final bool isSelected;

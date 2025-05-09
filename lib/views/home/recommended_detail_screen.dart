@@ -12,7 +12,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:share_plus/share_plus.dart';
 
 class DetailScreen extends StatefulWidget {
-  final Datum item;
+  final NewsDatum item;
 
   DetailScreen({Key? key, required this.item}) : super(key: key);
 
@@ -190,10 +190,10 @@ class _DetailScreenState extends State<DetailScreen> {
               onTap: () {
                 final title = widget.item.newsTitle ?? 'Check this out!';
                 // final link = widget.item.newsCategory ?? ''; // Replace with your actual link
-                final params = ShareParams(title: title,uri: Uri(
-  scheme: 'https',
-  host: 'crash.net',
-));
+                final params = ShareParams(
+                  title: title,
+                  uri: Uri(scheme: 'https', host: 'crash.net'),
+                );
                 SharePlus.instance.share(params);
               },
               child: Image.asset(

@@ -1,12 +1,13 @@
 import 'package:dio/dio.dart';
+import 'package:kota/constants/api.dart';
 import 'package:kota/model/event_model.dart';
 
 class EventsApiService {
   final Dio _dio = Dio();
 
-  Future<List<Datum>> fetchEvents() async {
+  Future<List<EventsDatum>> fetchEvents() async {
     try{
-    final response = await _dio.get("https://kbaiota.org/api/news/get-all-events");
+    final response = await _dio.get(ApiEndpoints.getEvents);
 
     if (response.statusCode == 200 && response.data['status'] == true) {
       final eventsModel = EventsModel.fromJson(response.data);
@@ -20,7 +21,7 @@ class EventsApiService {
     }
   }
 
-  Future<List<Datum>> postFavEvents() async {
+  Future<List<EventsDatum>> postFavEvents() async {
     try{
     final response = await _dio.post("https://kbaiota.org/kbiota/api/news/updatevent-badges-favorites");
 

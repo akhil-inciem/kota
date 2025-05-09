@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:kota/controller/auth_controller.dart';
 import 'package:kota/controller/event_controller.dart';
 import 'package:kota/controller/favorite_controller.dart';
+import 'package:kota/controller/find_controller.dart';
 import 'package:kota/controller/forum_controller.dart';
 import 'package:kota/controller/home_controller.dart';
 import 'package:kota/controller/user_controller.dart';
@@ -17,6 +18,7 @@ void main() {
   Get.lazyPut(() => EventController());
   Get.lazyPut(() => FavouriteController());
   Get.lazyPut(() => ForumController());
+  Get.lazyPut(() => FindController());
   runApp(MyApp());
 }
 

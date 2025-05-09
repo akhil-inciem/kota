@@ -6,7 +6,7 @@ import 'package:kota/controller/favorite_controller.dart';
 import 'package:kota/data/dummy.dart';
 import 'package:kota/views/favourites/widgets/favourite_list.dart';
 import 'package:kota/views/favourites/widgets/filter_bottom_sheet.dart';
-import 'package:kota/views/home/widgets/recommended_list.dart';
+import 'package:kota/views/home/widgets/news_list.dart';
 import 'package:kota/views/home/widgets/search_bar.dart';
 import 'package:kota/views/home/widgets/top_bar.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';

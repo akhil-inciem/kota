@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:kota/constants/api.dart';
 import 'package:kota/model/profile_model.dart';
 
 class UserApiService {
@@ -6,7 +7,7 @@ class UserApiService {
 
   Future<User> fetchUserProfile(String userId) async {
     try {
-      final response = await _dio.get("http://192.168.48.119/kbiota/api/news/get-user?id=$userId"); 
+      final response = await _dio.get("${ApiEndpoints.getUserProfile}$userId"); 
 
       if (response.statusCode == 200 && response.data['status'] == true) {
         final userResponse = UserResponse.fromJson(response.data);

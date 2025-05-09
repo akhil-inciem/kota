@@ -6,8 +6,10 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 
 class CustomSearchBar extends StatelessWidget {
   final bool filter;
+  final TextEditingController? controller;
+  final Function(String)? onChanged;
 
-  const CustomSearchBar({Key? key, this.filter = false}) : super(key: key);
+  const CustomSearchBar({Key? key, this.filter = false,this.controller,this.onChanged}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +20,7 @@ class CustomSearchBar extends StatelessWidget {
           // Expanded TextField
           Expanded(
             child: TextField(
+              controller: controller,
               decoration: InputDecoration(
                 hintText: 'Search here',
                 prefixIcon: const Icon(Icons.search),
@@ -37,6 +40,7 @@ class CustomSearchBar extends StatelessWidget {
                 ),
                 contentPadding: const EdgeInsets.symmetric(vertical: 5),
               ),
+              onChanged: onChanged,
             ),
           ),
 

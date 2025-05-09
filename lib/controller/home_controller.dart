@@ -8,11 +8,14 @@ import '../constants/app_constants.dart';
 
 class HomeController extends GetxController {
   RxInt index = 0.obs;
+  var selectedTabIndex = 0.obs;
   final isLoading = true.obs;
-  final newsItems = <Datum>[].obs;
-  final favoriteItemList = <Datum>[].obs;
+  final newsItems = <NewsDatum>[].obs;
+  final RxList<NewsDatum> filteredNewsItems = <NewsDatum>[].obs;
+  final favoriteItemList = <NewsDatum>[].obs;
   var bookmarkedStatus = <String, bool>{}.obs;
   final _favApiService = FavoritesApiService();
+  final NewsApiService _newsApiService = NewsApiService();
 
   @override
   void onInit() {
@@ -43,8 +46,9 @@ class HomeController extends GetxController {
   isLoading.value = true;
 
   try {
-    NewsModel news = NewsModel.fromJson(DummyData.news);
-    newsItems.assignAll(news.data);
+    final List<NewsDatum> fetchedNews = await _newsApiService.fetchNews();
+    newsItems.assignAll(fetchedNews);
+    filteredNewsItems.assignAll(fetchedNews);
   } catch (e) {
     print("Error fetching news: $e");
   } finally {
@@ -52,4 +56,17 @@ class HomeController extends GetxController {
   }
 }
 
+void filterNews(String query) {
+  if (query.isEmpty) {
+    filteredNewsItems.assignAll(newsItems);
+  } else {
+    filteredNewsItems.assignAll(
+      newsItems.where(
+        (item) =>
+            item.newsTitle?.toLowerCase().contains(query.toLowerCase()) == true ||
+            item.newsDescription?.toLowerCase().contains(query.toLowerCase()) == true,
+      ),
+    );
+  }
+}
 }

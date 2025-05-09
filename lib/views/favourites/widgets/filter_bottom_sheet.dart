@@ -5,6 +5,7 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/favorite_controller.dart';
 import 'package:kota/data/dummy.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class FilterBottomSheetWidget extends StatelessWidget {
   final FavouriteController favController = Get.find<FavouriteController>();
@@ -107,12 +108,12 @@ class FilterBottomSheetWidget extends StatelessWidget {
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryButton,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10,
-                      horizontal: 15,
+                    padding:  EdgeInsets.symmetric(
+                      vertical: 1.h,
+                      horizontal: 10.w,
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
                   onPressed: () {
@@ -126,17 +127,17 @@ class FilterBottomSheetWidget extends StatelessWidget {
                 if (favController.selectedDate.value != null ||
                     favController.selectedCategory.value != null)
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    padding: EdgeInsets.symmetric(horizontal: 4.w),
                     child: ElevatedButton(
                       onPressed: favController.resetFilters,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primaryButton,
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 15,
+                        padding:  EdgeInsets.symmetric(
+                          vertical: 1.h,
+                          horizontal: 4.w,
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                       child: const Text(

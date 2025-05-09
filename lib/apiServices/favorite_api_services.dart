@@ -4,7 +4,7 @@ import 'package:kota/model/news_model.dart';
 class FavoritesApiService {
   final Dio _dio = Dio();
 
-  Future<List<Datum>> fetchFavorites() async {
+  Future<List<NewsDatum>> fetchFavorites() async {
     try{
     final response = await _dio.get("https://kbaiota.org/api/news/get-all-news");
 

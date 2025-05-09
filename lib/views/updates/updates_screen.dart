@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:kota/data/dummy.dart';
-import 'package:kota/views/home/widgets/recommended_list.dart';
+import 'package:kota/views/home/widgets/news_list.dart';
 import 'package:kota/views/home/widgets/search_bar.dart';
 import 'package:kota/views/home/widgets/top_bar.dart';
 import 'package:kota/views/updates/widgets/notification_list.dart';

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:get/get.dart';
 import 'package:kota/constants/colors.dart';
+import 'package:kota/views/drawer/contact_us_screen.dart';
 import 'package:kota/views/drawer/executives_screen.dart';
 import 'package:kota/views/drawer/find_screen.dart';
 import 'package:kota/views/drawer/mission_screen.dart';
@@ -32,7 +33,7 @@ class DrawerPage extends StatelessWidget {
                     Get.to(()=>ExecutivePage());
                   },),
                   DrawerItem(icon: Icons.contact_mail_outlined, title: 'Contact Us',onPressed: () {
-                    // Get.to(()=>ContactUsPage());
+                    Get.to(()=>ContactUsScreen());
                   },),
                   DrawerItem(icon: Icons.help_outline, title: 'FAQ',onPressed: () {
                     // Get.to(()=>FAQPage());

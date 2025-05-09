@@ -6,7 +6,7 @@ import 'package:kota/model/event_model.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class UpcomingEventCard extends StatelessWidget {
-  final Datum event;
+  final EventsDatum event;
 
   const UpcomingEventCard({required this.event});
 

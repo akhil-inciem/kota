@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:kota/views/forum/add_discussion_page.dart';
 import 'package:kota/views/forum/widgets/forumlist.dart';
-import 'package:kota/views/home/widgets/recommended_list.dart';
+import 'package:kota/views/home/widgets/news_list.dart';
 import 'package:kota/views/home/widgets/search_bar.dart';
 import 'package:kota/views/home/widgets/top_bar.dart';
 import 'package:kota/views/login/widgets/custom_button.dart';

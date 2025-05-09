@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:kota/constants/api.dart';
 import 'package:kota/model/login_model.dart';
 
 class AuthApiService {
@@ -7,7 +8,7 @@ class AuthApiService {
   Future<LoginResponseModel> login(String email, String password) async {
     try {
       final response = await _dio.post(
-        'http://192.168.48.119/kbiota/api/news/login',
+        ApiEndpoints.login,
         data: {
           'email': email,
           'member_password': password,

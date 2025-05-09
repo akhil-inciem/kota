@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:kota/constants/colors.dart';
+import 'package:kota/controller/forum_controller.dart';
 import 'package:kota/data/dummy.dart';
 import 'package:kota/views/forum/widgets/forum_body.dart';
 import 'package:kota/views/forum/widgets/reply_tile.dart';
@@ -17,6 +18,7 @@ class ForumDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ForumController controller = Get.find<ForumController>();
     final List<String> comments = DummyData.comments;
 
     final imageUrl = item['image'];
@@ -26,6 +28,7 @@ class ForumDetailScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -81,6 +84,10 @@ class ForumDetailScreen extends StatelessWidget {
                             'assets/images/nurse-patient-wheelchair.jpg',
                         likes: item['likes'] ?? "0",
                         comments: item['comments'] ?? "0",
+                        isLiked: item['isLiked'] ?? false, // Add this flag in your data
+  onLikeToggle: () {
+    controller.toggleLike(item['id']); // Use proper ID or index
+  },
                       ),
                     ),
 
@@ -92,70 +99,78 @@ class ForumDetailScreen extends StatelessWidget {
                      ),
                      ReplyTile(userName: "Guest User 123XYZ" ?? '', comment: comments[2]),
                     // Comment Input Field
+                    _buildCommentInput()
                   ],
                 ),
               ),
             ),
           ],
         ),
-        bottomNavigationBar: Container(
-  padding:  EdgeInsets.symmetric(horizontal: 1.w),
-  height: 10.h,
-  decoration: BoxDecoration(
-    color: Colors.grey.shade100,
-    borderRadius: BorderRadius.only(topLeft: Radius.circular(25),topRight: Radius.circular(25)),
-    boxShadow: [
-      BoxShadow(
-        color: Colors.black.withOpacity(0.1),
-        offset: const Offset(0, -2), // shadow from top
-        blurRadius: 6,
-        spreadRadius: 1,
-      ),
-    ],
-  ),
-  child: Padding(
-    padding:  EdgeInsets.symmetric(horizontal: 5.w),
-    child: Row(
-    children: [
-       CircleAvatar(radius: 20,backgroundImage: NetworkImage('https://i.pravatar.cc/300'),),
-       SizedBox(width: 3.w),
-      Expanded(
-        child: Container(
-          padding:  EdgeInsets.symmetric(horizontal: 12),
-          decoration: BoxDecoration(
-            color: Colors.grey.shade200,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  decoration:  InputDecoration(
-                    hintText: 'Post your comment here',
-                    border: InputBorder.none,
-                    hintStyle: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey
-                    )
-                  ),
-                ),
-              ),
-              IconButton(
-                onPressed: () {
-                },
-                icon:  Icon(Icons.send, color: AppColors.primaryText),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ],
-    ),
-  ),
-
-)
 
       ),
     );
   }
+}
+Widget _buildCommentInput() {
+  return Container(
+    padding: EdgeInsets.symmetric(horizontal: 1.w),
+    decoration: BoxDecoration(
+      color: Colors.grey.shade100,
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(25),
+        topRight: Radius.circular(25),
+      ),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.1),
+          offset: Offset(0, -2),
+          blurRadius: 6,
+          spreadRadius: 1,
+        ),
+      ],
+    ),
+    child: Padding(
+      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+      child: Row(
+        children: [
+          CircleAvatar(
+            radius: 20,
+            backgroundImage: NetworkImage('https://i.pravatar.cc/300'),
+          ),
+          SizedBox(width: 3.w),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 12),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade200,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Post your comment here',
+                        border: InputBorder.none,
+                        hintStyle: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      // post logic
+                    },
+                    icon: Icon(Icons.send, color: AppColors.primaryText),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
