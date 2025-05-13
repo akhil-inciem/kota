@@ -7,7 +7,7 @@ import 'package:kota/controller/forum_controller.dart';
 import 'package:kota/data/dummy.dart';
 import 'package:kota/views/forum/forum_detail_screen.dart';
 import 'package:kota/views/forum/widgets/forum_shimmer.dart';
-import 'package:kota/views/home/recommended_detail_screen.dart';
+import 'package:kota/views/home/news_detail_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 class ForumList extends StatelessWidget {
 

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:kota/constants/api.dart';
 import 'package:kota/model/news_model.dart';
 
 class FavoritesApiService {
@@ -6,7 +7,7 @@ class FavoritesApiService {
 
   Future<List<NewsDatum>> fetchFavorites() async {
     try{
-    final response = await _dio.get("https://kbaiota.org/api/news/get-all-news");
+    final response = await _dio.get(ApiEndpoints.getNews);
 
     if (response.statusCode == 200 && response.data['status'] == true) {
       final newsModel = NewsModel.fromJson(response.data);
@@ -20,20 +21,19 @@ class FavoritesApiService {
     }
   }
 
-   Future<void> sendBookmarkStatusToApi(String id, bool status) async {
+   Future<void> sendNewsBookmarkStatusToApi(String id, bool status) async {
   try {
     FormData formData = FormData.fromMap({
       'news_id': id,
-      'faverites': status.toString(), // sending as string "true"/"false"
+      'faverites': status.toString(),
     });
 
     final response = await _dio.post(
-      'https://yourapi.com/update-bookmark',
+      ApiEndpoints.updateNewsFavorites,
       data: formData,
       options: Options(
         headers: {
           'Content-Type': 'multipart/form-data',
-          // 'Authorization': 'Bearer your_token', // If needed
         },
       ),
     );
@@ -48,6 +48,31 @@ class FavoritesApiService {
     rethrow;
   }
 }
+Future<void> sendEventsBookmarkStatusToApi(String id, bool status) async {
+  try {
+    FormData formData = FormData.fromMap({
+      'news_id': id,
+      'faverites': status.toString(),
+    });
 
+    final response = await _dio.post(
+      ApiEndpoints.updateEventFavorites,
+      data: formData,
+      options: Options(
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      ),
+    );
 
+    if (response.statusCode == 200) {
+      print('Bookmark status updated successfully');
+    } else {
+      print('Failed to update: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error sending bookmark status: $e');
+    rethrow;
+  }
+}
 }

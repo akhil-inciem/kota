@@ -9,7 +9,7 @@ class ProfileHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 25.h,
+      height: 30.h,
       width: double.infinity,
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -20,6 +20,19 @@ class ProfileHeader extends StatelessWidget {
       ),
       child: Stack(
         children: [
+           Positioned(
+            right: 0,
+            top: 8.h,
+            bottom: 0,
+            child: Opacity(
+              opacity: 0.8, // You can adjust this value (0.05 - 0.2 looks nice)
+              child: Image.asset(
+                'assets/images/drawertop_bg.png', // <-- your background image
+                width: 70.w,
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
             child: Row(
@@ -124,26 +137,4 @@ class ProfileHeader extends StatelessWidget {
       ),
     );
   }
-
-  Widget _buildDrawerButton(BuildContext context) {
-  return InkWell(
-    onTap: () {
-      Get.to(()=>DrawerPage());
-    },
-    child: Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Image.asset(
-        'assets/icons/drawer_icon.png',
-        color: Colors.white,
-        width: 6.w,
-        height: 2.5.h,
-        fit: BoxFit.contain,
-      ),
-    ),
-  );
-}
 }

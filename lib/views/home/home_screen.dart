@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/event_controller.dart';
 import 'package:kota/controller/home_controller.dart';
-import 'package:kota/views/home/widgets/custom_bottom_nav_bar.dart';
 import 'package:kota/views/home/widgets/events_list.dart';
 import 'package:kota/views/home/widgets/home_tab_bar.dart';
 import 'package:kota/views/home/widgets/latest_news_list.dart';
@@ -14,29 +11,22 @@ import 'package:kota/views/home/widgets/top_bar.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final TextEditingController searchController = TextEditingController();
+  
   final HomeController homeController = Get.find<HomeController>();
   final EventController eventController = Get.find<EventController>();
-
   @override
   void initState() {
     super.initState();
-    searchController.addListener(() {
-      homeController.filterNews(searchController.text);
+    homeController.searchController.addListener(() {
+      homeController.filterNews(homeController.searchController.text);
     });
-  }
-
-  @override
-  void dispose() {
-    searchController.dispose();
-    super.dispose();
   }
 
   @override
@@ -47,21 +37,23 @@ class _HomeScreenState extends State<HomeScreen> {
         TopBar(),
         SizedBox(height: 0.5.h),
         CustomSearchBar(
-          controller: searchController,
-          onChanged: (value){
-           homeController.selectedTabIndex.value == 0 ? homeController.filterNews(value) : eventController.filterEvents(value);
-          } 
+          controller: homeController.searchController,
+          onChanged: (value) {
+            homeController.selectedTabIndex.value == 0
+                ? homeController.filterNews(value)
+                : eventController.filterEvents(value);
+          },
         ),
         SizedBox(height: 2.h),
         Obx(() {
-            return HomeTabBar(
-              selectedIndex: homeController.selectedTabIndex.value,
-              onTabSelected: (index) {
-                  homeController.selectedTabIndex.value = index;
-              },
-            );
-          }
-        ),
+          return HomeTabBar(
+            selectedIndex: homeController.selectedTabIndex.value,
+            onTabSelected: (index) {
+              homeController.searchController.clear();
+              homeController.selectedTabIndex.value = index;
+            },
+          );
+        }),
         Expanded(
           child: Stack(
             children: [
@@ -70,12 +62,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: EdgeInsets.zero,
                 children: [AdvertisementList()],
               ),
-              // DraggableScrollableSheet on top of the advertisement list
+
               Positioned.fill(
                 child: DraggableScrollableSheet(
-                  initialChildSize: 0.7, // Initial size of the sheet
-                  minChildSize: 0.7, // Minimum size when dragged down
-                  maxChildSize: 1.0, // Maximum size when fully dragged up
+                  initialChildSize: 0.7,
+                  minChildSize: 0.7,
+                  maxChildSize: 1.0,
                   builder: (
                     BuildContext context,
                     ScrollController scrollController,
@@ -115,8 +107,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: Center(
                                       child: Obx(() {
                                         return Text(
-                                          homeController.newsItems.length
-                                              .toString(),
+                                          homeController
+                                                      .selectedTabIndex
+                                                      .value ==
+                                                  0
+                                              ? homeController
+                                                  .filteredNewsItems
+                                                  .length
+                                                  .toString()
+                                              : eventController
+                                                  .filteredEventsItems
+                                                  .length
+                                                  .toString(),
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 13.sp,
@@ -129,23 +131,20 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             SizedBox(height: 1.h),
-
-                            // Recommended list with scroll controller
                             Obx(() {
-                                return Expanded(
-                                  child:
-                                      homeController.selectedTabIndex.value == 0
-                                          ? NewsList(
-                                            isFavourite: false,
-                                            scrollController: scrollController,
-                                          )
-                                          : EventsList(
-                                            isFavourite: false,
-                                            scrollController: scrollController,
-                                          ),
-                                );
-                              }
-                            ),
+                              return Expanded(
+                                child:
+                                    homeController.selectedTabIndex.value == 0
+                                        ? NewsList(
+                                          isFavourite: false,
+                                          scrollController: scrollController,
+                                        )
+                                        : EventsList(
+                                          isFavourite: false,
+                                          scrollController: scrollController,
+                                        ),
+                              );
+                            }),
                           ],
                         ),
                       ),

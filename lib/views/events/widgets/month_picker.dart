@@ -21,6 +21,14 @@ class MonthYearPicker extends StatefulWidget {
 
 class _MonthYearPickerState extends State<MonthYearPicker> {
   final ScrollController _scrollController = ScrollController();
+  
+  @override
+void initState() {
+  super.initState();
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    _scrollToSelectedMonth();
+  });
+}
 
   @override
   void didUpdateWidget(covariant MonthYearPicker oldWidget) {
@@ -57,7 +65,6 @@ class _MonthYearPickerState extends State<MonthYearPicker> {
             final DateTime date = DateTime(widget.currentYear, index + 1);
             final monthYear = DateFormat('MMM yyyy').format(date);
             final isSelected = index + 1 == widget.currentMonth;
-
             return GestureDetector(
               onTap: () {
                 widget.onMonthSelected(DateTime(widget.currentYear, index + 1, 1));
@@ -65,7 +72,7 @@ class _MonthYearPickerState extends State<MonthYearPicker> {
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 1.h),
                 child: Container(
-                  width: 100, // consistent width for centering logic
+                  width: 100,
                   alignment: Alignment.center,
                   child: Text(
                     monthYear,

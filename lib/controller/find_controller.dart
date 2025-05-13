@@ -1,22 +1,36 @@
 import 'package:get/get.dart';
+import 'package:kota/apiServices/find_api_services.dart';
 import 'package:kota/data/dummy.dart';
+import 'package:kota/model/clinic_model.dart';
+import 'package:kota/model/therapist_dropdwon_model.dart';
+import 'package:kota/model/therapist_model.dart';
 
 class FindController extends GetxController {
   var isTherapistLoading = false.obs;
-var isClinicLoading = false.obs;
   var isTherapistSearched = false.obs;
-var isClinicSearched = false.obs;
 
-  final districts = <String>[].obs;
-  final genders = <String>[].obs;
-  final practiceAreas = <String>[].obs;
+  final fetchedTherapistList = <TherapistDatum>[].obs;
+final filteredTherapistList = <TherapistDatum>[].obs;
 
-  final selectedDistrict = RxnString();
-  final selectedGender = RxnString();
-  final selectedPracticeArea = RxnString();
+final fetchedClinicList = <Clinic>[].obs;
+final filteredClinicList = <Clinic>[].obs;
 
-  var therapistResults = <Map<String, dynamic>>[].obs;
-var clinicResults = <Map<String, dynamic>>[].obs;
+  final isClinicSearched = false.obs;
+  final RxBool isClinicLoading = false.obs;
+  final isGovClinic = false.obs;
+  final isPrivateClinic = false.obs;
+
+  final districts = <District>[].obs;
+  final genders = <Gender>[].obs;
+  final practiceAreas = <PracticeArea>[].obs;
+
+  final selectedDistrict = Rxn<District>();
+  final selectedGender = Rxn<Gender>();
+  final selectedPracticeArea = Rxn<PracticeArea>();
+
+  var clinicResults = <Map<String, dynamic>>[].obs;
+
+  final FindApiServices _findApiServices = FindApiServices();
 
   @override
   void onInit() {
@@ -24,41 +38,98 @@ var clinicResults = <Map<String, dynamic>>[].obs;
     fetchDropdownData();
   }
 
-  void fetchDropdownData() async {
-    await Future.delayed(Duration(milliseconds: 200));
-
-    // Simulate data from API
-    districts.value = ['District A', 'District B', 'District C'];
-    genders.value = ['Male', 'Female', 'Other'];
-    practiceAreas.value = ['Pediatrics', 'Geriatrics', 'Rehab'];
+  Future<void> fetchDropdownData() async {
+    try {
+      final dropdownData =
+          await _findApiServices.fetchTherapistDropdownDetails();
+      final districtList = dropdownData.data?.districts ?? [];
+      final genderList = dropdownData.data?.gender ?? [];
+      final practiceAreaList = dropdownData.data?.practiceArea ?? [];
+      districts.value = [
+        District(
+          districtId: '',
+          district: '-- Select District --',
+          status: '',
+          country: '',
+          state: '',
+        ),
+        ...districtList,
+      ];
+      genders.value = [
+        Gender(genderId: '', gender: '-- Select Gender --', status: ''),
+        ...genderList,
+      ];
+      practiceAreas.value = [
+        PracticeArea(spId: '', specialization: '-- Select Practice Area --'),
+        ...practiceAreaList,
+      ];
+    } catch (e) {
+      print("Error fetching dropdown data: $e");
+    }
   }
 
-  void performSearch({required bool isClinic}) async {
-  if (isClinic) {
-    isClinicLoading.value = true;
-    await Future.delayed(Duration(seconds: 1));
-    clinicResults.assignAll(DummyData.dummyClinicResults);
-    isClinicLoading.value = false;
-    isClinicSearched.value = true;
-  } else {
+  void resetTherapistSearch() {
+    isTherapistSearched.value = false;
+  }
+
+  Future<void> findTherapist() async {
+  try {
     isTherapistLoading.value = true;
-    await Future.delayed(Duration(seconds: 1));
-    therapistResults.assignAll(DummyData.dummyTherapistResults);
+    final results = await _findApiServices.fetchSearchResults(
+      districtId: selectedDistrict.value?.districtId ?? "",
+      genderId: selectedGender.value?.genderId ?? "",
+      practiceAreaId: selectedPracticeArea.value?.spId ?? "",
+    );
+    fetchedTherapistList.value = results;
+    filteredTherapistList.value = results;
     isTherapistLoading.value = false;
     isTherapistSearched.value = true;
+  } catch (e) {
+    print("Therapist fetch failed: $e");
   }
 }
 
+void searchClinic({required bool isGov}) async {
+  isGovClinic.value = isGov;
+  isPrivateClinic.value = !isGov;
+  isClinicLoading.value = true;
 
-void resetSearch({required bool isClinic}) {
-  if (isClinic) {
-    isClinicSearched.value = false;
-    clinicResults.clear();
+  final results = await _findApiServices.fetchClinicResults(isGov);
+  fetchedClinicList.value = results;
+  filteredClinicList.value = results;
+
+  isClinicSearched.value = true;
+  isClinicLoading.value = false;
+}
+
+void filterTherapists(String query) {
+  if (query.isEmpty) {
+    filteredTherapistList.value = fetchedTherapistList;
   } else {
-    isTherapistSearched.value = false;
-    therapistResults.clear();
+    filteredTherapistList.value = fetchedTherapistList
+        .where((item) =>
+            (item.firstName ?? '').toLowerCase().contains(query.toLowerCase()) ||
+            (item.district ?? '').toLowerCase().contains(query.toLowerCase()))
+        .toList();
   }
 }
 
+void filterClinics(String query) {
+  if (query.isEmpty) {
+    filteredClinicList.value = fetchedClinicList;
+  } else {
+    filteredClinicList.value = fetchedClinicList
+        .where((item) =>
+            (item.nameAndPlaceOfInstitution ?? '').toLowerCase().contains(query.toLowerCase()) ||
+            (item.district ?? '').toLowerCase().contains(query.toLowerCase()))
+        .toList();
+  }
+}
 
+  void resetClinicSearch() {
+    isClinicSearched.value = false;
+    isGovClinic.value = false;
+    isPrivateClinic.value = false;
+    fetchedClinicList.clear();
+  }
 }

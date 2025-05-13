@@ -97,6 +97,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.6"
+  csslib:
+    dependency: transitive
+    description:
+      name: csslib
+      sha256: "09bad715f418841f976c77db72d5398dc1253c21fb9c0c7f0b0b985860b2d58e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
   dio:
     dependency: "direct main"
     description:
@@ -190,6 +198,46 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.4.1"
+  flutter_custom_tabs:
+    dependency: "direct main"
+    description:
+      name: flutter_custom_tabs
+      sha256: ac3543d7b4e0ac6ecdf3744360039ebb573656c0ce759149d228e1934d4f7535
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.0"
+  flutter_custom_tabs_android:
+    dependency: transitive
+    description:
+      name: flutter_custom_tabs_android
+      sha256: "925fc5e7d27372ee523962dcfcd4b77c0443549482c284dd7897b77815547621"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.1"
+  flutter_custom_tabs_ios:
+    dependency: transitive
+    description:
+      name: flutter_custom_tabs_ios
+      sha256: c61a58d30b29ccb09ea4da0daa335bbf8714bcf8798d0d9f4f58a0b83c6c421b
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.0"
+  flutter_custom_tabs_platform_interface:
+    dependency: transitive
+    description:
+      name: flutter_custom_tabs_platform_interface
+      sha256: "54a6ff5cc7571cb266a47ade9f6f89d1980b9ed2dba18162a6d5300afc408449"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.0"
+  flutter_custom_tabs_web:
+    dependency: transitive
+    description:
+      name: flutter_custom_tabs_web
+      sha256: "236e035c73b6d3ef0a2f85cd8b6b815954e7559c9f9d50a15ed2e53a297b58b0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -232,6 +280,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.7.2"
+  html:
+    dependency: "direct main"
+    description:
+      name: html
+      sha256: "6d1264f2dffa1b1101c25a91dff0dc2daee4c18e87cd8538729773c073dbf602"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.15.6"
   http:
     dependency: transitive
     description:
@@ -653,6 +709,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
+  url_launcher:
+    dependency: "direct main"
+    description:
+      name: url_launcher
+      sha256: "9d06212b1362abc2f0f0d78e6f09f726608c74e3b9462e8368bb03314aa8d603"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.3.1"
+  url_launcher_android:
+    dependency: transitive
+    description:
+      name: url_launcher_android
+      sha256: "8582d7f6fe14d2652b4c45c9b6c14c0b678c2af2d083a11b604caeba51930d79"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.3.16"
+  url_launcher_ios:
+    dependency: transitive
+    description:
+      name: url_launcher_ios
+      sha256: "7f2022359d4c099eea7df3fdf739f7d3d3b9faf3166fb1dd390775176e0b76cb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.3.3"
   url_launcher_linux:
     dependency: transitive
     description:
@@ -661,6 +741,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.1"
+  url_launcher_macos:
+    dependency: transitive
+    description:
+      name: url_launcher_macos
+      sha256: "17ba2000b847f334f16626a574c702b196723af2a289e7a93ffcb79acff855c2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.2"
   url_launcher_platform_interface:
     dependency: transitive
     description:

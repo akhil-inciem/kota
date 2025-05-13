@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class LabelledDropdown extends StatelessWidget {
+class LabelledDropdown<T> extends StatelessWidget {
   final String label;
-  final List<String> items;
-  final String? selectedValue;
-  final void Function(String?) onChanged;
+  final List<T> items;
+  final T? selectedValue;
+  final void Function(T?) onChanged;
   final String hintText;
+  final String Function(T) itemAsString;
 
   const LabelledDropdown({
     Key? key,
@@ -15,6 +16,7 @@ class LabelledDropdown extends StatelessWidget {
     required this.selectedValue,
     required this.onChanged,
     required this.hintText,
+    required this.itemAsString,
   }) : super(key: key);
 
   @override
@@ -29,21 +31,39 @@ class LabelledDropdown extends StatelessWidget {
       children: [
         Text(label,
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-        SizedBox(height: 0.8.h),
-        DropdownButtonFormField<String>(
-          value: effectiveValue, // ensures hint shows when value is null
-          items: items
-              .map((val) => DropdownMenuItem(value: val, child: Text(val)))
-              .toList(),
+        SizedBox(height: 8),
+        DropdownButtonFormField<T>(
+          value: effectiveValue,
+          items: items.map((val) {
+            final label = itemAsString(val);
+            return DropdownMenuItem<T>(
+              value: val,
+              child: Tooltip(
+                message: label,
+                child: Container(
+                  width: double.infinity,
+                  child: Text(
+                    label,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    softWrap: false,
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
           onChanged: onChanged,
+          isExpanded: true,
           decoration: InputDecoration(
             hintText: hintText,
-            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
         ),
       ],
     );
   }
 }
-

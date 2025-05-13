@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:kota/views/drawer/contact_us_screen.dart';
 import 'package:kota/views/drawer/executives_screen.dart';
-import 'package:kota/views/drawer/find_screen.dart';
+import 'package:kota/views/drawer/find/find_screen.dart';
 import 'package:kota/views/drawer/mission_screen.dart';
 import 'package:kota/views/profile/profile_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';

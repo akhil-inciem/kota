@@ -11,16 +11,16 @@ import 'package:kota/views/home/widgets/top_bar.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:share_plus/share_plus.dart';
 
-class DetailScreen extends StatefulWidget {
+class NewsDetailScreen extends StatefulWidget {
   final NewsDatum item;
 
-  DetailScreen({Key? key, required this.item}) : super(key: key);
+  NewsDetailScreen({Key? key, required this.item}) : super(key: key);
 
   @override
-  State<DetailScreen> createState() => _DetailScreenState();
+  State<NewsDetailScreen> createState() => _NewsDetailScreenState();
 }
 
-class _DetailScreenState extends State<DetailScreen> {
+class _NewsDetailScreenState extends State<NewsDetailScreen> {
   final HomeController homeController = Get.find<HomeController>();
   final ValueNotifier<double> radiusNotifier = ValueNotifier<double>(30.0);
   final ValueNotifier<double> extentNotifier = ValueNotifier(0.6);

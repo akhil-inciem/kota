@@ -1,18 +1,17 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/auth_controller.dart';
 import 'package:kota/views/base.dart';
-import 'package:kota/views/home/home_screen.dart';
 import 'package:kota/views/login/guest_registration.dart';
-import 'package:kota/views/login/user_registration_screen.dart';
 import 'package:kota/views/login/widgets/custom_button.dart';
-import 'package:kota/views/login/widgets/custom_textfield.dart';
 import 'package:kota/views/login/widgets/labelled_textfield.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -213,8 +212,8 @@ class _LoginScreenState extends State<LoginScreen>
                   // );
 
                   // if (success) {
-                    Get.offAll(BaseScreen());
-                //   }
+                  Get.offAll(BaseScreen());
+                  // }
                 },
                 isGuestButton: false,
               ),
@@ -238,12 +237,13 @@ class _LoginScreenState extends State<LoginScreen>
                           fontSize: 12,
                           decoration: TextDecoration.underline,
                         ),
-                        recognizer:
-                            TapGestureRecognizer()
-                              ..onTap = () {
-                                // Get.to(()=>RegistrationScreen());
-                                // print('Register Here clicked');
-                              },
+                        recognizer: TapGestureRecognizer()..onTap = () async {const url = 'https://pub.dev/packages/flutter_custom_tabs';
+              if (await canLaunch(url)) {
+                await launch(url, forceWebView: true, enableJavaScript: true);
+              } else {
+                throw 'Could not launch $url';
+              }
+    },
                       ),
                     ],
                   ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kota/constants/colors.dart';
+import 'package:kota/controller/drawer_controller.dart';
 import 'package:kota/views/drawer/widgets/executive_card.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -9,48 +10,16 @@ import 'package:get/get.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class ExecutivePage extends StatelessWidget {
+class ExecutivePage extends StatefulWidget {
   const ExecutivePage({super.key});
 
-  static const List<Map<String, String>> executives = [
-    {
-      "name": "Dr. Alice Smith",
-      "phone": "+1 234 567 890",
-      "email": "alice.smith@example.com",
-      "image": "assets/images/certificate.jpg",
-    },
-    {
-      "name": "Dr. Bob Johnson",
-      "phone": "+1 987 654 321",
-      "email": "bob.johnson@example.com",
-      "image": "assets/images/recommend_tile.jpg",
-    },
-    {
-      "name": "Dr. Alice Smith",
-      "phone": "+1 234 567 890",
-      "email": "alice.smith@example.com",
-      "image": "assets/images/certificate.jpg",
-    },
-    {
-      "name": "Dr. Bob Johnson",
-      "phone": "+1 987 654 321",
-      "email": "bob.johnson@example.com",
-      "image": "assets/images/recommend_tile.jpg",
-    },
-    {
-      "name": "Dr. Alice Smith",
-      "phone": "+1 234 567 890",
-      "email": "alice.smith@example.com",
-      "image": "assets/images/certificate.jpg",
-    },
-    {
-      "name": "Dr. Bob Johnson",
-      "phone": "+1 987 654 321",
-      "email": "bob.johnson@example.com",
-      "image": "assets/images/recommend_tile.jpg",
-    },
-  ];
+  @override
+  State<ExecutivePage> createState() => _ExecutivePageState();
+}
 
+class _ExecutivePageState extends State<ExecutivePage> {
+  final SideMenuController menuController = Get.put(SideMenuController());
+  
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -96,19 +65,23 @@ class ExecutivePage extends StatelessWidget {
   }
 
   Widget _buildExecutiveGrid() {
-    return Expanded(
-      child: GridView.builder(
-        itemCount: executives.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 2.w,
-          mainAxisExtent: 36.h,
-        ),
-        itemBuilder: (context, index) {
-          final executive = executives[index];
-          return ExecutiveCard(executive: executive);
-        },
-      ),
+    final executives = menuController.executiveList;
+    return Obx(() {
+        return Expanded(
+          child: GridView.builder(
+            itemCount: executives.length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 2.w,
+              mainAxisExtent: 36.h,
+            ),
+            itemBuilder: (context, index) {
+              final executive = executives[index];
+              return ExecutiveCard(executive: executive);
+            },
+          ),
+        );
+      }
     );
   }
 }

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:kota/constants/colors.dart';
 import 'package:kota/views/events/widgets/month_picker.dart';
 import 'package:kota/views/events/widgets/week_header.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -32,9 +30,7 @@ class CustomCalendar extends StatelessWidget {
               controller.clearSelectedWeekday();
             },
           ),
-
           const SizedBox(height: 10),
-          // Custom weekday labels (S M T W T F S)
           const WeekdayHeader(),
           Divider(),
           // TableCalendar
@@ -43,7 +39,7 @@ class CustomCalendar extends StatelessWidget {
             child: TableCalendar(
               daysOfWeekVisible: false,
               headerVisible: false,
-              daysOfWeekHeight: 20, // explicit height for weekday row
+              daysOfWeekHeight: 20,
               calendarStyle: CalendarStyle(
                 outsideDaysVisible: false,
                 todayDecoration: BoxDecoration(
@@ -69,15 +65,13 @@ class CustomCalendar extends StatelessWidget {
               onDaySelected: (selectedDay, focusedDay) {
                 controller.setSelectedDate(selectedDay);
                 controller.setFocusedDate(focusedDay);
-                controller.updateSelectedWeekday(selectedDay); // 👈 Add this
+                controller.updateSelectedWeekday(selectedDay);
               },
-
               onPageChanged: (focusedDay) {
                 controller.setFocusedDate(focusedDay);
                 controller
                     .clearSelectedWeekday(); // 👈 Clear highlight on month change
               },
-
               startingDayOfWeek: StartingDayOfWeek.sunday,
               calendarBuilders: CalendarBuilders(
                 defaultBuilder: (context, date, _) {

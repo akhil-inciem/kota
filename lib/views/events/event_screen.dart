@@ -84,15 +84,21 @@ class EventScreen extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 6.w,vertical: 1.h),
-                                child: const Text("No events for Today",style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.black,
-                                      ),),
+                                child: Column(
+                                  children: [
+                                    SizedBox(height: 15.h,),
+                                    Center(
+                                      child: const Text("No upcoming Events",style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.black,
+                                            ),),
+                                    ),
+                                  ],
+                                ),
                               ),
                               SizedBox(height: 2.h),
                             ],
-
                             // Upcoming Events
                             if (controller.upcomingEvents.isNotEmpty) ...[
                               Container(

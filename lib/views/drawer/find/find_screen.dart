@@ -5,7 +5,8 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/find_controller.dart';
 import 'package:kota/views/drawer/widgets/custom_expansion_tile.dart';
-import 'package:kota/views/drawer/widgets/find_tabview.dart';
+import 'package:kota/views/drawer/find/widgets/find_clinic_tab.dart';
+import 'package:kota/views/drawer/find/widgets/find_therapist_tab.dart';
 import 'package:kota/views/drawer/widgets/labelled_dropdown.dart';
 import 'package:kota/views/home/widgets/top_bar.dart';
 import 'package:kota/views/login/widgets/custom_button.dart';
@@ -26,10 +27,18 @@ class _FindScreenState extends State<FindScreen>
   final FindController controller = Get.put(FindController());
 
   @override
-  void initState() {
-    _tabController = TabController(length: 2, vsync: this);
-    super.initState();
-  }
+void initState() {
+  super.initState();
+
+  _tabController = TabController(length: 2, vsync: this);
+
+  // Delay reactive value assignment until after first frame
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    controller.isTherapistSearched.value = false;
+    controller.isClinicSearched.value = false;
+  });
+}
+
 
   @override
   void dispose() {
@@ -42,15 +51,15 @@ class _FindScreenState extends State<FindScreen>
     return Scaffold(
       backgroundColor: AppColors.primaryBackground,
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 1.h),
-            TopBar(title: "Find", onTap: () => Get.back()),
-            SizedBox(height: 2.h),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 4.w),
-              child: Container(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 4.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 1.h),
+              _buildAppBar(),
+              SizedBox(height: 2.h),
+              Container(
                 color: AppColors.primaryBackground,
                 child: TabBar(
                   controller: _tabController,
@@ -65,19 +74,42 @@ class _FindScreenState extends State<FindScreen>
                   ],
                 ),
               ),
-            ),
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  FindTab(isClinic: false, controller: controller),
-                  FindTab(isClinic: true, controller: controller),
-                ],
+              Expanded(
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    FindTherapistTab(controller: controller),
+                    FindClinicTab(controller: controller),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
+    );
+  }
+  Widget _buildAppBar() {
+    return Row(
+      children: [
+        InkWell(
+          onTap: () => Get.back(),
+          child: Image.asset(
+            'assets/icons/backbutton.png',
+            color: Colors.black,
+            width: 6.w,
+            height: 2.5.h,
+          ),
+        ),
+        SizedBox(width: 4.w),
+        Text(
+          "Find",
+          style: TextStyle(
+            fontSize: 17.sp,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
     );
   }
 }

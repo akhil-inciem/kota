@@ -6,7 +6,7 @@ import 'package:kota/controller/favorite_controller.dart';
 import 'package:kota/data/dummy.dart';
 import 'package:kota/extensions/badge_extensions.dart';
 import 'package:kota/views/forum/widgets/forum_shimmer.dart';
-import 'package:kota/views/home/recommended_detail_screen.dart';
+import 'package:kota/views/home/news_detail_screen.dart';
 import 'package:kota/views/home/widgets/list_shimmer.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 

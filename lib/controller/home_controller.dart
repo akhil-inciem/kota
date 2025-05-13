@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kota/apiServices/favorite_api_services.dart';
 import 'package:kota/apiServices/news_api_service.dart';
@@ -16,6 +17,7 @@ class HomeController extends GetxController {
   var bookmarkedStatus = <String, bool>{}.obs;
   final _favApiService = FavoritesApiService();
   final NewsApiService _newsApiService = NewsApiService();
+  final TextEditingController searchController = TextEditingController();
 
   @override
   void onInit() {
@@ -26,17 +28,11 @@ class HomeController extends GetxController {
   void toggleBookmark(String id) async {
   final currentStatus = bookmarkedStatus[id] ?? false;
   final newStatus = !currentStatus;
-
-  // Update local state immediately for UI feedback
   bookmarkedStatus[id] = newStatus;
-
-  // Now send it to the API
   try {
-    await _favApiService.sendBookmarkStatusToApi(id, newStatus);
+    await _favApiService.sendNewsBookmarkStatusToApi(id, newStatus);
   } catch (e) {
     print("Failed to update bookmark status: $e");
-
-    // Optionally revert if API fails
     bookmarkedStatus[id] = currentStatus;
   }
 }

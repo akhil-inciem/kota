@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kota/controller/event_controller.dart';
+import 'package:kota/views/home/events_detail_screen.dart';
 import 'package:kota/views/home/widgets/list_shimmer.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import '../recommended_detail_screen.dart';
+import '../news_detail_screen.dart';
 
 class EventsList extends StatefulWidget {
   final bool isFavourite; // <--- New parameter
@@ -45,7 +46,7 @@ class _EventsListState extends State<EventsList> {
       if (items.isEmpty) {
         return Center(
           child: Text(
-            'No News available',
+            'No Events available',
             style: TextStyle(fontSize: 18, color: Colors.black),
           ),
         );
@@ -60,12 +61,12 @@ class _EventsListState extends State<EventsList> {
           final item = items[index];
           return GestureDetector(
             onTap: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => DetailScreen(item: item),
-              //   ),
-              // );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EventsDetailScreen(item: item),
+                ),
+              );
             },
             child: Column(
               children: [
@@ -140,7 +141,7 @@ class _EventsListState extends State<EventsList> {
                               ),
                               SizedBox(height: 1.h),
                               Text(
-                                item.eventTitle ?? '',
+                                item.eventName ?? '',
                                 maxLines: 2,
                                 style: const TextStyle(
                                   fontSize: 14,

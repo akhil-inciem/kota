@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:kota/controller/home_controller.dart';
 import 'package:kota/data/dummy.dart';
 import 'package:kota/extensions/badge_extensions.dart';
-import 'package:kota/views/home/recommended_detail_screen.dart';
+import 'package:kota/views/home/news_detail_screen.dart';
 import 'package:kota/views/home/widgets/list_shimmer.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -65,7 +65,7 @@ class _NewsListState extends State<NewsList> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => DetailScreen(item: item),
+                  builder: (context) => NewsDetailScreen(item: item),
                 ),
               );
             },

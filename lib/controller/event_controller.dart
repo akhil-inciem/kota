@@ -84,7 +84,7 @@ class EventController extends GetxController {
     filteredEventsItems.assignAll(
       allEvents.where(
         (item) =>
-            item.eventTitle?.toLowerCase().contains(query.toLowerCase()) == true ||
+            item.eventName?.toLowerCase().contains(query.toLowerCase()) == true ||
             item.eventDescription?.toLowerCase().contains(query.toLowerCase()) == true,
       ),
     );

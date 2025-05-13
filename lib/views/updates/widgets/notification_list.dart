@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:kota/data/dummy.dart';
-import 'package:kota/views/home/recommended_detail_screen.dart';
+import 'package:kota/views/home/news_detail_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class NotificationList extends StatelessWidget {

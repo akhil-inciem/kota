@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kota/constants/colors.dart';
+import 'package:kota/controller/drawer_controller.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:html/parser.dart' show parse;
 
 class MissionPage extends StatelessWidget {
-  const MissionPage({super.key});
+   MissionPage({super.key});
 
+  final SideMenuController controller = Get.put(SideMenuController());
+
+  String cleanHtml(String htmlString) {
+  final document = parse(htmlString);
+  final text = document.body?.text.trim() ?? '';
+  return text.replaceAll(RegExp(r'\n\s*'), '\n').trim();
+}
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -44,23 +53,38 @@ class MissionPage extends StatelessWidget {
 
               // Scrollable content
               Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      _buildInfoCard(
-                        title: "Our Mission",
-                        content:
-                            "To empower communities with innovative healthcare solutions, ensuring accessibility, quality, and compassion in every service we deliver.",
-                      ),
-                      SizedBox(height: 3.h),
-                      _buildInfoCard(
-                        title: "Our Vision",
-                        content:
-                            "To be a global leader in healthcare excellence, driven by technology, inclusivity, and an unwavering commitment to well-being.",
-                      ),
-                    ],
-                  ),
-                ),
+                child: Obx(() {
+                  if (controller.isLoading.value) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (controller.visionMission.isEmpty) {
+                    return const Center(child: Text("No Vision or Mission data available."));
+                  }
+
+                  final rawVision = controller.visionMission.first.vision ?? "N/A";
+final rawMission = controller.visionMission.first.mission ?? "N/A";
+
+final vision = cleanHtml(rawVision);
+final mission = cleanHtml(rawMission);
+
+
+                  return SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        _buildInfoCard(
+                          title: "Our Mission",
+                          content: mission,
+                        ),
+                        SizedBox(height: 3.h),
+                        _buildInfoCard(
+                          title: "Our Vision",
+                          content: vision,
+                        ),
+                      ],
+                    ),
+                  );
+                }),
               ),
             ],
           ),
@@ -122,7 +146,7 @@ class MissionPage extends StatelessWidget {
           style: TextStyle(
             fontSize: 15.sp,
             color: Colors.black87,
-            height: 1.6,
+            // height: 2,
           ),
         ),
       ],

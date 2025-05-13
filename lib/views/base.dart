@@ -55,6 +55,7 @@ class _BaseScreenState extends State<BaseScreen> {
         controller: _pageController,
         onPageChanged: (index) {
           homeController.index.value = index;
+          homeController.searchController.clear();
         },
         children: List.generate(_pages.length, (index) {
           return AnimatedBuilder(
