@@ -7,6 +7,7 @@ import 'package:kota/controller/favorite_controller.dart';
 import 'package:kota/controller/find_controller.dart';
 import 'package:kota/controller/forum_controller.dart';
 import 'package:kota/controller/home_controller.dart';
+import 'package:kota/controller/updates_controller.dart';
 import 'package:kota/controller/user_controller.dart';
 import 'package:kota/views/login/login_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -20,6 +21,7 @@ void main() {
   Get.lazyPut(() => ForumController());
   Get.lazyPut(() => FindController());
   Get.lazyPut(() => SideMenuController());
+  Get.lazyPut(() => UpdateController());
   runApp(MyApp());
 }
 

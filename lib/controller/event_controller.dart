@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:kota/apiServices/events_api_services.dart';
+import 'package:kota/apiServices/favorite_api_services.dart';
 import 'package:kota/data/dummy.dart';
 import 'package:kota/model/event_model.dart';
 
@@ -12,6 +13,8 @@ class EventController extends GetxController {
   final allEvents = <EventsDatum>[].obs;
   RxBool isLoading = false.obs;
   final selectedWeekdayIndex = RxInt(-1);
+  var bookmarkedStatus = <String, bool>{}.obs;
+  final _favApiService = FavoritesApiService();
   final EventsApiService _eventsApiService = EventsApiService();
 
   @override
@@ -26,17 +29,38 @@ class EventController extends GetxController {
   }
 
   Future<void> fetchEventItems() async {
-    isLoading.value = true;
-    try {
-      final fetchedEvents = await _eventsApiService.fetchEvents();
-      allEvents.assignAll(fetchedEvents);
-      filteredEventsItems.assignAll(fetchedEvents);
-    } catch (e) {
-      print("Error fetching events: $e");
-    } finally {
-      isLoading.value = false;
+  isLoading.value = true;
+  try {
+    final fetchedEvents = await _eventsApiService.fetchEvents();
+    allEvents.assignAll(fetchedEvents);
+    filteredEventsItems.assignAll(fetchedEvents);
+
+    // Initialize bookmark status from the `favourite` field
+    for (final event in fetchedEvents) {
+      if (event.eventId != null) {
+        bookmarkedStatus[event.eventId!] = event.faverites == "1";
+      }
     }
+
+  } catch (e) {
+    print("Error fetching events: $e");
+  } finally {
+    isLoading.value = false;
   }
+}
+
+
+  void toggleBookmark(String id) async {
+  final currentStatus = bookmarkedStatus[id] ?? false;
+  final newStatus = !currentStatus;
+  bookmarkedStatus[id] = newStatus;
+  try {
+    await _favApiService.sendEventsBookmarkStatusToApi(id, newStatus);
+  } catch (e) {
+    print("Failed to update bookmark status: $e");
+    bookmarkedStatus[id] = currentStatus;
+  }
+}
 
   void updateSelectedWeekday(DateTime date) {
     selectedWeekdayIndex.value = date.weekday % 7;
@@ -84,7 +108,8 @@ class EventController extends GetxController {
     filteredEventsItems.assignAll(
       allEvents.where(
         (item) =>
-            item.eventName?.toLowerCase().contains(query.toLowerCase()) == true ||
+            item.eventName?.toLowerCase().contains(query.toLowerCase()) == true
+             ||
             item.eventDescription?.toLowerCase().contains(query.toLowerCase()) == true,
       ),
     );

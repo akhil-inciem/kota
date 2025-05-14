@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:html/parser.dart' as html_parser;
 import 'package:intl/intl.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/event_controller.dart';
@@ -11,24 +12,29 @@ import 'package:kota/views/home/widgets/top_bar.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:share_plus/share_plus.dart';
 
-class EventsDetailScreen extends StatefulWidget {
-  final EventsDatum item;
+class FavoritesDetailScreen extends StatefulWidget {
+  final Map<String, dynamic> item;
 
-  EventsDetailScreen({Key? key, required this.item}) : super(key: key);
+  FavoritesDetailScreen({Key? key, required this.item}) : super(key: key);
 
   @override
-  State<EventsDetailScreen> createState() => _EventsDetailScreenState();
+  State<FavoritesDetailScreen> createState() => _FavoritesDetailScreenState();
 }
 
-class _EventsDetailScreenState extends State<EventsDetailScreen> {
+class _FavoritesDetailScreenState extends State<FavoritesDetailScreen> {
   final HomeController homeController = Get.find<HomeController>();
   final EventController eventController = Get.find<EventController>();
   final ValueNotifier<double> radiusNotifier = ValueNotifier<double>(30.0);
   final ValueNotifier<double> extentNotifier = ValueNotifier(0.6);
 
+  String _htmlToPlainText(String htmlString) {
+    final document = html_parser.parse(htmlString);
+    return document.body?.text.trim() ?? '';
+  }
+
   @override
   Widget build(BuildContext context) {
-    final imageUrl = widget.item.image;
+    final imageUrl = widget.item["image"];
 
     return SafeArea(
       child: Scaffold(
@@ -177,8 +183,8 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
               ),
               const SizedBox(width: 4),
               Text(
-                widget.item.eventstartDateDate != null
-                    ? DateFormat('dd MMM yyyy').format(widget.item.eventstartDateDate!)
+                widget.item["date"] != null
+                    ? DateFormat('dd MMM yyyy').format(widget.item['date']!)
                     : '',
                 style: const TextStyle(fontSize: 10, color: Color(0xFF2640C8)),
               ),
@@ -189,7 +195,7 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
           children: [
             GestureDetector(
               onTap: () {
-                final title = widget.item.eventName ?? 'Check this out!';
+                final title = widget.item['title'] ?? 'Check this out!';
                 // final link = widget.item.newsCategory ?? ''; // Replace with your actual link
                 final params = ShareParams(
                   title: title,
@@ -203,22 +209,6 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
                 width: 2.5.h, // use 2.h for both to maintain aspect ratio
               ),
             ),
-            SizedBox(width: 5.w), // spacing between the images
-            Obx(() {
-              final isBookmarked =
-                  eventController.bookmarkedStatus[widget.item.eventId] ?? false;
-
-              return GestureDetector(
-                onTap: () => eventController.toggleBookmark(widget.item.eventId!),
-                child: Image.asset(
-                  isBookmarked
-                      ? 'assets/icons/saved.png'
-                      : 'assets/icons/favorites_unselected.png',
-                  height: 2.5.h,
-                  width: 2.5.h,
-                ),
-              );
-            }),
             SizedBox(width: 3.w),
           ],
         ),
@@ -228,7 +218,7 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
 
   Widget _title() {
     return Text(
-      widget.item.eventName ?? '',
+      widget.item['title'] ?? '',
       style: TextStyle(
         fontSize: 17.sp,
         fontWeight: FontWeight.w700,
@@ -273,7 +263,7 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
 
   Widget _description() {
     return Text(
-      widget.item.eventDescription ?? '',
+     _htmlToPlainText(widget.item['description']),
       style: TextStyle(fontSize: 15.sp, color: Colors.black54),
     );
   }

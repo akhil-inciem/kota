@@ -43,8 +43,8 @@ class EventsDatum {
         required this.feesPerSeat,
         required this.location,
         required this.onlineBooking,
-        // required this.badges,
-        // required this.faverites,
+        required this.badges,
+        required this.faverites,
     });
 
     final String? eventId;
@@ -63,8 +63,8 @@ class EventsDatum {
     final String? feesPerSeat;
     final String? location;
     final String? onlineBooking;
-    // final dynamic badges;
-    // final dynamic faverites;
+    final dynamic badges;
+    final dynamic faverites;
 
     factory EventsDatum.fromJson(Map<String, dynamic> json){ 
         return EventsDatum(
@@ -84,8 +84,8 @@ class EventsDatum {
             feesPerSeat: json["fees_per_seat"],
             location: json["location"],
             onlineBooking: json["online_booking"],
-            // badges: json["badges"],
-            // faverites: json["faverites"],
+            badges: json["badges"],
+            faverites: json["faverites"],
         );
     }
 
@@ -106,8 +106,8 @@ class EventsDatum {
         "fees_per_seat": feesPerSeat,
         "location": location,
         "online_booking": onlineBooking,
-        // "badges": badges,
-        // "faverites": faverites,
+        "badges": badges,
+        "faverites": faverites,
     };
 
 }

@@ -1,25 +1,25 @@
 import 'package:dio/dio.dart';
 import 'package:kota/constants/api.dart';
+import 'package:kota/model/favorite_model.dart';
 import 'package:kota/model/news_model.dart';
 
 class FavoritesApiService {
   final Dio _dio = Dio();
 
-  Future<List<NewsDatum>> fetchFavorites() async {
-    try{
-    final response = await _dio.get(ApiEndpoints.getNews);
+  Future<FavoritesModel> fetchFavorites() async {
+  try {
+    final response = await _dio.get(ApiEndpoints.favorites);
 
     if (response.statusCode == 200 && response.data['status'] == true) {
-      final newsModel = NewsModel.fromJson(response.data);
-      return newsModel.data; 
+      return FavoritesModel.fromJson(response.data);
     } else {
-      throw Exception("Failed to load news");
+      throw Exception("Failed to load news and events");
     }
-    }catch(e){
-      print(e);
-      return [];
-    }
+  } catch (e) {
+    print("Error in fetchFavorites: $e");
+    rethrow;
   }
+}
 
    Future<void> sendNewsBookmarkStatusToApi(String id, bool status) async {
   try {
@@ -37,7 +37,6 @@ class FavoritesApiService {
         },
       ),
     );
-
     if (response.statusCode == 200) {
       print('Bookmark status updated successfully');
     } else {
@@ -51,7 +50,7 @@ class FavoritesApiService {
 Future<void> sendEventsBookmarkStatusToApi(String id, bool status) async {
   try {
     FormData formData = FormData.fromMap({
-      'news_id': id,
+      'event_id': id,
       'faverites': status.toString(),
     });
 

@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kota/apiServices/forum_api_services.dart';
 import 'package:kota/data/dummy.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -6,6 +8,8 @@ class ForumController extends GetxController {
   final isLoading = true.obs;
   final forumItems = <Map<String, dynamic>>[].obs;
   final selectedImages = <XFile>[].obs;
+  final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
 
   @override
   void onInit() {
@@ -59,4 +63,31 @@ class ForumController extends GetxController {
   print(isLiked ? 'Unliked post $itemId' : 'Liked post $itemId');
 }
 
+ Future<void> createDiscussion() async {
+    final title = titleController.text.trim();
+    final description = descriptionController.text.trim();
+
+    if (title.isEmpty || description.isEmpty) {
+      Get.snackbar("Error", "Title and description cannot be empty");
+      return;
+    }
+
+    try {
+      await ForumApiService.postDiscussion(
+        title: title,
+        description: description,
+        images: selectedImages,
+      );
+      Get.back(); // Navigate back or show success message
+    } catch (e) {
+      Get.snackbar("Error", e.toString());
+    }
+  }
+
+  @override
+  void onClose() {
+    titleController.dispose();
+    descriptionController.dispose();
+    super.onClose();
+  }
 }

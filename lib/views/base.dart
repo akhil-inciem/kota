@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/home_controller.dart';
+import 'package:kota/controller/updates_controller.dart';
 import 'package:kota/views/events/event_screen.dart';
 import 'package:kota/views/favourites/favourite_screen.dart';
 import 'package:kota/views/forum/forum_screen.dart';
@@ -56,6 +57,8 @@ class _BaseScreenState extends State<BaseScreen> {
         onPageChanged: (index) {
           homeController.index.value = index;
           homeController.searchController.clear();
+          Get.find<UpdateController>().clearSearch();
+
         },
         children: List.generate(_pages.length, (index) {
           return AnimatedBuilder(

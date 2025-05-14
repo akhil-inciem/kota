@@ -115,11 +115,7 @@ class AddImageSection extends StatelessWidget {
             ],
           ),
           SizedBox(height: 4.h),
-          CustomButton(
-            text: "Create Discussion",
-            backgroundColor: AppColors.primaryButton,
-            textColor: Colors.white,
-          ),
+         
         ],
       ),
     );

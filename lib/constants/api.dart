@@ -24,6 +24,7 @@ class ApiEndpoints {
 
   //Updates
   static const String getUpdates = '$baseUrl/news/updates';
+  static const String getMemberExpiry = '$baseUrl/news/get-member-details?member=';
 
   // User
   static const String getUserProfile = '$baseUrl/news/get-user?id=';
