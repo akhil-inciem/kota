@@ -9,6 +9,21 @@ class ApiEndpoints {
   static const String resetPassword = '$baseUrl/news/passwordReset';
   static const String guestSignIn = '$baseUrl/news/guest-signin';
 
+  //Forums
+  // Thread APIs
+  static const String createThread = '$baseUrl/forums/createThread';
+  static const String getAllThreads = '$baseUrl/forums/getAllThreads';
+  static const String getThreadDetails = '$baseUrl/forums/getThreadDetails/{id}';
+  static const String likeThread = '$baseUrl/forums/likeThread/{id}';
+
+  // Comment APIs
+  static const String createComment = '$baseUrl/forums/createComment/{id}';
+  static const String likeComment = '$baseUrl/forums/likeComment/{id}';
+
+  // Reply APIs
+  static const String createCommentReply = '$baseUrl/forums/createCmtReply/{id}';
+  static const String likeReply = '$baseUrl/forums/likeReply/{id}';
+
   // News
   static const String getNews = '$baseUrl/news/get-all-news';
   static const String getNewsById = '$baseUrl/news/{id}';

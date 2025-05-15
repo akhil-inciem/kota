@@ -16,19 +16,20 @@ class ExecutiveCard extends StatelessWidget {
         // Executive Image
         ClipRRect(
           borderRadius: BorderRadius.circular(12),
-          child: Image.network(
-            "https://media.istockphoto.com/id/1399565382/photo/young-happy-mixed-race-businessman-standing-with-his-arms-crossed-working-alone-in-an-office.jpg?s=612x612&w=0&k=20&c=buXwOYjA_tjt2O3-kcSKqkTp2lxKWJJ_Ttx2PhYe3VM=",
-            //  Image.asset(
-            //   executive.portalImage!,
+          child: 
+          // Image.network(
+          //   "https://media.istockphoto.com/id/1399565382/photo/young-happy-mixed-race-businessman-standing-with-his-arms-crossed-working-alone-in-an-office.jpg?s=612x612&w=0&k=20&c=buXwOYjA_tjt2O3-kcSKqkTp2lxKWJJ_Ttx2PhYe3VM=",
+             Image.network(
+              executive.portalImage!,
             width: double.infinity,
             height: 18.h,
             fit: BoxFit.cover,
           ),
         ),
-
+    
         // Info Section
         Container(
-          height: 16.h,
+          height: 17.h,
           padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
           decoration: BoxDecoration(
             color: AppColors.primaryBackground,
@@ -41,57 +42,45 @@ class ExecutiveCard extends StatelessWidget {
                 executive.designation ?? '',
                 style: TextStyle(fontSize: 14.sp, color: Colors.black87),
               ),
-
+    
               /// First name
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    executive.firstName ?? '',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15.sp,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        executive.firstName ?? '',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.sp,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        executive.lastName ?? '',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.sp,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ),
-                  Text(
-                    executive.lastName ?? '',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15.sp,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  IconButton(
+                    icon: Icon(Icons.share, size: 18.sp),
+                    onPressed: () {
+                      // Share functionality here
+                    },
                   ),
                 ],
               ),
-
-              /// Last name + share button
-              // Row(
-              //   children: [
-              //     Expanded(
-              //       child: Text(
-              //         executive.lastName ?? '',
-              //         style: TextStyle(
-              //           fontWeight: FontWeight.bold,
-              //           fontSize: 15.sp,
-              //         ),
-              //         maxLines: 1,
-              //         overflow: TextOverflow.ellipsis,
-              //       ),
-              //     ),
-              //     IconButton(
-              //       icon: Icon(Icons.share, size: 18.sp),
-              //       onPressed: () {
-              //         // Share functionality here
-              //       },
-              //     ),
-              //   ],
-              // ),
               Text(
                 executive.officialMobile ?? '',
-                style: TextStyle(fontSize: 14.sp, color: Colors.black87),
+                style: TextStyle(fontSize: 13.sp, color: Colors.black87),
               ),
               Text(
                 executive.officialEmail ?? '',

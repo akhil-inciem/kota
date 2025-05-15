@@ -9,11 +9,24 @@ import 'package:kota/views/forum/forum_detail_screen.dart';
 import 'package:kota/views/forum/widgets/forum_shimmer.dart';
 import 'package:kota/views/home/news_detail_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-class ForumList extends StatelessWidget {
+class ForumList extends StatefulWidget {
 
-  final ForumController favouriteController = Get.find<ForumController>();
 
  ForumList({Key? key,}) : super(key: key);
+
+  @override
+  State<ForumList> createState() => _ForumListState();
+}
+
+class _ForumListState extends State<ForumList> {
+  final ForumController favouriteController = Get.find<ForumController>();
+
+  String hoursAgo(String createdAt) {
+  final createdTime = DateTime.parse(createdAt);
+  final now = DateTime.now();
+  final difference = now.difference(createdTime);
+  return '${difference.inHours} hours ago';
+}
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +35,10 @@ class ForumList extends StatelessWidget {
       return const ForumShimmer(); // Show shimmer while loading
     }
 
-      final items = favouriteController.forumItems;
+      final items = favouriteController.threadsList;
         return ListView.builder(
           padding: EdgeInsets.zero,
-          itemCount: DummyData.forumItems.length,
+          itemCount: items.length,
           physics: const AlwaysScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             final item = items[index];
@@ -62,7 +75,7 @@ class ForumList extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            item['name'] ?? '',
+                            '${item.firstName} ${item.lastName}' ?? '',
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -70,12 +83,13 @@ class ForumList extends StatelessWidget {
                           ),
                           SizedBox(height: 0.5.h),
                           Text(
-                            '${item['time'] ?? '0'} hours ago',
-                            style: const TextStyle(
-                              fontSize: 10,
-                              color: Colors.grey,
-                            ),
-                          ),
+  hoursAgo(item.createdAt!),
+  style: const TextStyle(
+    fontSize: 10,
+    color: Colors.grey,
+  ),
+),
+
                         ],
                       ),
                     ),
@@ -84,7 +98,7 @@ class ForumList extends StatelessWidget {
                 ),
                 SizedBox(height: 1.h),
                 Text(
-                  item['title'] ?? '',
+                  item.title ?? '',
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
@@ -105,14 +119,14 @@ class ForumList extends StatelessWidget {
                           Icon(Icons.favorite_border, size: 16, color: AppColors.primaryText),
                           SizedBox(width: 4),
                           Text(
-                            '${item['likes'] ?? 0}',
+                            '${item.likeCount ?? 0}',
                             style: const TextStyle(fontSize: 12),
                           ),
                           SizedBox(width: 12),
                           Icon(Icons.comment, size: 16, color: Colors.grey),
                           SizedBox(width: 4),
                           Text(
-                            '${item['comments'] ?? 0} Comments',
+                            '${item.commentCount ?? 0} Comments',
                             style: const TextStyle(fontSize: 12),
                           ),
                         ],

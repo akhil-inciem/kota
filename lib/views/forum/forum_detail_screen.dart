@@ -6,13 +6,14 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/forum_controller.dart';
 import 'package:kota/data/dummy.dart';
+import 'package:kota/model/forum_model.dart';
 import 'package:kota/views/forum/widgets/forum_body.dart';
 import 'package:kota/views/forum/widgets/reply_tile.dart';
 import 'package:kota/views/home/widgets/top_bar.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class ForumDetailScreen extends StatelessWidget {
-  final Map<String, dynamic> item;
+  final ForumData item;
 
   ForumDetailScreen({Key? key, required this.item}) : super(key: key);
 
@@ -21,10 +22,10 @@ class ForumDetailScreen extends StatelessWidget {
     final ForumController controller = Get.find<ForumController>();
     final List<String> comments = DummyData.comments;
 
-    final imageUrl = item['image'];
-    final title = item['title'];
-    final description = item['description'];
-    final userName = item['name'];
+    final imageUrl = item.images;
+    final title = item.title;
+    final description = item.content;
+    final userName = '${item.firstName}${item.lastName}';
 
     return SafeArea(
       child: Scaffold(
@@ -80,13 +81,13 @@ class ForumDetailScreen extends StatelessWidget {
                         title: title ?? '',
                         description: description ?? '',
                         imageUrl:
-                            imageUrl ??
+                            imageUrl.toString() ??
                             'assets/images/nurse-patient-wheelchair.jpg',
-                        likes: item['likes'] ?? "0",
-                        comments: item['comments'] ?? "0",
-                        isLiked: item['isLiked'] ?? false, // Add this flag in your data
+                        likes: item.likeCount ?? "0",
+                        comments: item.commentCount ?? "0",
+                        // isLiked: item['isLiked'] ?? false, // Add this flag in your data
   onLikeToggle: () {
-    controller.toggleLike(item['id']); // Use proper ID or index
+    // controller.toggleLike(item['id']); // Use proper ID or index
   },
                       ),
                     ),

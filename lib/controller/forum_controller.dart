@@ -2,28 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kota/apiServices/forum_api_services.dart';
 import 'package:kota/data/dummy.dart';
+import 'package:kota/model/forum_model.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ForumController extends GetxController {
   final isLoading = true.obs;
-  final forumItems = <Map<String, dynamic>>[].obs;
   final selectedImages = <XFile>[].obs;
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
+  final forumModel = Rxn<ForumModel>();
+  final threadsList = <ForumData>[].obs;
+  final ForumApiService _forumApiService = ForumApiService();
 
   @override
   void onInit() {
     super.onInit();
-    fetchRecommendedItems();
+    loadThreads();
   }
 
-  Future<void> fetchRecommendedItems() async {
+  Future<void> loadThreads() async {
+  try {
     isLoading.value = true;
-    
-    await Future.delayed(const Duration(seconds: 1)); 
-    forumItems.value = DummyData.forumItems;
+    threadsList.value = await _forumApiService.fetchThreads();
+  } catch (e) {
+    print('Error loading threads: $e');
+  } finally {
     isLoading.value = false;
   }
+}
 
   void addImage(XFile image) {
     selectedImages.add(image);
@@ -41,27 +47,27 @@ class ForumController extends GetxController {
     return selectedImages.map((img) => img.path).toList();
   }
 
-  void toggleLike(String itemId) async {
-  final index = forumItems.indexWhere((item) => item['id'] == itemId);
-  if (index == -1) return;
+//   void toggleLike(String itemId) async {
+//   final index = threadsList.indexWhere((item) => item.id == itemId);
+//   if (index == -1) return;
 
-  final currentItem = forumItems[index];
-  final isLiked = currentItem['isLiked'] ?? false;
-  final currentLikes = int.tryParse(currentItem['likes'] ?? '0') ?? 0;
+//   final currentItem = threadsList[index];
+//   // final isLiked = currentItem['isLiked'] ?? false;
+//   // final currentLikes = int.tryParse(currentItem['likes'] ?? '0') ?? 0;
 
-  // Update locally
-  forumItems[index] = {
-    ...currentItem,
-    'isLiked': !isLiked,
-    'likes': (!isLiked ? (currentLikes + 1) : (currentLikes - 1)).toString()
-  };
+//   // // Update locally
+//   // forumItems[index] = {
+//   //   ...currentItem,
+//   //   'isLiked': !isLiked,
+//   //   'likes': (!isLiked ? (currentLikes + 1) : (currentLikes - 1)).toString()
+//   // };
 
-  update(); // optional if using GetBuilder
+//   update(); // optional if using GetBuilder
 
-  // Mock API call
-  await Future.delayed(Duration(milliseconds: 200));
-  print(isLiked ? 'Unliked post $itemId' : 'Liked post $itemId');
-}
+//   // Mock API call
+//   await Future.delayed(Duration(milliseconds: 200));
+//   print(isLiked ? 'Unliked post $itemId' : 'Liked post $itemId');
+// }
 
  Future<void> createDiscussion() async {
     final title = titleController.text.trim();

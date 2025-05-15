@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kota/apiServices/favorite_api_services.dart';
 import 'package:kota/data/dummy.dart';
@@ -9,6 +10,8 @@ class FavouriteController extends GetxController {
   Rx<DateTime?> selectedDate = Rx<DateTime?>(null);
   Rx<String?> selectedCategory = Rx<String?>(null);
   final isLoading = true.obs;
+  final searchQuery = ''.obs;
+  final TextEditingController searchController = TextEditingController();
 
   final allItems = <Map<String, dynamic>>[].obs; // Stores all news + events
   final filteredList = <Map<String, dynamic>>[].obs;
@@ -67,31 +70,49 @@ class FavouriteController extends GetxController {
     }
   }
 
-  void applyFilters() {
-    filteredList.value = allItems.where((item) {
-      bool matchesDate = true;
-      bool matchesCategory = true;
+ void applyFilters() {
+  filteredList.value = allItems.where((item) {
+    bool matchesDate = true;
+    bool matchesCategory = true;
+    bool matchesSearch = true;
 
-      if (selectedDate.value != null) {
-        DateTime itemDate = item['date'];
-        matchesDate = itemDate.year == selectedDate.value!.year &&
-                      itemDate.month == selectedDate.value!.month &&
-                      itemDate.day == selectedDate.value!.day;
-      }
+    // Filter by date
+    if (selectedDate.value != null) {
+      DateTime itemDate = item['date'];
+      matchesDate = itemDate.year == selectedDate.value!.year &&
+          itemDate.month == selectedDate.value!.month &&
+          itemDate.day == selectedDate.value!.day;
+    }
 
-      if (selectedCategory.value != null && selectedCategory.value != 'None') {
-        matchesCategory = item['badge'] == selectedCategory.value;
-      }
+    // Filter by category
+    final itemBadge = (item['badge'] ?? '').toString().toLowerCase().trim();
+    final selectedBadge = (selectedCategory.value ?? '').toLowerCase().trim();
+    if (selectedCategory.value != null && selectedBadge.isNotEmpty && selectedBadge != 'none') {
+      matchesCategory = itemBadge == selectedBadge;
+    }
 
-      return matchesDate && matchesCategory;
-    }).toList();
-  }
+    // Filter by search
+    if (searchQuery.value.isNotEmpty) {
+      final query = searchQuery.value.toLowerCase();
+      final title = (item['title'] ?? '').toString().toLowerCase();
+      matchesSearch = title.contains(query);
+    }
+
+    return matchesDate && matchesCategory && matchesSearch;
+  }).toList();
+}
+
+void setSearchQuery(String query) {
+  searchQuery.value = query;
+  applyFilters();
+}
 
   void resetFilters() {
-    selectedDate.value = null;
-    selectedCategory.value = null;
-    filteredList.value = allItems;
-  }
+  selectedDate.value = null;
+  selectedCategory.value = null;
+  searchQuery.value = '';
+  filteredList.value = allItems;
+}
 
   void setSelectedDate(DateTime? date) {
     selectedDate.value = date;

@@ -73,7 +73,7 @@ class _ExecutivePageState extends State<ExecutivePage> {
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 2.w,
-              mainAxisExtent: 34.h,
+              mainAxisExtent: 35.h,
             ),
             itemBuilder: (context, index) {
               final executive = executives[index];

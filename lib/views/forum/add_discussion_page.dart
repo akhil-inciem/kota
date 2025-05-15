@@ -59,6 +59,7 @@ class NewDiscussionPage extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 7.w),
                 child: TextField(
+                  controller: _forumController.titleController,
                   maxLines: 2,
                   decoration: InputDecoration(
                     hintText: 'Enter title',
@@ -76,6 +77,7 @@ class NewDiscussionPage extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 7.w),
                 child: TextField(
                   maxLines: 10,
+                  controller: _forumController.descriptionController,
                   decoration: InputDecoration(
                     hintText: 'Type your question/queries here...',
                     hintStyle: TextStyle(fontSize: 16),

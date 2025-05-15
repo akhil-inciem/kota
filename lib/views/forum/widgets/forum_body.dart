@@ -9,7 +9,7 @@ class ForumPostBody extends StatefulWidget {
   final String imageUrl;
   final String likes;
   final String comments;
-  final bool isLiked;
+  // final bool isLiked;
   final VoidCallback onLikeToggle;
 
   const ForumPostBody({
@@ -19,7 +19,7 @@ class ForumPostBody extends StatefulWidget {
     required this.imageUrl,
     required this.likes,
     required this.comments,
-    required this.isLiked,
+    // required this.isLiked,
     required this.onLikeToggle,
   }) : super(key: key);
 
@@ -33,15 +33,15 @@ class _ForumPostBodyState extends State<ForumPostBody> {
   @override
   void initState() {
     super.initState();
-    _liked = widget.isLiked;
+    // _liked = widget.isLiked;
   }
 
-  void _handleLikeTap() {
-    setState(() {
-      _liked = !_liked;
-    });
-    widget.onLikeToggle();
-  }
+  // void _handleLikeTap() {
+  //   setState(() {
+  //     _liked = !_liked;
+  //   });
+  //   widget.onLikeToggle();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -67,9 +67,11 @@ class _ForumPostBodyState extends State<ForumPostBody> {
         Row(
           children: [
             GestureDetector(
-              onTap: _handleLikeTap,
+              // onTap: _handleLikeTap,
               child: Icon(Icons.favorite,
-                  size: 20, color: _liked ? Colors.red : Colors.grey),
+                  size: 20,
+                  //  color: _liked ? Colors.red : Colors.grey
+                   ),
             ),
             SizedBox(width: 4),
             Text(widget.likes, style: TextStyle(fontSize: 14)),

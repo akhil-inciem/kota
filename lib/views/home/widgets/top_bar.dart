@@ -60,8 +60,10 @@ class _TopBarState extends State<TopBar> {
     if (!showSearch)
       Expanded(
         child: (currentIndex == 0 && widget.title == null)
-            ? SvgPicture.asset('assets/images/KOTA_Logo.svg', width: 100)
-
+            ? Padding(
+              padding: EdgeInsets.symmetric(horizontal: 2.w),
+              child: Align(alignment: Alignment.centerLeft,child: SvgPicture.asset('assets/images/KOTA_Logo.svg', width: 100)),
+            )
             : Row(
                 children: [
                   InkWell(
@@ -81,7 +83,7 @@ class _TopBarState extends State<TopBar> {
                 ],
               ),
       ),
-    Spacer(),
+    // Spacer(),
     // Search Icon
     if (widget.isEvent)
   InkWell(

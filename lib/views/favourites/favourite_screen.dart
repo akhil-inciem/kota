@@ -47,7 +47,10 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
         SizedBox(height: 0.5.h),
         Row(
           children: [
-            const Expanded(child: CustomSearchBar()),
+             Expanded(child: CustomSearchBar(
+              controller: favController.searchController,
+              onChanged: (value) => favController.setSearchQuery(value),
+            )),
             // Filter button
             InkWell(
               onTap: openFilterBottomSheet,
