@@ -51,6 +51,7 @@ class _SearchHeaderState extends State<SearchHeader> {
           child: Padding(
             padding: EdgeInsets.only(right: 1.w),
             child: TextField(
+              autofocus: false,
               controller: _controller,
               onChanged: (value) {
                 widget.onSearch(value);

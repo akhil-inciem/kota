@@ -28,6 +28,8 @@ class FavoriteList extends StatelessWidget {
     return Obx(() {
       if (favouriteController.isLoading.value) {
         return const ListShimmer(); // Show shimmer while loading
+      }else if(favouriteController.filteredList.isEmpty){
+        return Center(child: Text("No Favorites Available",style: TextStyle(fontSize: 18, color: Colors.black),));
       }
       final items = favouriteController.filteredList;
       return ListView.builder(
@@ -141,9 +143,9 @@ class FavoriteList extends StatelessWidget {
                             borderRadius: BorderRadius.circular(15),
                             color: Colors.grey.shade300,
                           ),
-                          child: const Image(
-                            image: AssetImage(
-                              'assets/images/recommend_tile.jpg',
+                          child:  Image(
+                            image: NetworkImage(
+                              item['image'],
                             ),
                             fit: BoxFit.fill,
                           ),

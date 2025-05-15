@@ -33,7 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: 4.h),
         TopBar(),
         SizedBox(height: 0.5.h),
         CustomSearchBar(

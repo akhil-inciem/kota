@@ -34,6 +34,7 @@ class UpdateController extends GetxController {
     try {
       isLoadingUpdates.value = true;
       final result = await _apiService.fetchUpdates();
+      final memberShip = await _apiService.fetchMembership();
       updatesModel.value = result;
 
       _processUpdates(result);

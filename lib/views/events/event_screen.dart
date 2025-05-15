@@ -39,7 +39,6 @@ class EventScreen extends StatelessWidget {
         children: [
           Column(
             children: [
-              SizedBox(height: 4.h),
               TopBar(
                 isEvent: true,
               ),

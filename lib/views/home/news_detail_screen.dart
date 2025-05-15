@@ -35,19 +35,38 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
         body: Stack(
           children: [
             // Background Image
-            Container(
-              height: 40.h, // Adjust as needed
-              width: double.infinity,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image:
-                      imageUrl != null
-                          ? NetworkImage(imageUrl)
-                          : const AssetImage('assets/images/Group 315.png')
-                              as ImageProvider,
-                  fit: BoxFit.cover,
+            Stack(
+              children: [
+                Container(
+                  height: 40.h,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image:
+                          imageUrl != null
+                              ? NetworkImage(imageUrl)
+                              : const AssetImage('assets/images/Group 315.png')
+                                  as ImageProvider,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
-              ),
+                Container(
+                  height: 40.h,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.black.withOpacity(0.8), // Top overlay
+                        Colors.transparent, // Middle (transparent)
+                        Colors.transparent, // Bottom overlay
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                  ),
+                ),
+              ],
             ),
 
             // Draggable Scrollable Sheet
@@ -147,7 +166,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                   top: 1.h,
                   left: 0,
                   right: 10,
-                  child: TopBar(title: "", onTap: () => Get.back()),
+                  child: TopBar(title: "", onTap: () => Get.back(),iconColor: Colors.white,),
                 );
               },
             ),

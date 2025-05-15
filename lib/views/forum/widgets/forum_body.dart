@@ -3,23 +3,24 @@ import 'package:kota/constants/colors.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:share_plus/share_plus.dart';
 
+import 'package:flutter/material.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
 class ForumPostBody extends StatefulWidget {
   final String title;
   final String description;
-  final String imageUrl;
+  final List<String> imageUrls;
   final String likes;
   final String comments;
-  // final bool isLiked;
   final VoidCallback onLikeToggle;
 
   const ForumPostBody({
     Key? key,
     required this.title,
     required this.description,
-    required this.imageUrl,
+    required this.imageUrls,
     required this.likes,
     required this.comments,
-    // required this.isLiked,
     required this.onLikeToggle,
   }) : super(key: key);
 
@@ -28,72 +29,104 @@ class ForumPostBody extends StatefulWidget {
 }
 
 class _ForumPostBodyState extends State<ForumPostBody> {
-  late bool _liked;
+  final PageController _pageController = PageController();
+  int _currentIndex = 0;
 
   @override
-  void initState() {
-    super.initState();
-    // _liked = widget.isLiked;
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
-
-  // void _handleLikeTap() {
-  //   setState(() {
-  //     _liked = !_liked;
-  //   });
-  //   widget.onLikeToggle();
-  // }
 
   @override
   Widget build(BuildContext context) {
+    final hasImages = widget.imageUrls.isNotEmpty;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(widget.title,
-            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14, color: Colors.black87)),
-        SizedBox(height: 12),
+            style: const TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 14,
+                color: Colors.black87)),
+        const SizedBox(height: 12),
         Text(widget.description,
-            style: TextStyle(color: Colors.black54, fontSize: 13, height: 1.5)),
-        SizedBox(height: 16),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: Image.asset(
-            widget.imageUrl,
-            height: 17.h,
-            width: double.infinity,
-            fit: BoxFit.cover,
+            style: const TextStyle(
+                color: Colors.black54, fontSize: 13, height: 1.5)),
+        const SizedBox(height: 16),
+
+        // Horizontal Image Scroll with Page Indicator
+        if (hasImages) ...[
+          SizedBox(
+            height: 50.h,
+            child: PageView.builder(
+              controller: _pageController,
+              itemCount: widget.imageUrls.length,
+              onPageChanged: (index) {
+                setState(() {
+                  _currentIndex = index;
+                });
+              },
+              itemBuilder: (_, index) {
+                return ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.network(
+                    widget.imageUrls[index],
+                    width: double.infinity,
+                    fit: BoxFit.fitWidth,
+                  ),
+                );
+              },
+            ),
           ),
-        ),
-        SizedBox(height: 16),
+          const SizedBox(height: 10),
+          Center(
+            child: SmoothPageIndicator(
+              controller: _pageController,
+              count: widget.imageUrls.length,
+              effect: WormEffect(
+                activeDotColor: AppColors.primaryButton,
+                dotHeight: 8,
+                dotWidth: 8,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+        ],
+
+        // Like, Comment, Share Row
         Row(
           children: [
             GestureDetector(
               // onTap: _handleLikeTap,
-              child: Icon(Icons.favorite,
-                  size: 20,
-                  //  color: _liked ? Colors.red : Colors.grey
-                   ),
+              child: const Icon(Icons.favorite, size: 20),
             ),
-            SizedBox(width: 4),
-            Text(widget.likes, style: TextStyle(fontSize: 14)),
-            SizedBox(width: 20),
-            Icon(Icons.comment, size: 20, color: Colors.grey),
-            SizedBox(width: 4),
-            Text('${widget.comments} Comments', style: TextStyle(fontSize: 14)),
-            SizedBox(width: 20),
-            GestureDetector(onTap: (){
-              final title = widget.title ?? 'Check this out!';
+            const SizedBox(width: 4),
+            Text(widget.likes, style: const TextStyle(fontSize: 14)),
+            const SizedBox(width: 20),
+            const Icon(Icons.comment, size: 20, color: Colors.grey),
+            const SizedBox(width: 4),
+            Text('${widget.comments} Comments',
+                style: const TextStyle(fontSize: 14)),
+            const SizedBox(width: 20),
+            GestureDetector(
+              onTap: () {
+                final title = widget.title;
                 final params = ShareParams(
                   title: title,
                   uri: Uri(scheme: 'https', host: 'crash.net'),
                 );
                 SharePlus.instance.share(params);
-            },child: Icon(Icons.share, size: 20, color: Colors.grey)),
-            SizedBox(width: 4),
-            Text('Share', style: TextStyle(fontSize: 14)),
+              },
+              child: const Icon(Icons.share, size: 20, color: Colors.grey),
+            ),
+            const SizedBox(width: 4),
+            const Text('Share', style: TextStyle(fontSize: 14)),
           ],
         ),
         SizedBox(height: 1.5.h),
-        Divider(),
+        const Divider(),
       ],
     );
   }

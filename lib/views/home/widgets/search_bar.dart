@@ -20,6 +20,7 @@ class CustomSearchBar extends StatelessWidget {
           // Expanded TextField
           Expanded(
             child: TextField(
+              autofocus: false,
               controller: controller,
               decoration: InputDecoration(
                 hintText: 'Search here',

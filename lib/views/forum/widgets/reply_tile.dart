@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:kota/model/forum_model.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
+import '../../../controller/forum_controller.dart';
+
 class ReplyTile extends StatelessWidget {
-  final String userName;
-  final String comment;
+  final Replies reply;
 
   const ReplyTile({
     Key? key,
-    required this.userName,
-    required this.comment,
+    required this.reply,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final ForumController _forumController = Get.find<ForumController>();
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 1.h),
       child: Column(
@@ -30,7 +33,7 @@ class ReplyTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    userName,
+                    '${reply.firstName}${reply.lastName}',
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
@@ -52,7 +55,7 @@ class ReplyTile extends StatelessWidget {
           const SizedBox(height: 12),
           // Comment text
           Text(
-            comment,
+            reply.content ?? "",
             style: const TextStyle(fontSize: 13,color: Colors.black54),
           ),
           const SizedBox(height: 8),
@@ -60,6 +63,81 @@ class ReplyTile extends StatelessWidget {
           Row(
             children: const [
               Icon(Icons.favorite_outline, size: 20, color: Colors.black), // or AppColors.primaryText
+              SizedBox(width: 20),
+              Icon(Icons.reply_sharp, size: 20, color: Colors.grey),
+              SizedBox(width: 4),
+              Text('Reply', style: TextStyle(fontSize: 14)),
+            ],
+          ),
+          SizedBox(height:1.h)
+,          Divider()
+        ],
+      ),
+    );
+  }
+}
+class CommentTile extends StatelessWidget {
+  final Comments comment;
+
+  const CommentTile({
+    Key? key,
+    required this.comment,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+final ForumController _forumController = Get.find<ForumController>();
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 1.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Profile & Name
+          Row(
+            children: [
+              const CircleAvatar(
+                radius: 20,
+                backgroundImage: NetworkImage('https://i.pravatar.cc/300'),
+              ),
+              SizedBox(width: 10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${comment.firstName}${comment.lastName}',
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const Text(
+                    'KOTA Member',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w300,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          // Comment text
+          Text(
+            comment.content ?? '',
+            style: const TextStyle(fontSize: 13,color: Colors.black54),
+          ),
+          const SizedBox(height: 8),
+          // Actions Row
+          Row(
+            children: [
+              GestureDetector(onTap: (){
+                _forumController.likeComment(comment.id ?? '');
+              },child: Icon(Icons.favorite_outline, size: 20, color: Colors.black)),
+              SizedBox(width: 1.w,), 
+              Text(comment.likeCount ?? ''),
               SizedBox(width: 20),
               Icon(Icons.reply_sharp, size: 20, color: Colors.grey),
               SizedBox(width: 4),

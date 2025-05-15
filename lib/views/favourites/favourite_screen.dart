@@ -42,7 +42,6 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: 4.h),
         TopBar(),
         SizedBox(height: 0.5.h),
         Row(
@@ -125,7 +124,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                       Divider(color: Colors.grey.shade200, thickness: 1),
                       SizedBox(height: 1.h),
                       SizedBox(
-                        height: 64.h,
+                        height: 62.h,
                         child:
                            FavoriteList(),
                       ),

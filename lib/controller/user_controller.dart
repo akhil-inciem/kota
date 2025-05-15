@@ -9,11 +9,17 @@ class UserController extends GetxController {
   var isLoading = false.obs;
   var error = ''.obs;
   
-  Future<void> loadUserProfile(String userId) async {
+  @override
+  void onInit() {
+    super.onInit();
+    loadUserProfile(); // Automatically call the API on controller init
+  }
+
+  Future<void> loadUserProfile() async {
     isLoading.value = true;
     error.value = '';
     try {
-      final response = await _apiService.fetchUserProfile(userId);
+      final response = await _apiService.fetchUserProfile();
       user.value = response; 
     } catch (e) {
       error.value = e.toString();

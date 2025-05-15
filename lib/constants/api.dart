@@ -13,16 +13,16 @@ class ApiEndpoints {
   // Thread APIs
   static const String createThread = '$baseUrl/forums/createThread';
   static const String getAllThreads = '$baseUrl/forums/getAllThreads';
-  static const String getThreadDetails = '$baseUrl/forums/getThreadDetails/{id}';
+  static const String getThreadDetails = '$baseUrl/forums/getThreadDetails';
   static const String likeThread = '$baseUrl/forums/likeThread/{id}';
 
   // Comment APIs
-  static const String createComment = '$baseUrl/forums/createComment/{id}';
-  static const String likeComment = '$baseUrl/forums/likeComment/{id}';
+  static const String createComment = '$baseUrl/forums/createComment/';
+  static const String likeComment = '$baseUrl/forums/likeComment/';
 
   // Reply APIs
-  static const String createCommentReply = '$baseUrl/forums/createCmtReply/{id}';
-  static const String likeReply = '$baseUrl/forums/likeReply/{id}';
+  static const String createCommentReply = '$baseUrl/forums/createCmtReply/';
+  static const String likeReply = '$baseUrl/forums/likeReply/';
 
   // News
   static const String getNews = '$baseUrl/news/get-all-news';

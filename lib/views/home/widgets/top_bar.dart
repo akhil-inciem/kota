@@ -137,8 +137,9 @@ Positioned(
         child: SizedBox(
   height: 5.h, // Reduced height
   child: TextField(
+    
     controller: searchController,
-    autofocus: true,
+    autofocus: false,
     decoration: InputDecoration(
       hintText: 'Search here',
       filled: true,

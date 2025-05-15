@@ -29,7 +29,6 @@ class _ForumScreenState extends State<ForumScreen> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: 4.h),
         TopBar(),
         SizedBox(height: 0.5.h),
         CustomSearchBar(),
@@ -75,12 +74,15 @@ class _ForumScreenState extends State<ForumScreen> {
                                       color: Color(0xFF0A57C9),
                                     ),
                                     child: Center(
-                                      child: Text(
-                                        "20",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
-                                        ),
+                                      child: Obx(() {
+                                          return Text(
+                                            forumController.threadsList.length.toString(),
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12,
+                                            ),
+                                          );
+                                        }
                                       ),
                                     ),
                                   ),

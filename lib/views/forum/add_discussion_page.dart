@@ -59,6 +59,7 @@ class NewDiscussionPage extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 7.w),
                 child: TextField(
+                  autofocus: false,
                   controller: _forumController.titleController,
                   maxLines: 2,
                   decoration: InputDecoration(
@@ -76,6 +77,7 @@ class NewDiscussionPage extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 7.w),
                 child: TextField(
+                  autofocus: false,
                   maxLines: 10,
                   controller: _forumController.descriptionController,
                   decoration: InputDecoration(

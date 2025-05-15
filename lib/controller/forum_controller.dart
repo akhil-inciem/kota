@@ -10,9 +10,17 @@ class ForumController extends GetxController {
   final selectedImages = <XFile>[].obs;
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
+  RxString selectedThreadId = ''.obs;
   final forumModel = Rxn<ForumModel>();
   final threadsList = <ForumData>[].obs;
+  final Rx<ForumData> singleThread = ForumData().obs;
   final ForumApiService _forumApiService = ForumApiService();
+  final TextEditingController commentController = TextEditingController();
+
+  RxString replyingToId = ''.obs; // ID of comment/reply being replied to
+  RxBool isReplying = false.obs;
+  RxString replyingToName = ''.obs; // Optional: To show UI hint
+
 
   @override
   void onInit() {
@@ -28,6 +36,17 @@ class ForumController extends GetxController {
     print('Error loading threads: $e');
   } finally {
     isLoading.value = false;
+  }
+}
+
+Future<void> loadSingleThread(String id) async {
+  try {
+    // Clear previous data so UI can show loading
+    singleThread.value = ForumData(); 
+    final data = await _forumApiService.fetchSingleThread(id);
+    singleThread.value = data;
+  } catch (e) {
+    print('Error loading threads: $e');
   }
 }
 
@@ -47,27 +66,58 @@ class ForumController extends GetxController {
     return selectedImages.map((img) => img.path).toList();
   }
 
-//   void toggleLike(String itemId) async {
-//   final index = threadsList.indexWhere((item) => item.id == itemId);
-//   if (index == -1) return;
+  void startReply({required String id, required String name}) {
+    replyingToId.value = id;
+    replyingToName.value = name;
+    isReplying.value = true;
+  }
 
-//   final currentItem = threadsList[index];
-//   // final isLiked = currentItem['isLiked'] ?? false;
-//   // final currentLikes = int.tryParse(currentItem['likes'] ?? '0') ?? 0;
+  void cancelReply() {
+    isReplying.value = false;
+    replyingToId.value = '';
+    replyingToName.value = '';
+    commentController.clear();
+  }
 
-//   // // Update locally
-//   // forumItems[index] = {
-//   //   ...currentItem,
-//   //   'isLiked': !isLiked,
-//   //   'likes': (!isLiked ? (currentLikes + 1) : (currentLikes - 1)).toString()
-//   // };
+  Future<void> postCommentOrReply() async {
+    final text = commentController.text.trim();
+    if (text.isEmpty) return;
 
-//   update(); // optional if using GetBuilder
+    if (isReplying.value && replyingToId.isNotEmpty) {
+      // Call reply API
+      await replyToComment(replyingToId.value, text);
+    } else {
+      // Call comment API
+      await postComment(selectedThreadId.value);
+    }
 
-//   // Mock API call
-//   await Future.delayed(Duration(milliseconds: 200));
-//   print(isLiked ? 'Unliked post $itemId' : 'Liked post $itemId');
-// }
+    cancelReply();
+    loadSingleThread(selectedThreadId.value); // Reload thread
+  }
+
+  Future<void> postComment(String threadID) async {
+    try {
+      await ForumApiService.postComment(threadId: threadID, comment: commentController.text
+
+      );
+      await loadSingleThread(threadID);
+    } catch (e) {
+      Get.snackbar("Error", e.toString());
+    }
+  }
+
+  Future<void> likeComment(String commentID) async {
+    try {
+      await ForumApiService.likeComment(commentID);
+      await loadSingleThread(selectedThreadId.value);
+    } catch (e) {
+      Get.snackbar("Error", e.toString());
+    }
+  }
+
+  Future<void> replyToComment(String commentId, String content) async {
+    // Call reply API
+  }
 
  Future<void> createDiscussion() async {
     final title = titleController.text.trim();
@@ -77,14 +127,17 @@ class ForumController extends GetxController {
       Get.snackbar("Error", "Title and description cannot be empty");
       return;
     }
-
     try {
       await ForumApiService.postDiscussion(
         title: title,
         description: description,
         images: selectedImages,
       );
-      Get.back(); // Navigate back or show success message
+      await loadThreads();
+      titleController.clear();
+      descriptionController.clear();
+      selectedImages.clear();
+      Get.back();
     } catch (e) {
       Get.snackbar("Error", e.toString());
     }

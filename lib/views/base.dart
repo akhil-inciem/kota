@@ -49,45 +49,32 @@ class _BaseScreenState extends State<BaseScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      backgroundColor: AppColors.primaryBackground,
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: (index) {
-          homeController.index.value = index;
-          homeController.searchController.clear();
-          Get.find<UpdateController>().clearSearch();
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        backgroundColor: AppColors.primaryBackground,
+        body: PageView(
+  controller: _pageController,
+  physics: const NeverScrollableScrollPhysics(), // Disable swipe
+  onPageChanged: (index) {
+    homeController.index.value = index;
+    homeController.searchController.clear();
+    Get.find<UpdateController>().clearSearch();
+  },
+  children: List.generate(_pages.length, (index) {
+    return _pages[index]; // No need for animation if swipe is disabled
+  }),
+),
 
-        },
-        children: List.generate(_pages.length, (index) {
-          return AnimatedBuilder(
-            animation: _pageController,
-            builder: (context, child) {
-              double page = _pageController.page ?? 0.0;
-              double opacity = (1 - (page - index).abs()).clamp(0.0, 1.0);
-
-              double scale = (1 - (page - index).abs() * 0.2).clamp(0.8, 1.0);
-              return Opacity(
-                opacity: opacity,
-                child: Transform.scale(
-                  scale: scale,
-                  child: child,
-                ),
-              );
-            },
-            child: _pages[index],
-          );
-        }),
+        bottomNavigationBar: Obx(() => CustomBottomNavBar(
+          currentIndex: homeController.index.value,
+          onTap: (index) {
+            // Update the index when bottom navigation is tapped
+            homeController.index.value = index;
+          _pageController.jumpToPage(index);
+          },
+        )),
       ),
-      bottomNavigationBar: Obx(() => CustomBottomNavBar(
-        currentIndex: homeController.index.value,
-        onTap: (index) {
-          // Update the index when bottom navigation is tapped
-          homeController.index.value = index;
-        _pageController.jumpToPage(index);
-        },
-      )),
     );
   }
 }

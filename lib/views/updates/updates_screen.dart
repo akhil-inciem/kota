@@ -31,7 +31,6 @@ class UpdatesScreen extends StatelessWidget {
 
       return Column(
         children: [
-          SizedBox(height: 4.h),
           TopBar(),
           SizedBox(height: 0.5.h),
           CustomSearchBar(
@@ -99,41 +98,48 @@ class UpdatesScreen extends StatelessWidget {
 
                           // Notification List
                           Expanded(
-                            child: SingleChildScrollView(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Filtered Today Section (After Search)
-                                  if (filteredTodayList.isNotEmpty) ...[
-                                    sectionHeader("Today"),
-                                    ...filteredTodayList.map(
-                                      (item) => NotificationTile(
-                                        item: {
-                                          'title': item['title'],
-                                          'description': item['description'],
-                                          'date': item['date'],
-                                        },
-                                      ),
-                                    ),
-                                  ],
+  child: controller.isLoadingUpdates.value
+      ? const Center(child: CircularProgressIndicator())
+      : (filteredTodayList.isEmpty && filteredOlderList.isEmpty)
+          ? const Center(
+              child: Text(
+                "No notifications found",
+                style: TextStyle(fontSize: 18, color: Colors.black),
+              ),
+            )
+          : SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (filteredTodayList.isNotEmpty) ...[
+                    sectionHeader("Today"),
+                    ...filteredTodayList.map(
+                      (item) => NotificationTile(
+                        item: {
+                          'title': item['title'],
+                          'description': item['description'],
+                          'date': item['date'],
+                        },
+                      ),
+                    ),
+                  ],
+                  if (filteredOlderList.isNotEmpty) ...[
+                    sectionHeader("Older"),
+                    ...filteredOlderList.map(
+                      (item) => NotificationTile(
+                        item: {
+                          'title': item['title'],
+                          'description': item['description'],
+                          'date': item['date'],
+                        },
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+)
 
-                                  // Filtered Older Section (After Search)
-                                  if (filteredOlderList.isNotEmpty) ...[
-                                    sectionHeader("Older"),
-                                    ...filteredOlderList.map(
-                                      (item) => NotificationTile(
-                                        item: {
-                                          'title': item['title'],
-                                          'description': item['description'],
-                                          'date': item['date'],
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ],
-                              ),
-                            ),
-                          ),
                         ],
                       ),
             ),
