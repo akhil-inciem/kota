@@ -10,8 +10,8 @@ class AuthApiService {
       final response = await _dio.post(
         ApiEndpoints.login,
         data: {
-          'email': 'athiathi125@gmail.com',
-          'member_password': 'Devu@2000',
+          'email': email,
+          'member_password': password,
         },
         options: Options(
         contentType: Headers.formUrlEncodedContentType, // Sets content type to x-www-form-urlencoded

@@ -17,10 +17,12 @@ class ForumController extends GetxController {
   final ForumApiService _forumApiService = ForumApiService();
   final TextEditingController commentController = TextEditingController();
 
-  RxString replyingToId = ''.obs; // ID of comment/reply being replied to
-  RxBool isReplying = false.obs;
-  RxString replyingToName = ''.obs; // Optional: To show UI hint
+  final isReplying = false.obs;
+  final replyingToId = ''.obs;
+  // Focus node for controlling keyboard focus
+  final FocusNode commentFocusNode = FocusNode();
 
+  RxString replyingToName = ''.obs; // Optional: To show UI hint
 
   @override
   void onInit() {
@@ -29,26 +31,24 @@ class ForumController extends GetxController {
   }
 
   Future<void> loadThreads() async {
-  try {
-    isLoading.value = true;
-    threadsList.value = await _forumApiService.fetchThreads();
-  } catch (e) {
-    print('Error loading threads: $e');
-  } finally {
-    isLoading.value = false;
+    try {
+      isLoading.value = true;
+      threadsList.value = await _forumApiService.fetchThreads();
+    } catch (e) {
+      print('Error loading threads: $e');
+    } finally {
+      isLoading.value = false;
+    }
   }
-}
 
-Future<void> loadSingleThread(String id) async {
-  try {
-    // Clear previous data so UI can show loading
-    singleThread.value = ForumData(); 
-    final data = await _forumApiService.fetchSingleThread(id);
-    singleThread.value = data;
-  } catch (e) {
-    print('Error loading threads: $e');
+  Future<void> loadSingleThread(String id) async {
+    try {
+      final data = await _forumApiService.fetchSingleThread(id);
+      singleThread.value = data;
+    } catch (e) {
+      print('Error loading threads: $e');
+    }
   }
-}
 
   void addImage(XFile image) {
     selectedImages.add(image);
@@ -66,16 +66,15 @@ Future<void> loadSingleThread(String id) async {
     return selectedImages.map((img) => img.path).toList();
   }
 
-  void startReply({required String id, required String name}) {
+  void startReply({required String id}) {
     replyingToId.value = id;
-    replyingToName.value = name;
     isReplying.value = true;
+    commentFocusNode.requestFocus();
   }
 
   void cancelReply() {
     isReplying.value = false;
     replyingToId.value = '';
-    replyingToName.value = '';
     commentController.clear();
   }
 
@@ -84,23 +83,22 @@ Future<void> loadSingleThread(String id) async {
     if (text.isEmpty) return;
 
     if (isReplying.value && replyingToId.isNotEmpty) {
-      // Call reply API
       await replyToComment(replyingToId.value, text);
     } else {
       // Call comment API
-      await postComment(selectedThreadId.value);
+      await postComment();
     }
-
     cancelReply();
     loadSingleThread(selectedThreadId.value); // Reload thread
   }
 
-  Future<void> postComment(String threadID) async {
+  Future<void> postComment() async {
     try {
-      await ForumApiService.postComment(threadId: threadID, comment: commentController.text
-
+      await ForumApiService.postComment(
+        threadId: selectedThreadId.value,
+        comment: commentController.text,
       );
-      await loadSingleThread(threadID);
+      await loadSingleThread(selectedThreadId.value);
     } catch (e) {
       Get.snackbar("Error", e.toString());
     }
@@ -115,11 +113,40 @@ Future<void> loadSingleThread(String id) async {
     }
   }
 
-  Future<void> replyToComment(String commentId, String content) async {
-    // Call reply API
+  Future<void> likeThread([String? threadId]) async {
+  final id = threadId ?? selectedThreadId.value;
+  try {
+    await ForumApiService.likeThread(id);
+    await loadSingleThread(id);
+  } catch (e) {
+    Get.snackbar("Error", e.toString());
+  }
+}
+
+
+  Future<void> likeReply(String replyId) async {
+    try {
+      await ForumApiService.likeReply(replyId);
+      await loadSingleThread(selectedThreadId.value);
+    } catch (e) {
+      Get.snackbar("Error", e.toString());
+    }
   }
 
- Future<void> createDiscussion() async {
+  Future<void> replyToComment(String commentId, String content) async {
+    try {
+      await ForumApiService.postReply(
+        threadId: selectedThreadId.value,
+        commentId: commentId,
+        reply: content,
+      );
+      await loadSingleThread(selectedThreadId.value);
+    } catch (e) {
+      Get.snackbar("Error", e.toString());
+    }
+  }
+
+  Future<void> createDiscussion() async {
     final title = titleController.text.trim();
     final description = descriptionController.text.trim();
 

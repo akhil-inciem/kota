@@ -120,16 +120,16 @@ class CustomCalendar extends StatelessWidget {
                     ),
                   );
                 },
-                markerBuilder: (context, date, events) {
-                  if (date.day == 10) return _buildDot(Colors.purple);
-                  if (date.day == 13) return _buildDot(Colors.orange);
-                  if (date.day == 14) return _buildDot(Colors.green);
-                  if ([21, 28, 29].contains(date.day)) {
-                    return _buildDot(Colors.purple);
-                  }
-                  if (date.day == 22) return _buildDot(Colors.red);
-                  return null;
-                },
+                // markerBuilder: (context, date, events) {
+                //   if (date.day == 10) return _buildDot(Colors.purple);
+                //   if (date.day == 13) return _buildDot(Colors.orange);
+                //   if (date.day == 14) return _buildDot(Colors.green);
+                //   if ([21, 28, 29].contains(date.day)) {
+                //     return _buildDot(Colors.purple);
+                //   }
+                //   if (date.day == 22) return _buildDot(Colors.red);
+                //   return null;
+                // },
               ),
             ),
           ),

@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kota/model/profile_model.dart';
 import 'package:kota/views/drawer/drawer_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class ProfileHeader extends StatelessWidget {
-  const ProfileHeader({Key? key}) : super(key: key);
+  final User user;
+
+  const ProfileHeader({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,14 +26,14 @@ class ProfileHeader extends StatelessWidget {
       ),
       child: Stack(
         children: [
-           Positioned(
+          Positioned(
             right: 0,
             top: 8.h,
             bottom: 0,
             child: Opacity(
-              opacity: 0.8, // You can adjust this value (0.05 - 0.2 looks nice)
+              opacity: 0.8,
               child: Image.asset(
-                'assets/images/drawertop_bg.png', // <-- your background image
+                'assets/images/drawertop_bg.png',
                 width: 70.w,
                 fit: BoxFit.contain,
               ),
@@ -50,11 +56,10 @@ class ProfileHeader extends StatelessWidget {
                         fit: BoxFit.contain,
                       ),
                     ),
-
                     SizedBox(width: 4.w),
-                    Text(
+                    const Text(
                       "Profile",
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 18,
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -65,7 +70,6 @@ class ProfileHeader extends StatelessWidget {
               ],
             ),
           ),
-          // Avatar and Name at Bottom Left
           Positioned(
             bottom: 25,
             left: 30,
@@ -74,13 +78,14 @@ class ProfileHeader extends StatelessWidget {
               children: [
                 Column(
                   children: [
-                    const CircleAvatar(
+                    CircleAvatar(
                       radius: 30,
                       backgroundImage: NetworkImage(
-                        'https://i.pravatar.cc/300',
-                      ), // Replace with user's profile image
+                        user.photo?.isNotEmpty == true
+                            ? 'https://yourserver.com/${user.photo}'
+                            : 'https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=random&color=fff',
+                      ),
                     ),
-
                     Padding(
                       padding: const EdgeInsets.all(6.0),
                       child: Container(
@@ -93,7 +98,7 @@ class ProfileHeader extends StatelessWidget {
                             horizontal: 2.w,
                             vertical: 0.3.h,
                           ),
-                          child: Center(
+                          child: const Center(
                             child: Text(
                               "Edit",
                               style: TextStyle(
@@ -110,17 +115,17 @@ class ProfileHeader extends StatelessWidget {
                 const SizedBox(width: 15),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
-                      'John Alexander',
-                      style: TextStyle(
+                      '${user.firstName} ${user.lastName}',
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
                       ),
                     ),
-                    SizedBox(height: 4),
-                    Text(
+                    const SizedBox(height: 4),
+                    const Text(
                       'KOTA Member',
                       style: TextStyle(
                         fontSize: 14,

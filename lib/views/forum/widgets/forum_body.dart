@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:kota/constants/colors.dart';
+import 'package:kota/controller/forum_controller.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -12,6 +14,7 @@ class ForumPostBody extends StatefulWidget {
   final List<String> imageUrls;
   final String likes;
   final String comments;
+  final bool isLiked;
   final VoidCallback onLikeToggle;
 
   const ForumPostBody({
@@ -21,6 +24,7 @@ class ForumPostBody extends StatefulWidget {
     required this.imageUrls,
     required this.likes,
     required this.comments,
+    required this.isLiked,
     required this.onLikeToggle,
   }) : super(key: key);
 
@@ -30,6 +34,7 @@ class ForumPostBody extends StatefulWidget {
 
 class _ForumPostBodyState extends State<ForumPostBody> {
   final PageController _pageController = PageController();
+  final ForumController controller = Get.find<ForumController>();
   int _currentIndex = 0;
 
   @override
@@ -45,15 +50,23 @@ class _ForumPostBodyState extends State<ForumPostBody> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(widget.title,
-            style: const TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 14,
-                color: Colors.black87)),
+        Text(
+          widget.title,
+          style: const TextStyle(
+            fontWeight: FontWeight.w700,
+            fontSize: 14,
+            color: Colors.black87,
+          ),
+        ),
         const SizedBox(height: 12),
-        Text(widget.description,
-            style: const TextStyle(
-                color: Colors.black54, fontSize: 13, height: 1.5)),
+        Text(
+          widget.description,
+          style: const TextStyle(
+            color: Colors.black54,
+            fontSize: 13,
+            height: 1.5,
+          ),
+        ),
         const SizedBox(height: 16),
 
         // Horizontal Image Scroll with Page Indicator
@@ -99,16 +112,32 @@ class _ForumPostBodyState extends State<ForumPostBody> {
         Row(
           children: [
             GestureDetector(
-              // onTap: _handleLikeTap,
-              child: const Icon(Icons.favorite, size: 20),
-            ),
+  onTap: controller.likeThread,
+  child: Icon(
+    widget.isLiked ? Icons.favorite : Icons.favorite_border,
+    size: 20,
+    color: widget.isLiked ? Colors.red : Colors.black,
+  ),
+),
             const SizedBox(width: 4),
             Text(widget.likes, style: const TextStyle(fontSize: 14)),
             const SizedBox(width: 20),
-            const Icon(Icons.comment, size: 20, color: Colors.grey),
-            const SizedBox(width: 4),
-            Text('${widget.comments} Comments',
-                style: const TextStyle(fontSize: 14)),
+            GestureDetector(
+              onTap: (){
+                controller.cancelReply();
+              },
+              child: Row(
+                children: [
+                  const Icon(Icons.comment, size: 20, color: Colors.grey),
+                  const SizedBox(width: 4),
+              Text(
+                '${widget.comments} Comments',
+                style: const TextStyle(fontSize: 14),
+              ),
+                ],
+              ),
+            ),
+            
             const SizedBox(width: 20),
             GestureDetector(
               onTap: () {

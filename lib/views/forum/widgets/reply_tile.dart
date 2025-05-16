@@ -8,10 +8,7 @@ import '../../../controller/forum_controller.dart';
 class ReplyTile extends StatelessWidget {
   final Replies reply;
 
-  const ReplyTile({
-    Key? key,
-    required this.reply,
-  }) : super(key: key);
+  const ReplyTile({Key? key, required this.reply}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -56,37 +53,55 @@ class ReplyTile extends StatelessWidget {
           // Comment text
           Text(
             reply.content ?? "",
-            style: const TextStyle(fontSize: 13,color: Colors.black54),
+            style: const TextStyle(fontSize: 13, color: Colors.black54),
           ),
           const SizedBox(height: 8),
           // Actions Row
           Row(
-            children: const [
-              Icon(Icons.favorite_outline, size: 20, color: Colors.black), // or AppColors.primaryText
+            children: [
+              GestureDetector(
+                onTap: () {
+                  _forumController.likeReply(reply.id ?? '');
+                },
+                child: Icon(
+                  reply.isLiked! ? Icons.favorite : Icons.favorite_border,
+                  size: 20,
+                  color: reply.isLiked! ? Colors.red : Colors.black,
+                ),
+              ),
+              SizedBox(width: 1.w),
+              Text(reply.likeCount ?? ''),
               SizedBox(width: 20),
-              Icon(Icons.reply_sharp, size: 20, color: Colors.grey),
-              SizedBox(width: 4),
-              Text('Reply', style: TextStyle(fontSize: 14)),
+              GestureDetector(
+                onTap: () {
+                  _forumController.startReply(id: reply.commentId ?? '');
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.reply_sharp, size: 20, color: Colors.grey),
+                    SizedBox(width: 4),
+                    Text('Reply', style: TextStyle(fontSize: 14)),
+                  ],
+                ),
+              ),
             ],
           ),
-          SizedBox(height:1.h)
-,          Divider()
+          SizedBox(height: 1.h),
+          Divider(),
         ],
       ),
     );
   }
 }
+
 class CommentTile extends StatelessWidget {
   final Comments comment;
 
-  const CommentTile({
-    Key? key,
-    required this.comment,
-  }) : super(key: key);
+  const CommentTile({Key? key, required this.comment}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-final ForumController _forumController = Get.find<ForumController>();
+    final ForumController _forumController = Get.find<ForumController>();
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 1.h),
       child: Column(
@@ -127,25 +142,42 @@ final ForumController _forumController = Get.find<ForumController>();
           // Comment text
           Text(
             comment.content ?? '',
-            style: const TextStyle(fontSize: 13,color: Colors.black54),
+            style: const TextStyle(fontSize: 13, color: Colors.black54),
           ),
           const SizedBox(height: 8),
           // Actions Row
           Row(
             children: [
-              GestureDetector(onTap: (){
-                _forumController.likeComment(comment.id ?? '');
-              },child: Icon(Icons.favorite_outline, size: 20, color: Colors.black)),
-              SizedBox(width: 1.w,), 
+              GestureDetector(
+                onTap: () {
+                  _forumController.likeComment(comment.id ?? '');
+                },
+                child: Icon(
+                  comment.isLiked! ? Icons.favorite : Icons.favorite_border,
+                  size: 20,
+                  color: comment.isLiked! ? Colors.red : Colors.black,
+                ),
+              ),
+              SizedBox(width: 1.w),
               Text(comment.likeCount ?? ''),
               SizedBox(width: 20),
-              Icon(Icons.reply_sharp, size: 20, color: Colors.grey),
-              SizedBox(width: 4),
-              Text('Reply', style: TextStyle(fontSize: 14)),
+
+              GestureDetector(
+                onTap: () {
+                  _forumController.startReply(id: comment.id ?? '');
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.reply_sharp, size: 20, color: Colors.grey),
+                    SizedBox(width: 4),
+                    Text('Reply', style: TextStyle(fontSize: 14)),
+                  ],
+                ),
+              ),
             ],
           ),
-          SizedBox(height:1.h)
-,          Divider()
+          SizedBox(height: 1.h),
+          Divider(),
         ],
       ),
     );

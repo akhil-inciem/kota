@@ -70,20 +70,20 @@ class _TopBarState extends State<TopBar> {
                     onTap: widget.onTap ?? () => homeController.index.value = 0,
                     child: Image.asset(
                       widget.leadingIcon ?? 'assets/icons/backbutton.png',
-                      width: 24,
+                      width: 20,
                       height: 24,
                       color: widget.iconColor ?? AppColors.primaryButton,
                     ),
                   ),
-                  SizedBox(width: 8),
+                  SizedBox(width: 3),
                   Text(
                     widget.title ?? _getTitle(currentIndex),
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
       ),
-    // Spacer(),
+    Spacer(),
     // Search Icon
     if (widget.isEvent)
   InkWell(
@@ -94,7 +94,7 @@ class _TopBarState extends State<TopBar> {
         });
       },
       child: Padding(
-        padding: const EdgeInsets.only(right:8.0),
+        padding: const EdgeInsets.only(right:4.0),
         child: Container(
           padding: EdgeInsets.all(13.sp),
           decoration: BoxDecoration(
@@ -109,7 +109,7 @@ class _TopBarState extends State<TopBar> {
           ),
           child:
           Image.asset('assets/icons/search.png',width: 20,
-            height: 20,
+            height: 17.sp,
             color: widget.iconColor,),
         ),
       ),
@@ -137,7 +137,6 @@ Positioned(
         child: SizedBox(
   height: 5.h, // Reduced height
   child: TextField(
-    
     controller: searchController,
     autofocus: false,
     decoration: InputDecoration(

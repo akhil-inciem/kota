@@ -4,7 +4,7 @@ class ApiEndpoints {
 
   // Auth
   static const String login = '$baseUrl/news/login';
-  static const String register = 'https://kbaiota.org/index/memberSignUp';
+  // static const String register = 'https://kbaiota.org/index/memberSignUp';
   static const String logout = '$baseUrl/news/logout';
   static const String resetPassword = '$baseUrl/news/passwordReset';
   static const String guestSignIn = '$baseUrl/news/guest-signin';
@@ -14,7 +14,7 @@ class ApiEndpoints {
   static const String createThread = '$baseUrl/forums/createThread';
   static const String getAllThreads = '$baseUrl/forums/getAllThreads';
   static const String getThreadDetails = '$baseUrl/forums/getThreadDetails';
-  static const String likeThread = '$baseUrl/forums/likeThread/{id}';
+  static const String likeThread = '$baseUrl/forums/likeThread/';
 
   // Comment APIs
   static const String createComment = '$baseUrl/forums/createComment/';

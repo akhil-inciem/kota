@@ -33,25 +33,29 @@ class ForumData {
   String? firstName;
   String? lastName;
   String? photo;
-  String? likeCount;
-  String? commentCount;
+  int? likeCount;
+  int? commentCount;
+  String? contentSnippet;
   List<String>? images;
   List<RecentLike>? recentLikes;
+  bool? isLiked;
   List<Comments>? comments;
 
   ForumData({
     this.id,
-    this.title,
-    this.content,
-    this.createdAt,
-    this.firstName,
-    this.lastName,
-    this.photo,
-    this.likeCount,
-    this.commentCount,
-    this.images,
-    this.recentLikes,
-    this.comments,
+      this.title,
+      this.content,
+      this.createdAt,
+      this.firstName,
+      this.lastName,
+      this.photo,
+      this.likeCount,
+      this.commentCount,
+      this.contentSnippet,
+      this.images,
+      this.recentLikes,
+      this.isLiked,
+      this.comments
   });
 
   ForumData.fromJson(Map<String, dynamic> json) {
@@ -64,38 +68,44 @@ class ForumData {
     photo = json['photo'];
     likeCount = json['like_count'];
     commentCount = json['comment_count'];
-    images = json['images']?.cast<String>() ?? [];
-
-     if (json['recent_likes'] != null) {
-    recentLikes = <RecentLike>[];
-    json['recent_likes'].forEach((v) {
-      recentLikes!.add(RecentLike.fromJson(v));
-    });
-  }
-
+    contentSnippet = json['content_snippet'];
+    images = json['images'].cast<String>();
+    if (json['recent_likes'] != null) {
+      recentLikes = <RecentLike>[];
+      json['recent_likes'].forEach((v) {
+        recentLikes!.add(new RecentLike.fromJson(v));
+      });
+    }
+    isLiked = json['is_liked'];
     if (json['comments'] != null) {
       comments = <Comments>[];
       json['comments'].forEach((v) {
-        comments!.add(Comments.fromJson(v));
+        comments!.add(new Comments.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'title': title,
-      'content': content,
-      'created_at': createdAt,
-      'first_name': firstName,
-      'last_name': lastName,
-      'photo': photo,
-      'like_count': likeCount,
-      'comment_count': commentCount,
-      'images': images,
-      'recent_likes': recentLikes?.map((v) => v.toJson()).toList(),
-      'comments': comments?.map((v) => v.toJson()).toList(),
-    };
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['title'] = this.title;
+    data['content'] = this.content;
+    data['created_at'] = this.createdAt;
+    data['first_name'] = this.firstName;
+    data['last_name'] = this.lastName;
+    data['photo'] = this.photo;
+    data['like_count'] = this.likeCount;
+    data['comment_count'] = this.commentCount;
+    data['content_snippet'] = this.contentSnippet;
+    data['images'] = this.images;
+    if (this.recentLikes != null) {
+      data['recent_likes'] = this.recentLikes!.map((v) => v.toJson()).toList();
+    }
+    data['is_liked'] = this.isLiked;
+    if (this.comments != null) {
+      data['comments'] = this.comments!.map((v) => v.toJson()).toList();
+    }
+    return data;
   }
 }
 
@@ -107,18 +117,19 @@ class Comments {
   String? lastName;
   String? photo;
   String? likeCount;
+  bool? isLiked;
   List<Replies>? replies;
 
-  Comments({
-    this.id,
-    this.content,
-    this.createdAt,
-    this.firstName,
-    this.lastName,
-    this.photo,
-    this.likeCount,
-    this.replies,
-  });
+  Comments(
+      {this.id,
+      this.content,
+      this.createdAt,
+      this.firstName,
+      this.lastName,
+      this.photo,
+      this.likeCount,
+      this.isLiked,
+      this.replies});
 
   Comments.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -128,25 +139,29 @@ class Comments {
     lastName = json['last_name'];
     photo = json['photo'];
     likeCount = json['like_count'];
+    isLiked = json['is_liked'];
     if (json['replies'] != null) {
       replies = <Replies>[];
       json['replies'].forEach((v) {
-        replies!.add(Replies.fromJson(v));
+        replies!.add(new Replies.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'content': content,
-      'created_at': createdAt,
-      'first_name': firstName,
-      'last_name': lastName,
-      'photo': photo,
-      'like_count': likeCount,
-      'replies': replies?.map((v) => v.toJson()).toList(),
-    };
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['content'] = this.content;
+    data['created_at'] = this.createdAt;
+    data['first_name'] = this.firstName;
+    data['last_name'] = this.lastName;
+    data['photo'] = this.photo;
+    data['like_count'] = this.likeCount;
+    data['is_liked'] = this.isLiked;
+    if (this.replies != null) {
+      data['replies'] = this.replies!.map((v) => v.toJson()).toList();
+    }
+    return data;
   }
 }
 class RecentLike {
@@ -165,12 +180,12 @@ class RecentLike {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'first_name': firstName,
-      'last_name': lastName,
-      'photo': photo,
-    };
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['first_name'] = this.firstName;
+    data['last_name'] = this.lastName;
+    data['photo'] = this.photo;
+    return data;
   }
 }
 class Replies {
@@ -181,16 +196,19 @@ class Replies {
   String? lastName;
   String? photo;
   String? likeCount;
+  bool? isLiked;
+  String? commentId;
 
-  Replies({
-    this.id,
-    this.content,
-    this.createdAt,
-    this.firstName,
-    this.lastName,
-    this.photo,
-    this.likeCount,
-  });
+  Replies(
+      {this.id,
+      this.content,
+      this.createdAt,
+      this.firstName,
+      this.lastName,
+      this.photo,
+      this.likeCount,
+      this.isLiked,
+      this.commentId});
 
   Replies.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -200,17 +218,21 @@ class Replies {
     lastName = json['last_name'];
     photo = json['photo'];
     likeCount = json['like_count'];
+    isLiked = json['is_liked'];
+    commentId = json['comment_id'];
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'content': content,
-      'created_at': createdAt,
-      'first_name': firstName,
-      'last_name': lastName,
-      'photo': photo,
-      'like_count': likeCount,
-    };
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['content'] = this.content;
+    data['created_at'] = this.createdAt;
+    data['first_name'] = this.firstName;
+    data['last_name'] = this.lastName;
+    data['photo'] = this.photo;
+    data['like_count'] = this.likeCount;
+    data['is_liked'] = this.isLiked;
+    data['comment_id'] = this.commentId;
+    return data;
   }
 }

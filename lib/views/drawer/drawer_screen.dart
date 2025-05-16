@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:get/get.dart';
 import 'package:kota/constants/colors.dart';
+import 'package:kota/controller/user_controller.dart';
 import 'package:kota/views/drawer/contact_us_screen.dart';
 import 'package:kota/views/drawer/executives_screen.dart';
 import 'package:kota/views/drawer/find/find_screen.dart';
 import 'package:kota/views/drawer/mission_screen.dart';
+import 'package:kota/views/login/login_screen.dart';
 import 'package:kota/views/profile/profile_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -39,7 +41,9 @@ class DrawerPage extends StatelessWidget {
                     // Get.to(()=>FAQPage());
                   },),
                   DrawerItem(icon: Icons.send_outlined, title: 'Find',onPressed: ()=> Get.to(()=>FindScreen()),),
-                  DrawerItem(icon: Icons.logout, title: 'Logout'),
+                  DrawerItem(icon: Icons.logout, title: 'Logout',onPressed: (){
+                    Get.offAll(()=>LoginScreen());
+                  },),
                 ],
               ),
             ),
@@ -55,6 +59,8 @@ class DrawerHeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userController = Get.put(UserController());
+
     return Container(
       height: 30.h,
       width: double.infinity,
@@ -67,22 +73,22 @@ class DrawerHeaderWidget extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          // Faded Background Image
+          // Background image
           Positioned(
             right: 0,
             top: 25,
             bottom: 0,
             child: Opacity(
-              opacity: 0.8, // You can adjust this value (0.05 - 0.2 looks nice)
+              opacity: 0.8,
               child: Image.asset(
-                'assets/images/drawertop_bg.png', // <-- your background image
+                'assets/images/drawertop_bg.png',
                 width: 80.w,
                 fit: BoxFit.contain,
               ),
             ),
           ),
 
-          // Close Button at Top Right
+          // Close button
           Positioned(
             top: 20,
             right: 20,
@@ -94,55 +100,73 @@ class DrawerHeaderWidget extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(6.0),
                 child: InkWell(
-                  child: const Icon(Icons.close,size: 35, color: Colors.white),
+                  child: const Icon(Icons.close, size: 35, color: Colors.white),
                   onTap: () => Get.back(),
                 ),
               ),
             ),
           ),
 
-          // Avatar and Name at Bottom Left
+          // Avatar and user info
           Positioned(
             bottom: 25,
             left: 30,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const CircleAvatar(
-                  radius: 30,
-                  backgroundImage: NetworkImage('https://i.pravatar.cc/300'),
-                ),
-                const SizedBox(width: 15),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
-                      'John Alexander',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
+            child: Obx(() {
+              final user = userController.user.value;
+
+              if (user == null) {
+                return const SizedBox(
+                  height: 60,
+                  width: 60,
+                  child: SizedBox(),
+                );
+              }
+
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundImage: NetworkImage(
+                      user.photo?.isNotEmpty == true
+                          ? 'https://yourserver.com/${user.photo}'
+                          : 'https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=random&color=fff',
                     ),
-                    SizedBox(height: 4),
-                    Text(
-                      'KOTA Member',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w300,
-                        color: Colors.white70,
+                  ),
+                  const SizedBox(width: 15),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${user.firstName} ${user.lastName}',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                      const SizedBox(height: 4),
+                      Text(
+                       'KOTA Member',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w300,
+                          color: Colors.white70,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            }),
           ),
         ],
       ),
     );
   }
 }
+
+
 class DrawerItem extends StatelessWidget {
   final IconData icon;
   final String title;

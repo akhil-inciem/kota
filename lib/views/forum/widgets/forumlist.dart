@@ -119,81 +119,87 @@ class _ForumListState extends State<ForumList> {
                             children: [
                               // Left side: Likes and comments
                               Row(
-                                children: [
-                                  Icon(
-                                    Icons.favorite_border,
-                                    size: 16,
-                                    color: AppColors.primaryText,
-                                  ),
-                                  SizedBox(width: 4),
-                                  Text(
-                                    '${item.likeCount ?? 0}',
-                                    style: const TextStyle(fontSize: 12),
-                                  ),
-                                  SizedBox(width: 12),
-                                  Icon(
-                                    Icons.comment,
-                                    size: 16,
-                                    color: Colors.grey,
-                                  ),
-                                  SizedBox(width: 4),
-                                  Text(
-                                    '${item.commentCount ?? 0} Comments',
-                                    style: const TextStyle(fontSize: 12),
-                                  ),
-                                ],
-                              ),
+  children: [
+    GestureDetector(
+      onTap: () {
+        forumController.likeThread(item.id);
+      },
+      child: Icon(
+        item.isLiked! ? Icons.favorite : Icons.favorite_border,
+        size: 16,
+        color: item.isLiked! ? Colors.red : Colors.black,
+      ),
+    ),
+    const SizedBox(width: 4),
+    Text(
+      '${item.likeCount ?? 0}',
+      style: const TextStyle(fontSize: 12),
+    ),
+    const SizedBox(width: 12),
+    const Icon(
+      Icons.comment,
+      size: 16,
+      color: Colors.grey,
+    ),
+    const SizedBox(width: 4),
+    Text(
+      '${item.commentCount ?? 0} Comments',
+      style: const TextStyle(fontSize: 12),
+    ),
+  ],
+),
+
                               // Right side: Stacked avatars
-                              Stack(
-                                clipBehavior: Clip.none,
-                                children: [
-                                  CircleAvatar(
-                                    radius: 15,
-                                    backgroundImage: NetworkImage(
-                                      'https://i.pravatar.cc/300',
-                                    ),
-                                  ),
-                                  Positioned(
-                                    left: 14,
-                                    child: CircleAvatar(
-                                      radius: 15,
-                                      backgroundImage: NetworkImage(
-                                        'https://i.pravatar.cc/300',
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    left: 26,
-                                    child: CircleAvatar(
-                                      radius: 15,
-                                      backgroundImage: NetworkImage(
-                                        'https://i.pravatar.cc/300',
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    left: 38,
-                                    child: Container(
-                                      width: 30,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                        color: Colors.black,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          '10+',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 8,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              // Stack(
+                              //   clipBehavior: Clip.none,
+                              //   children: [
+                              //     CircleAvatar(
+                              //       radius: 15,
+                              //       backgroundImage: NetworkImage(
+                              //         'https://i.pravatar.cc/300',
+                              //       ),
+                              //     ),
+                              //     Positioned(
+                              //       left: 14,
+                              //       child: CircleAvatar(
+                              //         radius: 15,
+                              //         backgroundImage: NetworkImage(
+                              //           'https://i.pravatar.cc/300',
+                              //         ),
+                              //       ),
+                              //     ),
+                              //     Positioned(
+                              //       left: 26,
+                              //       child: CircleAvatar(
+                              //         radius: 15,
+                              //         backgroundImage: NetworkImage(
+                              //           'https://i.pravatar.cc/300',
+                              //         ),
+                              //       ),
+                              //     ),
+                              //     Positioned(
+                              //       left: 38,
+                              //       child: Container(
+                              //         width: 30,
+                              //         height: 30,
+                              //         decoration: BoxDecoration(
+                              //           color: Colors.black,
+                              //           shape: BoxShape.circle,
+                              //         ),
+                              //         child: Center(
+                              //           child: Text(
+                              //             '10+',
+                              //             style: TextStyle(
+                              //               color: Colors.white,
+                              //               fontSize: 8,
+                              //               fontWeight: FontWeight.bold,
+                              //             ),
+                              //           ),
+                              //         ),
+                              //       ),
+                              //     ),
+                              //   ],
+                              // ),
                             ],
                           ),
                         ),

@@ -42,7 +42,7 @@ class _ProfilePageState extends State<ProfilePage> {
           final user = userController.user.value!;
             return Column(
               children: [
-                const ProfileHeader(),
+                 ProfileHeader(user: user,),
                 Expanded(
                   child: SingleChildScrollView(
                     padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 2.h),

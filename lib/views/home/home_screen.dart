@@ -19,8 +19,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   
-  final HomeController homeController = Get.find<HomeController>();
-  final EventController eventController = Get.find<EventController>();
+  final HomeController homeController = Get.put(HomeController());
+  final EventController eventController = Get.put(EventController());
   @override
   void initState() {
     super.initState();
