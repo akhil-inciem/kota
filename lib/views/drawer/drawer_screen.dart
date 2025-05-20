@@ -5,6 +5,7 @@ import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/user_controller.dart';
 import 'package:kota/views/drawer/contact_us_screen.dart';
 import 'package:kota/views/drawer/executives_screen.dart';
+import 'package:kota/views/drawer/faq.screen.dart';
 import 'package:kota/views/drawer/find/find_screen.dart';
 import 'package:kota/views/drawer/mission_screen.dart';
 import 'package:kota/views/login/login_screen.dart';
@@ -21,7 +22,7 @@ class DrawerPage extends StatelessWidget {
         backgroundColor: AppColors.primaryBackground,
         body: Column(
           children: [
-            const DrawerHeaderWidget(),
+             DrawerHeaderWidget(),
             const SizedBox(height: 20),
             Expanded(
               child: ListView(
@@ -38,7 +39,7 @@ class DrawerPage extends StatelessWidget {
                     Get.to(()=>ContactUsScreen());
                   },),
                   DrawerItem(icon: Icons.help_outline, title: 'FAQ',onPressed: () {
-                    // Get.to(()=>FAQPage());
+                    Get.to(()=>FaqScreen());
                   },),
                   DrawerItem(icon: Icons.send_outlined, title: 'Find',onPressed: ()=> Get.to(()=>FindScreen()),),
                   DrawerItem(icon: Icons.logout, title: 'Logout',onPressed: (){
@@ -55,11 +56,12 @@ class DrawerPage extends StatelessWidget {
 }
 
 class DrawerHeaderWidget extends StatelessWidget {
-  const DrawerHeaderWidget({Key? key}) : super(key: key);
+  final userController = Get.put(UserController());
+   DrawerHeaderWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final userController = Get.put(UserController());
+    
 
     return Container(
       height: 30.h,
@@ -129,7 +131,7 @@ class DrawerHeaderWidget extends StatelessWidget {
                     radius: 30,
                     backgroundImage: NetworkImage(
                       user.photo?.isNotEmpty == true
-                          ? 'https://yourserver.com/${user.photo}'
+                          ? user.photo!
                           : 'https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=random&color=fff',
                     ),
                   ),

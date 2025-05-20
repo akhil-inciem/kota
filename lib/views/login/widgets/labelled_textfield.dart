@@ -44,7 +44,7 @@ class LabelledTextField extends StatelessWidget {
             child: Text(
               rightLabel!,
               style: TextStyle(
-                color: Colors.blue,
+                color: AppColors.primaryText,
                 fontWeight: FontWeight.w600,
                 fontSize: 12,
               ),

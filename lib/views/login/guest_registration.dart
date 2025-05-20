@@ -26,6 +26,13 @@ class _GuestRegistrationScreenState extends State<GuestRegistrationScreen>
   late AnimationController _controller;
   late Animation<Offset> _animation;
   final AuthController authController = Get.find<AuthController>();
+  final TextEditingController fullNameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
+  final TextEditingController phoneController =
+      TextEditingController(); // optional
 
   @override
   void initState() {
@@ -63,7 +70,7 @@ class _GuestRegistrationScreenState extends State<GuestRegistrationScreen>
             width: double.infinity,
             height: double.infinity,
             decoration: const BoxDecoration(
-               gradient: LinearGradient(
+              gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [Color(0xFF015FC9), Color(0xFF7001C5)],
@@ -79,7 +86,7 @@ class _GuestRegistrationScreenState extends State<GuestRegistrationScreen>
                 Center(
                   child: Padding(
                     padding: EdgeInsets.only(
-                      bottom: 55.h,
+                      bottom: 60.h,
                     ), // <-- Important padding!
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -105,7 +112,7 @@ class _GuestRegistrationScreenState extends State<GuestRegistrationScreen>
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                    height: 65.h, // control how much space it takes
+                    height: 72.h, // control how much space it takes
                     width: double.infinity,
                     padding: EdgeInsets.symmetric(
                       horizontal: 8.w,
@@ -122,24 +129,37 @@ class _GuestRegistrationScreenState extends State<GuestRegistrationScreen>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           LabelledTextField(
+                            controller: fullNameController,
                             label: 'Full Name',
                             hintText: 'Enter your full name',
                             icon: Icons.person,
+                            isPassword: false,
                           ),
                           SizedBox(height: 2.h),
                           LabelledTextField(
-                            label: 'User ID/ Name',
-                            hintText: 'Guest ID will generate here',
-                            isPassword: true,
+                            controller: emailController,
+                            label: 'Email',
+                            hintText: 'Enter your email',
+                            isPassword: false,
                           ),
                           SizedBox(height: 2.h),
                           LabelledTextField(
+                            controller: phoneController,
+                            label: 'Phone Number',
+                            hintText: 'Enter your phone number',
+                            isPassword: false,
+                          ),
+
+                          SizedBox(height: 2.h),
+                          LabelledTextField(
+                            controller: passwordController,
                             label: 'Password',
                             hintText: 'Enter your password',
                             isPassword: true,
                           ),
                           SizedBox(height: 2.h),
                           LabelledTextField(
+                            controller: confirmPasswordController,
                             label: 'Re-Enter Password',
                             hintText: 'Re-Enter your password',
                             isPassword: true,
@@ -150,10 +170,62 @@ class _GuestRegistrationScreenState extends State<GuestRegistrationScreen>
                             backgroundColor: AppColors.primaryButton,
                             textColor: Colors.white,
                             isGuestButton: false,
-                            onPressed: () {
-                              authController.loginAsGuest();
-                  Get.offAll(BaseScreen());
-                              // Guest sign in logic
+                            onPressed: () async {
+                              String fullName = fullNameController.text.trim();
+                              String email = emailController.text.trim();
+                              String phone = phoneController.text.trim();
+                              String password = passwordController.text.trim();
+                              String confirmPassword =
+                                  confirmPasswordController.text.trim();
+
+                              if (fullName.isEmpty ||
+                                  email.isEmpty ||
+                                  phone.isEmpty ||
+                                  password.isEmpty ||
+                                  confirmPassword.isEmpty) {
+                                Get.snackbar(
+                                  "Missing Fields",
+                                  "Please fill out all the fields.",
+                                );
+                                return;
+                              }
+
+                              if (!GetUtils.isEmail(email)) {
+                                Get.snackbar(
+                                  "Invalid Email",
+                                  "Please enter a valid email address.",
+                                );
+                                return;
+                              }
+
+                              if (!GetUtils.isPhoneNumber(phone)) {
+                                Get.snackbar(
+                                  "Invalid Phone",
+                                  "Please enter a valid phone number.",
+                                );
+                                return;
+                              }
+
+                              if (password != confirmPassword) {
+                                Get.snackbar(
+                                  "Password Mismatch",
+                                  "Passwords do not match.",
+                                );
+                                return;
+                              }
+
+                              final success = await authController
+                                  .registerAsGuest(
+                                    fullName: fullName,
+                                    mailId: email,
+                                    password: password,
+                                    confirmPassword: confirmPassword,
+                                    phoneNumber: phone,
+                                  );
+
+                              if (success) {
+                                Get.offAll(BaseScreen());
+                              }
                             },
                           ),
                           SizedBox(height: 2.h),

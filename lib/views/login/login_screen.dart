@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
+// import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -212,7 +212,7 @@ class _LoginScreenState extends State<LoginScreen>
                   );
 
                   if (success) {
-                  Get.offAll(BaseScreen());
+                    Get.offAll(BaseScreen());
                   }
                 },
                 isGuestButton: false,
@@ -237,13 +237,18 @@ class _LoginScreenState extends State<LoginScreen>
                           fontSize: 12,
                           decoration: TextDecoration.underline,
                         ),
-                        recognizer: TapGestureRecognizer()..onTap = () async {const url = 'https://pub.dev/packages/flutter_custom_tabs';
-              if (await canLaunch(url)) {
-                await launch(url, forceWebView: true, enableJavaScript: true);
-              } else {
-                throw 'Could not launch $url';
-              }
-    },
+                        recognizer:
+                            TapGestureRecognizer()
+                              ..onTap = () async {
+                                const url =
+                                    'http://dev.kbaiota.org/index/memberSignUp';
+                                if (await canLaunchUrl(Uri.parse(url))) {
+                                  await launchUrl(Uri.parse(url));
+                                  // await launch(url, forceWebView: true, enableJavaScript: true);
+                                } else {
+                                  throw 'Could not launch $url';
+                                }
+                              },
                       ),
                     ],
                   ),

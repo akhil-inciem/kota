@@ -67,7 +67,7 @@ class _ForumListState extends State<ForumList> {
                             CircleAvatar(
                               radius: 25,
                               backgroundImage: NetworkImage(
-                                'https://i.pravatar.cc/300',
+                                item.photo!,
                               ),
                             ),
                             SizedBox(width: 8),
@@ -119,35 +119,40 @@ class _ForumListState extends State<ForumList> {
                             children: [
                               // Left side: Likes and comments
                               Row(
-  children: [
-    GestureDetector(
-      onTap: () {
-        forumController.likeThread(item.id);
-      },
-      child: Icon(
-        item.isLiked! ? Icons.favorite : Icons.favorite_border,
-        size: 16,
-        color: item.isLiked! ? Colors.red : Colors.black,
-      ),
-    ),
-    const SizedBox(width: 4),
-    Text(
-      '${item.likeCount ?? 0}',
-      style: const TextStyle(fontSize: 12),
-    ),
-    const SizedBox(width: 12),
-    const Icon(
-      Icons.comment,
-      size: 16,
-      color: Colors.grey,
-    ),
-    const SizedBox(width: 4),
-    Text(
-      '${item.commentCount ?? 0} Comments',
-      style: const TextStyle(fontSize: 12),
-    ),
-  ],
-),
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      forumController.likeThread(item.id);
+                                    },
+                                    child: Icon(
+                                      item.isLiked!
+                                          ? Icons.favorite
+                                          : Icons.favorite_border,
+                                      size: 16,
+                                      color:
+                                          item.isLiked!
+                                              ? Colors.red
+                                              : Colors.black,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    '${item.likeCount ?? 0}',
+                                    style: const TextStyle(fontSize: 12),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  const Icon(
+                                    Icons.comment,
+                                    size: 16,
+                                    color: Colors.grey,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    '${item.commentCount ?? 0} Comments',
+                                    style: const TextStyle(fontSize: 12),
+                                  ),
+                                ],
+                              ),
 
                               // Right side: Stacked avatars
                               // Stack(

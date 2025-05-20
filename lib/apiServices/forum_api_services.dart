@@ -12,11 +12,10 @@ class ForumApiService {
 
   Future<List<ForumData>> fetchThreads() async {
     try {
-      final response = await _dio.get(ApiEndpoints.getAllThreads
-      ,queryParameters: {
-    'user_id': _userId,
-  },
-  );
+      final response = await _dio.get(
+        ApiEndpoints.getAllThreads,
+        queryParameters: {'user_id': _userId},
+      );
 
       if (response.statusCode == 200 && response.data['status'] == true) {
         final List<dynamic> dataJson = response.data['data'];
@@ -35,11 +34,9 @@ class ForumApiService {
   Future<ForumData> fetchSingleThread(String threadId) async {
     try {
       final response = await _dio.get(
-  '${ApiEndpoints.getThreadDetails}/$threadId',
-  queryParameters: {
-    'user_id': _userId,
-  },
-);
+        '${ApiEndpoints.getThreadDetails}/$threadId',
+        queryParameters: {'user_id': _userId},
+      );
 
       if (response.statusCode == 200 && response.data['status'] == true) {
         final dynamic dataJson = response.data['data'];
@@ -181,20 +178,17 @@ class ForumApiService {
     final String url = '${ApiEndpoints.likeReply}$replyId';
 
     try {
-  final dio.FormData formData = dio.FormData.fromMap({
-    'id': _userId, 
-  });
+      final dio.FormData formData = dio.FormData.fromMap({'id': _userId});
 
-  final response = await _dio.post(url, data: formData);
+      final response = await _dio.post(url, data: formData);
 
-  if (response.statusCode == 200 && response.data['status'] == true) {
-    print("Reply liked successfully");
-  } else {
-    throw Exception("Failed to like reply: ${response.statusCode}");
-  }
-} catch (e) {
-  throw Exception("Like reply error: $e");
-}
-
+      if (response.statusCode == 200 && response.data['status'] == true) {
+        print("Reply liked successfully");
+      } else {
+        throw Exception("Failed to like reply: ${response.statusCode}");
+      }
+    } catch (e) {
+      throw Exception("Like reply error: $e");
+    }
   }
 }

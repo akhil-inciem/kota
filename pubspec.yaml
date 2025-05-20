@@ -13,6 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_custom_tabs: ^2.4.0
+  flutter_html: ^3.0.0
   flutter_svg: ^2.1.0
   get: ^4.7.2
   html: ^0.15.6
@@ -22,6 +23,7 @@ dependencies:
   share_plus: ^11.0.0
   shimmer: ^3.0.0
   smooth_page_indicator: ^1.2.1
+  syncfusion_flutter_pdfviewer: ^29.2.4
   table_calendar: ^3.2.0
   url_launcher: ^6.3.1
 

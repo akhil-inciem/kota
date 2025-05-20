@@ -4,7 +4,7 @@ class ApiEndpoints {
 
   // Auth
   static const String login = '$baseUrl/news/login';
-  // static const String register = 'https://kbaiota.org/index/memberSignUp';
+  static const String register = '$baseUrl/news/register';
   static const String logout = '$baseUrl/news/logout';
   static const String resetPassword = '$baseUrl/news/passwordReset';
   static const String guestSignIn = '$baseUrl/news/guest-signin';

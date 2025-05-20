@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class MyCertificationsWidget extends StatelessWidget {
   final int certificationCount;
@@ -35,16 +36,18 @@ class MyCertificationsWidget extends StatelessWidget {
             SizedBox(height: 2.h),
             // Image
             Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.grey[200], // optional background
-              ),
-              clipBehavior: Clip.antiAlias,
-              child: Image.asset(
-                imagePath,
-                fit: BoxFit.cover,
-              ),
-            ),
+  height: 50.h,
+  width: double.infinity,
+  decoration: BoxDecoration(
+    color: Colors.grey[200],
+  ),
+  clipBehavior: Clip.antiAlias,
+  child: SfPdfViewer.network(
+    imagePath,
+    canShowScrollHead: true,
+    canShowScrollStatus: true,
+  ),
+)
           ],
         ),
       ),

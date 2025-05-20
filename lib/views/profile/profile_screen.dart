@@ -52,14 +52,14 @@ class _ProfilePageState extends State<ProfilePage> {
                          ProfileInfoWidget(
                           email: user.email!,
                           phoneNumber: user.primaryNumber!,
-                          role: user.birthDate!,
+                          role: "KOTA Member",
                         ),
                         SizedBox(height: 2.h),
                         const ChangePasswordWidget(),
                         SizedBox(height: 2.h),
                         MyCertificationsWidget(
                           certificationCount: certificationCount,
-                          imagePath: 'assets/images/certificate.jpg',
+                          imagePath: user.aiotaCertificate!,
                         ),
                       ],
                     ),

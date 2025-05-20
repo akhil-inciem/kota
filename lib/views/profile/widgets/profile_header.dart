@@ -15,7 +15,7 @@ class ProfileHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 30.h,
+      height: 25.h,
       width: double.infinity,
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -82,7 +82,7 @@ class ProfileHeader extends StatelessWidget {
                       radius: 30,
                       backgroundImage: NetworkImage(
                         user.photo?.isNotEmpty == true
-                            ? 'https://yourserver.com/${user.photo}'
+                            ? user.photo!
                             : 'https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=random&color=fff',
                       ),
                     ),

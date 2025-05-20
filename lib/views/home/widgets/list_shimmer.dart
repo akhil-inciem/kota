@@ -86,3 +86,96 @@ class ListShimmer extends StatelessWidget {
     );
   }
 }
+class FaqShimmer extends StatelessWidget {
+  const FaqShimmer({super.key});
+
+  Widget shimmerContainer({
+    required double height,
+    required double width,
+    required BorderRadius borderRadius,
+  }) {
+    return Container(
+      height: height,
+      width: width,
+      decoration: BoxDecoration(
+        color: Colors.grey.withOpacity(0.9),
+        borderRadius: borderRadius,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Top shimmer containers before list
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
+          child: Shimmer.fromColors(
+            baseColor: Colors.grey.withOpacity(0.15),
+            highlightColor: Colors.grey.withOpacity(0.25),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 3.h),
+                shimmerContainer(
+                  height: 5.h,
+                  width: 60.w,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                SizedBox(height: 2.h),
+                shimmerContainer(
+                  height: 5.h,
+                  width: 20.w,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        // Shimmer list
+        Expanded(
+          child: ListView.builder(
+            itemCount: 6,
+            padding: EdgeInsets.zero,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+                child: Shimmer.fromColors(
+                  baseColor: Colors.grey.withOpacity(0.15),
+                  highlightColor: Colors.grey.withOpacity(0.25),
+                  child: Row(
+                    children: [
+                      // Left: Circle avatar shimmer
+                      Container(
+                        height: 30.sp,
+                        width: 30.sp,
+                        decoration: const BoxDecoration(
+                          color: Colors.grey,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      SizedBox(width: 12),
+
+                      // Center: Text shimmer
+                      Expanded(
+                        child: shimmerContainer(
+                          height: 10.h,
+                          width: 40.w,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
