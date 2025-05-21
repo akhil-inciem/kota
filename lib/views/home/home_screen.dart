@@ -6,8 +6,8 @@ import 'package:kota/views/home/widgets/events_list.dart';
 import 'package:kota/views/home/widgets/home_tab_bar.dart';
 import 'package:kota/views/home/widgets/latest_news_list.dart';
 import 'package:kota/views/home/widgets/news_list.dart';
-import 'package:kota/views/home/widgets/search_bar.dart';
-import 'package:kota/views/home/widgets/top_bar.dart';
+import 'package:kota/views/widgets/search_bar.dart';
+import 'package:kota/views/widgets/top_bar.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class HomeScreen extends StatefulWidget {

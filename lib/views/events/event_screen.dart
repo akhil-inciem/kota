@@ -9,7 +9,7 @@ import 'package:kota/views/events/widgets/custom_calendar.dart';
 import 'package:kota/views/events/widgets/today_event_card.dart';
 import 'package:kota/views/events/widgets/upcoming_event_card.dart';
 import 'package:kota/views/home/widgets/news_list.dart';
-import 'package:kota/views/home/widgets/top_bar.dart';
+import 'package:kota/views/widgets/top_bar.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:flutter/material.dart';

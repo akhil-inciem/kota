@@ -65,11 +65,33 @@ class _ForumListState extends State<ForumList> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             CircleAvatar(
-                              radius: 25,
-                              backgroundImage: NetworkImage(
-                                item.photo!,
-                              ),
-                            ),
+  radius: 25,
+  backgroundColor: Colors.grey[200],
+  child: item.photo == null
+      ? Icon(Icons.person, size: 30, color: Colors.grey)
+      : ClipOval(
+          child: Image.network(
+            item.photo!,
+            width: 50,
+            height: 50,
+            fit: BoxFit.cover,
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Center(
+                child: SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+              );
+            },
+            errorBuilder: (context, error, stackTrace) {
+              return Icon(Icons.error, size: 30, color: Colors.red);
+            },
+          ),
+        ),
+),
+
                             SizedBox(width: 8),
                             Expanded(
                               child: Column(
@@ -153,7 +175,6 @@ class _ForumListState extends State<ForumList> {
                                   ),
                                 ],
                               ),
-
                               // Right side: Stacked avatars
                               // Stack(
                               //   clipBehavior: Clip.none,

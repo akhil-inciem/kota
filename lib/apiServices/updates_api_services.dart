@@ -14,7 +14,7 @@ class UpdateApiService {
   // ✅ 1. Get Membership Info by userId
   Future<MemberShipModel?> fetchMembership() async {
      final authController = Get.find<AuthController>();
-      final userId = authController.userModel.value!.id;
+      final userId = authController.userModel.value!.data.id;
     try {
       final response = await _dio.get('${ApiEndpoints.getMemberExpiry}$userId');
       if (response.statusCode == 200) {

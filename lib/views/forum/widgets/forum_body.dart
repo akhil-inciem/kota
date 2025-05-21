@@ -12,9 +12,10 @@ class ForumPostBody extends StatefulWidget {
   final String title;
   final String description;
   final List<String> imageUrls;
-  final String likes;
-  final String comments;
-  final bool isLiked;
+  final RxBool isLiked;
+final RxString likes;
+final RxString comments;
+
   final VoidCallback onLikeToggle;
 
   const ForumPostBody({
@@ -110,50 +111,48 @@ class _ForumPostBodyState extends State<ForumPostBody> {
 
         // Like, Comment, Share Row
         Row(
-          children: [
-            GestureDetector(
-  onTap: controller.likeThread,
-  child: Icon(
-    widget.isLiked ? Icons.favorite : Icons.favorite_border,
-    size: 20,
-    color: widget.isLiked ? Colors.red : Colors.black,
-  ),
+  children: [
+    GestureDetector(
+      onTap: widget.onLikeToggle,
+      child: Obx(() => Icon(
+        widget.isLiked.value ? Icons.favorite : Icons.favorite_border,
+        size: 20,
+        color: widget.isLiked.value ? Colors.red : Colors.black,
+      )),
+    ),
+    const SizedBox(width: 4),
+    Obx(() => Text(widget.likes.value, style: const TextStyle(fontSize: 14))),
+    const SizedBox(width: 20),
+    GestureDetector(
+      onTap: controller.cancelReply,
+      child: Row(
+        children: [
+          const Icon(Icons.comment, size: 20, color: Colors.grey),
+          const SizedBox(width: 4),
+          Obx(() => Text(
+            '${widget.comments} Comments',
+            style: const TextStyle(fontSize: 14),
+          )),
+        ],
+      ),
+    ),
+    const SizedBox(width: 20),
+    GestureDetector(
+      onTap: () {
+        final title = widget.title;
+        final params = ShareParams(
+          title: title,
+          uri: Uri(scheme: 'https', host: 'crash.net'),
+        );
+        SharePlus.instance.share(params);
+      },
+      child: const Icon(Icons.share, size: 20, color: Colors.grey),
+    ),
+    const SizedBox(width: 4),
+    const Text('Share', style: TextStyle(fontSize: 14)),
+  ],
 ),
-            const SizedBox(width: 4),
-            Text(widget.likes, style: const TextStyle(fontSize: 14)),
-            const SizedBox(width: 20),
-            GestureDetector(
-              onTap: (){
-                controller.cancelReply();
-              },
-              child: Row(
-                children: [
-                  const Icon(Icons.comment, size: 20, color: Colors.grey),
-                  const SizedBox(width: 4),
-              Text(
-                '${widget.comments} Comments',
-                style: const TextStyle(fontSize: 14),
-              ),
-                ],
-              ),
-            ),
-            
-            const SizedBox(width: 20),
-            GestureDetector(
-              onTap: () {
-                final title = widget.title;
-                final params = ShareParams(
-                  title: title,
-                  uri: Uri(scheme: 'https', host: 'crash.net'),
-                );
-                SharePlus.instance.share(params);
-              },
-              child: const Icon(Icons.share, size: 20, color: Colors.grey),
-            ),
-            const SizedBox(width: 4),
-            const Text('Share', style: TextStyle(fontSize: 14)),
-          ],
-        ),
+
         SizedBox(height: 1.5.h),
         const Divider(),
       ],

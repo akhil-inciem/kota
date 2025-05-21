@@ -21,9 +21,9 @@ class ReplyTile extends StatelessWidget {
           // Profile & Name
           Row(
             children: [
-              const CircleAvatar(
+               CircleAvatar(
                 radius: 20,
-                backgroundImage: NetworkImage('https://i.pravatar.cc/300'),
+                backgroundImage: NetworkImage(reply.photo!),
               ),
               SizedBox(width: 10),
               Column(
@@ -110,9 +110,9 @@ class CommentTile extends StatelessWidget {
           // Profile & Name
           Row(
             children: [
-              const CircleAvatar(
+               CircleAvatar(
                 radius: 20,
-                backgroundImage: NetworkImage('https://i.pravatar.cc/300'),
+                backgroundImage: NetworkImage(comment.photo!),
               ),
               SizedBox(width: 10),
               Column(

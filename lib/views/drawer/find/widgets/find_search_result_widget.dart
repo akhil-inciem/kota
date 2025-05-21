@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kota/model/clinic_model.dart';
 import 'package:kota/model/therapist_model.dart';
 import 'package:kota/views/drawer/find/widgets/find_search.dart';
-import 'package:kota/views/home/widgets/search_bar.dart';
+import 'package:kota/views/widgets/search_bar.dart';
 import 'package:kota/views/login/widgets/custom_button.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 

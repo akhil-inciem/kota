@@ -1,20 +1,20 @@
 class FavoritesModel {
   bool? status;
-  String? message;
+  String? userId;
   Data? data;
 
-  FavoritesModel({this.status, this.message, this.data});
+  FavoritesModel({this.status, this.userId, this.data});
 
   FavoritesModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    message = json['message'];
+    userId = json['user_id'];
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
-    data['message'] = this.message;
+    data['user_id'] = this.userId;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -29,15 +29,15 @@ class Data {
   Data({this.news, this.events});
 
   Data.fromJson(Map<String, dynamic> json) {
-    if (json['news'] != null) {
+    if (json['favorite_news'] != null) {
       news = <News>[];
-      json['news'].forEach((v) {
+      json['favorite_news'].forEach((v) {
         news!.add(new News.fromJson(v));
       });
     }
-    if (json['events'] != null) {
+    if (json['favorite_events'] != null) {
       events = <Events>[];
-      json['events'].forEach((v) {
+      json['favorite_events'].forEach((v) {
         events!.add(new Events.fromJson(v));
       });
     }
@@ -46,16 +46,17 @@ class Data {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.news != null) {
-      data['news'] = this.news!.map((v) => v.toJson()).toList();
+      data['favorite_news'] = this.news!.map((v) => v.toJson()).toList();
     }
     if (this.events != null) {
-      data['events'] = this.events!.map((v) => v.toJson()).toList();
+      data['favorite_events'] = this.events!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class News {
+  String? favoriteId;
   String? newsId;
   String? newsTitle;
   String? newsSubTitle;
@@ -70,10 +71,11 @@ class News {
   Null? author;
   String? newsAuthor;
   String? badges;
-  String? faverites;
 
   News(
-      {this.newsId,
+      {
+      this.favoriteId,
+      this.newsId,
       this.newsTitle,
       this.newsSubTitle,
       this.newsDescription,
@@ -86,8 +88,7 @@ class News {
       this.newsCategory,
       this.author,
       this.newsAuthor,
-      this.badges,
-      this.faverites});
+      this.badges,});
 
   News.fromJson(Map<String, dynamic> json) {
     newsId = json['news_id'];
@@ -104,7 +105,7 @@ class News {
     author = json['author'];
     newsAuthor = json['news_author'];
     badges = json['badges'];
-    faverites = json['faverites'];
+    favoriteId = json['favorite_id'];
   }
 
   Map<String, dynamic> toJson() {
@@ -123,12 +124,13 @@ class News {
     data['author'] = this.author;
     data['news_author'] = this.newsAuthor;
     data['badges'] = this.badges;
-    data['faverites'] = this.faverites;
+    data['favorite_id'] = this.favoriteId;
     return data;
   }
 }
 
 class Events {
+  String? favoriteId;
   String? eventId;
   String? eventTitle;
   String? eventName;
@@ -146,10 +148,11 @@ class Events {
   String? location;
   String? onlineBooking;
   String? badges;
-  String? faverites;
 
   Events(
-      {this.eventId,
+      {
+      this.favoriteId,
+      this.eventId,
       this.eventTitle,
       this.eventName,
       this.eventShortDescription,
@@ -165,8 +168,7 @@ class Events {
       this.feesPerSeat,
       this.location,
       this.onlineBooking,
-      this.badges,
-      this.faverites});
+      this.badges,});
 
   Events.fromJson(Map<String, dynamic> json) {
     eventId = json['event_id'];
@@ -186,7 +188,7 @@ class Events {
     location = json['location'];
     onlineBooking = json['online_booking'];
     badges = json['badges'];
-    faverites = json['faverites'];
+    favoriteId = json['favorite_id'];
   }
 
   Map<String, dynamic> toJson() {
@@ -208,7 +210,7 @@ class Events {
     data['location'] = this.location;
     data['online_booking'] = this.onlineBooking;
     data['badges'] = this.badges;
-    data['faverites'] = this.faverites;
+    data['favorite_id'] = this.favoriteId;
     return data;
   }
 }

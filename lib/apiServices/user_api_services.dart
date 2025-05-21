@@ -11,7 +11,7 @@ class UserApiService {
   Future<User> fetchUserProfile() async {
     try {
       final authController = Get.find<AuthController>();
-      final userId = authController.userModel.value!.id;
+      final userId = authController.userModel.value!.data.id;
 
       final response = await _dio.get("${ApiEndpoints.getUserProfile}$userId");
 

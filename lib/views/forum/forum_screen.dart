@@ -5,8 +5,8 @@ import 'package:kota/controller/forum_controller.dart';
 import 'package:kota/views/forum/add_discussion_page.dart';
 import 'package:kota/views/forum/widgets/forumlist.dart';
 import 'package:kota/views/home/widgets/news_list.dart';
-import 'package:kota/views/home/widgets/search_bar.dart';
-import 'package:kota/views/home/widgets/top_bar.dart';
+import 'package:kota/views/widgets/search_bar.dart';
+import 'package:kota/views/widgets/top_bar.dart';
 import 'package:kota/views/login/widgets/custom_button.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -31,7 +31,10 @@ class _ForumScreenState extends State<ForumScreen> {
       children: [
         TopBar(),
         SizedBox(height: 0.5.h),
-        CustomSearchBar(),
+        CustomSearchBar(
+          controller: forumController.searchController,
+          onChanged: (value) => forumController.setSearchQuery(value),
+        ),
         SizedBox(height: 2.h),
         Expanded(
           child: SingleChildScrollView(

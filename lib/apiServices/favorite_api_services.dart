@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:kota/constants/api.dart';
 import 'package:kota/model/favorite_model.dart';
@@ -8,7 +10,12 @@ class FavoritesApiService {
 
   Future<FavoritesModel> fetchFavorites() async {
   try {
-    final response = await _dio.get(ApiEndpoints.favorites);
+    final response = await _dio.get(
+      ApiEndpoints.favorites,
+      queryParameters: {
+        'user_id': "589",
+      },
+    );
 
     if (response.statusCode == 200 && response.data['status'] == true) {
       return FavoritesModel.fromJson(response.data);

@@ -32,13 +32,13 @@ class FavouriteController extends GetxController {
       final List<Map<String, dynamic>> combinedList = [];
 
       // Combine news
-      if (favoritesModel.data?.news != null) {
+      if (favoritesModel.data!.news != null) {
         for (var news in favoritesModel.data!.news!) {
           combinedList.add({
             'type': 'news',
             'title': news.newsTitle ?? '',
             'description': news.newsDescription ?? '',
-            'date': DateTime.tryParse(news.newsDate ?? '') ?? DateTime.now(),
+            'date': DateTime.tryParse(news.newsDate.toString() ?? '') ?? DateTime.now(),
             'badge': news.badges ?? '',
             'image': news.newsImage ?? '',
             'data': news,
@@ -47,13 +47,13 @@ class FavouriteController extends GetxController {
       }
 
       // Combine events
-      if (favoritesModel.data?.events != null) {
+      if (favoritesModel.data!.events != null) {
         for (var event in favoritesModel.data!.events!) {
           combinedList.add({
             'type': 'event',
             'title': event.eventName ?? '',
             'description': event.eventDescription ?? '',
-            'date': DateTime.tryParse(event.eventstartDateDate ?? '') ?? DateTime.now(),
+            'date': DateTime.tryParse(event.eventstartDateDate?.toString() ?? '') ?? DateTime.now(),
             'badge': event.badges ?? '',
             'image': event.image ?? '',
             'data': event,

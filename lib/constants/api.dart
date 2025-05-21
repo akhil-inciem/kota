@@ -33,7 +33,7 @@ class ApiEndpoints {
   static const String getEventById = '$baseUrl/events/{id}';
 
   //Favorites
-  static const String favorites = '$baseUrl/news/all_favorites';
+  static const String favorites = '$baseUrl/news/get_favorites';
   static const String updateNewsFavorites = '$baseUrl/news/update-badges-favorites';
   static const String updateEventFavorites = '$baseUrl/news/updatevent-badges-favorites';
 

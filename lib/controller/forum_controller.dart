@@ -13,13 +13,20 @@ class ForumController extends GetxController {
   RxString selectedThreadId = ''.obs;
   final forumModel = Rxn<ForumModel>();
   final threadsList = <ForumData>[].obs;
+  final originalThreadsList = <ForumData>[]; // Backup for filtering
+  var comments = <Comments>[].obs;
   final Rx<ForumData> singleThread = ForumData().obs;
   final ForumApiService _forumApiService = ForumApiService();
   final TextEditingController commentController = TextEditingController();
+  final TextEditingController searchController = TextEditingController();
 
   final isReplying = false.obs;
   final replyingToId = ''.obs;
-  // Focus node for controlling keyboard focus
+  final searchQuery = ''.obs;
+  var isLiked = false.obs;
+  var likeCount = '0'.obs;
+  var commentCount = '0'.obs;
+
   final FocusNode commentFocusNode = FocusNode();
 
   RxString replyingToName = ''.obs; // Optional: To show UI hint
@@ -33,7 +40,9 @@ class ForumController extends GetxController {
   Future<void> loadThreads() async {
     try {
       isLoading.value = true;
-      threadsList.value = await _forumApiService.fetchThreads();
+      final fetchedThreads = await _forumApiService.fetchThreads();
+      originalThreadsList.assignAll(fetchedThreads);
+      threadsList.assignAll(fetchedThreads);
     } catch (e) {
       print('Error loading threads: $e');
     } finally {
@@ -41,12 +50,18 @@ class ForumController extends GetxController {
     }
   }
 
-  Future<void> loadSingleThread(String id) async {
+  Future<ForumData> loadSingleThread(String id) async {
     try {
-      final data = await _forumApiService.fetchSingleThread(id);
-      singleThread.value = data;
+      final thread = await _forumApiService.fetchSingleThread(id);
+      singleThread.value = thread;
+      comments.value = thread.comments ?? [];
+      isLiked.value = thread.isLiked ?? false;
+      likeCount.value = thread.likeCount?.toString() ?? '0';
+      commentCount.value = thread.commentCount?.toString() ?? '0';
+      return thread;
     } catch (e) {
       print('Error loading threads: $e');
+      rethrow;
     }
   }
 
@@ -60,12 +75,6 @@ class ForumController extends GetxController {
       selectedImages.removeAt(index);
     }
   }
-
-  // Convert to paths for API
-  List<String> getImagePaths() {
-    return selectedImages.map((img) => img.path).toList();
-  }
-
   void startReply({required String id}) {
     replyingToId.value = id;
     isReplying.value = true;
@@ -104,34 +113,140 @@ class ForumController extends GetxController {
     }
   }
 
-  Future<void> likeComment(String commentID) async {
-    try {
-      await ForumApiService.likeComment(commentID);
-      await loadSingleThread(selectedThreadId.value);
-    } catch (e) {
-      Get.snackbar("Error", e.toString());
+  void applyFilters() {
+    final query = searchQuery.value.toLowerCase();
+    if (query.isEmpty) {
+      threadsList.assignAll(originalThreadsList);
+      return;
     }
+
+    final filtered =
+        originalThreadsList.where((thread) {
+          final title = thread.title?.toLowerCase() ?? '';
+          final description = thread.content?.toLowerCase() ?? '';
+          return title.contains(query) || description.contains(query);
+        }).toList();
+
+    threadsList.assignAll(filtered);
   }
 
-  Future<void> likeThread([String? threadId]) async {
-  final id = threadId ?? selectedThreadId.value;
+  void setSearchQuery(String query) {
+    searchQuery.value = query;
+    applyFilters();
+  }
+
+  Future<void> likeComment(String commentId) async {
+  final index = comments.indexWhere((c) => c.id == commentId);
+  if (index == -1) return;
+
+  final oldComment = comments[index];
+  final liked = !(oldComment.isLiked ?? false);
+  final currentCount = int.tryParse(oldComment.likeCount ?? '0') ?? 0;
+
+  // Optimistic UI update
+  final updatedComment = oldComment.copyWith(
+    isLiked: liked,
+    likeCount: (liked ? currentCount + 1 : currentCount - 1).toString(),
+  );
+  comments[index] = updatedComment;
+  comments.refresh();
+
   try {
-    await ForumApiService.likeThread(id);
-    await loadSingleThread(id);
+    await _forumApiService.likeComment(commentId);
   } catch (e) {
-    Get.snackbar("Error", e.toString());
+    // Revert on failure
+    comments[index] = oldComment;
+    comments.refresh();
+    Get.snackbar("Failed to like comment", e.toString());
   }
 }
 
-
   Future<void> likeReply(String replyId) async {
-    try {
-      await ForumApiService.likeReply(replyId);
-      await loadSingleThread(selectedThreadId.value);
-    } catch (e) {
-      Get.snackbar("Error", e.toString());
+  for (int i = 0; i < comments.length; i++) {
+    final replies = comments[i].replies;
+    if (replies == null) continue;
+
+    final replyIndex = replies.indexWhere((r) => r.id == replyId);
+    if (replyIndex != -1) {
+      final oldReply = replies[replyIndex];
+      final liked = !(oldReply.isLiked ?? false);
+      final currentCount = int.tryParse(oldReply.likeCount ?? '0') ?? 0;
+
+      final updatedReply = oldReply.copyWith(
+        isLiked: liked,
+        likeCount: (liked ? currentCount + 1 : currentCount - 1).toString(),
+      );
+      replies[replyIndex] = updatedReply;
+
+      // Re-assign to trigger reactive update
+      comments[i] = comments[i].copyWith(replies: List<Replies>.from(replies));
+      comments.refresh();
+
+      try {
+        await _forumApiService.likeReply(replyId);
+      } catch (e) {
+        // Revert on failure
+        replies[replyIndex] = oldReply;
+        comments[i] = comments[i].copyWith(replies: List<Replies>.from(replies));
+        comments.refresh();
+        Get.snackbar("Failed to like reply", e.toString());
+      }
+      break;
     }
   }
+}
+
+  Future<void> likeThread([String? threadId]) async {
+    final id = threadId ?? selectedThreadId.value;
+
+    // Find index in the list
+    final index = threadsList.indexWhere((thread) => thread.id == id);
+    if (index == -1) return;
+
+    final thread = threadsList[index];
+    final currentStatus = thread.isLiked ?? false;
+    final updatedLikeCount = (thread.likeCount ?? 0) + (currentStatus ? -1 : 1);
+
+    // Optimistically update list
+    threadsList[index] = thread.copyWith(
+      isLiked: !currentStatus,
+      likeCount: updatedLikeCount,
+    );
+
+    // ✅ If the liked thread is also the one shown in detail, update its state
+    if (selectedThreadId.value == id) {
+      isLiked.value = !currentStatus;
+      likeCount.value = updatedLikeCount.toString();
+    }
+
+    try {
+      await ForumApiService.likeThread(id);
+
+      // Optional: reload the updated thread from server
+      final updatedThread = await loadSingleThread(id);
+
+      threadsList[index] = updatedThread;
+
+      if (selectedThreadId.value == id) {
+        singleThread.value = updatedThread;
+        isLiked.value = updatedThread.isLiked ?? false;
+        likeCount.value = updatedThread.likeCount?.toString() ?? '0';
+        commentCount.value = updatedThread.commentCount?.toString() ?? '0';
+      }
+    } catch (e) {
+      // Revert change if API call fails
+      threadsList[index] = thread;
+
+      if (selectedThreadId.value == id) {
+        isLiked.value = currentStatus;
+        likeCount.value = (thread.likeCount ?? 0).toString();
+      }
+
+      Get.snackbar("Error", "Failed to update like");
+    }
+  }
+
+  
 
   Future<void> replyToComment(String commentId, String content) async {
     try {

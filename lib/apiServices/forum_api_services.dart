@@ -8,9 +8,9 @@ import 'package:dio/dio.dart' as dio;
 class ForumApiService {
   static final dio.Dio _dio = dio.Dio();
   static final _authController = Get.find<AuthController>();
-  static final String? _userId = _authController.userModel.value?.id;
+  static final String? _userId = _authController.userModel.value?.data.id;
 
-  Future<List<ForumData>> fetchThreads() async {
+   Future<List<ForumData>> fetchThreads() async {
     try {
       final response = await _dio.get(
         ApiEndpoints.getAllThreads,
@@ -31,7 +31,7 @@ class ForumApiService {
     }
   }
 
-  Future<ForumData> fetchSingleThread(String threadId) async {
+   Future<ForumData> fetchSingleThread(String threadId) async {
     try {
       final response = await _dio.get(
         '${ApiEndpoints.getThreadDetails}/$threadId',
@@ -64,7 +64,7 @@ class ForumApiService {
 
     final dio.FormData formData = dio.FormData.fromMap({
       'title': title,
-      'id': _userId,
+      _authController.isGuest ? 'guest_user_id' : 'user_id': _userId,
       'content': description,
       'images[]': await Future.wait(
         images.map(
@@ -129,7 +129,7 @@ class ForumApiService {
     }
   }
 
-  static Future<void> likeComment(String commentId) async {
+   Future<void> likeComment(String commentId) async {
     final String url = '${ApiEndpoints.likeComment}$commentId';
 
     try {
@@ -174,7 +174,7 @@ class ForumApiService {
     }
   }
 
-  static Future<void> likeReply(String replyId) async {
+   Future<void> likeReply(String replyId) async {
     final String url = '${ApiEndpoints.likeReply}$replyId';
 
     try {

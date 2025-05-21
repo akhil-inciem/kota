@@ -7,7 +7,7 @@ import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/event_controller.dart';
 import 'package:kota/controller/home_controller.dart';
 import 'package:kota/model/event_model.dart';
-import 'package:kota/views/home/widgets/top_bar.dart';
+import 'package:kota/views/widgets/top_bar.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:share_plus/share_plus.dart';
 

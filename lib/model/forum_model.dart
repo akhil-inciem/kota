@@ -107,8 +107,41 @@ class ForumData {
     }
     return data;
   }
+  ForumData copyWith({
+  String? id,
+  String? title,
+  String? content,
+  String? createdAt,
+  String? firstName,
+  String? lastName,
+  String? photo,
+  int? likeCount,
+  int? commentCount,
+  String? contentSnippet,
+  List<String>? images,
+  List<RecentLike>? recentLikes,
+  bool? isLiked,
+  List<Comments>? comments,
+}) {
+  return ForumData(
+    id: id ?? this.id,
+    title: title ?? this.title,
+    content: content ?? this.content,
+    createdAt: createdAt ?? this.createdAt,
+    firstName: firstName ?? this.firstName,
+    lastName: lastName ?? this.lastName,
+    photo: photo ?? this.photo,
+    likeCount: likeCount ?? this.likeCount,
+    commentCount: commentCount ?? this.commentCount,
+    contentSnippet: contentSnippet ?? this.contentSnippet,
+    images: images ?? this.images,
+    recentLikes: recentLikes ?? this.recentLikes,
+    isLiked: isLiked ?? this.isLiked,
+    comments: comments ?? this.comments,
+  );
 }
 
+}
 class Comments {
   String? id;
   String? content;
@@ -164,30 +197,58 @@ class Comments {
     return data;
   }
 }
-class RecentLike {
-  String? id;
-  String? firstName;
-  String? lastName;
-  String? photo;
-
-  RecentLike({this.id, this.firstName, this.lastName, this.photo});
-
-  RecentLike.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    firstName = json['first_name'];
-    lastName = json['last_name'];
-    photo = json['photo'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['first_name'] = this.firstName;
-    data['last_name'] = this.lastName;
-    data['photo'] = this.photo;
-    return data;
+extension CommentsCopyWith on Comments {
+  Comments copyWith({
+    String? id,
+    String? content,
+    String? createdAt,
+    String? firstName,
+    String? lastName,
+    String? photo,
+    String? likeCount,
+    bool? isLiked,
+    List<Replies>? replies,
+  }) {
+    return Comments(
+      id: id ?? this.id,
+      content: content ?? this.content,
+      createdAt: createdAt ?? this.createdAt,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      photo: photo ?? this.photo,
+      likeCount: likeCount ?? this.likeCount,
+      isLiked: isLiked ?? this.isLiked,
+      replies: replies ?? this.replies,
+    );
   }
 }
+
+extension RepliesCopyWith on Replies {
+  Replies copyWith({
+    String? id,
+    String? content,
+    String? createdAt,
+    String? firstName,
+    String? lastName,
+    String? photo,
+    String? likeCount,
+    bool? isLiked,
+    String? commentId,
+  }) {
+    return Replies(
+      id: id ?? this.id,
+      content: content ?? this.content,
+      createdAt: createdAt ?? this.createdAt,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      photo: photo ?? this.photo,
+      likeCount: likeCount ?? this.likeCount,
+      isLiked: isLiked ?? this.isLiked,
+      commentId: commentId ?? this.commentId,
+    );
+  }
+}
+
 class Replies {
   String? id;
   String? content;
@@ -233,6 +294,31 @@ class Replies {
     data['like_count'] = this.likeCount;
     data['is_liked'] = this.isLiked;
     data['comment_id'] = this.commentId;
+    return data;
+  }
+}
+
+class RecentLike {
+  String? id;
+  String? firstName;
+  String? lastName;
+  String? photo;
+
+  RecentLike({this.id, this.firstName, this.lastName, this.photo});
+
+  RecentLike.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    firstName = json['first_name'];
+    lastName = json['last_name'];
+    photo = json['photo'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['first_name'] = this.firstName;
+    data['last_name'] = this.lastName;
+    data['photo'] = this.photo;
     return data;
   }
 }

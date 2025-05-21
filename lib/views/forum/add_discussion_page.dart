@@ -4,7 +4,7 @@ import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/forum_controller.dart';
 import 'package:kota/controller/user_controller.dart';
 import 'package:kota/views/forum/widgets/add_imageSection.dart';
-import 'package:kota/views/home/widgets/top_bar.dart';
+import 'package:kota/views/widgets/top_bar.dart';
 import 'package:kota/views/login/widgets/custom_button.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -75,7 +75,6 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
                         )
                   ),
                   SizedBox(height: 4.h),
-            
                   /// Title TextField
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 7.w),

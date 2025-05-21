@@ -8,7 +8,7 @@ import 'package:kota/views/events/event_screen.dart';
 import 'package:kota/views/favourites/favourite_screen.dart';
 import 'package:kota/views/forum/forum_screen.dart';
 import 'package:kota/views/home/home_screen.dart';
-import 'package:kota/views/home/widgets/custom_bottom_nav_bar.dart';
+import 'package:kota/views/widgets/custom_bottom_nav_bar.dart';
 import 'package:kota/views/updates/updates_screen.dart';
 
 class BaseScreen extends StatefulWidget {

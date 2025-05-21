@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kota/controller/updates_controller.dart';
-import 'package:kota/views/home/widgets/search_bar.dart';
-import 'package:kota/views/home/widgets/top_bar.dart';
+import 'package:kota/views/widgets/search_bar.dart';
+import 'package:kota/views/widgets/top_bar.dart';
 import 'package:kota/views/updates/widgets/notification_list.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 

@@ -8,7 +8,7 @@ import 'package:kota/views/drawer/widgets/custom_expansion_tile.dart';
 import 'package:kota/views/drawer/find/widgets/find_clinic_tab.dart';
 import 'package:kota/views/drawer/find/widgets/find_therapist_tab.dart';
 import 'package:kota/views/drawer/widgets/labelled_dropdown.dart';
-import 'package:kota/views/home/widgets/top_bar.dart';
+import 'package:kota/views/widgets/top_bar.dart';
 import 'package:kota/views/login/widgets/custom_button.dart';
 import 'package:kota/views/login/widgets/custom_checkbox.dart';
 import 'package:kota/views/login/widgets/labelled_textfield.dart';

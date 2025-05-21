@@ -4,7 +4,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/user_controller.dart';
 import 'package:kota/views/drawer/drawer_screen.dart';
-import 'package:kota/views/home/widgets/top_bar.dart';
+import 'package:kota/views/widgets/top_bar.dart';
 import 'package:kota/views/profile/widgets/certifcation_widget.dart';
 import 'package:kota/views/profile/widgets/profile_change_password.dart';
 import 'package:kota/views/profile/widgets/profile_header.dart';
