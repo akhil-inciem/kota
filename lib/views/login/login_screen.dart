@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen>
   late Animation<Offset> _slideAnimation;
   late Animation<double> _kotaMoveUpOnContainerSlideAnimation;
   final AuthController authController = Get.find<AuthController>();
-
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -140,7 +140,6 @@ class _LoginScreenState extends State<LoginScreen>
               );
             },
           ),
-
           // Login Container Sliding In
           SlideTransition(position: _slideAnimation, child: _loginContainer()),
         ],
@@ -152,7 +151,7 @@ class _LoginScreenState extends State<LoginScreen>
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
-        height: 53.h, // control how much space it takes
+        height: 50.h, // control how much space it takes
         width: double.infinity,
         padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
         decoration: const BoxDecoration(
@@ -160,101 +159,112 @@ class _LoginScreenState extends State<LoginScreen>
           borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
         ),
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              LabelledTextField(
-                controller: emailController,
-                label: 'Email',
-                hintText: 'Enter your email',
-                isPassword: false,
-              ),
-              SizedBox(height: 4.h),
-              LabelledTextField(
-                controller: passwordController,
-                label: 'Password',
-                rightLabel: 'Forgot Password?',
-                onRightLabelTap: () {
-                  print('Forgot Password clicked');
-                },
-                hintText: 'Enter password',
-                isPassword: true,
-              ),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                LabelledTextField(
+                  controller: emailController,
+                  label: 'Email',
+                  hintText: 'Enter your email',
+                  isPassword: false,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Email is required';
+                    }
+                    if (!GetUtils.isEmail(value.trim())) return 'Enter a valid email';
+                    return null;
+                  },
+                ),
+                SizedBox(height: 3.h),
+                LabelledTextField(
+                  controller: passwordController,
+                  label: 'Password',
+                  rightLabel: 'Forgot Password?',
+                  onRightLabelTap: () {
+                  },
+                  hintText: 'Enter password',
+                  isPassword: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Password is required';
+                    }
+                    if (value.length < 6) {
+                      return 'Password must be at least 6 characters';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 5.h),
+                CustomButton(
+                  text: 'I Am A Guest User',
+                  backgroundColor: Colors.white,
+                  textColor: AppColors.primaryButton,
+                  onPressed: () => Get.offAll(GuestRegistrationScreen()),
+                  isGuestButton: true,
+                ),
+                SizedBox(height: 2.h),
+                CustomButton(
+                  text: 'Sign In',
+                  backgroundColor: AppColors.primaryButton,
+                  textColor: Colors.white,
+                  onPressed: () async {
+                    if (_formKey.currentState?.validate() ?? false) {
+                      String email = emailController.text.trim();
+                      String password = passwordController.text;
 
-              SizedBox(height: 6.5.h),
-              CustomButton(
-                text: 'I Am A Guest User',
-                backgroundColor: Colors.white,
-                textColor: AppColors.primaryButton,
-                onPressed: () => Get.offAll(GuestRegistrationScreen()),
-                isGuestButton: true,
-              ),
-              SizedBox(height: 2.h),
-              CustomButton(
-                text: 'Sign In',
-                backgroundColor: AppColors.primaryButton,
-                textColor: Colors.white,
-                onPressed: () async {
-                  String email = emailController.text.trim();
-                  String password = passwordController.text;
+                      bool success = await authController.loginAsUser(
+                        email,
+                        password,
+                      );
 
-                  if (email.isEmpty || password.isEmpty) {
-                    Get.snackbar(
-                      "Error",
-                      "Please enter both username and password",
-                    );
-                    return;
-                  }
-
-                  bool success = await authController.loginAsUser(
-                    emailController.text,
-                    passwordController.text,
-                  );
-
-                  if (success) {
-                    Get.offAll(BaseScreen());
-                  }
-                },
-                isGuestButton: false,
-              ),
-              SizedBox(height: 2.h),
-              Align(
-                alignment: Alignment.center,
-                child: Text.rich(
-                  TextSpan(
-                    text: "Don't have an account? ",
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 12,
-                    ),
-                    children: [
-                      TextSpan(
-                        text: 'Register Here',
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                          decoration: TextDecoration.underline,
-                        ),
-                        recognizer:
-                            TapGestureRecognizer()
-                              ..onTap = () async {
-                                const url =
-                                    'http://dev.kbaiota.org/index/memberSignUp';
-                                if (await canLaunchUrl(Uri.parse(url))) {
-                                  await launchUrl(Uri.parse(url));
-                                  // await launch(url, forceWebView: true, enableJavaScript: true);
-                                } else {
-                                  throw 'Could not launch $url';
-                                }
-                              },
+                      if (success) {
+                        Get.offAll(BaseScreen());
+                      }
+                    }
+                  },
+                  isGuestButton: false,
+                ),
+                SizedBox(height: 2.h),
+                Align(
+                  alignment: Alignment.center,
+                  child: Text.rich(
+                    TextSpan(
+                      text: "Don't have an account? ",
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
                       ),
-                    ],
+                      children: [
+                        TextSpan(
+                          text: 'Register Here',
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                            decoration: TextDecoration.underline,
+                          ),
+                          recognizer:
+                              TapGestureRecognizer()
+                                ..onTap = () async {
+                                  const url =
+                                      'http://dev.kbaiota.org/index/memberSignUp';
+                                  if (await canLaunchUrl(Uri.parse(url))) {
+                                    await launchUrl(Uri.parse(url));
+                                    // await launch(url, forceWebView: true, enableJavaScript: true);
+                                  } else {
+                                    throw 'Could not launch $url';
+                                  }
+                                },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

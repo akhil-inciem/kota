@@ -7,7 +7,6 @@ import 'package:kota/views/home/widgets/list_shimmer.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shimmer/shimmer.dart';
 
-
 class FaqScreen extends StatelessWidget {
   final SideMenuController controller = Get.put(SideMenuController());
 
@@ -24,7 +23,7 @@ class FaqScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 1.h,),
+              SizedBox(height: 1.h),
               _buildAppBar(),
               Expanded(
                 child: Obx(() {
@@ -51,10 +50,16 @@ class FaqScreen extends StatelessWidget {
                       Expanded(
                         child: ListView.separated(
                           itemCount: controller.faqList.length,
-                          separatorBuilder: (_, __) => const SizedBox(height: 12),
+                          separatorBuilder:
+                              (_, __) => const SizedBox(height: 12),
                           itemBuilder: (context, index) {
                             final faq = controller.faqList[index];
-                            final isExpanded = controller.expandedIndex.value == index;
+                            String cleanedHtml = (faq.answer ?? '').replaceAll(
+                              RegExp(r'style="[^"]*"'),
+                              '',
+                            );
+                            final isExpanded =
+                                controller.expandedIndex.value == index;
 
                             return Padding(
                               padding: EdgeInsets.symmetric(horizontal: 2.w),
@@ -75,7 +80,10 @@ class FaqScreen extends StatelessWidget {
                                       textColor: AppColors.primaryText,
                                       leading: const CircleAvatar(
                                         backgroundColor: AppColors.primaryText,
-                                        child: Icon(Icons.question_mark, color: Colors.white),
+                                        child: Icon(
+                                          Icons.question_mark,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                       title: Text(
                                         faq.question ?? '',
@@ -84,13 +92,11 @@ class FaqScreen extends StatelessWidget {
                                           fontSize: 15,
                                         ),
                                       ),
-                                      childrenPadding: const EdgeInsets.symmetric(
-                                        horizontal: 16.0,
-                                        vertical: 8.0,
-                                      ),
-                                      children: [
-                                        Html(data: faq.answer ?? ''),
-                                      ],
+                                      childrenPadding:
+                                          const EdgeInsets.symmetric(
+                                            horizontal: 16.0,
+                                            vertical: 8.0,
+                                          ),
                                       trailing: Icon(
                                         isExpanded
                                             ? Icons.keyboard_arrow_up
@@ -100,6 +106,22 @@ class FaqScreen extends StatelessWidget {
                                         controller.toggleExpansion(index);
                                       },
                                       initiallyExpanded: isExpanded,
+                                      children: [
+                                        Html(
+                                          data: faq.answer ?? '',
+                                          style: {
+                                            "h4": Style(
+                                              fontSize: FontSize(15.0),
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                            "*": Style(
+                                              fontSize: FontSize(15.0),
+                                              fontFamily: 'Poppins',
+                                              color: Colors.black,
+                                            ),
+                                          },
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -134,13 +156,9 @@ class FaqScreen extends StatelessWidget {
         SizedBox(width: 4.w),
         Text(
           "FAQ",
-          style: TextStyle(
-            fontSize: 17.sp,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.bold),
         ),
       ],
     );
   }
 }
-

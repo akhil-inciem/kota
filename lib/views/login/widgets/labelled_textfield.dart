@@ -11,6 +11,7 @@ class LabelledTextField extends StatelessWidget {
   final IconData? icon;
   final bool isPassword;
   final TextEditingController? controller;
+  final String? Function(String?)? validator;
 
   const LabelledTextField({
     Key? key,
@@ -20,7 +21,8 @@ class LabelledTextField extends StatelessWidget {
     required this.hintText,
     this.icon,
     this.isPassword = false,
-    this.controller
+    this.controller,
+    this.validator
   }) : super(key: key);
 
   @override
@@ -62,18 +64,17 @@ class LabelledTextField extends StatelessWidget {
         ),
       );
     }
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         labelWidget,
         SizedBox(height: 0.3.h),
         CustomTextField(
-          
           icon: icon,
           hintText: hintText,
           controller: controller,
           isPassword: isPassword,
+          validator: validator,
         ),
       ],
     );

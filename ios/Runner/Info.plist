@@ -45,5 +45,16 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>CFBundleURLTypes</key>
+<array>
+  <dict>
+    <key>CFBundleURLName</key>
+    <string>com.yourcompany.kota</string> <!-- Use your actual bundle ID here -->
+    <key>CFBundleURLSchemes</key>
+    <array>
+      <string>myapp</string> <!-- This is your custom scheme -->
+    </array>
+  </dict>
+</array>
 </dict>
 </plist>

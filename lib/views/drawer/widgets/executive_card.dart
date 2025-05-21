@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kota/model/executive_model.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:kota/constants/colors.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ExecutiveCard extends StatelessWidget {
   final LeadersDetail executive;
@@ -73,7 +74,6 @@ class ExecutiveCard extends StatelessWidget {
                   IconButton(
                     icon: Icon(Icons.share, size: 18.sp),
                     onPressed: () {
-                      // Share functionality here
                     },
                   ),
                 ],

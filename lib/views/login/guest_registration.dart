@@ -25,24 +25,23 @@ class _GuestRegistrationScreenState extends State<GuestRegistrationScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Offset> _animation;
+  final _formKey = GlobalKey<FormState>();
+
   final AuthController authController = Get.find<AuthController>();
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
-  final TextEditingController phoneController =
-      TextEditingController(); // optional
+  final TextEditingController phoneController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1200),
     );
-
     _animation = Tween<Offset>(
       begin: const Offset(0, 1),
       end: Offset.zero,
@@ -57,6 +56,11 @@ class _GuestRegistrationScreenState extends State<GuestRegistrationScreen>
   @override
   void dispose() {
     _controller.dispose();
+    fullNameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    phoneController.dispose();
     super.dispose();
   }
 
@@ -65,7 +69,7 @@ class _GuestRegistrationScreenState extends State<GuestRegistrationScreen>
     return Scaffold(
       body: Stack(
         children: [
-          // Background Image
+          // Background Gradient
           Container(
             width: double.infinity,
             height: double.infinity,
@@ -82,12 +86,10 @@ class _GuestRegistrationScreenState extends State<GuestRegistrationScreen>
             position: _animation,
             child: Stack(
               children: [
-                // Centered SVG and Text
+                // Top Centered Logo and Text
                 Center(
                   child: Padding(
-                    padding: EdgeInsets.only(
-                      bottom: 60.h,
-                    ), // <-- Important padding!
+                    padding: EdgeInsets.only(bottom: 60.h),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -112,155 +114,145 @@ class _GuestRegistrationScreenState extends State<GuestRegistrationScreen>
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                    height: 72.h, // control how much space it takes
+                    height: 72.h,
                     width: double.infinity,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 8.w,
-                      vertical: 4.h,
-                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                     decoration: const BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(30),
-                      ),
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
                     ),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          LabelledTextField(
-                            controller: fullNameController,
-                            label: 'Full Name',
-                            hintText: 'Enter your full name',
-                            icon: Icons.person,
-                            isPassword: false,
-                          ),
-                          SizedBox(height: 2.h),
-                          LabelledTextField(
-                            controller: emailController,
-                            label: 'Email',
-                            hintText: 'Enter your email',
-                            isPassword: false,
-                          ),
-                          SizedBox(height: 2.h),
-                          LabelledTextField(
-                            controller: phoneController,
-                            label: 'Phone Number',
-                            hintText: 'Enter your phone number',
-                            isPassword: false,
-                          ),
-
-                          SizedBox(height: 2.h),
-                          LabelledTextField(
-                            controller: passwordController,
-                            label: 'Password',
-                            hintText: 'Enter your password',
-                            isPassword: true,
-                          ),
-                          SizedBox(height: 2.h),
-                          LabelledTextField(
-                            controller: confirmPasswordController,
-                            label: 'Re-Enter Password',
-                            hintText: 'Re-Enter your password',
-                            isPassword: true,
-                          ),
-                          SizedBox(height: 5.h),
-                          CustomButton(
-                            text: 'Sign In as a Guest',
-                            backgroundColor: AppColors.primaryButton,
-                            textColor: Colors.white,
-                            isGuestButton: false,
-                            onPressed: () async {
-                              String fullName = fullNameController.text.trim();
-                              String email = emailController.text.trim();
-                              String phone = phoneController.text.trim();
-                              String password = passwordController.text.trim();
-                              String confirmPassword =
-                                  confirmPasswordController.text.trim();
-
-                              if (fullName.isEmpty ||
-                                  email.isEmpty ||
-                                  phone.isEmpty ||
-                                  password.isEmpty ||
-                                  confirmPassword.isEmpty) {
-                                Get.snackbar(
-                                  "Missing Fields",
-                                  "Please fill out all the fields.",
-                                );
-                                return;
-                              }
-
-                              if (!GetUtils.isEmail(email)) {
-                                Get.snackbar(
-                                  "Invalid Email",
-                                  "Please enter a valid email address.",
-                                );
-                                return;
-                              }
-
-                              if (!GetUtils.isPhoneNumber(phone)) {
-                                Get.snackbar(
-                                  "Invalid Phone",
-                                  "Please enter a valid phone number.",
-                                );
-                                return;
-                              }
-
-                              if (password != confirmPassword) {
-                                Get.snackbar(
-                                  "Password Mismatch",
-                                  "Passwords do not match.",
-                                );
-                                return;
-                              }
-
-                              final success = await authController
-                                  .registerAsGuest(
-                                    fullName: fullName,
-                                    mailId: email,
-                                    password: password,
-                                    confirmPassword: confirmPassword,
-                                    phoneNumber: phone,
+                    child: Form(
+                      key: _formKey,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            LabelledTextField(
+                              controller: fullNameController,
+                              label: 'Full Name',
+                              hintText: 'Enter your full name',
+                              icon: Icons.person,
+                              isPassword: false,
+                              validator: (value) {
+                                if (value == null || value.trim().isEmpty) {
+                                  return 'Full name is required';
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(height: 2.h),
+                            LabelledTextField(
+                              controller: emailController,
+                              label: 'Email',
+                              hintText: 'Enter your email',
+                              isPassword: false,
+                              validator: (value) {
+                                if (value == null || value.trim().isEmpty) {
+                                  return 'Email is required';
+                                } else if (!GetUtils.isEmail(value.trim())) {
+                                  return 'Enter a valid email';
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(height: 2.h),
+                            LabelledTextField(
+                              controller: phoneController,
+                              label: 'Phone Number',
+                              hintText: 'Enter your phone number',
+                              isPassword: false,
+                              validator: (value) {
+                                if (value == null || value.trim().isEmpty) {
+                                  return 'Phone number is required';
+                                } else if (!GetUtils.isPhoneNumber(value.trim())) {
+                                  return 'Enter a valid phone number';
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(height: 2.h),
+                            LabelledTextField(
+                              controller: passwordController,
+                              label: 'Password',
+                              hintText: 'Enter your password',
+                              isPassword: true,
+                              validator: (value) {
+                                if (value == null || value.trim().isEmpty) {
+                                  return 'Password is required';
+                                } else if (value.trim().length < 6) {
+                                  return 'Minimum 6 characters required';
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(height: 2.h),
+                            LabelledTextField(
+                              controller: confirmPasswordController,
+                              label: 'Re-Enter Password',
+                              hintText: 'Re-Enter your password',
+                              isPassword: true,
+                              validator: (value) {
+                                if (value == null || value.trim().isEmpty) {
+                                  return 'Please confirm your password';
+                                } else if (value != passwordController.text.trim()) {
+                                  return 'Passwords do not match';
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(height: 5.h),
+                            CustomButton(
+                              text: 'Sign In as a Guest',
+                              backgroundColor: AppColors.primaryButton,
+                              textColor: Colors.white,
+                              isGuestButton: false,
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  final success = await authController.registerAsGuest(
+                                    fullName: fullNameController.text.trim(),
+                                    mailId: emailController.text.trim(),
+                                    password: passwordController.text.trim(),
+                                    confirmPassword: confirmPasswordController.text.trim(),
+                                    phoneNumber: phoneController.text.trim(),
                                   );
-
-                              if (success) {
-                                Get.offAll(BaseScreen());
-                              }
-                            },
-                          ),
-                          SizedBox(height: 2.h),
-                          // The Sign In clickable text remains same
-                          Align(
-                            alignment: Alignment.center,
-                            child: Text.rich(
-                              TextSpan(
-                                text: "Already have an account? ",
-                                style: TextStyle(
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 12,
-                                ),
-                                children: [
-                                  TextSpan(
-                                    text: 'Sign In',
-                                    style: TextStyle(
-                                      color: Colors.blue,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                      decoration: TextDecoration.underline,
-                                    ),
-                                    recognizer:
-                                        TapGestureRecognizer()
-                                          ..onTap = () {
-                                            Get.offAll(LoginScreen());
-                                            print('Sign In clicked');
-                                          },
+                                  if (success) {
+                                    Get.offAll(BaseScreen());
+                                  }
+                                }
+                              },
+                            ),
+                            SizedBox(height: 2.h),
+                            Align(
+                              alignment: Alignment.center,
+                              child: Text.rich(
+                                TextSpan(
+                                  text: "Already have an account? ",
+                                  style: const TextStyle(
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12,
                                   ),
-                                ],
+                                  children: [
+                                    TextSpan(
+                                      text: 'Sign In',
+                                      style: const TextStyle(
+                                        color: Colors.blue,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          Get.offAll(LoginScreen());
+                                        },
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -273,3 +265,4 @@ class _GuestRegistrationScreenState extends State<GuestRegistrationScreen>
     );
   }
 }
+

@@ -9,6 +9,7 @@ class CustomTextField extends StatelessWidget {
   final IconData? icon;
   final bool isPassword;
   final TextEditingController? controller;
+  final String? Function(String?)? validator;
 
   const CustomTextField({
     Key? key,
@@ -16,21 +17,24 @@ class CustomTextField extends StatelessWidget {
     this.icon,
     this.isPassword = false,
     this.controller,
+    this.validator,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final RxBool _obscureText = true.obs;
-
     if (!isPassword) _obscureText.value = false;
 
-    return Obx(() => TextField(
+    return Obx(() => TextFormField(
           controller: controller,
           obscureText: _obscureText.value,
+          validator: validator,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           decoration: InputDecoration(
             hintText: hintText,
-            hintStyle: TextStyle(fontSize: 14, color: Color(0xFF839099)),
+            hintStyle: const TextStyle(fontSize: 14, color: Color(0xFF839099)),
             filled: true,
+            isDense: true,
             fillColor: AppColors.primaryBackground,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15),
@@ -44,7 +48,7 @@ class CustomTextField extends StatelessWidget {
               borderRadius: BorderRadius.circular(15),
               borderSide: BorderSide.none,
             ),
-            contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
+            contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
             suffixIcon: isPassword
                 ? IconButton(
                     icon: Icon(
@@ -58,6 +62,3 @@ class CustomTextField extends StatelessWidget {
         ));
   }
 }
-
-
-

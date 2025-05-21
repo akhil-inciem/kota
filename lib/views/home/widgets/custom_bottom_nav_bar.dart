@@ -70,7 +70,7 @@ final int notificationCount = 99; // 👈 Pass this dynamically from state
   _buildNavItem(
     selectedIcon: 'assets/icons/favorites_selected.png',
     unselectedIcon: 'assets/icons/favorites_unselected.png',
-    label: 'Favorites',
+    label: 'Favourites',
     index: 3,
   ),
   _buildNavItem(

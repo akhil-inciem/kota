@@ -11,10 +11,12 @@ class AuthApiService {
       final response = await _dio.post(
         ApiEndpoints.login,
         data: {
-          'email': email,
-          // 'athiathi125@gmail.com'
-          'member_password': password,
-          // 'Devu@2000'
+          'email': 
+          // email,
+          'athiathi125@gmail.com',
+          'member_password': 
+          // password,
+          'Devu@2000'
         },
         options: Options(
           contentType:

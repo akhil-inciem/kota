@@ -44,7 +44,7 @@ class _TopBarState extends State<TopBar> {
       case 2:
         return 'Forum';
       case 3:
-        return 'Favorites';
+        return 'Favourites';
       case 4:
         return 'Updates';
       default:
