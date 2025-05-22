@@ -24,18 +24,21 @@ class GuestModel {
 
 class Data {
   String? fullName;
+  int? id;
   String? mailId;
 
   Data({this.fullName, this.mailId});
 
   Data.fromJson(Map<String, dynamic> json) {
     fullName = json['full_name'];
+    id = json['id'];
     mailId = json['mail_id'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['full_name'] = this.fullName;
+    data['id'] = this.id;
     data['mail_id'] = this.mailId;
     return data;
   }

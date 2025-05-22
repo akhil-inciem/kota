@@ -10,11 +10,13 @@ class ForumApiService {
   static final _authController = Get.find<AuthController>();
   static final String? _userId = _authController.userModel.value?.data.id;
 
-   Future<List<ForumData>> fetchThreads() async {
+  Future<List<ForumData>> fetchThreads() async {
     try {
       final response = await _dio.get(
         ApiEndpoints.getAllThreads,
-        queryParameters: {'user_id': _userId},
+        queryParameters: {
+          _authController.isGuest ? 'guest_user_id' : 'user_id': _userId,
+        },
       );
 
       if (response.statusCode == 200 && response.data['status'] == true) {
@@ -31,11 +33,13 @@ class ForumApiService {
     }
   }
 
-   Future<ForumData> fetchSingleThread(String threadId) async {
+  Future<ForumData> fetchSingleThread(String threadId) async {
     try {
       final response = await _dio.get(
         '${ApiEndpoints.getThreadDetails}/$threadId',
-        queryParameters: {'user_id': _userId},
+        queryParameters: {
+          _authController.isGuest ? 'guest_user_id' : 'user_id': _userId,
+        },
       );
 
       if (response.statusCode == 200 && response.data['status'] == true) {
@@ -94,7 +98,9 @@ class ForumApiService {
     try {
       final response = await _dio.post(
         url,
-        data: dio.FormData.fromMap({'id': _userId}),
+        data: dio.FormData.fromMap({
+          _authController.isGuest ? 'guest_user_id' : 'user_id': _userId,
+        }),
       );
 
       if (response.statusCode == 200 && response.data['status'] == true) {
@@ -116,7 +122,10 @@ class ForumApiService {
     try {
       final response = await _dio.post(
         url,
-        data: dio.FormData.fromMap({'id': _userId, 'content': comment}),
+        data: dio.FormData.fromMap({
+          _authController.isGuest ? 'guest_user_id' : 'user_id': _userId,
+          'content': comment,
+        }),
       );
 
       if (response.statusCode == 200 && response.data['status'] == true) {
@@ -129,13 +138,15 @@ class ForumApiService {
     }
   }
 
-   Future<void> likeComment(String commentId) async {
+  Future<void> likeComment(String commentId) async {
     final String url = '${ApiEndpoints.likeComment}$commentId';
 
     try {
       final response = await _dio.post(
         url,
-        data: dio.FormData.fromMap({'id': _userId}),
+        data: dio.FormData.fromMap({
+          _authController.isGuest ? 'guest_user_id' : 'user_id': _userId,
+        }),
       );
 
       if (response.statusCode == 200 && response.data['status'] == true) {
@@ -157,7 +168,7 @@ class ForumApiService {
 
     try {
       final dio.FormData formData = dio.FormData.fromMap({
-        'id': _userId,
+        _authController.isGuest ? 'guest_user_id' : 'user_id': _userId,
         'content': reply,
         'comment_id': commentId,
       });
@@ -174,11 +185,13 @@ class ForumApiService {
     }
   }
 
-   Future<void> likeReply(String replyId) async {
+  Future<void> likeReply(String replyId) async {
     final String url = '${ApiEndpoints.likeReply}$replyId';
 
     try {
-      final dio.FormData formData = dio.FormData.fromMap({'id': _userId});
+      final dio.FormData formData = dio.FormData.fromMap({
+        _authController.isGuest ? 'guest_user_id' : 'user_id': _userId,
+      });
 
       final response = await _dio.post(url, data: formData);
 

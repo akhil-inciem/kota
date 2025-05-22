@@ -9,7 +9,7 @@ import 'package:kota/views/login/widgets/custom_button.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class NewDiscussionPage extends StatefulWidget {
-   NewDiscussionPage({super.key});
+  const NewDiscussionPage({super.key});
 
   @override
   State<NewDiscussionPage> createState() => _NewDiscussionPageState();
@@ -33,11 +33,11 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
         backgroundColor: Colors.white,
         body: Obx(() {
           if (userController.isLoading.value) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (userController.user.value == null) {
-          return const Center(child: Text('No user data found'));
-        } else {
-          final user = userController.user.value!;
+            return const Center(child: CircularProgressIndicator());
+          } else if (userController.user.value == null) {
+            return const Center(child: Text('No user data found'));
+          } else {
+            final user = userController.user.value!;
             return SingleChildScrollView(
               child: Column(
                 children: [
@@ -53,28 +53,31 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
                   SizedBox(height: 2.h),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 6.w),
-                    child:  Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                             CircleAvatar(
-                              radius: 30,
-                              backgroundImage: NetworkImage(
-                                user.photo!,
-                              ),
-                            ),
-                            const SizedBox(width: 15),
-                            Text(
-                             '${user.firstName} ${user.lastName}',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ],
-                        )
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          radius: 30,
+                          backgroundImage: NetworkImage(
+                            user.photo?.isNotEmpty == true
+                                ? user.photo!
+                                : 'https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=random&color=fff',
+                          ),
+                        ),
+                        const SizedBox(width: 15),
+                        Text(
+                          '${user.firstName} ${user.lastName}',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(height: 4.h),
+
                   /// Title TextField
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 7.w),
@@ -92,7 +95,7 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
                       ),
                     ),
                   ),
-            
+
                   /// Description TextField
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 7.w),
@@ -111,7 +114,7 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
                     ),
                   ),
                   SizedBox(height: 4.h),
-            
+
                   Divider(color: Colors.grey.shade300, thickness: 1, height: 1),
                   SizedBox(height: 2.h),
                   AddImageSection(),
@@ -128,8 +131,7 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
               ),
             );
           }
-        }
-        ),
+        }),
       ),
     );
   }

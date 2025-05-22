@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kota/controller/auth_controller.dart';
 import 'package:kota/model/profile_model.dart';
 import 'package:kota/views/drawer/drawer_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -7,11 +8,11 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 class ProfileHeader extends StatelessWidget {
   final User user;
 
-  const ProfileHeader({
+   ProfileHeader({
     Key? key,
     required this.user,
   }) : super(key: key);
-
+final authController = Get.find<AuthController>();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -125,8 +126,8 @@ class ProfileHeader extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    const Text(
-                      'KOTA Member',
+                     Text(
+                      authController.isGuest ? "KOTA Guest" : "KOTA Member",
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w300,

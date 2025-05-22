@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:kota/constants/colors.dart';
+import 'package:kota/controller/auth_controller.dart';
 import 'package:kota/controller/user_controller.dart';
 import 'package:kota/views/drawer/drawer_screen.dart';
 import 'package:kota/views/widgets/top_bar.dart';
@@ -21,6 +22,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   int certificationCount = 1;
   final userController = Get.put(UserController());
+  final authController = Get.find<AuthController>();
 
   @override
   void initState() {
@@ -52,11 +54,12 @@ class _ProfilePageState extends State<ProfilePage> {
                          ProfileInfoWidget(
                           email: user.email!,
                           phoneNumber: user.primaryNumber!,
-                          role: "KOTA Member",
+                          role:authController.isGuest ? "KOTA Guest" : "KOTA Member",
                         ),
                         SizedBox(height: 2.h),
                         const ChangePasswordWidget(),
                         SizedBox(height: 2.h),
+                        user.aiotaCertificate == null ? SizedBox.shrink():
                         MyCertificationsWidget(
                           certificationCount: certificationCount,
                           imagePath: user.aiotaCertificate!,

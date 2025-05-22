@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:kota/constants/colors.dart';
+import 'package:kota/controller/auth_controller.dart';
 import 'package:kota/controller/forum_controller.dart';
 import 'package:kota/controller/user_controller.dart';
 import 'package:kota/data/dummy.dart';
@@ -25,6 +26,7 @@ class ForumDetailScreen extends StatefulWidget {
 class _ForumDetailScreenState extends State<ForumDetailScreen> {
   final ForumController controller = Get.find<ForumController>();
   final userController = Get.put(UserController());
+  final authController = Get.find<AuthController>();
 
   @override
   void initState() {
@@ -91,7 +93,7 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                                   ),
                                 ),
                                 Text(
-                                  'KOTA Member',
+authController.isGuest ? "KOTA Guest" : "KOTA Member",
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.grey,

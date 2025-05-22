@@ -13,7 +13,10 @@ class UserApiService {
       final authController = Get.find<AuthController>();
       final userId = authController.userModel.value!.data.id;
 
-      final response = await _dio.get("${ApiEndpoints.getUserProfile}$userId");
+      final response = await _dio.get(ApiEndpoints.getUserProfile, queryParameters: {
+        'id': userId,
+        'isguest': authController.isGuest ? 1 : 0
+      },);
 
       if (response.statusCode == 200 && response.data['status'] == true) {
         final userResponse = UserResponse.fromJson(response.data);

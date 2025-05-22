@@ -1,216 +1,209 @@
 class FavoritesModel {
-  bool? status;
-  String? userId;
-  Data? data;
+  final bool status;
+  final String userId;
+  final Data? data;
 
-  FavoritesModel({this.status, this.userId, this.data});
+  FavoritesModel({
+    required this.status,
+    required this.userId,
+    this.data,
+  });
 
-  FavoritesModel.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    userId = json['user_id'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
-  }
+  factory FavoritesModel.fromJson(Map<String, dynamic> json) => FavoritesModel(
+        status: json["status"] ?? false,
+        userId: json["user_id"].toString(),
+        data: json["data"] != null ? Data.fromJson(json["data"]) : null,
+      );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['user_id'] = this.userId;
-    if (this.data != null) {
-      data['data'] = this.data!.toJson();
-    }
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+        "status": status,
+        "user_id": userId,
+        "data": data?.toJson(),
+      };
 }
+
 
 class Data {
-  List<News>? news;
-  List<Events>? events;
+    Data({
+        required this.favoriteNews,
+        required this.favoriteEvents,
+    });
 
-  Data({this.news, this.events});
+    final List<FavoriteNew> favoriteNews;
+    final List<FavoriteEvent> favoriteEvents;
 
-  Data.fromJson(Map<String, dynamic> json) {
-    if (json['favorite_news'] != null) {
-      news = <News>[];
-      json['favorite_news'].forEach((v) {
-        news!.add(new News.fromJson(v));
-      });
+    factory Data.fromJson(Map<String, dynamic> json){ 
+        return Data(
+            favoriteNews: json["favorite_news"] == null ? [] : List<FavoriteNew>.from(json["favorite_news"]!.map((x) => FavoriteNew.fromJson(x))),
+            favoriteEvents: json["favorite_events"] == null ? [] : List<FavoriteEvent>.from(json["favorite_events"]!.map((x) => FavoriteEvent.fromJson(x))),
+        );
     }
-    if (json['favorite_events'] != null) {
-      events = <Events>[];
-      json['favorite_events'].forEach((v) {
-        events!.add(new Events.fromJson(v));
-      });
-    }
-  }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.news != null) {
-      data['favorite_news'] = this.news!.map((v) => v.toJson()).toList();
-    }
-    if (this.events != null) {
-      data['favorite_events'] = this.events!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
+    Map<String, dynamic> toJson() => {
+        "favorite_news": favoriteNews.map((x) => x?.toJson()).toList(),
+        "favorite_events": favoriteEvents.map((x) => x?.toJson()).toList(),
+    };
+
 }
 
-class News {
-  String? favoriteId;
-  String? newsId;
-  String? newsTitle;
-  String? newsSubTitle;
-  String? newsDescription;
-  String? newsImage;
-  String? newsDate;
-  String? attachment;
-  String? addedOn;
-  String? addedBy;
-  String? status;
-  String? newsCategory;
-  Null? author;
-  String? newsAuthor;
-  String? badges;
+class FavoriteEvent {
+    FavoriteEvent({
+        required this.favoriteId,
+        required this.eventId,
+        required this.eventTitle,
+        required this.eventName,
+        required this.eventShortDescription,
+        required this.eventDescription,
+        required this.eventstartDateDate,
+        required this.eventEndDate,
+        required this.totalSeats,
+        required this.addedBy,
+        required this.addedOn,
+        required this.image,
+        required this.document,
+        required this.status,
+        required this.feesPerSeat,
+        required this.location,
+        required this.onlineBooking,
+        required this.badges,
+    });
 
-  News(
-      {
-      this.favoriteId,
-      this.newsId,
-      this.newsTitle,
-      this.newsSubTitle,
-      this.newsDescription,
-      this.newsImage,
-      this.newsDate,
-      this.attachment,
-      this.addedOn,
-      this.addedBy,
-      this.status,
-      this.newsCategory,
-      this.author,
-      this.newsAuthor,
-      this.badges,});
+    final String? favoriteId;
+    final String? eventId;
+    final String? eventTitle;
+    final String? eventName;
+    final String? eventShortDescription;
+    final String? eventDescription;
+    final DateTime? eventstartDateDate;
+    final DateTime? eventEndDate;
+    final String? totalSeats;
+    final String? addedBy;
+    final String? addedOn;
+    final String? image;
+    final String? document;
+    final String? status;
+    final String? feesPerSeat;
+    final String? location;
+    final String? onlineBooking;
+    final String? badges;
 
-  News.fromJson(Map<String, dynamic> json) {
-    newsId = json['news_id'];
-    newsTitle = json['news_title'];
-    newsSubTitle = json['news_sub_title'];
-    newsDescription = json['news_description'];
-    newsImage = json['news_image'];
-    newsDate = json['news_date'];
-    attachment = json['attachment'];
-    addedOn = json['added_on'];
-    addedBy = json['added_by'];
-    status = json['status'];
-    newsCategory = json['news_category'];
-    author = json['author'];
-    newsAuthor = json['news_author'];
-    badges = json['badges'];
-    favoriteId = json['favorite_id'];
-  }
+    factory FavoriteEvent.fromJson(Map<String, dynamic> json){ 
+        return FavoriteEvent(
+            favoriteId: json["favorite_id"],
+            eventId: json["event_id"],
+            eventTitle: json["event_title"],
+            eventName: json["event_name"],
+            eventShortDescription: json["event_short_description"],
+            eventDescription: json["event_description"],
+            eventstartDateDate: DateTime.tryParse(json["eventstart_date_date"] ?? ""),
+            eventEndDate: DateTime.tryParse(json["event_end_date"] ?? ""),
+            totalSeats: json["total_seats"],
+            addedBy: json["added_by"],
+            addedOn: json["added_on"],
+            image: json["image"],
+            document: json["document"],
+            status: json["status"],
+            feesPerSeat: json["fees_per_seat"],
+            location: json["location"],
+            onlineBooking: json["online_booking"],
+            badges: json["badges"],
+        );
+    }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['news_id'] = this.newsId;
-    data['news_title'] = this.newsTitle;
-    data['news_sub_title'] = this.newsSubTitle;
-    data['news_description'] = this.newsDescription;
-    data['news_image'] = this.newsImage;
-    data['news_date'] = this.newsDate;
-    data['attachment'] = this.attachment;
-    data['added_on'] = this.addedOn;
-    data['added_by'] = this.addedBy;
-    data['status'] = this.status;
-    data['news_category'] = this.newsCategory;
-    data['author'] = this.author;
-    data['news_author'] = this.newsAuthor;
-    data['badges'] = this.badges;
-    data['favorite_id'] = this.favoriteId;
-    return data;
-  }
+    Map<String, dynamic> toJson() => {
+        "favorite_id": favoriteId,
+        "event_id": eventId,
+        "event_title": eventTitle,
+        "event_name": eventName,
+        "event_short_description": eventShortDescription,
+        "event_description": eventDescription,
+        "eventstart_date_date": eventstartDateDate?.toIso8601String(),
+        "event_end_date": eventEndDate?.toIso8601String(),
+        "total_seats": totalSeats,
+        "added_by": addedBy,
+        "added_on": addedOn,
+        "image": image,
+        "document": document,
+        "status": status,
+        "fees_per_seat": feesPerSeat,
+        "location": location,
+        "online_booking": onlineBooking,
+        "badges": badges,
+    };
+
 }
 
-class Events {
-  String? favoriteId;
-  String? eventId;
-  String? eventTitle;
-  String? eventName;
-  String? eventShortDescription;
-  String? eventDescription;
-  String? eventstartDateDate;
-  String? eventEndDate;
-  String? totalSeats;
-  String? addedBy;
-  String? addedOn;
-  String? image;
-  String? document;
-  String? status;
-  String? feesPerSeat;
-  String? location;
-  String? onlineBooking;
-  String? badges;
+class FavoriteNew {
+    FavoriteNew({
+        required this.favoriteId,
+        required this.newsId,
+        required this.newsTitle,
+        required this.newsSubTitle,
+        required this.newsDescription,
+        required this.newsImage,
+        required this.newsDate,
+        required this.attachment,
+        required this.addedOn,
+        required this.addedBy,
+        required this.status,
+        required this.newsCategory,
+        required this.author,
+        required this.newsAuthor,
+        required this.badges,
+    });
 
-  Events(
-      {
-      this.favoriteId,
-      this.eventId,
-      this.eventTitle,
-      this.eventName,
-      this.eventShortDescription,
-      this.eventDescription,
-      this.eventstartDateDate,
-      this.eventEndDate,
-      this.totalSeats,
-      this.addedBy,
-      this.addedOn,
-      this.image,
-      this.document,
-      this.status,
-      this.feesPerSeat,
-      this.location,
-      this.onlineBooking,
-      this.badges,});
+    final String? favoriteId;
+    final String? newsId;
+    final String? newsTitle;
+    final String? newsSubTitle;
+    final String? newsDescription;
+    final String? newsImage;
+    final DateTime? newsDate;
+    final String? attachment;
+    final String? addedOn;
+    final String? addedBy;
+    final String? status;
+    final String? newsCategory;
+    final dynamic author;
+    final String? newsAuthor;
+    final String? badges;
 
-  Events.fromJson(Map<String, dynamic> json) {
-    eventId = json['event_id'];
-    eventTitle = json['event_title'];
-    eventName = json['event_name'];
-    eventShortDescription = json['event_short_description'];
-    eventDescription = json['event_description'];
-    eventstartDateDate = json['eventstart_date_date'];
-    eventEndDate = json['event_end_date'];
-    totalSeats = json['total_seats'];
-    addedBy = json['added_by'];
-    addedOn = json['added_on'];
-    image = json['image'];
-    document = json['document'];
-    status = json['status'];
-    feesPerSeat = json['fees_per_seat'];
-    location = json['location'];
-    onlineBooking = json['online_booking'];
-    badges = json['badges'];
-    favoriteId = json['favorite_id'];
-  }
+    factory FavoriteNew.fromJson(Map<String, dynamic> json){ 
+        return FavoriteNew(
+            favoriteId: json["favorite_id"],
+            newsId: json["news_id"],
+            newsTitle: json["news_title"],
+            newsSubTitle: json["news_sub_title"],
+            newsDescription: json["news_description"],
+            newsImage: json["news_image"],
+            newsDate: DateTime.tryParse(json["news_date"] ?? ""),
+            attachment: json["attachment"],
+            addedOn: json["added_on"],
+            addedBy: json["added_by"],
+            status: json["status"],
+            newsCategory: json["news_category"],
+            author: json["author"],
+            newsAuthor: json["news_author"],
+            badges: json["badges"],
+        );
+    }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['event_id'] = this.eventId;
-    data['event_title'] = this.eventTitle;
-    data['event_name'] = this.eventName;
-    data['event_short_description'] = this.eventShortDescription;
-    data['event_description'] = this.eventDescription;
-    data['eventstart_date_date'] = this.eventstartDateDate;
-    data['event_end_date'] = this.eventEndDate;
-    data['total_seats'] = this.totalSeats;
-    data['added_by'] = this.addedBy;
-    data['added_on'] = this.addedOn;
-    data['image'] = this.image;
-    data['document'] = this.document;
-    data['status'] = this.status;
-    data['fees_per_seat'] = this.feesPerSeat;
-    data['location'] = this.location;
-    data['online_booking'] = this.onlineBooking;
-    data['badges'] = this.badges;
-    data['favorite_id'] = this.favoriteId;
-    return data;
-  }
+    Map<String, dynamic> toJson() => {
+        "favorite_id": favoriteId,
+        "news_id": newsId,
+        "news_title": newsTitle,
+        "news_sub_title": newsSubTitle,
+        "news_description": newsDescription,
+        "news_image": newsImage,
+        "news_date": "${newsDate!.year.toString().padLeft(4,'0')}-${newsDate!.month.toString().padLeft(2,'0')}-${newsDate!.day.toString().padLeft(2,'0')}",
+        "attachment": attachment,
+        "added_on": addedOn,
+        "added_by": addedBy,
+        "status": status,
+        "news_category": newsCategory,
+        "author": author,
+        "news_author": newsAuthor,
+        "badges": badges,
+    };
+
 }

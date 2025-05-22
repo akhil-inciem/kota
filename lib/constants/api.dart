@@ -34,15 +34,15 @@ class ApiEndpoints {
 
   //Favorites
   static const String favorites = '$baseUrl/news/get_favorites';
-  static const String updateNewsFavorites = '$baseUrl/news/update-badges-favorites';
-  static const String updateEventFavorites = '$baseUrl/news/updatevent-badges-favorites';
+  static const String updateNewsFavorites = '$baseUrl/news/addnewsfavorite';
+  static const String updateEventFavorites = '$baseUrl/news/addnewsfavorite';
 
   //Updates
   static const String getUpdates = '$baseUrl/news/updates';
   static const String getMemberExpiry = '$baseUrl/news/get-member-details?member=';
 
   // User
-  static const String getUserProfile = '$baseUrl/news/get-user?id=';
+  static const String getUserProfile = '$baseUrl/news/get-user';
   static const String updateUserProfile = '$baseUrl/user/update';
 
   //Drawer

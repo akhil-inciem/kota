@@ -32,8 +32,8 @@ class FavouriteController extends GetxController {
       final List<Map<String, dynamic>> combinedList = [];
 
       // Combine news
-      if (favoritesModel.data!.news != null) {
-        for (var news in favoritesModel.data!.news!) {
+      if (favoritesModel.data!.favoriteNews != null) {
+        for (var news in favoritesModel.data!.favoriteNews!) {
           combinedList.add({
             'type': 'news',
             'title': news.newsTitle ?? '',
@@ -47,8 +47,8 @@ class FavouriteController extends GetxController {
       }
 
       // Combine events
-      if (favoritesModel.data!.events != null) {
-        for (var event in favoritesModel.data!.events!) {
+      if (favoritesModel.data!.favoriteEvents != null) {
+        for (var event in favoritesModel.data!.favoriteEvents!) {
           combinedList.add({
             'type': 'event',
             'title': event.eventName ?? '',

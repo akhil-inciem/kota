@@ -12,9 +12,12 @@ import 'package:kota/views/login/login_screen.dart';
 import 'package:kota/views/profile/profile_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class DrawerPage extends StatelessWidget {
-  const DrawerPage({Key? key}) : super(key: key);
+import '../../controller/auth_controller.dart';
 
+class DrawerPage extends StatelessWidget {
+   DrawerPage({Key? key}) : super(key: key);
+
+  final authController = Get.find<AuthController>();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -56,9 +59,10 @@ class DrawerPage extends StatelessWidget {
 }
 
 class DrawerHeaderWidget extends StatelessWidget {
-  final userController = Get.put(UserController());
+  
    DrawerHeaderWidget({Key? key}) : super(key: key);
-
+   final userController = Get.put(UserController());
+final authController = Get.find<AuthController>();
   @override
   Widget build(BuildContext context) {
     
@@ -149,7 +153,7 @@ class DrawerHeaderWidget extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                       'KOTA Member',
+                      authController.isGuest ? "KOTA Guest" : "KOTA Member",
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w300,

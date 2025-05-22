@@ -54,7 +54,7 @@ class AuthController extends GetxController {
           status: true,
           message: "Guest login",
           role: 'Guest Member',
-          data: UserData(id: '0', isGuest: 1),
+          data: UserData(id:guestModel.value!.data!.id!.toString(), isGuest: 1),
         );
 
         Get.snackbar("Registration Success", result.message ?? 'Success');

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kota/controller/auth_controller.dart';
 import 'package:kota/model/forum_model.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -8,7 +9,8 @@ import '../../../controller/forum_controller.dart';
 class ReplyTile extends StatelessWidget {
   final Replies reply;
 
-  const ReplyTile({Key? key, required this.reply}) : super(key: key);
+   ReplyTile({Key? key, required this.reply}) : super(key: key);
+  final authController = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +23,16 @@ class ReplyTile extends StatelessWidget {
           // Profile & Name
           Row(
             children: [
-               CircleAvatar(
-                radius: 20,
-                backgroundImage: NetworkImage(reply.photo!),
-              ),
+               reply.photo != null
+        ? CircleAvatar(
+            radius: 20,
+            backgroundImage: NetworkImage(reply.photo!),
+          )
+        : const CircleAvatar(
+            radius: 20,
+            child: Icon(Icons.person, color: Colors.white),
+            backgroundColor: Colors.grey,
+          ),
               SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,8 +45,8 @@ class ReplyTile extends StatelessWidget {
                       color: Colors.black,
                     ),
                   ),
-                  const Text(
-                    'KOTA Member',
+                   Text(
+                    authController.isGuest ? "KOTA Guest" : "KOTA Member",
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w300,
@@ -97,8 +105,8 @@ class ReplyTile extends StatelessWidget {
 class CommentTile extends StatelessWidget {
   final Comments comment;
 
-  const CommentTile({Key? key, required this.comment}) : super(key: key);
-
+   CommentTile({Key? key, required this.comment}) : super(key: key);
+  final authController = Get.find<AuthController>();
   @override
   Widget build(BuildContext context) {
     final ForumController _forumController = Get.find<ForumController>();
@@ -110,10 +118,16 @@ class CommentTile extends StatelessWidget {
           // Profile & Name
           Row(
             children: [
-               CircleAvatar(
-                radius: 20,
-                backgroundImage: NetworkImage(comment.photo!),
-              ),
+               comment.photo != null
+        ? CircleAvatar(
+            radius: 20,
+            backgroundImage: NetworkImage(comment.photo!),
+          )
+        : const CircleAvatar(
+            radius: 20,
+            child: Icon(Icons.person, color: Colors.white),
+            backgroundColor: Colors.grey,
+          ),
               SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,8 +140,8 @@ class CommentTile extends StatelessWidget {
                       color: Colors.black,
                     ),
                   ),
-                  const Text(
-                    'KOTA Member',
+                   Text(
+                    authController.isGuest ? "KOTA Guest" : "KOTA Member",
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w300,
