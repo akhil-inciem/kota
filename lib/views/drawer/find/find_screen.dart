@@ -75,14 +75,20 @@ void initState() {
                 ),
               ),
               Expanded(
-                child: TabBarView(
-                  controller: _tabController,
-                  children: [
-                    FindTherapistTab(controller: controller),
-                    FindClinicTab(controller: controller),
-                  ],
-                ),
-              ),
+  child: Obx(() {
+    if (!controller.isDropdownDataLoaded.value) {
+      return Center(child: CircularProgressIndicator());
+    }
+    return TabBarView(
+      controller: _tabController,
+      children: [
+        FindTherapistTab(controller: controller),
+        FindClinicTab(controller: controller),
+      ],
+    );
+  }),
+),
+
             ],
           ),
         ),

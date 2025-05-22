@@ -20,12 +20,22 @@ class ForumList extends StatefulWidget {
 class _ForumListState extends State<ForumList> {
   final ForumController forumController = Get.find<ForumController>();
 
-  String hoursAgo(String createdAt) {
-    final createdTime = DateTime.parse(createdAt);
-    final now = DateTime.now();
-    final difference = now.difference(createdTime);
-    return '${difference.inHours} hours ago';
+  String timeAgo(String createdAt) {
+  final createdTime = DateTime.parse(createdAt);
+  final now = DateTime.now();
+  final difference = now.difference(createdTime);
+
+  if (difference.inMinutes < 1) {
+    return 'Just now';
+  } else if (difference.inMinutes < 60) {
+    return '${difference.inMinutes} minute${difference.inMinutes == 1 ? '' : 's'} ago';
+  } else if (difference.inHours < 24) {
+    return '${difference.inHours} hour${difference.inHours == 1 ? '' : 's'} ago';
+  } else {
+    return '${difference.inDays} day${difference.inDays == 1 ? '' : 's'} ago';
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +45,9 @@ class _ForumListState extends State<ForumList> {
       }
 
       final items = forumController.threadsList;
+      if(items.isEmpty){
+        return Center(child: Text("No Forums Available",style: TextStyle(fontSize: 18, color: Colors.black),));
+      }
       return ListView.builder(
         padding: EdgeInsets.zero,
         itemCount: items.length,
@@ -106,7 +119,7 @@ class _ForumListState extends State<ForumList> {
                                   ),
                                   SizedBox(height: 0.5.h),
                                   Text(
-                                    hoursAgo(item.createdAt!),
+                                    timeAgo(item.createdAt!),
                                     style: const TextStyle(
                                       fontSize: 10,
                                       color: Colors.grey,

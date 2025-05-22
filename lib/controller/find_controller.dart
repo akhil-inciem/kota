@@ -8,7 +8,7 @@ import 'package:kota/model/therapist_model.dart';
 class FindController extends GetxController {
   var isTherapistLoading = false.obs;
   var isTherapistSearched = false.obs;
-
+  final RxBool isDropdownDataLoaded = false.obs;
   final fetchedTherapistList = <TherapistDatum>[].obs;
 final filteredTherapistList = <TherapistDatum>[].obs;
 
@@ -39,34 +39,38 @@ final filteredClinicList = <Clinic>[].obs;
   }
 
   Future<void> fetchDropdownData() async {
-    try {
-      final dropdownData =
-          await _findApiServices.fetchTherapistDropdownDetails();
-      final districtList = dropdownData.data?.districts ?? [];
-      final genderList = dropdownData.data?.gender ?? [];
-      final practiceAreaList = dropdownData.data?.practiceArea ?? [];
-      districts.value = [
-        District(
-          districtId: '',
-          district: '-- Select District --',
-          status: '',
-          country: '',
-          state: '',
-        ),
-        ...districtList,
-      ];
-      genders.value = [
-        Gender(genderId: '', gender: '-- Select Gender --', status: ''),
-        ...genderList,
-      ];
-      practiceAreas.value = [
-        PracticeArea(spId: '', specialization: '-- Select Practice Area --'),
-        ...practiceAreaList,
-      ];
-    } catch (e) {
-      print("Error fetching dropdown data: $e");
-    }
+  try {
+    final dropdownData =
+        await _findApiServices.fetchTherapistDropdownDetails();
+    final districtList = dropdownData.data?.districts ?? [];
+    final genderList = dropdownData.data?.gender ?? [];
+    final practiceAreaList = dropdownData.data?.practiceArea ?? [];
+
+    districts.value = [
+      District(
+        districtId: '',
+        district: '-- Select District --',
+        status: '',
+        country: '',
+        state: '',
+      ),
+      ...districtList,
+    ];
+    genders.value = [
+      Gender(genderId: '', gender: '-- Select Gender --', status: ''),
+      ...genderList,
+    ];
+    practiceAreas.value = [
+      PracticeArea(spId: '', specialization: '-- Select Practice Area --'),
+      ...practiceAreaList,
+    ];
+
+    // ✅ Mark data as loaded
+    isDropdownDataLoaded.value = true;
+  } catch (e) {
+    print("Error fetching dropdown data: $e");
   }
+}
 
   void resetTherapistSearch() {
     isTherapistSearched.value = false;

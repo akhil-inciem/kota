@@ -92,8 +92,7 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                Text(
-authController.isGuest ? "KOTA Guest" : "KOTA Member",
+                                Text( "KOTA Member",
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.grey,
