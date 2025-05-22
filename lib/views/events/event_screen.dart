@@ -19,7 +19,7 @@ import 'package:table_calendar/table_calendar.dart';
 class EventScreen extends StatelessWidget {
   EventScreen({Key? key}) : super(key: key);
 
-  final EventController controller = Get.find<EventController>();
+  final EventController controller = Get.put(EventController());
 
   final ValueNotifier<double> radiusNotifier = ValueNotifier<double>(20.0);
 

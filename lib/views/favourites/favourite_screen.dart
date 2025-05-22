@@ -19,7 +19,7 @@ class FavouriteScreen extends StatefulWidget {
 }
 
 class _FavouriteScreenState extends State<FavouriteScreen> {
-  final FavouriteController favController = Get.find<FavouriteController>();
+  final FavouriteController favController = Get.put(FavouriteController());
 
   @override
   void initState() {
@@ -124,7 +124,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                       Divider(color: Colors.grey.shade200, thickness: 1),
                       SizedBox(height: 1.h),
                       SizedBox(
-                        height: 62.h,
+                        height: 63.h,
                         child:
                            FavoriteList(),
                       ),

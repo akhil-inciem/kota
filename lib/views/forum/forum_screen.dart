@@ -18,7 +18,7 @@ class ForumScreen extends StatefulWidget {
 }
 
 class _ForumScreenState extends State<ForumScreen> {
-  final ForumController forumController = Get.find<ForumController>();
+  final ForumController forumController = Get.put(ForumController());
 
   @override
   void initState() {
@@ -109,7 +109,7 @@ class _ForumScreenState extends State<ForumScreen> {
                           thickness: 1,
                           height: 1,
                         ),
-                        SizedBox(height:62.7.h,child: ForumList()),
+                        SizedBox(height:70.h,child: ForumList()),
                       ],
                     ),
                   ),

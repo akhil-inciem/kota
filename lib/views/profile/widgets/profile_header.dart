@@ -84,7 +84,7 @@ final authController = Get.find<AuthController>();
                       backgroundImage: NetworkImage(
                         user.photo?.isNotEmpty == true
                             ? user.photo!
-                            : 'https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=random&color=fff',
+                            : 'https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName ?? ''}&background=random&color=fff',
                       ),
                     ),
                     Padding(
@@ -118,7 +118,7 @@ final authController = Get.find<AuthController>();
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${user.firstName} ${user.lastName}',
+                      '${user.firstName} ${user.lastName ?? ''}',
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,

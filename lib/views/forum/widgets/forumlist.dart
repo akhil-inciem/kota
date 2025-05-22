@@ -98,7 +98,7 @@ class _ForumListState extends State<ForumList> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '${item.firstName} ${item.lastName}' ?? '',
+                                    '${item.firstName} ${item.lastName ?? ''}' ?? '',
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,

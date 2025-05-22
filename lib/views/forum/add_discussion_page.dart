@@ -66,7 +66,7 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
                         ),
                         const SizedBox(width: 15),
                         Text(
-                          '${user.firstName} ${user.lastName}',
+                          '${user.firstName} ${user.lastName ?? ''}',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,

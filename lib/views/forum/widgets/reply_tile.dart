@@ -38,7 +38,7 @@ class ReplyTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${reply.firstName}${reply.lastName}',
+                    '${reply.firstName}${reply.lastName ?? ''}',
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
@@ -133,7 +133,7 @@ class CommentTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${comment.firstName}${comment.lastName}',
+                    '${comment.firstName}${comment.lastName ?? ''}',
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,

@@ -108,32 +108,32 @@ final int notificationCount = 99; // 👈 Pass this dynamically from state
             width: 22,
             height: 22,
           ),
-          if (isUpdatesTab)
-            Positioned(
-              top: -4,
-              right: -6,
-              child: Container(
-                height: 2.h,
-                width: 2.h,
-                // padding: const EdgeInsets.symmetric(horizontal: 2,),
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                constraints: const BoxConstraints(minWidth: 16),
-                child: Center(
-                  child: Text(
-                    badgeCount! > 99 ? '99+' : badgeCount.toString(),
-                    style:  TextStyle(
-                      color: Colors.white,
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-            ),
+          // if (isUpdatesTab)
+          //   Positioned(
+          //     top: -4,
+          //     right: -6,
+          //     child: Container(
+          //       height: 2.h,
+          //       width: 2.h,
+          //       // padding: const EdgeInsets.symmetric(horizontal: 2,),
+          //       decoration: BoxDecoration(
+          //         color: Colors.red,
+          //         borderRadius: BorderRadius.circular(10),
+          //       ),
+          //       constraints: const BoxConstraints(minWidth: 16),
+          //       child: Center(
+          //         child: Text(
+          //           badgeCount! > 99 ? '99+' : badgeCount.toString(),
+          //           style:  TextStyle(
+          //             color: Colors.white,
+          //             fontSize: 12.sp,
+          //             fontWeight: FontWeight.bold,
+          //           ),
+          //           textAlign: TextAlign.center,
+          //         ),
+          //       ),
+          //     ),
+          //   ),
         ],
       ),
     ),
