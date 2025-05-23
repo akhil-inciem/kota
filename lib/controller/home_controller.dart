@@ -2,17 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kota/apiServices/favorite_api_services.dart';
 import 'package:kota/apiServices/news_api_service.dart';
-import 'package:kota/data/dummy.dart';
 import 'package:kota/model/news_model.dart';
-import 'package:kota/model/user_model.dart';
-import '../constants/app_constants.dart';
 
 class HomeController extends GetxController {
   RxInt index = 0.obs;
   var selectedTabIndex = 0.obs;
-  final isLoading = true.obs;
+  final isLoading = false.obs;
   final newsItems = <NewsDatum>[].obs;
   final RxList<NewsDatum> filteredNewsItems = <NewsDatum>[].obs;
+  final Rxn<NewsDatum> selectedNewsItem = Rxn<NewsDatum>();
   final favoriteItemList = <NewsDatum>[].obs;
   var bookmarkedStatus = <String, bool>{}.obs;
   final _favApiService = FavoritesApiService();
@@ -22,7 +20,6 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchNewsItems();
   }
 
   void toggleBookmark(String id) async {
@@ -37,6 +34,35 @@ class HomeController extends GetxController {
   }
 }
 
+  Future<void> fetchSingleNewsItem(String newsId) async {
+  isLoading.value = true;
+  selectedNewsItem.value = null;
+  
+  try {
+    final newsItem = await _newsApiService.fetchNewsById(
+      newsId: newsId,
+    );
+
+    if (newsItem != null) {
+      selectedNewsItem.value = newsItem;
+      final index = newsItems.indexWhere((item) => item.newsId == newsId);
+      if (index != -1) {
+        newsItems[index] = newsItem;
+        filteredNewsItems[index] = newsItem;
+      } else {
+        newsItems.add(newsItem);
+        filteredNewsItems.add(newsItem);
+      }
+      if (newsItem.newsId != null) {
+        bookmarkedStatus[newsItem.newsId!] = newsItem.favorites == "1";
+      }
+    }
+  } catch (e) {
+    print("Error fetching single news item: $e");
+  } finally {
+    isLoading.value = false;
+  }
+}
 
   Future<void> fetchNewsItems() async {
   isLoading.value = true;
@@ -47,7 +73,7 @@ class HomeController extends GetxController {
     filteredNewsItems.assignAll(fetchedNews);
     for (final news in fetchedNews) {
       if (news.newsId != null) {
-        bookmarkedStatus[news.newsId!] = news.faverites == "1";
+        bookmarkedStatus[news.newsId!] = news.favorites == "1";
       }
     }
   } catch (e) {

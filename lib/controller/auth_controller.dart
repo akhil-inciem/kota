@@ -18,7 +18,7 @@ class AuthController extends GetxController {
       if (response.status) {
         userModel.value =
             response; 
-        CustomSnackbars.success("Login Success", "Welcome to KOTA");
+        CustomSnackbars.success("Login Successful", "Welcome to KOTA");
         return true;
       } else {
         CustomSnackbars.warning(response.message, "Login Failed");
@@ -57,14 +57,14 @@ class AuthController extends GetxController {
           data: UserData(id:guestModel.value!.data!.id!.toString(), isGuest: 1),
         );
 
-        Get.snackbar("Registration Success", result.message ?? 'Success');
+        CustomSnackbars.success("Registration Successful", "Welcome to KOTA");
         return true;
       } else {
-        Get.snackbar("Registration Failed", result.message ?? 'Failed');
+        CustomSnackbars.warning("Registration Failed", result.message ?? 'Failed');
         return false;
       }
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      CustomSnackbars.oops(e.toString(),"Oops");
       return false;
     }
   }

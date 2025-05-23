@@ -9,6 +9,7 @@ class LabelledTextField extends StatelessWidget {
   final VoidCallback? onRightLabelTap; // Right label tap action
   final String hintText;
   final IconData? icon;
+  final Color? fillColor;
   final bool isPassword;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
@@ -18,6 +19,7 @@ class LabelledTextField extends StatelessWidget {
     this.label,
     this.rightLabel,
     this.onRightLabelTap,
+    this.fillColor,
     required this.hintText,
     this.icon,
     this.isPassword = false,
@@ -70,6 +72,7 @@ class LabelledTextField extends StatelessWidget {
         labelWidget,
         SizedBox(height: 0.3.h),
         CustomTextField(
+          fillColor: fillColor,
           icon: icon,
           hintText: hintText,
           controller: controller,

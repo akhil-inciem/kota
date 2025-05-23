@@ -64,7 +64,7 @@ class _EventsListState extends State<EventsList> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => EventsDetailScreen(item: item),
+                  builder: (context) => EventsDetailScreen(eventId: item.eventId!,),
                 ),
               );
             },

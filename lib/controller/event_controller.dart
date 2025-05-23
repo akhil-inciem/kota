@@ -10,6 +10,7 @@ class EventController extends GetxController {
   RxList<EventsDatum> upcomingEvents = <EventsDatum>[].obs;
   final Rx<DateTime> focusedDate = DateTime.now().obs;
   final RxList<EventsDatum> filteredEventsItems = <EventsDatum>[].obs;
+  final Rxn<EventsDatum> selectedEvent = Rxn<EventsDatum>();
   final allEvents = <EventsDatum>[].obs;
   RxBool isLoading = false.obs;
   final selectedWeekdayIndex = RxInt(-1);
@@ -20,47 +21,68 @@ class EventController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _initialize();
-  }
-
-  Future<void> _initialize() async {
-    await fetchEventItems();
-    await filterTodayEvents();
   }
 
   Future<void> fetchEventItems() async {
-  isLoading.value = true;
-  try {
-    final fetchedEvents = await _eventsApiService.fetchEvents();
-    allEvents.assignAll(fetchedEvents);
-    filteredEventsItems.assignAll(fetchedEvents);
+    isLoading.value = true;
+    try {
+      final fetchedEvents = await _eventsApiService.fetchEvents();
+      allEvents.assignAll(fetchedEvents);
+      filteredEventsItems.assignAll(fetchedEvents);
 
-    // Initialize bookmark status from the `favourite` field
-    for (final event in fetchedEvents) {
-      if (event.eventId != null) {
-        bookmarkedStatus[event.eventId!] = event.faverites == "1";
+      // Initialize bookmark status from the `favourite` field
+      for (final event in fetchedEvents) {
+        if (event.eventId != null) {
+          bookmarkedStatus[event.eventId!] = event.favorites == "1";
+        }
       }
+    } catch (e) {
+      print("Error fetching events: $e");
+    } finally {
+      isLoading.value = false;
     }
-
-  } catch (e) {
-    print("Error fetching events: $e");
-  } finally {
-    isLoading.value = false;
   }
-}
 
+  Future<void> fetchSingleEventItem(String eventId) async {
+    isLoading.value = true;
+
+    try {
+      final eventItem = await _eventsApiService.fetchEventsById(
+        eventsId: eventId,
+      );
+
+      if (eventItem != null) {
+        selectedEvent.value = eventItem;
+        final index = allEvents.indexWhere((item) => item.eventId == eventId);
+        if (index != -1) {
+          allEvents[index] = eventItem;
+          filteredEventsItems[index] = eventItem;
+        } else {
+          allEvents.add(eventItem);
+          filteredEventsItems.add(eventItem);
+        }
+        if (eventItem.eventId != null) {
+          bookmarkedStatus[eventItem.eventId!] = eventItem.favorites == "1";
+        }
+      }
+    } catch (e) {
+      print("Error fetching single news item: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
 
   void toggleBookmark(String id) async {
-  final currentStatus = bookmarkedStatus[id] ?? false;
-  final newStatus = !currentStatus;
-  bookmarkedStatus[id] = newStatus;
-  try {
-    await _favApiService.sendEventsBookmarkStatusToApi(id, newStatus);
-  } catch (e) {
-    print("Failed to update bookmark status: $e");
-    bookmarkedStatus[id] = currentStatus;
+    final currentStatus = bookmarkedStatus[id] ?? false;
+    final newStatus = !currentStatus;
+    bookmarkedStatus[id] = newStatus;
+    try {
+      await _favApiService.sendEventsBookmarkStatusToApi(id, newStatus);
+    } catch (e) {
+      print("Failed to update bookmark status: $e");
+      bookmarkedStatus[id] = currentStatus;
+    }
   }
-}
 
   void updateSelectedWeekday(DateTime date) {
     selectedWeekdayIndex.value = date.weekday % 7;
@@ -97,22 +119,25 @@ class EventController extends GetxController {
 
   bool isSameDate(DateTime date1, DateTime date2) {
     return date1.year == date2.year &&
-           date1.month == date2.month &&
-           date1.day == date2.day;
+        date1.month == date2.month &&
+        date1.day == date2.day;
   }
-  
+
   void filterEvents(String query) {
-  if (query.isEmpty) {
-    filteredEventsItems.assignAll(allEvents);
-  } else {
-    filteredEventsItems.assignAll(
-      allEvents.where(
-        (item) =>
-            item.eventName?.toLowerCase().contains(query.toLowerCase()) == true
-             ||
-            item.eventDescription?.toLowerCase().contains(query.toLowerCase()) == true,
-      ),
-    );
+    if (query.isEmpty) {
+      filteredEventsItems.assignAll(allEvents);
+    } else {
+      filteredEventsItems.assignAll(
+        allEvents.where(
+          (item) =>
+              item.eventName?.toLowerCase().contains(query.toLowerCase()) ==
+                  true ||
+              item.eventDescription?.toLowerCase().contains(
+                    query.toLowerCase(),
+                  ) ==
+                  true,
+        ),
+      );
+    }
   }
-}
 }

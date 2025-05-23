@@ -7,6 +7,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 class CustomTextField extends StatelessWidget {
   final String hintText;
   final IconData? icon;
+  final Color? fillColor;
   final bool isPassword;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
@@ -14,6 +15,7 @@ class CustomTextField extends StatelessWidget {
   const CustomTextField({
     Key? key,
     required this.hintText,
+    this.fillColor,
     this.icon,
     this.isPassword = false,
     this.controller,
@@ -35,7 +37,7 @@ class CustomTextField extends StatelessWidget {
             hintStyle: const TextStyle(fontSize: 14, color: Color(0xFF839099)),
             filled: true,
             isDense: true,
-            fillColor: AppColors.primaryBackground,
+            fillColor:fillColor ?? AppColors.primaryBackground,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15),
               borderSide: BorderSide.none,

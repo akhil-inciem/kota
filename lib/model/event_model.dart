@@ -44,7 +44,7 @@ class EventsDatum {
         required this.location,
         required this.onlineBooking,
         required this.badges,
-        required this.faverites,
+        required this.favorites,
     });
 
     final String? eventId;
@@ -64,7 +64,7 @@ class EventsDatum {
     final String? location;
     final String? onlineBooking;
     final dynamic badges;
-    final dynamic faverites;
+    final dynamic favorites;
 
     factory EventsDatum.fromJson(Map<String, dynamic> json){ 
         return EventsDatum(
@@ -85,7 +85,7 @@ class EventsDatum {
             location: json["location"],
             onlineBooking: json["online_booking"],
             badges: json["badges"],
-            faverites: json["faverites"],
+            favorites: json["favorites"],
         );
     }
 
@@ -107,7 +107,7 @@ class EventsDatum {
         "location": location,
         "online_booking": onlineBooking,
         "badges": badges,
-        "faverites": faverites,
+        "favorites": favorites,
     };
 
 }

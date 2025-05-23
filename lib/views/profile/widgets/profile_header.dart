@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:kota/controller/auth_controller.dart';
 import 'package:kota/model/profile_model.dart';
 import 'package:kota/views/drawer/drawer_screen.dart';
+import 'package:kota/views/profile/edit_profile_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class ProfileHeader extends StatelessWidget {
@@ -87,24 +88,29 @@ final authController = Get.find<AuthController>();
                             : 'https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName ?? ''}&background=random&color=fff',
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(6.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.black87,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 2.w,
-                            vertical: 0.3.h,
+                    GestureDetector(
+                      onTap: (){
+                        Get.to(()=>EditProfileScreen());
+                      },
+                      child: Padding(
+                        padding:  EdgeInsets.all(6.sp),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.4),
+                            borderRadius: BorderRadius.circular(5),
                           ),
-                          child: const Center(
-                            child: Text(
-                              "Edit",
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: Colors.white,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 4.w,
+                              vertical: 0.4.h,
+                            ),
+                            child:  Center(
+                              child: Text(
+                                "Edit",
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ),

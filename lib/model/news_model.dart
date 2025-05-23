@@ -41,7 +41,7 @@ class NewsDatum {
         required this.author,
         required this.newsAuthor,
         required this.badges,
-        required this.faverites,
+        required this.favorites,
     });
 
     final String? newsId;
@@ -58,7 +58,7 @@ class NewsDatum {
     final dynamic author;
     final String? newsAuthor;
     final dynamic badges;
-    final dynamic faverites;
+    final dynamic favorites;
 
     factory NewsDatum.fromJson(Map<String, dynamic> json){ 
         return NewsDatum(
@@ -76,7 +76,7 @@ class NewsDatum {
             author: json["author"],
             newsAuthor: json["news_author"],
             badges: json["badges"],
-            faverites: json["faverites"],
+            favorites: json["favorites"],
         );
     }
 
@@ -95,7 +95,7 @@ class NewsDatum {
         "author": author,
         "news_author": newsAuthor,
         "badges": badges,
-        "faverites": faverites,
+        "favorites": favorites,
     };
 
 }

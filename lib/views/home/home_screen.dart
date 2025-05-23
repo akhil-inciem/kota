@@ -24,6 +24,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    homeController.fetchNewsItems();
+    eventController.fetchEventItems();
+    eventController.filterTodayEvents();
     homeController.searchController.addListener(() {
       homeController.filterNews(homeController.searchController.text);
     });

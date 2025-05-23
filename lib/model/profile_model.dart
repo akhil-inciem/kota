@@ -104,4 +104,45 @@ class User {
         'pg_certificate': pgCertificate,
         'aiota_certificate': aiotaCertificate,
       };
+
+      User copyWith({
+  String? id,
+  String? aiotaMembershipNo,
+  String? kbaiotaMembershipNo,
+  String? firstName,
+  String? lastName,
+  String? birthDate,
+  String? photo,
+  String? primaryNumber,
+  String? secondaryNumber,
+  String? email,
+  String? address,
+  String? pincode,
+  String? idProof,
+  String? signDate,
+  String? graduationCertificate,
+  String? pgCertificate,
+  String? aiotaCertificate,
+}) {
+  return User(
+    id: id ?? this.id,
+    aiotaMembershipNo: aiotaMembershipNo ?? this.aiotaMembershipNo,
+    kbaiotaMembershipNo: kbaiotaMembershipNo ?? this.kbaiotaMembershipNo,
+    firstName: firstName ?? this.firstName,
+    lastName: lastName ?? this.lastName,
+    birthDate: birthDate ?? this.birthDate,
+    photo: photo ?? this.photo,
+    primaryNumber: primaryNumber ?? this.primaryNumber,
+    secondaryNumber: secondaryNumber ?? this.secondaryNumber,
+    email: email ?? this.email,
+    address: address ?? this.address,
+    pincode: pincode ?? this.pincode,
+    idProof: idProof ?? this.idProof,
+    signDate: signDate ?? this.signDate,
+    graduationCertificate: graduationCertificate ?? this.graduationCertificate,
+    pgCertificate: pgCertificate ?? this.pgCertificate,
+    aiotaCertificate: aiotaCertificate ?? this.aiotaCertificate,
+  );
+}
+
 }

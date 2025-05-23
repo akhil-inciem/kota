@@ -72,7 +72,7 @@ Future<void> sendEventsBookmarkStatusToApi(String id, bool status) async {
   try {
     FormData formData = FormData.fromMap({
       'user_id': userId,
-      'event_id': id,
+      'events_id': id,
       'user_type' : authController.isGuest ? 1 : 0,
       'badges' : 'events'
     });

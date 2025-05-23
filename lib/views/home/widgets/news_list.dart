@@ -14,7 +14,7 @@ class NewsList extends StatefulWidget {
   final bool isFavourite; // <--- New parameter
   final ScrollController scrollController;
 
-  NewsList({
+   NewsList({
     Key? key,
     required this.isFavourite,
     required this.scrollController,
@@ -39,7 +39,7 @@ class _NewsListState extends State<NewsList> {
   Widget build(BuildContext context) {
     return Obx(() {
       if (homeController.isLoading.value) {
-        return const ListShimmer(); // Show shimmer while loading
+        return const ListShimmer(); 
       }
 
       final items = homeController.filteredNewsItems;
@@ -65,7 +65,7 @@ class _NewsListState extends State<NewsList> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => NewsDetailScreen(item: item),
+                  builder: (context) => NewsDetailScreen(newsId: item.newsId!,),
                 ),
               );
             },

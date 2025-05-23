@@ -12,7 +12,23 @@ import 'package:kota/controller/user_controller.dart';
 import 'package:kota/views/login/login_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-void main() {
+// final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+//     FlutterLocalNotificationsPlugin();
+
+// Future<void> initNotifications() async {
+//   const AndroidInitializationSettings androidSettings =
+//       AndroidInitializationSettings('@mipmap/ic_launcher');
+
+//   const InitializationSettings settings =
+//       InitializationSettings(android: androidSettings);
+
+//   await flutterLocalNotificationsPlugin.initialize(settings);
+// }
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // await NotificationService.initialize();
+  
   Get.lazyPut(() => AuthController());
   Get.lazyPut(() => HomeController());
   Get.lazyPut(() => UserController());
@@ -22,6 +38,7 @@ void main() {
   Get.lazyPut(() => FindController());
   Get.lazyPut(() => SideMenuController());
   Get.lazyPut(() => UpdateController());
+
   runApp(MyApp());
 }
 

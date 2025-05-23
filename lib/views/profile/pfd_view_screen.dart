@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class PDFViewerScreen extends StatelessWidget {
@@ -9,8 +11,33 @@ class PDFViewerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("View Certification")),
-      body: SfPdfViewer.network(pdfUrl),
+      
+      body: Padding(
+        padding:  EdgeInsets.symmetric(horizontal: 4.w),
+        child: Column(
+          
+          children: [
+            _buildAppBar(), 
+            Expanded(child: SfPdfViewer.network(pdfUrl)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAppBar() {
+    return Row(
+      children: [
+        InkWell(
+          onTap: () => Get.back(),
+          child: Icon(Icons.arrow_back_ios, size: 3.h),
+        ),
+        SizedBox(width: 4.w),
+        Text(
+          "Contact Us",
+          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+        ),
+      ],
     );
   }
 }

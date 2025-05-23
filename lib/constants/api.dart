@@ -26,11 +26,11 @@ class ApiEndpoints {
 
   // News
   static const String getNews = '$baseUrl/news/get-all-news';
-  static const String getNewsById = '$baseUrl/news/{id}';
+  static const String getNewsById = '$baseUrl/news/getnews_by_id';
 
   // Events
   static const String getEvents = '$baseUrl/news/get-all-events';
-  static const String getEventById = '$baseUrl/events/{id}';
+  static const String getEventById = '$baseUrl/news/get_events_id';
 
   //Favorites
   static const String favorites = '$baseUrl/news/get_favorites';
