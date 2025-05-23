@@ -26,8 +26,10 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
 
   @override
   void initState() {
-    homeController.fetchSingleNewsItem(widget.newsId);
     super.initState();
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    homeController.fetchSingleNewsItem(widget.newsId);
+  });
   }
 
   @override

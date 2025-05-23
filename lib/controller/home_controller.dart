@@ -37,7 +37,7 @@ class HomeController extends GetxController {
   Future<void> fetchSingleNewsItem(String newsId) async {
   isLoading.value = true;
   selectedNewsItem.value = null;
-  
+
   try {
     final newsItem = await _newsApiService.fetchNewsById(
       newsId: newsId,
@@ -54,7 +54,7 @@ class HomeController extends GetxController {
         filteredNewsItems.add(newsItem);
       }
       if (newsItem.newsId != null) {
-        bookmarkedStatus[newsItem.newsId!] = newsItem.favorites == "1";
+        bookmarkedStatus[newsItem.newsId!] = newsItem.favorites == 1;
       }
     }
   } catch (e) {
@@ -71,11 +71,6 @@ class HomeController extends GetxController {
     final List<NewsDatum> fetchedNews = await _newsApiService.fetchNews();
     newsItems.assignAll(fetchedNews);
     filteredNewsItems.assignAll(fetchedNews);
-    for (final news in fetchedNews) {
-      if (news.newsId != null) {
-        bookmarkedStatus[news.newsId!] = news.favorites == "1";
-      }
-    }
   } catch (e) {
     print("Error fetching news: $e");
   } finally {
@@ -96,4 +91,10 @@ void filterNews(String query) {
     );
   }
 }
+
+void clearSelectedNews() {
+  selectedNewsItem.value = null;
+  bookmarkedStatus.clear();
+}
+
 }

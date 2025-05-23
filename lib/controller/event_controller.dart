@@ -29,13 +29,6 @@ class EventController extends GetxController {
       final fetchedEvents = await _eventsApiService.fetchEvents();
       allEvents.assignAll(fetchedEvents);
       filteredEventsItems.assignAll(fetchedEvents);
-
-      // Initialize bookmark status from the `favourite` field
-      for (final event in fetchedEvents) {
-        if (event.eventId != null) {
-          bookmarkedStatus[event.eventId!] = event.favorites == "1";
-        }
-      }
     } catch (e) {
       print("Error fetching events: $e");
     } finally {
@@ -62,7 +55,7 @@ class EventController extends GetxController {
           filteredEventsItems.add(eventItem);
         }
         if (eventItem.eventId != null) {
-          bookmarkedStatus[eventItem.eventId!] = eventItem.favorites == "1";
+          bookmarkedStatus[eventItem.eventId!] = eventItem.favorites == 1;
         }
       }
     } catch (e) {
@@ -140,4 +133,9 @@ class EventController extends GetxController {
       );
     }
   }
+  void clearSelectedEvent() {
+  selectedEvent.value = null;
+  bookmarkedStatus.clear();
+}
+
 }
