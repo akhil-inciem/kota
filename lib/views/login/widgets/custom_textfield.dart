@@ -10,7 +10,7 @@ class CustomTextField extends StatelessWidget {
   final Color? fillColor;
   final bool isPassword;
   final TextEditingController? controller;
-  final String? Function(String?)? validator;
+  final String? Function(String?)? validator; 
 
   const CustomTextField({
     Key? key,

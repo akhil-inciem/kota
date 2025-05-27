@@ -1,3 +1,4 @@
+import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kota/controller/auth_controller.dart';
@@ -12,22 +13,11 @@ import 'package:kota/controller/user_controller.dart';
 import 'package:kota/views/login/login_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-// final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-//     FlutterLocalNotificationsPlugin();
-
-// Future<void> initNotifications() async {
-//   const AndroidInitializationSettings androidSettings =
-//       AndroidInitializationSettings('@mipmap/ic_launcher');
-
-//   const InitializationSettings settings =
-//       InitializationSettings(android: androidSettings);
-
-//   await flutterLocalNotificationsPlugin.initialize(settings);
-// }
+import 'helper/deep_link_handler.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await NotificationService.initialize();
+  setupAppLinks();                
   
   Get.lazyPut(() => AuthController());
   Get.lazyPut(() => HomeController());

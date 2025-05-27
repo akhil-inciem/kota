@@ -9,6 +9,7 @@ class UpdateController extends GetxController {
   final UpdateApiService _apiService = UpdateApiService();
 
   Rx<UpdatesModel?> updatesModel = Rx<UpdatesModel?>(null);
+  Rx<MemberShipModel?> memberModel = Rx<MemberShipModel?>(null);
   RxBool isLoadingUpdates = false.obs;
 
   // Final combined list
@@ -26,7 +27,6 @@ class UpdateController extends GetxController {
   void onInit() {
     super.onInit();
     getUpdates();
-
      debounce(searchQuery, (_) => _applySearch(), time: Duration(milliseconds: 300));
   }
 
@@ -36,7 +36,7 @@ class UpdateController extends GetxController {
       final result = await _apiService.fetchUpdates();
       final memberShip = await _apiService.fetchMembership();
       updatesModel.value = result;
-
+      memberModel.value = memberShip;
       _processUpdates(result);
     } catch (e) {
       print('Controller error fetching updates: $e');

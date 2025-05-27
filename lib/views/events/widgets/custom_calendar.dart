@@ -30,7 +30,7 @@ class CustomCalendar extends StatelessWidget {
               controller.clearSelectedWeekday();
             },
           ),
-          const SizedBox(height: 10),
+           SizedBox(height: 0.5.h),
           const WeekdayHeader(),
           Divider(),
           // TableCalendar
@@ -39,7 +39,6 @@ class CustomCalendar extends StatelessWidget {
             child: TableCalendar(
               daysOfWeekVisible: false,
               headerVisible: false,
-              daysOfWeekHeight: 20,
               calendarStyle: CalendarStyle(
                 outsideDaysVisible: false,
                 todayDecoration: BoxDecoration(

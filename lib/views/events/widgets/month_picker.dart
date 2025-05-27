@@ -54,7 +54,7 @@ void initState() {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 7.h,
+      height: 5.h,
       child: Container(
         color: Colors.white,
         child: ListView.builder(

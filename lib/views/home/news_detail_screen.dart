@@ -27,9 +27,9 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
   @override
   void initState() {
     super.initState();
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    homeController.fetchSingleNewsItem(widget.newsId);
-  });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      homeController.fetchSingleNewsItem(widget.newsId);
+    });
   }
 
   @override
@@ -225,13 +225,16 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
             GestureDetector(
               onTap: () {
                 final title = item.newsTitle ?? 'Check this out!';
-                // final link = widget.item.newsCategory ?? ''; // Replace with your actual link
+                final newsId = item.newsId; // Make sure this exists
                 final params = ShareParams(
                   title: title,
-                  uri: Uri(scheme: 'https', host: 'crash.net'),
+                  uri: Uri.parse(
+                    "https://www.flutter-deep-link.com/news/$newsId",
+                  ),
                 );
                 SharePlus.instance.share(params);
               },
+
               child: Image.asset(
                 'assets/icons/share.png',
                 height: 2.5.h,

@@ -29,11 +29,11 @@ class AuthController extends GetxController {
         CustomSnackbars.success("Login Successful", "Welcome to KOTA");
         return true;
       } else {
-        CustomSnackbars.warning(response.message, "Login Failed");
+        CustomSnackbars.warning("We couldn’t log you in. Please check your username and password and try again.", "Login Failed");
         return false;
       }
     } catch (e) {
-      CustomSnackbars.warning(e.toString(), "Oops");
+      CustomSnackbars.failure("Something went wrong while trying to log in. Please try again later.","Unexpected Error");
       return false;
     }
   }
