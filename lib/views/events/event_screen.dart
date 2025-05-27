@@ -16,6 +16,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../widgets/search_bar.dart';
+
 class EventScreen extends StatelessWidget {
   EventScreen({Key? key}) : super(key: key);
 
@@ -42,7 +44,16 @@ class EventScreen extends StatelessWidget {
               TopBar(
                 isEvent: true,
               ),
-              SizedBox(height: 1.h),
+              SizedBox(height: 0.5.h),
+              CustomSearchBar(
+          // controller: homeController.searchController,
+          // onChanged: (value) {
+          //   homeController.selectedTabIndex.value == 0
+          //       ? homeController.filterNews(value)
+          //       : eventController.filterEvents(value);
+          // },
+        ),
+        SizedBox(height: 1.h),
               CustomCalendar(),
             ],
           ),

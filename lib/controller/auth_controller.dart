@@ -11,6 +11,14 @@ class AuthController extends GetxController {
 
   bool get isGuest => userModel.value?.data.isGuest == 1;
   bool get isUser => userModel.value?.data.isGuest == 0;
+  final isExpanded = false.obs;
+  final isLoading = false.obs;
+
+  void toggleExpansion() => isExpanded.value = !isExpanded.value;
+
+  void collapse() => isExpanded.value = false;
+
+  void expand() => isExpanded.value = true;
 
   Future<bool> loginAsUser(String username, String password) async {
     try {
@@ -29,6 +37,40 @@ class AuthController extends GetxController {
       return false;
     }
   }
+
+  Future<bool> resetPasswordUser(String email) async {
+  try {
+    isLoading.value = true;
+    await _authService.resetPasswordUser(email);
+    return true; // success
+  } catch (e) {
+    print("Failed to send mail: $e");
+    return false; // failure
+   } finally {
+      isLoading.value = false;
+    }
+}
+
+Future<bool> guestResetPassword({
+  required String email,
+  required String oldPassword,
+  required String newPassword,
+}) async {
+  try {
+    // Replace with your actual API logic
+    await _authService.resetGuestPassword(
+      email,
+      oldPassword,
+      newPassword,
+    );
+    return true;
+  } catch (e) {
+    print("Guest password reset error: $e");
+    return false;
+  }
+}
+
+
 
   Future<bool> registerAsGuest({
     required String fullName,

@@ -1,12 +1,13 @@
 class ApiEndpoints {
   // Base URL
-  static const String baseUrl = 'http://dev.kbaiota.org/api';
+  static const String baseUrl = 'https://dev.kbaiota.org/api';
 
   // Auth
   static const String login = '$baseUrl/news/login';
   static const String register = '$baseUrl/news/register';
   static const String logout = '$baseUrl/news/logout';
   static const String resetPassword = '$baseUrl/news/passwordReset';
+  static const String resetGuestPassword = '$baseUrl/news/reset_password_guste_user';
   static const String guestSignIn = '$baseUrl/news/guest-signin';
 
   //Forums
@@ -35,7 +36,7 @@ class ApiEndpoints {
   //Favorites
   static const String favorites = '$baseUrl/news/get_favorites';
   static const String updateNewsFavorites = '$baseUrl/news/addnewsfavorite';
-  static const String updateEventFavorites = '$baseUrl/news/addnewsfavorite';
+  static const String updateEventFavorites = '$baseUrl/news/addeventsfavorite';
 
   //Updates
   static const String getUpdates = '$baseUrl/news/updates';

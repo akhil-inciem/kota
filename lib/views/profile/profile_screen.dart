@@ -57,9 +57,9 @@ class _ProfilePageState extends State<ProfilePage> {
                           role:authController.isGuest ? "KOTA Guest" : "KOTA Member",
                         ),
                         SizedBox(height: 2.h),
-                        const ChangePasswordWidget(),
+                        ChangePasswordWidget(email: user.email!,),
                         SizedBox(height: 2.h),
-                        user.aiotaCertificate == null ? SizedBox.shrink():
+                        authController.isGuest ? SizedBox.shrink() :
                         MyCertificationsWidget(
                           certificationCount: certificationCount,
                           imagePath: user.aiotaCertificate!,

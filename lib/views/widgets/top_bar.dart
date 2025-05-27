@@ -94,11 +94,11 @@ class _TopBarState extends State<TopBar> {
                                         AppColors.primaryButton,
                                   ),
                                 ),
-                                SizedBox(width: 3),
+                                SizedBox(width: 1.2.w),
                                 Text(
                                   widget.title ?? _getTitle(currentIndex),
                                   style: TextStyle(
-                                    fontSize: 14,
+                                    fontSize: 16.sp,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -106,39 +106,6 @@ class _TopBarState extends State<TopBar> {
                             ),
                   ),
                 Spacer(),
-                // Search Icon
-                if (widget.isEvent)
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        showSearch = !showSearch;
-                        if (!showSearch) searchController.clear();
-                      });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 4.0),
-                      child: Container(
-                        padding: EdgeInsets.all(13.sp),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.white),
-                          borderRadius:
-                              showSearch
-                                  ? BorderRadius.horizontal(
-                                    right: Radius.circular(8),
-                                    left: Radius.circular(0),
-                                  )
-                                  : BorderRadius.circular(8),
-                          color: Colors.white,
-                        ),
-                        child: Image.asset(
-                          'assets/icons/search.png',
-                          width: 20,
-                          height: 17.sp,
-                          color: widget.iconColor,
-                        ),
-                      ),
-                    ),
-                  ),
                 if (currentIndex == 0 && authController.isGuest)
                   Expanded(
                     child: Padding(
@@ -163,60 +130,6 @@ class _TopBarState extends State<TopBar> {
                   ),
                 _buildDrawerButton(),
               ],
-            ),
-
-            Positioned(
-              right: 22.w, // Adjust for drawer and search icons
-              child: AnimatedContainer(
-                duration: Duration(milliseconds: 400),
-                curve: Curves.easeInOut,
-                width: showSearch ? 67.w : 0,
-                child: AnimatedOpacity(
-                  duration: Duration(milliseconds: 300),
-                  opacity: showSearch ? 1 : 0,
-                  child: IgnorePointer(
-                    ignoring: !showSearch,
-                    child: SizedBox(
-                      height: 5.h, // Reduced height
-                      child: TextField(
-                        controller: searchController,
-                        autofocus: false,
-                        decoration: InputDecoration(
-                          hintText: 'Search here',
-                          filled: true,
-                          fillColor: Colors.white,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.horizontal(
-                              left: Radius.circular(8), // Only left side
-                              right: Radius.circular(0),
-                            ),
-                            borderSide: BorderSide.none,
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.horizontal(
-                              left: Radius.circular(8),
-                              right: Radius.circular(0),
-                            ),
-                            borderSide: BorderSide.none,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.horizontal(
-                              left: Radius.circular(8),
-                              right: Radius.circular(0),
-                            ),
-                            borderSide: BorderSide.none,
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 8,
-                          ),
-                          isDense: true, // Ensures more compact height
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
             ),
           ],
         ),

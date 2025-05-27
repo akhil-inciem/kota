@@ -13,7 +13,7 @@ class CustomBottomNavBar extends StatelessWidget {
   }) : super(key: key);
 
 
-final int notificationCount = 99; // 👈 Pass this dynamically from state
+final int notificationCount = 99; 
 
   @override
 
