@@ -101,7 +101,6 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                               ],
                             ),
                             Spacer(),
-                            Icon(Icons.more_horiz),
                           ],
                         ),
                       ),

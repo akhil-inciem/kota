@@ -13,11 +13,11 @@ class AuthApiService {
         ApiEndpoints.login,
         data: {
           'email': 
-          // email,
-          'athiathi125@gmail.com',
+          email,
+          // 'athiathi125@gmail.com',
           'member_password': 
-          // password,
-          'Devu@2000'
+          password,
+          // 'Devu@2000'
         },
         options: Options(
           contentType:

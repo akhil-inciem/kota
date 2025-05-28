@@ -21,14 +21,14 @@ class MonthYearPicker extends StatefulWidget {
 
 class _MonthYearPickerState extends State<MonthYearPicker> {
   final ScrollController _scrollController = ScrollController();
-  
+
   @override
-void initState() {
-  super.initState();
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    _scrollToSelectedMonth();
-  });
-}
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToSelectedMonth();
+    });
+  }
 
   @override
   void didUpdateWidget(covariant MonthYearPicker oldWidget) {
@@ -39,7 +39,7 @@ void initState() {
   }
 
   void _scrollToSelectedMonth() {
-    final double itemWidth = 100; // Adjust based on actual width
+    final double itemWidth = 100;
     final double screenWidth = MediaQuery.of(context).size.width;
     final double targetOffset =
         (widget.currentMonth - 1) * itemWidth - (screenWidth - itemWidth) / 2;
@@ -67,7 +67,9 @@ void initState() {
             final isSelected = index + 1 == widget.currentMonth;
             return GestureDetector(
               onTap: () {
-                widget.onMonthSelected(DateTime(widget.currentYear, index + 1, 1));
+                widget.onMonthSelected(
+                  DateTime(widget.currentYear, index + 1, 1),
+                );
               },
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 1.h),
@@ -77,9 +79,13 @@ void initState() {
                   child: Text(
                     monthYear,
                     style: TextStyle(
-                      color: isSelected ? AppColors.primaryText : Color(0xFFA8B7C2),
+                      color:
+                          isSelected
+                              ? AppColors.primaryText
+                              : Color(0xFFA8B7C2),
                       fontSize: 16,
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      fontWeight:
+                          isSelected ? FontWeight.bold : FontWeight.normal,
                     ),
                   ),
                 ),

@@ -44,7 +44,7 @@ class ApiEndpoints {
 
   // User
   static const String getUserProfile = '$baseUrl/news/get-user';
-  static const String updateUserProfile = '$baseUrl/user/update';
+  static const String updateUserProfile = '$baseUrl/news/update';
 
   //Drawer
   static const String getVisionMission = '$baseUrl/news/vissionandmission';

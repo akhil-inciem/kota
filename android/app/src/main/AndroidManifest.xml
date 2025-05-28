@@ -29,26 +29,24 @@
               />
 
               <!--Universal Deep Link-->
-              <intent-filter android:autoVerify="true">
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-        <data
-            android:scheme="https"
-            android:host="www.flutter-deep-link.com" />
-    </intent-filter>
+            <intent-filter android:autoVerify="true">
+              <action android:name="android.intent.action.VIEW" />
+              <category android:name="android.intent.category.DEFAULT" />
+              <category android:name="android.intent.category.BROWSABLE" />
+              <data
+               android:scheme="https"
+               android:host="www.flutter-deep-link.com" />
+            </intent-filter>
 
               <!-- Custom App Link-->
             <intent-filter>
-    <action android:name="android.intent.action.VIEW" />
-
-    <category android:name="android.intent.category.DEFAULT" />
-    <category android:name="android.intent.category.BROWSABLE" />
-
-    <data
-        android:scheme="flutterDeepLink"
-        android:host="flutter-deep-link" />
-</intent-filter>
+             <action android:name="android.intent.action.VIEW" />
+             <category android:name="android.intent.category.DEFAULT" />
+             <category android:name="android.intent.category.BROWSABLE" />
+             <data
+              android:scheme="flutterDeepLink"
+              android:host="flutter-deep-link" />
+            </intent-filter>
 
 
             <intent-filter>

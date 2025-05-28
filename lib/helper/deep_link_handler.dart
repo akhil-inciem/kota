@@ -8,12 +8,12 @@ void setupAppLinks() {
   final appLinks = AppLinks();
 
   appLinks.uriLinkStream.listen((Uri uri) {
-    _handleIncomingLink(uri);
+    // _handleIncomingLink(uri);
   });
 
-  appLinks.getInitialLink().then((uri) {
-    if (uri != null) _handleIncomingLink(uri);
-  });
+  // appLinks.getInitialLink().then((uri) {
+  //   if (uri != null) _handleIncomingLink(uri);
+  // });
 }
 
 void _handleIncomingLink(Uri uri) {

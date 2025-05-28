@@ -17,8 +17,7 @@ import 'helper/deep_link_handler.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  setupAppLinks();                
-  
+  setupAppLinks();
   Get.lazyPut(() => AuthController());
   Get.lazyPut(() => HomeController());
   Get.lazyPut(() => UserController());
@@ -28,7 +27,6 @@ void main() async {
   Get.lazyPut(() => FindController());
   Get.lazyPut(() => SideMenuController());
   Get.lazyPut(() => UpdateController());
-
   runApp(MyApp());
 }
 
@@ -38,7 +36,7 @@ class MyApp extends StatelessWidget {
     return ResponsiveSizer(
       builder: (context, orientation, screenType) {
         return GetMaterialApp(
-          title: 'MVC GetX App',
+          title: 'KOTA App',
           debugShowCheckedModeBanner: false,
           home: LoginScreen(),
           theme: ThemeData(useMaterial3: false, fontFamily: 'Poppins'),

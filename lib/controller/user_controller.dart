@@ -28,8 +28,6 @@ class UserController extends GetxController {
   void onInit() {
     super.onInit();
     loadUserProfile();
-
-    // Listen for changes
     firstNameController.addListener(_checkForChanges);
     lastNameController.addListener(_checkForChanges);
     phoneController.addListener(_checkForChanges);
@@ -40,9 +38,19 @@ class UserController extends GetxController {
   selectedImage.value = imageFile;
 }
 
-void clearFields(){
+void clearFields() {
+  final currentUser = user.value;
+  if (currentUser != null) {
+    firstNameController.text = currentUser.firstName ?? '';
+    lastNameController.text = currentUser.lastName ?? '';
+    phoneController.text = currentUser.primaryNumber ?? '';
+    emailController.text = currentUser.email ?? '';
+  }
+
   selectedImage.value = null;
+  isChanged.value = false;
 }
+
 
   Future<void> loadUserProfile() async {
     isLoading.value = true;
@@ -76,19 +84,11 @@ void clearFields(){
       lastName: lastNameController.text.trim(),
       primaryNumber: phoneController.text.trim(),
       email: emailController.text.trim(),
-      image: selectedImage.value, // nullable File?
+      image: selectedImage.value,
     );
-
-    // Re-fetch updated profile
     await loadUserProfile();
-
-    // Optionally, clear the temp image after update
     selectedImage.value = null;
-
-    // Show success feedback
     CustomSnackbars.success( "Your profile has been successfully updated.","Profile updated");
-
-    // Navigate away or update view
     Get.back(); 
   } catch (e) {
     error.value = e.toString();

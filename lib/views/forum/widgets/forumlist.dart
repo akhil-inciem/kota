@@ -21,21 +21,20 @@ class _ForumListState extends State<ForumList> {
   final ForumController forumController = Get.find<ForumController>();
 
   String timeAgo(String createdAt) {
-  final createdTime = DateTime.parse(createdAt);
-  final now = DateTime.now();
-  final difference = now.difference(createdTime);
+    final createdTime = DateTime.parse(createdAt);
+    final now = DateTime.now();
+    final difference = now.difference(createdTime);
 
-  if (difference.inMinutes < 1) {
-    return 'Just now';
-  } else if (difference.inMinutes < 60) {
-    return '${difference.inMinutes} minute${difference.inMinutes == 1 ? '' : 's'} ago';
-  } else if (difference.inHours < 24) {
-    return '${difference.inHours} hour${difference.inHours == 1 ? '' : 's'} ago';
-  } else {
-    return '${difference.inDays} day${difference.inDays == 1 ? '' : 's'} ago';
+    if (difference.inMinutes < 1) {
+      return 'Just now';
+    } else if (difference.inMinutes < 60) {
+      return '${difference.inMinutes} minute${difference.inMinutes == 1 ? '' : 's'} ago';
+    } else if (difference.inHours < 24) {
+      return '${difference.inHours} hour${difference.inHours == 1 ? '' : 's'} ago';
+    } else {
+      return '${difference.inDays} day${difference.inDays == 1 ? '' : 's'} ago';
+    }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +44,13 @@ class _ForumListState extends State<ForumList> {
       }
 
       final items = forumController.threadsList;
-      if(items.isEmpty){
-        return Center(child: Text("No Forums Available",style: TextStyle(fontSize: 18, color: Colors.black),));
+      if (items.isEmpty) {
+        return Center(
+          child: Text(
+            "No Forums Available",
+            style: TextStyle(fontSize: 18, color: Colors.black),
+          ),
+        );
       }
       return ListView.builder(
         padding: EdgeInsets.zero,
@@ -78,32 +82,53 @@ class _ForumListState extends State<ForumList> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             CircleAvatar(
-  radius: 25,
-  backgroundColor: Colors.grey[200],
-  child: item.photo == null
-      ? Icon(Icons.person, size: 30, color: Colors.grey)
-      : ClipOval(
-          child: Image.network(
-            item.photo!,
-            width: 50,
-            height: 50,
-            fit: BoxFit.cover,
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) return child;
-              return Center(
-                child: SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                ),
-              );
-            },
-            errorBuilder: (context, error, stackTrace) {
-              return Icon(Icons.error, size: 30, color: Colors.red);
-            },
-          ),
-        ),
-),
+                              radius: 25,
+                              backgroundColor: Colors.grey[200],
+                              child:
+                                  item.photo == null
+                                      ? Icon(
+                                        Icons.person,
+                                        size: 30,
+                                        color: Colors.grey,
+                                      )
+                                      : ClipOval(
+                                        child: Image.network(
+                                          item.photo!,
+                                          width: 50,
+                                          height: 50,
+                                          fit: BoxFit.cover,
+                                          loadingBuilder: (
+                                            context,
+                                            child,
+                                            loadingProgress,
+                                          ) {
+                                            if (loadingProgress == null)
+                                              return child;
+                                            return Center(
+                                              child: SizedBox(
+                                                width: 20,
+                                                height: 20,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                      strokeWidth: 2,
+                                                    ),
+                                              ),
+                                            );
+                                          },
+                                          errorBuilder: (
+                                            context,
+                                            error,
+                                            stackTrace,
+                                          ) {
+                                            return Icon(
+                                              Icons.error,
+                                              size: 30,
+                                              color: Colors.red,
+                                            );
+                                          },
+                                        ),
+                                      ),
+                            ),
 
                             SizedBox(width: 8),
                             Expanded(
@@ -111,7 +136,8 @@ class _ForumListState extends State<ForumList> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '${item.firstName} ${item.lastName ?? ''}' ?? '',
+                                    '${item.firstName} ${item.lastName ?? ''}' ??
+                                        '',
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -127,12 +153,7 @@ class _ForumListState extends State<ForumList> {
                                   ),
                                 ],
                               ),
-                            ),
-                            Icon(
-                              Icons.more_horiz,
-                              size: 24.sp,
-                              color: Colors.grey,
-                            ),
+                            )
                           ],
                         ),
                         SizedBox(height: 1.h),

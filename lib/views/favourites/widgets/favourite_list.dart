@@ -29,7 +29,22 @@ class FavoriteList extends StatelessWidget {
       if (favouriteController.isLoading.value) {
         return const ListShimmer(); // Show shimmer while loading
       }else if(favouriteController.filteredList.isEmpty){
-        return Center(child: Text("No Favorites Available",style: TextStyle(fontSize: 18, color: Colors.black),));
+        return Center(
+  child: Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+       Image.asset( 'assets/icons/favorites_unselected.png',
+                  height: 8.h,
+                  width: 8.h,
+                ),
+      SizedBox(height: 12),
+      Text(
+        "No Favorites Available",
+        style: TextStyle(fontSize: 18, color: Colors.black),
+      ),
+    ],
+  ),
+);
       }
       final items = favouriteController.filteredList;
       return ListView.builder(

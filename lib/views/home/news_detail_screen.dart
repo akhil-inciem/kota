@@ -225,11 +225,11 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
             GestureDetector(
               onTap: () {
                 final title = item.newsTitle ?? 'Check this out!';
-                final newsId = item.newsId; // Make sure this exists
+                final newsId = item.newsId;
                 final params = ShareParams(
                   title: title,
                   uri: Uri.parse(
-                    "https://www.flutter-deep-link.com/news/$newsId",
+                    "https://www.flutter-deep-link.com",
                   ),
                 );
                 SharePlus.instance.share(params);

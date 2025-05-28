@@ -45,11 +45,18 @@ class _EventsListState extends State<EventsList> {
 
       if (items.isEmpty) {
         return Center(
-          child: Text(
-            'No Events available',
-            style: TextStyle(fontSize: 18, color: Colors.black),
-          ),
-        );
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(Icons.newspaper, size: 48, color: Colors.grey),
+        SizedBox(height: 12),
+        Text(
+          'No Events available',
+          style: TextStyle(fontSize: 18, color: Colors.black),
+        ),
+      ],
+    ),
+  );
       }
 
       return ListView.builder(
