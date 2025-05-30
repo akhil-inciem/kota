@@ -1,7 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:get/get.dart' as getx;
 import 'package:kota/constants/api.dart';
 import 'package:kota/model/guest_model.dart';
 import 'package:kota/model/login_model.dart';
+
+import '../controller/auth_controller.dart';
 
 class AuthApiService {
   final Dio _dio = Dio();
@@ -113,5 +116,44 @@ class AuthApiService {
     } catch (e) {
       throw Exception('Registration failed: $e');
     }
+  }
+  Future<void> logout() async {
+    final authController = getx.Get.find<AuthController>();
+      final userId = authController.userModel.value!.data.id;
+    try {
+  print('Sending logout request...');
+  print('User ID: $userId, Guest: ${authController.isGuest ? 1 : 0}');
+
+  FormData formData = FormData.fromMap({
+    'user_id': userId,
+    'isguest': authController.isGuest ? 1 : 0,
+  });
+
+  final response = await _dio.post(
+    ApiEndpoints.logout,
+    data: formData,
+    options: Options(
+      sendTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 10),
+      validateStatus: (_) => true, // prevent crash on unexpected status
+    ),
+  );
+
+  print('Response status: ${response.statusCode}');
+  print('Response data: ${response.data}');
+} catch (e) {
+  if (e is DioException) {
+    print('Dio error!');
+    print('Type: ${e.type}');
+    print('Message: ${e.message}');
+    print('URI: ${e.requestOptions.uri}');
+    print('Headers: ${e.requestOptions.headers}');
+    print('Data: ${e.requestOptions.data}');
+  } else {
+    print('Unknown error: $e');
+  }
+}
+
+
   }
 }

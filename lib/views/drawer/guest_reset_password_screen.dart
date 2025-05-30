@@ -18,24 +18,17 @@ class GuestResetPasswordScreen extends StatefulWidget {
 
 class _GuestResetPasswordScreenState extends State<GuestResetPasswordScreen> {
   final AuthController authController = Get.find<AuthController>();
+  final _formKey = GlobalKey<FormState>();
 
   final TextEditingController _oldPasswordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
 
   void _submit() async {
+    if (!_formKey.currentState!.validate()) return;
+
     final oldPassword = _oldPasswordController.text.trim();
     final newPassword = _newPasswordController.text.trim();
-    final confirmPassword = _confirmPasswordController.text.trim();
-
-    if (oldPassword.isEmpty || newPassword.isEmpty || confirmPassword.isEmpty) {
-      CustomSnackbars.failure('All fields are required', 'Validation Error');
-      return;
-    }
-    if (newPassword != confirmPassword) {
-      CustomSnackbars.failure('Passwords do not match', 'Validation Error');
-      return;
-    }
 
     authController.isLoading.value = true;
 
@@ -52,6 +45,7 @@ class _GuestResetPasswordScreenState extends State<GuestResetPasswordScreen> {
       _oldPasswordController.clear();
       _newPasswordController.clear();
       _confirmPasswordController.clear();
+      Get.back();
     } else {
       CustomSnackbars.failure('Failed to reset password. Try again.', 'Error');
     }
@@ -63,81 +57,84 @@ class _GuestResetPasswordScreenState extends State<GuestResetPasswordScreen> {
       child: Scaffold(
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildAppBar(),
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildAppBar(),
 
-                SizedBox(height: 6.h),
+                  SizedBox(height: 6.h),
 
-                // Old Password Field
-                LabelledTextField(
-                  controller: _oldPasswordController,
-                  label: "Old Password",
-                  hintText: 'Enter previous password',
-                  isPassword: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) return 'Previous password is required';
-                    if (value.length < 6) return 'Password must be at least 6 characters';
-                    return null;
-                  },
-                ),
+                  // Old Password Field
+                  LabelledTextField(
+                    controller: _oldPasswordController,
+                    label: "Old Password",
+                    hintText: 'Enter previous password',
+                    isPassword: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) return 'Previous password is required';
+                      if (value.length < 6) return 'Password must be at least 6 characters';
+                      return null;
+                    },
+                  ),
 
-                SizedBox(height: 3.h),
+                  SizedBox(height: 3.h),
 
-                // New Password Field
-                LabelledTextField(
-                  controller: _newPasswordController,
-                  label: "New Password",
-                  hintText: 'Enter new password',
-                  isPassword: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) return 'New password is required';
-                    if (value.length < 6) return 'Password must be at least 6 characters';
-                    return null;
-                  },
-                ),
+                  // New Password Field
+                  LabelledTextField(
+                    controller: _newPasswordController,
+                    label: "New Password",
+                    hintText: 'Enter new password',
+                    isPassword: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) return 'New password is required';
+                      if (value.length < 6) return 'Password must be at least 6 characters';
+                      return null;
+                    },
+                  ),
 
-                SizedBox(height: 2.h),
+                  SizedBox(height: 2.h),
 
-                // Confirm New Password Field
-                LabelledTextField(
-                  controller: _confirmPasswordController,
-                  label: "Confirm New Password",
-                  hintText: 'Re-enter new password',
-                  isPassword: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) return 'Please confirm your new password';
-                    if (value != _newPasswordController.text) return 'Passwords do not match';
-                    return null;
-                  },
-                ),
+                  // Confirm New Password Field
+                  LabelledTextField(
+                    controller: _confirmPasswordController,
+                    label: "Confirm New Password",
+                    hintText: 'Re-enter new password',
+                    isPassword: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) return 'Please confirm your new password';
+                      if (value != _newPasswordController.text) return 'Passwords do not match';
+                      return null;
+                    },
+                  ),
 
-                SizedBox(height: 3.h),
+                  SizedBox(height: 3.h),
 
-                // Submit Button or Loader
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Obx(() {
-                    return SizedBox(
-                      height: 5.h,
-                      width: 40.w,
-                      child: authController.isLoading.value
-                          ? const Center(
-                              child: SpinKitWave(
-                                color: Colors.blue,
-                                size: 30,
+                  // Submit Button or Loader
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Obx(() {
+                      return SizedBox(
+                        height: 5.h,
+                        width: 40.w,
+                        child: authController.isLoading.value
+                            ? const Center(
+                                child: SpinKitWave(
+                                  color: Colors.blue,
+                                  size: 30,
+                                ),
+                              )
+                            : CustomButton(
+                                onPressed: _submit,
+                                text: 'Submit',
                               ),
-                            )
-                          : CustomButton(
-                              onPressed: _submit,
-                              text: 'Submit',
-                            ),
-                    );
-                  }),
-                ),
-              ],
+                      );
+                    }),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

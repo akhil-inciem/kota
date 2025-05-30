@@ -27,7 +27,7 @@ class _GuestRegistrationScreenState extends State<GuestRegistrationScreen>
   late Animation<Offset> _animation;
   final _formKey = GlobalKey<FormState>();
 
-  final AuthController authController = Get.find<AuthController>();
+  final AuthController authController = Get.put(AuthController());
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();

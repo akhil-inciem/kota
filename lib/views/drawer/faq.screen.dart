@@ -7,14 +7,26 @@ import 'package:kota/views/home/widgets/list_shimmer.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shimmer/shimmer.dart';
 
-class FaqScreen extends StatelessWidget {
-  final SideMenuController controller = Get.put(SideMenuController());
+class FaqScreen extends StatefulWidget {
 
   FaqScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  State<FaqScreen> createState() => _FaqScreenState();
+}
+
+class _FaqScreenState extends State<FaqScreen> {
+  final SideMenuController controller = Get.put(SideMenuController());
+
+  @override
+  void initState() {
     controller.loadFaqs();
+    super.initState();
+  }
+
+  
+  @override
+  Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.primaryBackground,
@@ -54,12 +66,6 @@ class FaqScreen extends StatelessWidget {
                               (_, __) => const SizedBox(height: 12),
                           itemBuilder: (context, index) {
                             final faq = controller.faqList[index];
-                            String cleanedHtml = (faq.answer ?? '').replaceAll(
-                              RegExp(r'style="[^"]*"'),
-                              '',
-                            );
-                            final isExpanded =
-                                controller.expandedIndex.value == index;
 
                             return Padding(
                               padding: EdgeInsets.symmetric(horizontal: 2.w),
@@ -76,52 +82,66 @@ class FaqScreen extends StatelessWidget {
                                       splashColor: Colors.transparent,
                                       highlightColor: Colors.transparent,
                                     ),
-                                    child: ExpansionTile(
-                                      textColor: AppColors.primaryText,
-                                      leading: const CircleAvatar(
-                                        backgroundColor: AppColors.primaryText,
-                                        child: Icon(
-                                          Icons.question_mark,
-                                          color: Colors.white,
+                                    child: Obx(
+                                      () => ExpansionTile(
+                                        key: Key(
+                                          index ==
+                                                  controller.expandedIndex.value
+                                              ? 'expanded'
+                                              : 'collapsed_$index',
                                         ),
-                                      ),
-                                      title: Text(
-                                        faq.question ?? '',
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                      childrenPadding:
-                                          const EdgeInsets.symmetric(
-                                            horizontal: 16.0,
-                                            vertical: 8.0,
+                                        textColor: AppColors.primaryText,
+                                        leading: const CircleAvatar(
+                                          backgroundColor:
+                                              AppColors.primaryText,
+                                          child: Icon(
+                                            Icons.question_mark,
+                                            color: Colors.white,
                                           ),
-                                      trailing: Icon(
-                                        isExpanded
-                                            ? Icons.keyboard_arrow_up
-                                            : Icons.keyboard_arrow_down,
-                                      ),
-                                      onExpansionChanged: (expanded) {
-                                        controller.toggleExpansion(index);
-                                      },
-                                      initiallyExpanded: isExpanded,
-                                      children: [
-                                        Html(
-                                          data: faq.answer ?? '',
-                                          style: {
-                                            "h4": Style(
-                                              fontSize: FontSize(15.0),
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                            "*": Style(
-                                              fontSize: FontSize(15.0),
-                                              fontFamily: 'Poppins',
-                                              color: Colors.black,
-                                            ),
-                                          },
                                         ),
-                                      ],
+                                        title: Text(
+                                          faq.question ?? '',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 15,
+                                          ),
+                                        ),
+                                        childrenPadding:
+                                            const EdgeInsets.symmetric(
+                                              horizontal: 16.0,
+                                              vertical: 8.0,
+                                            ),
+                                        trailing: Icon(
+                                          index ==
+                                                  controller.expandedIndex.value
+                                              ? Icons.keyboard_arrow_up
+                                              : Icons.keyboard_arrow_down,
+                                        ),
+                                        initiallyExpanded:
+                                            index ==
+                                            controller.expandedIndex.value,
+                                        onExpansionChanged: (expanded) {
+                                          controller.toggleExpansion(
+                                            expanded ? index : -1,
+                                          );
+                                        },
+                                        children: [
+                                          Html(
+                                            data: faq.answer ?? '',
+                                            style: {
+                                              "h4": Style(
+                                                fontSize: FontSize(15.0),
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                              "*": Style(
+                                                fontSize: FontSize(15.0),
+                                                fontFamily: 'Poppins',
+                                                color: Colors.black,
+                                              ),
+                                            },
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),

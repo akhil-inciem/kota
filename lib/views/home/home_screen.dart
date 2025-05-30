@@ -18,7 +18,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  
   final HomeController homeController = Get.put(HomeController());
   final EventController eventController = Get.put(EventController());
   @override
@@ -29,6 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
     eventController.filterTodayEvents();
     homeController.searchController.addListener(() {
       homeController.filterNews(homeController.searchController.text);
+      eventController.filterEvents(homeController.searchController.text);
     });
   }
 

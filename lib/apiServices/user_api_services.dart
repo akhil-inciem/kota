@@ -5,19 +5,17 @@ import 'package:kota/constants/api.dart';
 import 'package:kota/model/profile_model.dart';
 import '../controller/auth_controller.dart';
 
-
 class UserApiService {
   final dio.Dio _dio = dio.Dio();
-  final AuthController _authController = Get.find<AuthController>();
+  static final _authController = Get.find<AuthController>();
+  static final String? _userId = _authController.userModel.value?.data.id;
 
   Future<User> fetchUserProfile() async {
     try {
-      final userId = _authController.userModel.value!.data.id;
-
       final response = await _dio.get(
         ApiEndpoints.getUserProfile,
         queryParameters: {
-          'id': userId,
+          'id': _userId,
           'isguest': _authController.isGuest ? 1 : 0,
         },
       );
@@ -35,57 +33,48 @@ class UserApiService {
   }
 
   Future<void> updateProfile({
-  required String firstName,
-  required String lastName,
-  required String primaryNumber,
-  required String email,
-  File? image,
-}) async {
-  final userModel = _authController.userModel.value;
-  if (userModel == null) {
-    throw Exception("User ID not available.");
-  }
+    required String firstName,
+    required String lastName,
+    required String primaryNumber,
+    required String email,
+    File? image,
+  }) async {
+    final String url = ApiEndpoints.updateUserProfile;
 
-  final String url = ApiEndpoints.updateUserProfile;
+    try {
+      final formData = dio.FormData.fromMap({
+        'user_id': _userId,
+        'is_guest': _authController.isGuest ? '1' : '0',
+        'first_name': firstName,
+        'last_name': lastName,
+        'primary_number': primaryNumber,
+        'email': email,
+        if (image != null)
+          'photo': await dio.MultipartFile.fromFile(
+            image.path,
+            filename: image.path.split('/').last,
+          ),
+      });
 
-  try {
-    final formData = dio.FormData.fromMap({
-      'user_id': userModel.data.id.toString(),
-      'is_guest': _authController.isGuest ? '1' : '0',
-      'first_name': firstName,
-      'last_name': lastName,
-      'primary_number': primaryNumber,
-      'email': email,
-      if (image != null)
-        'photo': await dio.MultipartFile.fromFile(
-          image.path,
-          filename: image.path.split('/').last,
+      final response = await _dio.post(
+        url,
+        data: formData,
+        options: dio.Options(
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'multipart/form-data',
+          },
         ),
-    });
+      );
 
-    final response = await _dio.post(
-      url,
-      data: formData,
-      options: dio.Options(
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'multipart/form-data',
-        },
-      ),
-    );
-
-    if (response.statusCode == 200 && response.data['status'] == true) {
-      print("Profile updated successfully");
-    } else {
-      final errorMsg = response.data['message'] ?? 'Unknown error occurred';
-      throw Exception("Failed to update profile: $errorMsg");
+      if (response.statusCode == 200 && response.data['status'] == true) {
+        print("Profile updated successfully");
+      } else {
+        final errorMsg = response.data['message'] ?? 'Unknown error occurred';
+        throw Exception("Failed to update profile: $errorMsg");
+      }
+    } catch (e) {
+      throw Exception("Update profile error: $e");
     }
-  } catch (e) {
-    throw Exception("Update profile error: $e");
   }
 }
-
-
-}
-
-

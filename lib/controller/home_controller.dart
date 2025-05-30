@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kota/apiServices/favorite_api_services.dart';
@@ -7,14 +8,21 @@ import 'package:kota/model/news_model.dart';
 class HomeController extends GetxController {
   RxInt index = 0.obs;
   var selectedTabIndex = 0.obs;
+
   final isLoading = false.obs;
-  final newsItems = <NewsDatum>[].obs;
+  bool _hasFetchedNews = false;
+
+
+  final RxList<NewsDatum> masterNewsItems = <NewsDatum>[].obs;
   final RxList<NewsDatum> filteredNewsItems = <NewsDatum>[].obs;
+
   final Rxn<NewsDatum> selectedNewsItem = Rxn<NewsDatum>();
   final favoriteItemList = <NewsDatum>[].obs;
-  var bookmarkedStatus = <String, bool>{}.obs;
+  final bookmarkedStatus = <String, bool>{}.obs;
+
   final _favApiService = FavoritesApiService();
-  final NewsApiService _newsApiService = NewsApiService();
+  final _newsApiService = NewsApiService();
+
   final TextEditingController searchController = TextEditingController();
 
   @override
@@ -23,54 +31,61 @@ class HomeController extends GetxController {
   }
 
   void toggleBookmark(String id) async {
-  final currentStatus = bookmarkedStatus[id] ?? false;
-  final newStatus = !currentStatus;
-  bookmarkedStatus[id] = newStatus;
-  try {
-    await _favApiService.sendNewsBookmarkStatusToApi(id, newStatus);
-  } catch (e) {
-    print("Failed to update bookmark status: $e");
-    bookmarkedStatus[id] = currentStatus;
+    final currentStatus = bookmarkedStatus[id] ?? false;
+    final newStatus = !currentStatus;
+    bookmarkedStatus[id] = newStatus;
+
+    try {
+      await _favApiService.sendNewsBookmarkStatusToApi(id, newStatus);
+    } catch (e) {
+      print("Failed to update bookmark status: $e");
+      bookmarkedStatus[id] = currentStatus;
+    }
   }
-}
 
   Future<void> fetchSingleNewsItem(String newsId) async {
-  isLoading.value = true;
-  selectedNewsItem.value = null;
+    isLoading.value = true;
+    selectedNewsItem.value = null;
 
-  try {
-    final newsItem = await _newsApiService.fetchNewsById(
-      newsId: newsId,
-    );
+    try {
+      final newsItem = await _newsApiService.fetchNewsById(newsId: newsId);
 
-    if (newsItem != null) {
-      selectedNewsItem.value = newsItem;
-      final index = newsItems.indexWhere((item) => item.newsId == newsId);
-      if (index != -1) {
-        newsItems[index] = newsItem;
-        filteredNewsItems[index] = newsItem;
-      } else {
-        newsItems.add(newsItem);
-        filteredNewsItems.add(newsItem);
+      if (newsItem != null) {
+        selectedNewsItem.value = newsItem;
+
+        final index = masterNewsItems.indexWhere((item) => item.newsId == newsId);
+        if (index != -1) {
+          masterNewsItems[index] = newsItem;
+          final filteredIndex = filteredNewsItems.indexWhere((item) => item.newsId == newsId);
+          if (filteredIndex != -1) {
+            filteredNewsItems[filteredIndex] = newsItem;
+          }
+        } else {
+          masterNewsItems.add(newsItem);
+          filteredNewsItems.add(newsItem);
+        }
+
+        if (newsItem.newsId != null) {
+          bookmarkedStatus[newsItem.newsId!] = newsItem.favorites == 1;
+        }
       }
-      if (newsItem.newsId != null) {
-        bookmarkedStatus[newsItem.newsId!] = newsItem.favorites == 1;
-      }
+    } catch (e) {
+      print("Error fetching single news item: $e");
+    } finally {
+      isLoading.value = false;
     }
-  } catch (e) {
-    print("Error fetching single news item: $e");
-  } finally {
-    isLoading.value = false;
   }
-}
 
   Future<void> fetchNewsItems() async {
+  if (_hasFetchedNews) return; // prevent refetching
+
   isLoading.value = true;
 
   try {
     final List<NewsDatum> fetchedNews = await _newsApiService.fetchNews();
-    newsItems.assignAll(fetchedNews);
+    masterNewsItems.assignAll(fetchedNews);
     filteredNewsItems.assignAll(fetchedNews);
+    _hasFetchedNews = true;
   } catch (e) {
     print("Error fetching news: $e");
   } finally {
@@ -78,23 +93,23 @@ class HomeController extends GetxController {
   }
 }
 
-void filterNews(String query) {
-  if (query.isEmpty) {
-    filteredNewsItems.assignAll(newsItems);
-  } else {
-    filteredNewsItems.assignAll(
-      newsItems.where(
-        (item) =>
-            item.newsTitle?.toLowerCase().contains(query.toLowerCase()) == true ||
-            item.newsDescription?.toLowerCase().contains(query.toLowerCase()) == true,
-      ),
-    );
+  void filterNews(String query) {
+    if (query.isEmpty) {
+      filteredNewsItems.assignAll(masterNewsItems);
+    } else {
+      final lowerQuery = query.toLowerCase();
+      filteredNewsItems.assignAll(
+        masterNewsItems.where(
+          (item) =>
+              item.newsTitle?.toLowerCase().contains(lowerQuery) == true ||
+              item.newsDescription?.toLowerCase().contains(lowerQuery) == true,
+        ),
+      );
+    }
   }
-}
 
-void clearSelectedNews() {
-  selectedNewsItem.value = null;
-  bookmarkedStatus.clear();
-}
-
+  void clearSelectedNews() {
+    selectedNewsItem.value = null;
+    bookmarkedStatus.clear();
+  }
 }

@@ -10,12 +10,14 @@ import 'package:kota/views/drawer/find/find_screen.dart';
 import 'package:kota/views/drawer/mission_screen.dart';
 import 'package:kota/views/login/login_screen.dart';
 import 'package:kota/views/profile/profile_screen.dart';
+import 'package:kota/views/widgets/custom_snackbar.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../controller/auth_controller.dart';
+import 'widgets/logout_dialog.dart';
 
 class DrawerPage extends StatelessWidget {
-   DrawerPage({Key? key}) : super(key: key);
+  DrawerPage({Key? key}) : super(key: key);
 
   final authController = Get.find<AuthController>();
   @override
@@ -25,29 +27,58 @@ class DrawerPage extends StatelessWidget {
         backgroundColor: AppColors.primaryBackground,
         body: Column(
           children: [
-             DrawerHeaderWidget(),
+            DrawerHeaderWidget(),
             const SizedBox(height: 20),
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                children:  [
+                children: [
                   ViewProfileItem(),
-                  DrawerItem(icon: Icons.track_changes_outlined, title: 'Vision & Mission',onPressed: () {
-                    Get.to(()=>MissionPage());
-                  },),
-                  DrawerItem(icon: Icons.group_outlined, title: 'KOTA Executives',onPressed: () {
-                    Get.to(()=>ExecutivePage());
-                  },),
-                  DrawerItem(icon: Icons.contact_mail_outlined, title: 'Contact Us',onPressed: () {
-                    Get.to(()=>ContactUsScreen());
-                  },),
-                  DrawerItem(icon: Icons.help_outline, title: 'FAQ',onPressed: () {
-                    Get.to(()=>FaqScreen());
-                  },),
-                  DrawerItem(icon: Icons.send_outlined, title: 'Find',onPressed: ()=> Get.to(()=>FindScreen()),),
-                  DrawerItem(icon: Icons.logout, title: 'Logout',onPressed: (){
-                    Get.offAll(()=>LoginScreen());
-                  },),
+                  DrawerItem(
+                    icon: Icons.track_changes_outlined,
+                    title: 'Vision & Mission',
+                    onPressed: () {
+                      Get.to(() => MissionPage());
+                    },
+                  ),
+                  DrawerItem(
+                    icon: Icons.group_outlined,
+                    title: 'KOTA Executives',
+                    onPressed: () {
+                      Get.to(() => ExecutivePage());
+                    },
+                  ),
+                  DrawerItem(
+                    icon: Icons.contact_mail_outlined,
+                    title: 'Contact Us',
+                    onPressed: () {
+                      Get.to(() => ContactUsScreen());
+                    },
+                  ),
+                  DrawerItem(
+                    icon: Icons.help_outline,
+                    title: 'FAQ',
+                    onPressed: () {
+                      Get.to(() => FaqScreen());
+                    },
+                  ),
+                  DrawerItem(
+                    icon: Icons.send_outlined,
+                    title: 'Find',
+                    onPressed: () => Get.to(() => FindScreen()),
+                  ),
+                  DrawerItem(
+                    icon: Icons.logout,
+                    title: 'Logout',
+                    onPressed: () {
+                      Get.dialog(
+                        LogoutConfirmationDialog(
+                          authController: authController,
+                        ),
+                        barrierDismissible: false,
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
@@ -59,14 +90,11 @@ class DrawerPage extends StatelessWidget {
 }
 
 class DrawerHeaderWidget extends StatelessWidget {
-  
-   DrawerHeaderWidget({Key? key}) : super(key: key);
-   final userController = Get.put(UserController());
-final authController = Get.find<AuthController>();
+  DrawerHeaderWidget({Key? key}) : super(key: key);
+  final userController = Get.put(UserController());
+  final authController = Get.find<AuthController>();
   @override
   Widget build(BuildContext context) {
-    
-
     return Container(
       height: 30.h,
       width: double.infinity,
@@ -121,11 +149,7 @@ final authController = Get.find<AuthController>();
               final user = userController.user.value;
 
               if (user == null) {
-                return const SizedBox(
-                  height: 60,
-                  width: 60,
-                  child: SizedBox(),
-                );
+                return const SizedBox(height: 60, width: 60, child: SizedBox());
               }
 
               return Row(
@@ -144,7 +168,7 @@ final authController = Get.find<AuthController>();
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${user.firstName} ${user.lastName}',
+                        '${user.firstName}${user.lastName != null && user.lastName!.isNotEmpty ? ' ${user.lastName}' : ''}',
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
@@ -153,7 +177,7 @@ final authController = Get.find<AuthController>();
                       ),
                       const SizedBox(height: 4),
                       Text(
-                      authController.isGuest ? "KOTA Guest" : "KOTA Member",
+                        authController.isGuest ? "KOTA Guest" : "KOTA Member",
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w300,
@@ -172,22 +196,24 @@ final authController = Get.find<AuthController>();
   }
 }
 
-
 class DrawerItem extends StatelessWidget {
   final IconData icon;
   final String title;
   final Function()? onPressed;
 
-  const DrawerItem({Key? key, required this.icon, required this.title,this.onPressed}) : super(key: key);
+  const DrawerItem({
+    Key? key,
+    required this.icon,
+    required this.title,
+    this.onPressed,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 1.w),
       child: Container(
-        decoration: const BoxDecoration(
-          color: AppColors.primaryBackground,
-        ),
+        decoration: const BoxDecoration(color: AppColors.primaryBackground),
         child: ListTile(
           leading: Icon(icon, color: Colors.black),
           title: Text(
@@ -227,7 +253,7 @@ class ViewProfileItem extends StatelessWidget {
           ),
         ),
       ),
-      onTap: ()=> Get.to(()=>ProfilePage()),
+      onTap: () => Get.to(() => ProfilePage()),
     );
   }
 }

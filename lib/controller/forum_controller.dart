@@ -1,8 +1,14 @@
+
+import 'dart:async';
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kota/apiServices/forum_api_services.dart';
 import 'package:kota/data/dummy.dart';
 import 'package:kota/model/forum_model.dart';
+import 'package:kota/views/widgets/custom_snackbar.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ForumController extends GetxController {
@@ -13,7 +19,9 @@ class ForumController extends GetxController {
   RxString selectedThreadId = ''.obs;
   final forumModel = Rxn<ForumModel>();
   final threadsList = <ForumData>[].obs;
-  final originalThreadsList = <ForumData>[]; // Backup for filtering
+  final originalThreadsList = <ForumData>[]; 
+  final RxBool isButtonEnabled = false.obs;
+  final RxBool isSubmitting = false.obs;
   var comments = <Comments>[].obs;
   final Rx<ForumData> singleThread = ForumData().obs;
   final ForumApiService _forumApiService = ForumApiService();
@@ -34,7 +42,33 @@ class ForumController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    titleController.addListener(_checkFields);
+    descriptionController.addListener(_checkFields);
     loadThreads();
+  }
+
+  void _checkFields() {
+    final title = titleController.text.trim();
+    final desc = descriptionController.text.trim();
+    isButtonEnabled.value = title.isNotEmpty && desc.isNotEmpty;
+  }
+
+  String _capitalizeFirst(String input) {
+    if (input.isEmpty) return input;
+    return input[0].toUpperCase() + input.substring(1);
+  }
+
+  Future<void> handleSubmit() async {
+    if (!isButtonEnabled.value || isSubmitting.value) return;
+
+    isSubmitting.value = true;
+
+    titleController.text = _capitalizeFirst(titleController.text.trim());
+    descriptionController.text = _capitalizeFirst(descriptionController.text.trim());
+
+    await createDiscussion();
+
+    isSubmitting.value = false;
   }
 
   Future<void> loadThreads() async {
@@ -48,6 +82,11 @@ class ForumController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  void resetFields(){
+    searchController.clear();
+    setSearchQuery('');
   }
 
   Future<ForumData> loadSingleThread(String id) async {
@@ -109,7 +148,8 @@ class ForumController extends GetxController {
       );
       await loadSingleThread(selectedThreadId.value);
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      String message = _getFriendlyErrorMessage(e);
+    CustomSnackbars.failure( message,"Failed to post Comment");
     }
   }
 
@@ -157,7 +197,8 @@ class ForumController extends GetxController {
     // Revert on failure
     comments[index] = oldComment;
     comments.refresh();
-    Get.snackbar("Failed to like comment", e.toString());
+    String message = _getFriendlyErrorMessage(e);
+    CustomSnackbars.failure( message,"Failed to like Comment");
   }
 }
 
@@ -189,7 +230,8 @@ class ForumController extends GetxController {
         replies[replyIndex] = oldReply;
         comments[i] = comments[i].copyWith(replies: List<Replies>.from(replies));
         comments.refresh();
-        Get.snackbar("Failed to like reply", e.toString());
+        String message = _getFriendlyErrorMessage(e);
+    CustomSnackbars.failure( message,"Failed to like Reply");
       }
       break;
     }
@@ -242,7 +284,8 @@ class ForumController extends GetxController {
         likeCount.value = (thread.likeCount ?? 0).toString();
       }
 
-      Get.snackbar("Error", "Failed to update like");
+      String message = _getFriendlyErrorMessage(e);
+    CustomSnackbars.failure( message,"Failed to Update Like");
     }
   }
 
@@ -257,7 +300,8 @@ class ForumController extends GetxController {
       );
       await loadSingleThread(selectedThreadId.value);
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      String message = _getFriendlyErrorMessage(e);
+    CustomSnackbars.failure( message,"Failed to Reply");
     }
   }
 
@@ -266,10 +310,11 @@ class ForumController extends GetxController {
     final description = descriptionController.text.trim();
 
     if (title.isEmpty || description.isEmpty) {
-      Get.snackbar("Error", "Title and description cannot be empty");
+      CustomSnackbars.failure("Error", "Title and description cannot be empty");
       return;
     }
     try {
+      isLoading.value = true;
       await ForumApiService.postDiscussion(
         title: title,
         description: description,
@@ -281,9 +326,31 @@ class ForumController extends GetxController {
       selectedImages.clear();
       Get.back();
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      String message = _getFriendlyErrorMessage(e);
+    CustomSnackbars.failure( message,"Failed to Create Discussion");
+    }finally{
+      isLoading.value = false;
     }
   }
+
+  String _getFriendlyErrorMessage(dynamic e) {
+  if (e is DioError) {
+    if (e.response != null && e.response?.data != null) {
+      // Handle backend error message if available
+      if (e.response?.data is Map && e.response?.data['message'] != null) {
+        return e.response?.data['message'];
+      }
+    }
+    return "Network error: ${e.message}";
+  } else if (e is SocketException) {
+    return "No internet connection. Please check your network.";
+  } else if (e is TimeoutException) {
+    return "Request timed out. Please try again.";
+  } else {
+    return "Something went wrong. Please try again.";
+  }
+}
+
 
   @override
   void onClose() {

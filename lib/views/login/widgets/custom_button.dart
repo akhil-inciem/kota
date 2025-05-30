@@ -39,6 +39,7 @@ class CustomButton extends StatelessWidget {
         : (textColor ?? defaultText).withOpacity(0.6);
 
     return GestureDetector(
+      
       onTap: isEnabled ? onPressed : null,
       child: Container(
         width: width ?? double.infinity,

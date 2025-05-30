@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kota/apiServices/events_api_services.dart';
 import 'package:kota/apiServices/favorite_api_services.dart';
@@ -17,6 +18,7 @@ class EventController extends GetxController {
   var bookmarkedStatus = <String, bool>{}.obs;
   final _favApiService = FavoritesApiService();
   final EventsApiService _eventsApiService = EventsApiService();
+  final TextEditingController searchController = TextEditingController();
 
   @override
   void onInit() {

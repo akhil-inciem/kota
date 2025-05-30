@@ -9,11 +9,8 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 class ProfileHeader extends StatelessWidget {
   final User user;
 
-   ProfileHeader({
-    Key? key,
-    required this.user,
-  }) : super(key: key);
-final authController = Get.find<AuthController>();
+  ProfileHeader({Key? key, required this.user}) : super(key: key);
+  final authController = Get.find<AuthController>();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -89,11 +86,11 @@ final authController = Get.find<AuthController>();
                       ),
                     ),
                     GestureDetector(
-                      onTap: (){
-                        Get.to(()=>EditProfileScreen());
+                      onTap: () {
+                        Get.to(() => EditProfileScreen());
                       },
                       child: Padding(
-                        padding:  EdgeInsets.all(6.sp),
+                        padding: EdgeInsets.all(6.sp),
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.black.withOpacity(0.4),
@@ -104,7 +101,7 @@ final authController = Get.find<AuthController>();
                               horizontal: 4.w,
                               vertical: 0.4.h,
                             ),
-                            child:  Center(
+                            child: Center(
                               child: Text(
                                 "Edit",
                                 style: TextStyle(
@@ -124,15 +121,16 @@ final authController = Get.find<AuthController>();
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${user.firstName} ${user.lastName ?? ''}',
+                      '${user.firstName}${user.lastName != null && user.lastName!.isNotEmpty ? ' ${user.lastName}' : ''}',
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
                       ),
                     ),
+
                     const SizedBox(height: 4),
-                     Text(
+                    Text(
                       authController.isGuest ? "KOTA Guest" : "KOTA Member",
                       style: TextStyle(
                         fontSize: 14,

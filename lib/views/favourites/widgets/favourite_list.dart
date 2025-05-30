@@ -13,7 +13,7 @@ import 'package:kota/views/home/widgets/list_shimmer.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class FavoriteList extends StatelessWidget {
-  final FavouriteController favouriteController =
+  final FavouriteController favController =
       Get.find<FavouriteController>();
 
   FavoriteList({Key? key}) : super(key: key);
@@ -25,10 +25,12 @@ class FavoriteList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return Obx(() {
-      if (favouriteController.isLoading.value) {
+      
+      if (favController.isLoading.value) {
         return const ListShimmer(); // Show shimmer while loading
-      }else if(favouriteController.filteredList.isEmpty){
+      }else if(favController.filteredList.isEmpty){
         return Center(
   child: Column(
     mainAxisSize: MainAxisSize.min,
@@ -39,14 +41,14 @@ class FavoriteList extends StatelessWidget {
                 ),
       SizedBox(height: 12),
       Text(
-        "No Favorites Available",
+        "No Favourites Available",
         style: TextStyle(fontSize: 18, color: Colors.black),
       ),
     ],
   ),
 );
       }
-      final items = favouriteController.filteredList;
+      final items = favController.filteredList;
       return ListView.builder(
         padding: EdgeInsets.zero,
         itemCount: items.length,

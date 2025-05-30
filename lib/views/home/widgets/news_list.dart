@@ -92,29 +92,6 @@ class _NewsListState extends State<NewsList> {
                             children: [
                               Row(
                                 children: [
-                                  // if (isFavourite) ...[
-                                  //   Container(
-                                  //     padding: const EdgeInsets.symmetric(
-                                  //       horizontal: 8,
-                                  //       vertical: 4,
-                                  //     ),
-                                  //     decoration: BoxDecoration(
-                                  //       color: getBadgeContainerColor(
-                                  //         item.badges,
-                                  //       ),
-                                  //       borderRadius: BorderRadius.circular(8),
-                                  //     ),
-                                  //     child: Text(
-                                  //       item.badges ?? 'Badge', // Badge Text
-                                  //       style: TextStyle(
-                                  //         fontSize: 10,
-                                  //         color: getBadgeTextColor(item.badges),
-                                  //       ),
-                                  //     ),
-                                  //   ),
-
-                                  //   SizedBox(width: 2.w),
-                                  // ],
                                   Container(
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 8,

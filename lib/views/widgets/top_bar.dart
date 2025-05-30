@@ -15,6 +15,7 @@ class TopBar extends StatefulWidget {
   final Function()? onTap;
   final Color? iconColor;
   final String? leadingIcon;
+  final Widget? leadingIconWidget;
   final bool isEvent;
 
   TopBar({
@@ -22,6 +23,7 @@ class TopBar extends StatefulWidget {
     this.onTap,
     this.iconColor,
     this.leadingIcon,
+    this.leadingIconWidget,
     this.isEvent = false,
   });
 
@@ -84,22 +86,27 @@ class _TopBarState extends State<TopBar> {
                                   onTap:
                                       widget.onTap ??
                                       () => homeController.index.value = 0,
-                                  child: Image.asset(
-                                    widget.leadingIcon ??
-                                        'assets/icons/backbutton.png',
-                                    width: 20,
-                                    height: 24,
-                                    color:
-                                        widget.iconColor ??
-                                        AppColors.primaryButton,
-                                  ),
+                                  child:
+                                      widget.leadingIconWidget ??
+                                      Image.asset(
+                                        widget.leadingIcon ??
+                                            'assets/icons/backbutton.png',
+                                        width: 20,
+                                        height: 24,
+                                        color:
+                                            widget.iconColor ??
+                                            AppColors.primaryButton,
+                                      ),
                                 ),
                                 SizedBox(width: 1.2.w),
-                                Text(
-                                  widget.title ?? _getTitle(currentIndex),
-                                  style: TextStyle(
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.bold,
+                                Expanded(
+                                  child: Text(
+                                    widget.title ?? _getTitle(currentIndex),
+                                    style: TextStyle(
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    maxLines: 1,
                                   ),
                                 ),
                               ],

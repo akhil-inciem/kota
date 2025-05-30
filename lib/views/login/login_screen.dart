@@ -173,7 +173,8 @@ class _LoginScreenState extends State<LoginScreen>
                     if (value == null || value.isEmpty) {
                       return 'Email is required';
                     }
-                    if (!GetUtils.isEmail(value.trim())) return 'Enter a valid email';
+                    if (!GetUtils.isEmail(value.trim()))
+                      return 'Enter a valid email';
                     return null;
                   },
                 ),
@@ -182,8 +183,7 @@ class _LoginScreenState extends State<LoginScreen>
                   controller: passwordController,
                   label: 'Password',
                   rightLabel: 'Forgot Password?',
-                  onRightLabelTap: () {
-                  },
+                  onRightLabelTap: () {},
                   hintText: 'Enter password',
                   isPassword: true,
                   validator: (value) {
@@ -205,26 +205,31 @@ class _LoginScreenState extends State<LoginScreen>
                   isGuestButton: true,
                 ),
                 SizedBox(height: 2.h),
-                CustomButton(
-                  text: 'Sign In',
-                  backgroundColor: AppColors.primaryButton,
-                  textColor: Colors.white,
-                  onPressed: () async {
-                    if (_formKey.currentState?.validate() ?? false) {
-                      String email = emailController.text.trim();
-                      String password = passwordController.text;
+                Obx(
+                  () => CustomButton(
+                    text:
+                        authController.isLoading.value
+                            ? 'Signing In...'
+                            : 'Sign In',
+                    backgroundColor: AppColors.primaryButton,
+                    textColor: Colors.white,
+                    isGuestButton: false,
+                    isEnabled: !authController.isLoading.value,
+                    onPressed: () async {
+                      if (_formKey.currentState?.validate() ?? false) {
+                        String email = emailController.text.trim();
+                        String password = passwordController.text;
 
-                      bool success = await authController.loginAsUser(
-                        email,
-                        password,
-                      );
-
-                      if (success) {
-                        Get.offAll(BaseScreen());
+                        bool success = await authController.loginAsUser(
+                          email,
+                          password,
+                        );
+                        if (success) {
+                          Get.offAll(BaseScreen());
+                        }
                       }
-                    }
-                  },
-                  isGuestButton: false,
+                    },
+                  ),
                 ),
                 SizedBox(height: 2.h),
                 Align(

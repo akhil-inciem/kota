@@ -46,9 +46,16 @@ class _ForumListState extends State<ForumList> {
       final items = forumController.threadsList;
       if (items.isEmpty) {
         return Center(
-          child: Text(
-            "No Forums Available",
-            style: TextStyle(fontSize: 18, color: Colors.black),
+          child: Column(
+            children: [
+              SizedBox(height: 25.h,),
+              Icon(Icons.newspaper, size: 35.sp, color: Colors.grey),
+              SizedBox(height: 1.h),
+              Text(
+                "No Forums Available",
+                style: TextStyle(fontSize: 18, color: Colors.black),
+              ),
+            ],
           ),
         );
       }
@@ -153,7 +160,7 @@ class _ForumListState extends State<ForumList> {
                                   ),
                                 ],
                               ),
-                            )
+                            ),
                           ],
                         ),
                         SizedBox(height: 1.h),

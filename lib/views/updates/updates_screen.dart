@@ -8,16 +8,31 @@ import 'package:kota/views/widgets/top_bar.dart';
 import 'package:kota/views/updates/widgets/notification_list.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class UpdatesScreen extends StatelessWidget {
+class UpdatesScreen extends StatefulWidget {
   UpdatesScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final authController = Get.find<AuthController>();
-    final updateController = Get.find<UpdateController>();
-    final item = updateController.memberModel.value?.data;
-    final isGuest = authController.isGuest;
+  State<UpdatesScreen> createState() => _UpdatesScreenState();
+}
 
+class _UpdatesScreenState extends State<UpdatesScreen> {
+  late final AuthController authController;
+  late final UpdateController updateController;
+  late final bool isGuest;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize controllers once
+    authController = Get.find<AuthController>();
+    updateController = Get.find<UpdateController>();
+    isGuest = authController.isGuest;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final item = updateController.memberModel.value?.data;
     final bool isExpired =
         item != null &&
         (item.membershipExpiryDate!.isBefore(DateTime.now()) ||
@@ -195,17 +210,30 @@ class UpdatesScreen extends StatelessWidget {
                                           // Now check for notifications
                                           if (filteredTodayList.isEmpty &&
                                               filteredOlderList.isEmpty)
-                                             Center(
+                                            Center(
                                               child: Padding(
                                                 padding: EdgeInsets.only(
-                                                  top: 30.h,
+                                                  top: 25.h,
                                                 ),
-                                                child: Text(
-                                                  "No notifications found",
-                                                  style: TextStyle(
-                                                    fontSize: 18,
-                                                    color: Colors.black,
-                                                  ),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.notifications_off_outlined,
+                                                      size:
+                                                          30.sp, // You can adjust size as needed
+                                                      color: Colors.grey,
+                                                    ),
+                                                    SizedBox(height: 2.h),
+                                                    Text(
+                                                      "No notifications available",
+                                                      style: TextStyle(
+                                                        fontSize: 18,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
                                             )

@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 // import 'package:kota/apiServices/notification_services.dart';
-import 'package:kota/views/profile/pfd_view_screen.dart';
+import 'package:kota/views/profile/pdf_view_screen.dart';
 import 'package:kota/views/widgets/custom_snackbar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -52,9 +52,6 @@ Future<void> downloadPdf(
 
     final dio = Dio();
 
-    // 🔔 Notify: download started
-    // await NotificationService.showNotification('Download Started', fileName);
-
     final response = await dio.download(
       url,
       savePath,
@@ -67,17 +64,11 @@ Future<void> downloadPdf(
 
     if (response.statusCode == 200) {
       CustomSnackbars.success("Saved to Downloads", "Download Successful");
-
-      // 🔔 Notify: download successful
-      // await NotificationService.showNotification('Download Complete', fileName);
     } else {
       throw Exception('Download failed');
     }
   } catch (e) {
     CustomSnackbars.oops(e.toString(), "Download Failed");
-
-    // 🔔 Notify: download failed
-    // await NotificationService.showNotification('Download Failed', e.toString());
   }
 }
 
@@ -110,15 +101,7 @@ Future<void> downloadPdf(
                   children: [
                     IconButton(
                       icon: const Icon(Icons.remove_red_eye),
-                      tooltip: "View",
                       onPressed: () => _openPdfViewer(context),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.download),
-                      tooltip: "Download",
-                      onPressed: () {
-                        downloadPdf(imagePath, 'my_certification.pdf', context);
-                      },
                     ),
                   ],
                 ),

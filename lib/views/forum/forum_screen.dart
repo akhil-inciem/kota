@@ -109,7 +109,7 @@ class _ForumScreenState extends State<ForumScreen> {
                           thickness: 1,
                           height: 1,
                         ),
-                        SizedBox(height:70.h,child: ForumList()),
+                        SizedBox(height:65.h,child: ForumList()),
                       ],
                     ),
                   ),

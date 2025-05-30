@@ -5,11 +5,6 @@ import 'package:kota/controller/drawer_controller.dart';
 import 'package:kota/views/drawer/widgets/executive_card.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:kota/constants/colors.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
-
 class ExecutivePage extends StatefulWidget {
   const ExecutivePage({super.key});
 
@@ -19,7 +14,13 @@ class ExecutivePage extends StatefulWidget {
 
 class _ExecutivePageState extends State<ExecutivePage> {
   final SideMenuController menuController = Get.put(SideMenuController());
-  
+
+  @override
+  void initState() {
+    super.initState();
+    menuController.fetchExecutives();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(

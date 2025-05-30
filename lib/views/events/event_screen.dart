@@ -46,7 +46,7 @@ class EventScreen extends StatelessWidget {
               ),
               SizedBox(height: 0.5.h),
               CustomSearchBar(
-          // controller: homeController.searchController,
+          controller: controller.searchController,
           // onChanged: (value) {
           //   homeController.selectedTabIndex.value == 0
           //       ? homeController.filterNews(value)
@@ -96,14 +96,18 @@ class EventScreen extends StatelessWidget {
                                     horizontal: 6.w,vertical: 1.h),
                                 child: Column(
                                   children: [
-                                    SizedBox(height: 15.h,),
-                                    Center(
-                                      child: const Text("No upcoming Events",style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.black,
-                                            ),),
-                                    ),
+                                    SizedBox(height: 10.h,),
+                                    Icon(
+                                        Icons.newspaper,
+                                        size: 35.sp,
+                                        color: Colors.grey,
+                                      ),
+                                      SizedBox(height: 1.h),
+                                     Text("No upcoming Events",style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.black,
+                                          ),),
                                   ],
                                 ),
                               ),

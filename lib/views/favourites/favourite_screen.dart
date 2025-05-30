@@ -24,6 +24,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
   @override
   void initState() {
     super.initState();
+    
     favController.fetchFilteredItems();
   }
 
@@ -40,6 +41,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Column(
       children: [
         TopBar(),
