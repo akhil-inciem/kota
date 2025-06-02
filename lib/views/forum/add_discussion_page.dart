@@ -24,7 +24,6 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
   @override
   void initState() {
     super.initState();
-    userController.loadUserProfile();
     _forumController.titleController.addListener(() {
       final text = _forumController.titleController.text;
       final capitalized = capitalizeFirstLetter(text);

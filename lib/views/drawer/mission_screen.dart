@@ -13,7 +13,7 @@ class MissionPage extends StatefulWidget {
 }
 
 class _MissionPageState extends State<MissionPage> {
-  final SideMenuController controller = Get.put(SideMenuController());
+  final SideMenuController controller = Get.find<SideMenuController>();
   
   String cleanHtml(String htmlString) {
   final document = parse(htmlString);
@@ -24,7 +24,6 @@ class _MissionPageState extends State<MissionPage> {
 @override
   void initState() {
     super.initState();
-    controller.fetchVisionAndMission();
   }
 
   @override

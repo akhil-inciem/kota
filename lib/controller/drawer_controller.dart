@@ -4,13 +4,11 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:kota/apiServices/drawer_api_services.dart';
-import 'package:kota/apiServices/events_api_services.dart';
-import 'package:kota/data/dummy.dart';
-import 'package:kota/model/event_model.dart';
 import 'package:kota/model/executive_model.dart';
 import 'package:kota/model/faq_model.dart';
 import 'package:kota/model/vision_mission_model.dart';
 import 'package:kota/views/widgets/custom_snackbar.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class SideMenuController extends GetxController {
@@ -25,6 +23,9 @@ class SideMenuController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    loadFaqs();
+  fetchVisionAndMission();
+  fetchExecutives();
   }
 
   Future<void> fetchExecutives() async {
@@ -42,35 +43,58 @@ class SideMenuController extends GetxController {
   }
 
   Future<void> downloadPdf(String url) async {
-    if (isDownloading.value) return;
+  if (isDownloading.value) return;
 
-    isDownloading.value = true;
+  isDownloading.value = true;
 
-    final status = await Permission.storage.request();
-
-    if (status.isGranted) {
-      try {
-        final response = await http.get(Uri.parse(url));
-        final directory = Directory('/storage/emulated/0/Download');
-
-        if (!await directory.exists()) {
-          await directory.create(recursive: true);
-        }
-
-        final fileName = 'downloaded_file_${DateTime.now().millisecondsSinceEpoch}.pdf';
-        final filePath = '${directory.path}/$fileName';
-        final file = File(filePath);
-        await file.writeAsBytes(response.bodyBytes);
-
-        CustomSnackbars.success('Saved to Downloads', 'Download Complete');
-      } catch (e) {
-        CustomSnackbars.failure('Download failed: $e', 'Error');
+  // Step 1: Request proper permissions
+  if (Platform.isAndroid) {
+    if (await Permission.storage.isDenied || await Permission.storage.isPermanentlyDenied) {
+      final status = await Permission.storage.request();
+      if (!status.isGranted) {
+        CustomSnackbars.failure('Storage permission is required to download.', 'Permission Denied');
+        isDownloading.value = false;
+        return;
       }
-    } else {
-      CustomSnackbars.failure('Storage permission is required to download.', 'Permission Denied');
     }
+  }
+
+  try {
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode != 200) {
+      throw Exception('Failed to download file');
+    }
+
+    // Step 2: Choose a safe directory
+    Directory? directory;
+    if (Platform.isAndroid) {
+      // For Android 11+ we use getExternalStorageDirectory
+      directory = await getExternalStorageDirectory();
+    } else {
+      directory = await getApplicationDocumentsDirectory();
+    }
+
+    if (directory == null) {
+      throw Exception('Unable to get download directory');
+    }
+
+    // Step 3: Save the file
+    final fileName = 'downloaded_file_${DateTime.now().millisecondsSinceEpoch}.pdf';
+    final filePath = '${directory.path}/$fileName';
+    final file = File(filePath);
+    await file.writeAsBytes(response.bodyBytes);
+
+    CustomSnackbars.success('Saved to ${directory.path}', 'Download Complete');
+
+    // Optional: Open the file
+    // await OpenFile.open(filePath);
+
+  } catch (e) {
+    CustomSnackbars.failure('Download failed: $e', 'Error');
+  } finally {
     isDownloading.value = false;
   }
+}
 
   void toggleExpansion(int index) {
     expandedIndex.value = index;

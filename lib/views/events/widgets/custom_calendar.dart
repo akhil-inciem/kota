@@ -56,8 +56,9 @@ class CustomCalendar extends StatelessWidget {
                 ),
               ),
               pageAnimationEnabled: true,
-              firstDay: DateTime.utc(2020, 1, 1),
-              lastDay: DateTime.utc(2030, 12, 31),
+              firstDay: DateTime(DateTime.now().year, 1, 1),
+lastDay: DateTime(DateTime.now().year, 12, 31),
+
               focusedDay: focusedDate,
               selectedDayPredicate:
                   (day) => controller.isSameDate(day, selectedDate),

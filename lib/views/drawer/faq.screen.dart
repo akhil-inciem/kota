@@ -16,11 +16,10 @@ class FaqScreen extends StatefulWidget {
 }
 
 class _FaqScreenState extends State<FaqScreen> {
-  final SideMenuController controller = Get.put(SideMenuController());
+  final SideMenuController controller = Get.find<SideMenuController>();
 
   @override
   void initState() {
-    controller.loadFaqs();
     super.initState();
   }
 

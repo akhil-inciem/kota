@@ -23,8 +23,6 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
   @override
   void initState() {
     super.initState();
-
-    // Initialize controllers once
     authController = Get.find<AuthController>();
     updateController = Get.find<UpdateController>();
     isGuest = authController.isGuest;

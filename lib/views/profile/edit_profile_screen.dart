@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kota/constants/colors.dart';
+import 'package:kota/controller/auth_controller.dart';
 import 'package:kota/controller/user_controller.dart';
 import 'package:kota/views/login/widgets/custom_button.dart';
 import 'package:kota/views/login/widgets/labelled_textfield.dart';
+import 'package:kota/views/profile/widgets/shimmer/edit_profile_button_shimmer.dart';
+import 'package:kota/views/profile/widgets/shimmer/edit_profile_shimmer.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -18,6 +21,7 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final userController = Get.find<UserController>();
+  final authController = Get.find<AuthController>();
 
   void pickImage(ImageSource source) async {
     final ImagePicker picker = ImagePicker();
@@ -35,38 +39,44 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.primaryBackground,
-        resizeToAvoidBottomInset: true,
-        body: Obx(() {
-          final user = userController.user.value;
-          if (userController.isLoading.value) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (user == null) {
-            return const Center(
-              child: Text(
-                'Failed to load user data',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-            );
-          }
-          return SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Container(
-              constraints: BoxConstraints(
-                minHeight:
-                    MediaQuery.of(context).size.height -
-                    MediaQuery.of(context).padding.top,
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 6.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(height: 2.h),
-                    _buildAppBar(),
+  return SafeArea(
+    child: Scaffold(
+      backgroundColor: AppColors.primaryBackground,
+      resizeToAvoidBottomInset: true,
+      body: Obx(() {
+        final user = userController.user.value;
+        final isLoading = userController.isLoading.value;
+
+        return SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Container(
+            constraints: BoxConstraints(
+              minHeight: MediaQuery.of(context).size.height -
+                  MediaQuery.of(context).padding.top,
+            ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 6.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 2.h),
+                  _buildAppBar(), // ✅ Always shown
+
+                  if (isLoading) ...[
+                    SizedBox(height: 4.h),
+                    const EditProfileShimmer(),
+                    SizedBox(height: 4.h),
+                    const ShimmerButtonPlaceholder(),
+                    SizedBox(height: 3.h),
+                  ] else if (user == null) ...[
+                    SizedBox(height: 4.h),
+                    const Center(
+                      child: Text(
+                        'Failed to load user data',
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                      ),
+                    ),
+                  ] else ...[
                     SizedBox(height: 4.h),
                     _buildProfilePictureSection(user),
                     SizedBox(height: 4.h),
@@ -76,23 +86,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       () => CustomButton(
                         text: "Update",
                         isEnabled: userController.isChanged.value,
-                        onPressed:
-                            userController.isChanged.value
-                                ? () => userController.updateUserProfile()
-                                : null,
+                        onPressed: userController.isChanged.value
+                            ? () => userController.updateUserProfile()
+                            : null,
                       ),
                     ),
                     SizedBox(height: 3.h),
-                  ],
-                ),
+                  ]
+                ],
               ),
             ),
-          );
-        }),
-      ),
-    );
-  }
-
+          ),
+        );
+      }),
+    ),
+  );
+}
   Widget _buildAppBar() {
     return Row(
       children: [
@@ -141,7 +150,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ? NetworkImage(user.photo!) as ImageProvider
                           : null),
               backgroundColor: Colors.grey[200],
-              child:selectedImage == null &&
+              child:
+                  selectedImage == null &&
                           (user.photo == null || user.photo!.isEmpty)
                       ? Icon(Icons.person, size: 8.h, color: Colors.grey[400])
                       : null,
@@ -183,6 +193,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Widget _buildFormSection(UserController userController) {
+    final isGuest = authController.isGuest;
     return Container(
       padding: EdgeInsets.all(6.w),
       decoration: BoxDecoration(
@@ -199,16 +210,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       child: Column(
         children: [
           LabelledTextField(
-            label: "First Name",
-            hintText: "Enter your first name",
+            label: isGuest ? "Full Name" : "First Name",
+            hintText:
+                isGuest ? "Enter your full name" : "Enter your first name",
             controller: userController.firstNameController,
           ),
-          SizedBox(height: 3.h),
-          LabelledTextField(
-            label: "Last Name",
-            hintText: "Enter your last name",
-            controller: userController.lastNameController,
-          ),
+          if (!isGuest) ...[
+            SizedBox(height: 3.h),
+            LabelledTextField(
+              label: "Last Name",
+              hintText: "Enter your last name",
+              controller: userController.lastNameController,
+            ),
+          ],
           SizedBox(height: 3.h),
           LabelledTextField(
             label: "Phone Number",

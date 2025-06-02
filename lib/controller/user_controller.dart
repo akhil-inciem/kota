@@ -106,21 +106,6 @@ void clearFields() {
         emailController.text != _originalUser.email;
   }
 
-  // Future<void> updateProfile() async {
-  //   // Update logic goes here
-  //   final updatedUser = _originalUser.copyWith(
-  //     firstName: firstNameController.text,
-  //     lastName: lastNameController.text,
-  //     primaryNumber: phoneController.text,
-  //     email: emailController.text,
-  //   );
-
-  //   // Simulate update
-  //   user.value = updatedUser;
-  //   _originalUser = updatedUser;
-  //   isChanged.value = false;
-  //   CustomSnackbars.success("Profile updated", "");
-  // }
 
   @override
   void onClose() {

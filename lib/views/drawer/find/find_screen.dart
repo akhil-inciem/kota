@@ -27,18 +27,17 @@ class _FindScreenState extends State<FindScreen>
   final FindController controller = Get.put(FindController());
 
   @override
-void initState() {
-  super.initState();
+  void initState() {
+    super.initState();
 
-  _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
 
-  // Delay reactive value assignment until after first frame
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    controller.isTherapistSearched.value = false;
-    controller.isClinicSearched.value = false;
-  });
-}
-
+    // Delay reactive value assignment until after first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.isTherapistSearched.value = false;
+      controller.isClinicSearched.value = false;
+    });
+  }
 
   @override
   void dispose() {
@@ -75,26 +74,26 @@ void initState() {
                 ),
               ),
               Expanded(
-  child: Obx(() {
-    if (!controller.isDropdownDataLoaded.value) {
-      return Center(child: CircularProgressIndicator());
-    }
-    return TabBarView(
-      controller: _tabController,
-      children: [
-        FindTherapistTab(controller: controller),
-        FindClinicTab(controller: controller),
-      ],
-    );
-  }),
-),
-
+                child: Obx(() {
+                  if (!controller.isDropdownDataLoaded.value) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  return TabBarView(
+                    controller: _tabController,
+                    children: [
+                      FindTherapistTab(controller: controller),
+                      FindClinicTab(controller: controller),
+                    ],
+                  );
+                }),
+              ),
             ],
           ),
         ),
       ),
     );
   }
+
   Widget _buildAppBar() {
     return Row(
       children: [
@@ -110,13 +109,9 @@ void initState() {
         SizedBox(width: 4.w),
         Text(
           "Find",
-          style: TextStyle(
-            fontSize: 17.sp,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.bold),
         ),
       ],
     );
   }
 }
-

@@ -1,7 +1,9 @@
+import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kota/controller/event_controller.dart';
 import 'package:kota/controller/home_controller.dart';
+import 'package:kota/views/drawer/executives_screen.dart';
 import 'package:kota/views/home/widgets/events_list.dart';
 import 'package:kota/views/home/widgets/home_tab_bar.dart';
 import 'package:kota/views/home/widgets/latest_news_list.dart';
@@ -20,6 +22,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final HomeController homeController = Get.put(HomeController());
   final EventController eventController = Get.put(EventController());
+
   @override
   void initState() {
     super.initState();

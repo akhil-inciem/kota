@@ -7,15 +7,15 @@ import 'package:dio/dio.dart' as dio;
 
 class ForumApiService {
   static final dio.Dio _dio = dio.Dio();
-  static final _authController = Get.find<AuthController>();
-  static final String? _userId = _authController.userModel.value?.data.id;
 
   Future<List<ForumData>> fetchThreads() async {
+     final authController = Get.find<AuthController>();
+    final String? userId = authController.userModel.value?.data.id;
     try {
       final response = await _dio.get(
         ApiEndpoints.getAllThreads,
         queryParameters: {
-          _authController.isGuest ? 'guest_user_id' : 'user_id': _userId,
+          authController.isGuest ? 'guest_user_id' : 'user_id': userId,
         },
       );
 
@@ -34,11 +34,13 @@ class ForumApiService {
   }
 
   Future<ForumData> fetchSingleThread(String threadId) async {
+     final authController = Get.find<AuthController>();
+    final String? userId = authController.userModel.value?.data.id;
     try {
       final response = await _dio.get(
         '${ApiEndpoints.getThreadDetails}/$threadId',
         queryParameters: {
-          _authController.isGuest ? 'guest_user_id' : 'user_id': _userId,
+          authController.isGuest ? 'guest_user_id' : 'user_id': userId,
         },
       );
 
@@ -60,7 +62,9 @@ class ForumApiService {
     required String description,
     required List<XFile> images,
   }) async {
-    if (_userId == null) {
+     final authController = Get.find<AuthController>();
+    final String? userId = authController.userModel.value?.data.id;
+    if (userId == null) {
       throw Exception("User ID not found. Make sure user is logged in.");
     }
 
@@ -68,7 +72,7 @@ class ForumApiService {
 
     final dio.FormData formData = dio.FormData.fromMap({
       'title': title,
-      _authController.isGuest ? 'guest_user_id' : 'user_id': _userId,
+      authController.isGuest ? 'guest_user_id' : 'user_id': userId,
       'content': description,
       'images[]': await Future.wait(
         images.map(
@@ -93,13 +97,15 @@ class ForumApiService {
   }
 
   static Future<void> likeThread(String threadId) async {
+     final authController = Get.find<AuthController>();
+    final String? userId = authController.userModel.value?.data.id;
     final String url = '${ApiEndpoints.likeThread}$threadId';
 
     try {
       final response = await _dio.post(
         url,
         data: dio.FormData.fromMap({
-          _authController.isGuest ? 'guest_user_id' : 'user_id': _userId,
+          authController.isGuest ? 'guest_user_id' : 'user_id': userId,
         }),
       );
 
@@ -117,13 +123,15 @@ class ForumApiService {
     required String threadId,
     required String comment,
   }) async {
+     final authController = Get.find<AuthController>();
+    final String? userId = authController.userModel.value?.data.id;
     final String url = '${ApiEndpoints.createComment}$threadId';
 
     try {
       final response = await _dio.post(
         url,
         data: dio.FormData.fromMap({
-          _authController.isGuest ? 'guest_user_id' : 'user_id': _userId,
+          authController.isGuest ? 'guest_user_id' : 'user_id': userId,
           'content': comment,
         }),
       );
@@ -139,13 +147,15 @@ class ForumApiService {
   }
 
   Future<void> likeComment(String commentId) async {
+     final authController = Get.find<AuthController>();
+    final String? userId = authController.userModel.value?.data.id;
     final String url = '${ApiEndpoints.likeComment}$commentId';
 
     try {
       final response = await _dio.post(
         url,
         data: dio.FormData.fromMap({
-          _authController.isGuest ? 'guest_user_id' : 'user_id': _userId,
+          authController.isGuest ? 'guest_user_id' : 'user_id': userId,
         }),
       );
 
@@ -164,11 +174,13 @@ class ForumApiService {
     required String reply,
     required String threadId,
   }) async {
+     final authController = Get.find<AuthController>();
+    final String? userId = authController.userModel.value?.data.id;
     final String url = '${ApiEndpoints.createCommentReply}$threadId';
 
     try {
       final dio.FormData formData = dio.FormData.fromMap({
-        _authController.isGuest ? 'guest_user_id' : 'user_id': _userId,
+        authController.isGuest ? 'guest_user_id' : 'user_id': userId,
         'content': reply,
         'comment_id': commentId,
       });
@@ -186,11 +198,13 @@ class ForumApiService {
   }
 
   Future<void> likeReply(String replyId) async {
+     final authController = Get.find<AuthController>();
+    final String? userId = authController.userModel.value?.data.id;
     final String url = '${ApiEndpoints.likeReply}$replyId';
 
     try {
       final dio.FormData formData = dio.FormData.fromMap({
-        _authController.isGuest ? 'guest_user_id' : 'user_id': _userId,
+        authController.isGuest ? 'guest_user_id' : 'user_id': userId,
       });
 
       final response = await _dio.post(url, data: formData);

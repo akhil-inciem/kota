@@ -74,7 +74,15 @@ class ExecutiveCard extends StatelessWidget {
                   IconButton(
                     icon: Icon(Icons.share, size: 18.sp),
                     onPressed: () {
-                    },
+                   final title = 'Check this out!';
+                final params = ShareParams(
+                  title: title,
+                  uri: Uri.parse(
+                    "https://dev.kbaiota.org",
+                  ),
+                );
+                SharePlus.instance.share(params);
+              },
                   ),
                 ],
               ),

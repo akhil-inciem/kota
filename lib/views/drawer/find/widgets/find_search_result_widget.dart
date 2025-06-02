@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kota/model/clinic_model.dart';
 import 'package:kota/model/therapist_model.dart';
 import 'package:kota/views/drawer/find/widgets/find_search.dart';
-import 'package:kota/views/widgets/search_bar.dart';
-import 'package:kota/views/login/widgets/custom_button.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-
-import 'package:flutter/material.dart';
 
 class SearchResultTherapistWidget extends StatelessWidget {
   final List<TherapistDatum> results;
@@ -38,7 +34,7 @@ class SearchResultTherapistWidget extends StatelessWidget {
           child: results.isEmpty
               ? const Center(
                   child: Text(
-                    'No data found',
+                    'No results available',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                   ),
                 )
@@ -90,7 +86,7 @@ class SearchResultClinicWidget extends StatelessWidget {
           child:results.isEmpty
               ? const Center(
                   child: Text(
-                    'No data found',
+                    'No results available',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                   ),
                 )

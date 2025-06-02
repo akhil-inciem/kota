@@ -1,14 +1,9 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/auth_controller.dart';
 import 'package:kota/controller/forum_controller.dart';
 import 'package:kota/controller/user_controller.dart';
-import 'package:kota/data/dummy.dart';
-import 'package:kota/model/forum_model.dart';
 import 'package:kota/views/forum/widgets/forum_body.dart';
 import 'package:kota/views/forum/widgets/reply_tile.dart';
 import 'package:kota/views/widgets/top_bar.dart';
@@ -56,19 +51,16 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
 
           return Column(
             children: [
-              // Scrollable content
               Expanded(
                 child: SingleChildScrollView(
                   padding: EdgeInsets.only(
                     bottom: 80,
-                  ), // Add padding to avoid overlap with input
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TopBar(title: 'Forum', onTap: () => Get.back()),
                       SizedBox(height: 2.h),
-
-                      // Profile section
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 7.w),
                         child: Row(
@@ -104,10 +96,7 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                           ],
                         ),
                       ),
-
                       SizedBox(height: 1.5.h),
-
-                      // Post content
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 6.w),
                         child: ForumPostBody(
@@ -120,10 +109,8 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                           onLikeToggle: () => controller.likeThread(),
                         ),
                       ),
-
-                      // Comments and Replies
                       Obx(() {
-                        final comments = controller.comments.reversed;
+                        final comments = controller.comments;
                         return Column(
                           children:
                               comments.map((comment) {
@@ -132,7 +119,7 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                                   children: [
                                     CommentTile(comment: comment),
                                     if (comment.replies != null)
-                                      ...comment.replies!.reversed.map(
+                                      ...comment.replies!.map(
                                         (reply) => Padding(
                                           padding: EdgeInsets.only(left: 10.w),
                                           child: ReplyTile(reply: reply),
@@ -147,8 +134,6 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                   ),
                 ),
               ),
-
-              // Fixed comment input bar
               _buildCommentInput(),
             ],
           );
@@ -158,95 +143,106 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
   }
 
   Widget _buildCommentInput() {
-    return Obx(() {
-      final user = userController.user.value;
-      final isReply = controller.isReplying.value;
+  return Obx(() {
+    final user = userController.user.value;
+    final isReply = controller.isReplying.value;
+    final isSending = controller.isPosting.value;
+    final canSend = controller.commentText.isNotEmpty && !isSending;
 
-      return Container(
-        padding: EdgeInsets.symmetric(horizontal: 1.w),
-        decoration: BoxDecoration(
-          color: Colors.grey.shade100,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(25),
-            topRight: Radius.circular(25),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              offset: Offset(0, -2),
-              blurRadius: 6,
-              spreadRadius: 1,
-            ),
-          ],
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 1.w),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade100,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(25),
+          topRight: Radius.circular(25),
         ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 20,
-                backgroundColor: Colors.grey.shade300,
-                backgroundImage:
-                    user?.photo != null ? NetworkImage(user!.photo!) : null,
-                child:
-                    user == null
-                        ? SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.grey,
-                            ),
-                          ),
-                        )
-                        : user.photo == null
-                        ? Icon(Icons.person, color: Colors.grey.shade700)
-                        : null,
-              ),
-
-              SizedBox(width: 3.w),
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: controller.commentController,
-                          focusNode: controller.commentFocusNode,
-                          autofocus: false,
-                          decoration: InputDecoration(
-                            hintText:
-                                isReply
-                                    ? 'Post your reply here'
-                                    : 'Post your comment here',
-                            border: InputBorder.none,
-                            hintStyle: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey,
-                            ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            offset: const Offset(0, -2),
+            blurRadius: 6,
+            spreadRadius: 1,
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 20,
+              backgroundColor: Colors.grey.shade300,
+              backgroundImage:
+                  user?.photo != null ? NetworkImage(user!.photo!) : null,
+              child: user == null
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Colors.grey,
+                        ),
+                      ),
+                    )
+                  : user.photo == null
+                      ? Icon(Icons.person, color: Colors.grey.shade700)
+                      : null,
+            ),
+            SizedBox(width: 3.w),
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: controller.commentController,
+                        focusNode: controller.commentFocusNode,
+                        decoration: InputDecoration(
+                          hintText: isReply
+                              ? 'Post your reply here'
+                              : 'Post your comment here',
+                          border: InputBorder.none,
+                          hintStyle: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
                           ),
                         ),
                       ),
-                      IconButton(
-                        onPressed: () {
-                          controller.postCommentOrReply();
-                        },
-                        icon: Icon(Icons.send, color: AppColors.primaryText),
-                      ),
-                    ],
-                  ),
+                    ),
+                    IconButton(
+                      onPressed: canSend
+                          ? () async {
+                              controller.isPosting.value = true;
+                              await controller.postCommentOrReply();
+                              controller.isPosting.value = false;
+                            }
+                          : null,
+                      icon: isSending
+                          ? const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : Icon(Icons.send,
+                              color: canSend
+                                  ? AppColors.primaryText
+                                  : Colors.grey.shade400),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      );
-    });
-  }
+      ),
+    );
+  });
+}
 }

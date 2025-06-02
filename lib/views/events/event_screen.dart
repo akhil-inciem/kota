@@ -30,8 +30,7 @@ class EventScreen extends StatelessWidget {
     return NotificationListener<DraggableScrollableNotification>(
       onNotification: (notification) {
         double extent =
-            notification.extent; // between minChildSize and maxChildSize
-        // Calculate border radius based on how much it has expanded
+            notification.extent; 
         double percentage = (extent - 0.5) / (0.83 - 0.5);
         double radius = 20 * (1 - percentage.clamp(0.0, 1.0));
         radiusNotifier.value = radius;
@@ -59,8 +58,8 @@ class EventScreen extends StatelessWidget {
           ),
 
           DraggableScrollableSheet(
-            initialChildSize: 0.38,
-            minChildSize: 0.38,
+            initialChildSize: 0.30,
+            minChildSize: 0.30,
             maxChildSize: 0.80,
             builder: (context, scrollController) {
               return ValueListenableBuilder<double>(

@@ -72,7 +72,7 @@ class AuthApiService {
     });
 
       final response = await _dio.post(
-        ApiEndpoints.resetPassword,
+        ApiEndpoints.resetGuestPassword,
         data: formData
       );
 

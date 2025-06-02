@@ -6,8 +6,6 @@ import 'package:kota/model/event_model.dart';
 
 class EventsApiService {
   final Dio _dio = Dio();
-  static final _authController = Get.find<AuthController>();
-  static final String? userId = _authController.userModel.value?.data.id;
   
   Future<List<EventsDatum>> fetchEvents() async {
     try{
@@ -28,6 +26,8 @@ class EventsApiService {
   Future<EventsDatum?> fetchEventsById({
   required String eventsId,
 }) async {
+   final authController = Get.find<AuthController>();
+    final String? userId = authController.userModel.value?.data.id;
   try {
     final response = await _dio.get(
       ApiEndpoints.getEventById,

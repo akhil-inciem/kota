@@ -68,7 +68,7 @@ class UpdateController extends GetxController {
       String? description;
 
       if (item is Map<String, dynamic>) {
-        dateStr = item['event_date'] ?? ''; // Replace with actual key
+        dateStr = item['event_date'] ?? ''; 
         title = item['event_title'] ?? 'Event';
         description = item['event_description'] ?? item.toString();
       } else {
@@ -121,11 +121,5 @@ class UpdateController extends GetxController {
     searchQuery.value = '';
     searchController.clear();
     _applySearch();
-  }
-
-  @override
-  void onClose() {
-    searchController.dispose();
-    super.onClose();
   }
 }

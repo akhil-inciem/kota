@@ -13,12 +13,11 @@ class ExecutivePage extends StatefulWidget {
 }
 
 class _ExecutivePageState extends State<ExecutivePage> {
-  final SideMenuController menuController = Get.put(SideMenuController());
+  final SideMenuController menuController = Get.find<SideMenuController>();
 
   @override
   void initState() {
     super.initState();
-    menuController.fetchExecutives();
   }
 
   @override

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:get/get.dart';
 import 'package:kota/constants/colors.dart';
+import 'package:kota/controller/drawer_controller.dart';
 import 'package:kota/controller/user_controller.dart';
 import 'package:kota/views/drawer/contact_us_screen.dart';
 import 'package:kota/views/drawer/executives_screen.dart';
@@ -12,6 +13,7 @@ import 'package:kota/views/login/login_screen.dart';
 import 'package:kota/views/profile/profile_screen.dart';
 import 'package:kota/views/widgets/custom_snackbar.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../controller/auth_controller.dart';
 import 'widgets/logout_dialog.dart';
@@ -20,6 +22,7 @@ class DrawerPage extends StatelessWidget {
   DrawerPage({Key? key}) : super(key: key);
 
   final authController = Get.find<AuthController>();
+  final SideMenuController menuController = Get.put(SideMenuController());
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -143,53 +146,117 @@ class DrawerHeaderWidget extends StatelessWidget {
 
           // Avatar and user info
           Positioned(
-            bottom: 25,
-            left: 30,
-            child: Obx(() {
-              final user = userController.user.value;
+  bottom: 25,
+  left: 30,
+  child: Obx(() {
+    final isLoading = userController.isLoading.value;
+    final user = userController.user.value;
 
-              if (user == null) {
-                return const SizedBox(height: 60, width: 60, child: SizedBox());
-              }
-
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundImage: NetworkImage(
-                      user.photo?.isNotEmpty == true
-                          ? user.photo!
-                          : 'https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName ?? ''}&background=random&color=fff',
-                    ),
-                  ),
-                  const SizedBox(width: 15),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '${user.firstName}${user.lastName != null && user.lastName!.isNotEmpty ? ' ${user.lastName}' : ''}',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        authController.isGuest ? "KOTA Guest" : "KOTA Member",
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w300,
-                          color: Colors.white70,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              );
-            }),
+    // If loading, show shimmer avatar placeholder
+    if (isLoading) {
+  return Shimmer.fromColors(
+    baseColor: Colors.grey.withOpacity(0.35),
+    highlightColor: Colors.grey.withOpacity(0.45),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          height: 60,
+          width: 60,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.grey,
           ),
+        ),
+        const SizedBox(width: 15),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 120,
+              height: 18,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.grey,
+              ),
+            ),
+            const SizedBox(height: 6),
+            Container(
+              width: 80,
+              height: 14,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.grey.withOpacity(0.9),
+              ),
+            ),
+          ],
+        )
+      ],
+    ),
+  );
+}
+
+
+    // If user is still null after loading, show nothing
+    if (user == null) {
+      return const SizedBox(height: 60, width: 60);
+    }
+
+    final imageUrl = user.photo?.isNotEmpty == true
+        ? user.photo!
+        : 'https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName ?? ''}&background=random&color=fff';
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(
+          height: 60,
+          width: 60,
+          child: ClipOval(
+            child: Image.network(
+              imageUrl,
+              fit: BoxFit.cover,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Shimmer.fromColors(
+                  baseColor: Colors.grey.shade300,
+                  highlightColor: Colors.grey.shade100,
+                  child: Container(
+                    color: Colors.grey,
+                  ),
+                );
+              },
+              errorBuilder: (context, error, stackTrace) => const Icon(Icons.error, color: Colors.red),
+            ),
+          ),
+        ),
+        const SizedBox(width: 15),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${user.firstName}${user.lastName != null && user.lastName!.isNotEmpty ? ' ${user.lastName}' : ''}',
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              authController.isGuest ? "KOTA Guest" : "KOTA Member",
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w300,
+                color: Colors.white70,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }),
+),
         ],
       ),
     );

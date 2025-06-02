@@ -22,6 +22,8 @@ class ForumController extends GetxController {
   final originalThreadsList = <ForumData>[]; 
   final RxBool isButtonEnabled = false.obs;
   final RxBool isSubmitting = false.obs;
+  final isPosting = false.obs;
+final hasText = false.obs;
   var comments = <Comments>[].obs;
   final Rx<ForumData> singleThread = ForumData().obs;
   final ForumApiService _forumApiService = ForumApiService();
@@ -31,6 +33,7 @@ class ForumController extends GetxController {
   final isReplying = false.obs;
   final replyingToId = ''.obs;
   final searchQuery = ''.obs;
+  final commentText = ''.obs;
   var isLiked = false.obs;
   var likeCount = '0'.obs;
   var commentCount = '0'.obs;
@@ -42,6 +45,9 @@ class ForumController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    commentController.addListener(() {
+    commentText.value = commentController.text;
+  });
     titleController.addListener(_checkFields);
     descriptionController.addListener(_checkFields);
     loadThreads();

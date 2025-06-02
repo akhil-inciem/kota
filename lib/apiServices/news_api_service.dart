@@ -7,8 +7,6 @@ import '../controller/auth_controller.dart';
 
 class NewsApiService {
   final Dio _dio = Dio();
-  static final _authController = Get.find<AuthController>();
-  static final String? userId = _authController.userModel.value?.data.id;
   
   Future<List<NewsDatum>> fetchNews() async {
     try {
@@ -29,6 +27,8 @@ class NewsApiService {
   Future<NewsDatum?> fetchNewsById({
   required String newsId,
 }) async {
+   final authController = Get.find<AuthController>();
+    final String? userId = authController.userModel.value?.data.id;
   try {
     final response = await _dio.get(
       ApiEndpoints.getNewsById,

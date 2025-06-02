@@ -7,16 +7,17 @@ import '../controller/auth_controller.dart';
 
 class UserApiService {
   final dio.Dio _dio = dio.Dio();
-  static final _authController = Get.find<AuthController>();
-  static final String? _userId = _authController.userModel.value?.data.id;
 
   Future<User> fetchUserProfile() async {
+    final authController = Get.find<AuthController>();
+    final String? userId = authController.userModel.value?.data.id;
+
     try {
       final response = await _dio.get(
         ApiEndpoints.getUserProfile,
         queryParameters: {
-          'id': _userId,
-          'isguest': _authController.isGuest ? 1 : 0,
+          'id': userId,
+          'isguest': authController.isGuest ? 1 : 0,
         },
       );
 
@@ -39,14 +40,21 @@ class UserApiService {
     required String email,
     File? image,
   }) async {
+    final authController = Get.find<AuthController>();
+    final String? userId = authController.userModel.value?.data.id;
+
     final String url = ApiEndpoints.updateUserProfile;
 
     try {
       final formData = dio.FormData.fromMap({
-        'user_id': _userId,
-        'is_guest': _authController.isGuest ? '1' : '0',
-        'first_name': firstName,
-        'last_name': lastName,
+        'user_id': userId,
+        'is_guest': authController.isGuest ? '1' : '0',
+        if (authController.isGuest)
+          'full_name': firstName
+        else ...{
+          'first_name': firstName,
+          'last_name': lastName,
+        },
         'primary_number': primaryNumber,
         'email': email,
         if (image != null)

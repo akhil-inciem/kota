@@ -27,7 +27,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    userController.loadUserProfile();
+    // userController.loadUserProfile();
   }
 
   @override

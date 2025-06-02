@@ -3,13 +3,14 @@ import 'package:get/get.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:kota/controller/auth_controller.dart';
 import 'package:kota/views/login/widgets/labelled_textfield.dart';
+import 'package:kota/views/profile/profile_screen.dart';
 import 'package:kota/views/widgets/custom_snackbar.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import '../login/widgets/custom_button.dart';
 
 class GuestResetPasswordScreen extends StatefulWidget {
   final String email;
-  const GuestResetPasswordScreen({super.key,required this.email});
+  const GuestResetPasswordScreen({super.key, required this.email});
 
   @override
   State<GuestResetPasswordScreen> createState() =>
@@ -22,34 +23,37 @@ class _GuestResetPasswordScreenState extends State<GuestResetPasswordScreen> {
 
   final TextEditingController _oldPasswordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
-  void _submit() async {
-    if (!_formKey.currentState!.validate()) return;
+  Future<void> submit() async {
+  if (!_formKey.currentState!.validate()) return;
 
-    final oldPassword = _oldPasswordController.text.trim();
-    final newPassword = _newPasswordController.text.trim();
+  final oldPassword = _oldPasswordController.text.trim();
+  final newPassword = _newPasswordController.text.trim();
 
-    authController.isLoading.value = true;
+  authController.isLoading.value = true;
 
-    final success = await authController.guestResetPassword(
-      email: widget.email,
-      oldPassword: oldPassword,
-      newPassword: newPassword,
-    );
+  final success = await authController.guestResetPassword(
+    email: widget.email,
+    oldPassword: oldPassword,
+    newPassword: newPassword,
+  );
 
-    authController.isLoading.value = false;
+  authController.isLoading.value = false;
 
-    if (success) {
-      CustomSnackbars.success('Password changed successfully', 'Success');
-      _oldPasswordController.clear();
-      _newPasswordController.clear();
-      _confirmPasswordController.clear();
-      Get.back();
-    } else {
-      CustomSnackbars.failure('Failed to reset password. Try again.', 'Error');
-    }
+  if (success) {
+    CustomSnackbars.success('Password changed successfully', 'Success');
+
+    _oldPasswordController.clear();
+    _newPasswordController.clear();
+    _confirmPasswordController.clear();
+     Navigator.pop(context);
+  } else {
+    CustomSnackbars.failure('Failed to reset password. Try again.', 'Error');
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -74,8 +78,10 @@ class _GuestResetPasswordScreenState extends State<GuestResetPasswordScreen> {
                     hintText: 'Enter previous password',
                     isPassword: true,
                     validator: (value) {
-                      if (value == null || value.isEmpty) return 'Previous password is required';
-                      if (value.length < 6) return 'Password must be at least 6 characters';
+                      if (value == null || value.isEmpty)
+                        return 'Previous password is required';
+                      if (value.length < 6)
+                        return 'Password must be at least 6 characters';
                       return null;
                     },
                   ),
@@ -89,8 +95,10 @@ class _GuestResetPasswordScreenState extends State<GuestResetPasswordScreen> {
                     hintText: 'Enter new password',
                     isPassword: true,
                     validator: (value) {
-                      if (value == null || value.isEmpty) return 'New password is required';
-                      if (value.length < 6) return 'Password must be at least 6 characters';
+                      if (value == null || value.isEmpty)
+                        return 'New password is required';
+                      if (value.length < 6)
+                        return 'Password must be at least 6 characters';
                       return null;
                     },
                   ),
@@ -104,8 +112,10 @@ class _GuestResetPasswordScreenState extends State<GuestResetPasswordScreen> {
                     hintText: 'Re-enter new password',
                     isPassword: true,
                     validator: (value) {
-                      if (value == null || value.isEmpty) return 'Please confirm your new password';
-                      if (value != _newPasswordController.text) return 'Passwords do not match';
+                      if (value == null || value.isEmpty)
+                        return 'Please confirm your new password';
+                      if (value != _newPasswordController.text)
+                        return 'Passwords do not match';
                       return null;
                     },
                   ),
@@ -119,17 +129,20 @@ class _GuestResetPasswordScreenState extends State<GuestResetPasswordScreen> {
                       return SizedBox(
                         height: 5.h,
                         width: 40.w,
-                        child: authController.isLoading.value
-                            ? const Center(
-                                child: SpinKitWave(
-                                  color: Colors.blue,
-                                  size: 30,
+                        child:
+                            authController.isLoading.value
+                                ? const Center(
+                                  child: SpinKitWave(
+                                    color: Colors.blue,
+                                    size: 30,
+                                  ),
+                                )
+                                : CustomButton(
+                                  onPressed: ()async{
+                                    await submit();
+                                  },
+                                  text: 'Submit',
                                 ),
-                              )
-                            : CustomButton(
-                                onPressed: _submit,
-                                text: 'Submit',
-                              ),
                       );
                     }),
                   ),

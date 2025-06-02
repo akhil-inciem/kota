@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:kota/constants/api.dart';
 import 'package:kota/model/executive_model.dart';
 import 'package:kota/model/faq_model.dart';
-import 'package:kota/model/profile_model.dart';
 import 'package:kota/model/vision_mission_model.dart';
 
 class DrawerApiServices {
