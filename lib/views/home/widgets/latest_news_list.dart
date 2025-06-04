@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kota/controller/home_controller.dart';
-import 'package:kota/data/dummy.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:shimmer/shimmer.dart';

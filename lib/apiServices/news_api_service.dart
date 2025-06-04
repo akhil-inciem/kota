@@ -42,9 +42,7 @@ class NewsApiService {
     );
 
     if (response.statusCode == 200 && response.data['status'] == true) {
-      final responseString = response.data.toString().trim();
-      final jsonString = jsonDecode(responseString);
-      return NewsDatum.fromJson(jsonString['data'][0]);
+      return NewsDatum.fromJson(response.data['data'][0]);
     } else {
       throw Exception("Failed to load news item");
     }

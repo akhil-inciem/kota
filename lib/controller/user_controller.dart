@@ -25,7 +25,6 @@ class UserController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    loadUserProfile();
     firstNameController.addListener(_checkForChanges);
     lastNameController.addListener(_checkForChanges);
     phoneController.addListener(_checkForChanges);
