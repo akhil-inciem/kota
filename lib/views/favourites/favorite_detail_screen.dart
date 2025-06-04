@@ -27,6 +27,24 @@ class _FavoritesDetailScreenState extends State<FavoritesDetailScreen> {
   final ValueNotifier<double> radiusNotifier = ValueNotifier<double>(30.0);
   final ValueNotifier<double> extentNotifier = ValueNotifier(0.6);
 
+  bool _isSharing = false;
+
+  void _handleShare() async {
+    if (_isSharing) return; // Prevent repeated taps
+
+    _isSharing = true;
+    final title = widget.item['title'] ?? 'Check this out!';
+    final params = ShareParams(
+      title: title,
+      uri: Uri.parse("https://dev.kbaiota.org/favourites"),
+    );
+    SharePlus.instance.share(params);
+
+    await Future.delayed(const Duration(milliseconds: 200));
+    _isSharing = false;
+  }
+
+
   String _htmlToPlainText(String htmlString) {
     final document = html_parser.parse(htmlString);
     return document.body?.text.trim() ?? '';
@@ -194,15 +212,7 @@ class _FavoritesDetailScreenState extends State<FavoritesDetailScreen> {
         Row(
           children: [
             GestureDetector(
-              onTap: () {
-                final title = widget.item['title'] ?? 'Check this out!';
-                // final link = widget.item.newsCategory ?? ''; // Replace with your actual link
-                final params = ShareParams(
-                  title: title,
-                  uri: Uri(scheme: 'https', host: 'crash.net'),
-                );
-                SharePlus.instance.share(params);
-              },
+              onTap: _handleShare,
               child: Image.asset(
                 'assets/icons/share.png',
                 height: 2.5.h,

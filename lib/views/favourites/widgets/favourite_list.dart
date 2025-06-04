@@ -12,15 +12,28 @@ import 'package:kota/views/home/news_detail_screen.dart';
 import 'package:kota/views/home/widgets/list_shimmer.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class FavoriteList extends StatelessWidget {
-  final FavouriteController favController =
-      Get.find<FavouriteController>();
+class FavoriteList extends StatefulWidget {
 
   FavoriteList({Key? key}) : super(key: key);
+
+  @override
+  State<FavoriteList> createState() => _FavoriteListState();
+}
+
+class _FavoriteListState extends State<FavoriteList> {
+  final FavouriteController favController =
+      Get.find<FavouriteController>();
 
   String _htmlToPlainText(String htmlString) {
     final document = html_parser.parse(htmlString);
     return document.body?.text.trim() ?? '';
+  }
+
+  @override
+ initState() {
+    // TODO: implement initState
+    super.initState();
+    // favController.fetchFilteredItems();
   }
 
   @override
@@ -155,18 +168,43 @@ class FavoriteList extends StatelessWidget {
                         const SizedBox(width: 12),
                         Container(
                           width: 24.w,
-                          height: 16.h,
+                          height: 15.h,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
                             color: Colors.grey.shade300,
+                            borderRadius: BorderRadius.circular(15),
                           ),
-                          child:  Image(
-                            image: NetworkImage(
-                              item['image'],
-                            ),
-                            fit: BoxFit.fill,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child:
+                                item['image'] == ''
+                                    ? Image.asset(
+                                      'assets/images/recommend_tile.jpg',
+                                      fit:
+                                          BoxFit
+                                              .cover, // Ensure the image fits inside the box
+                                    )
+                                    : Image.network(
+                                      item['image'],
+                                      fit:
+                                          BoxFit
+                                              .cover, // Ensure the image fits inside the box
+                                    ),
                           ),
                         ),
+                        // Container(
+                        //   width: 24.w,
+                        //   height: 16.h,
+                        //   decoration: BoxDecoration(
+                        //     borderRadius: BorderRadius.circular(15),
+                        //     color: Colors.grey.shade300,
+                        //   ),
+                        //   child:  Image(
+                        //     image: NetworkImage(
+                        //       item['image'],
+                        //     ),
+                        //     fit: BoxFit.fill,
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),

@@ -24,7 +24,6 @@ class FavouriteController extends GetxController {
   }
 
   Future<void> fetchFilteredItems() async {
-    if (_hasFetchedFavorites) return; // <-- Prevent re-fetching
 
     try {
       isLoading.value = true;

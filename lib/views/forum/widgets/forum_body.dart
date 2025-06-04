@@ -14,6 +14,7 @@ class ForumPostBody extends StatefulWidget {
   final List<String> imageUrls;
   final RxBool isLiked;
 final RxString likes;
+final String id;
 final RxString comments;
 
   final VoidCallback onLikeToggle;
@@ -26,6 +27,7 @@ final RxString comments;
     required this.likes,
     required this.comments,
     required this.isLiked,
+    required this.id,
     required this.onLikeToggle,
   }) : super(key: key);
 
@@ -36,6 +38,24 @@ final RxString comments;
 class _ForumPostBodyState extends State<ForumPostBody> {
   final PageController _pageController = PageController();
   final ForumController controller = Get.find<ForumController>();
+
+  bool _isSharing = false;
+
+  void _handleShare() async {
+    if (_isSharing) return;
+
+    _isSharing = true;
+
+    final title = widget.title ?? 'Check this out!';
+    final params = ShareParams(
+      title: title,
+      uri: Uri.parse("https://dev.kbaiota.org/forum/${widget.id}"),
+    );
+    SharePlus.instance.share(params);
+
+    await Future.delayed(const Duration(milliseconds: 200));
+    _isSharing = false;
+  }
   int _currentIndex = 0;
 
   @override
@@ -138,18 +158,16 @@ class _ForumPostBodyState extends State<ForumPostBody> {
     ),
     const SizedBox(width: 20),
     GestureDetector(
-      onTap: () {
-        final title = widget.title;
-        final params = ShareParams(
-          title: title,
-          uri: Uri(scheme: 'https', host: 'crash.net'),
-        );
-        SharePlus.instance.share(params);
-      },
-      child: const Icon(Icons.share, size: 20, color: Colors.grey),
-    ),
-    const SizedBox(width: 4),
-    const Text('Share', style: TextStyle(fontSize: 14)),
+      onTap: _handleShare,
+      behavior: HitTestBehavior.opaque, // Ensures tap works on padding areas too
+      child: Row(
+        children: const [
+          Icon(Icons.share, size: 20, color: Colors.grey),
+          SizedBox(width: 4),
+          Text('Share', style: TextStyle(fontSize: 14)),
+        ],
+      ),
+    )
   ],
 ),
 

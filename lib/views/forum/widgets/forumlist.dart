@@ -80,16 +80,16 @@ class _ForumListState extends State<ForumList> {
                   padding: EdgeInsets.symmetric(horizontal: 3.w),
                   child: Container(
                     color: Colors.white,
-                    padding: const EdgeInsets.all(12),
+                    padding:  EdgeInsets.all(14.sp),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 1.h),
+                        SizedBox(height: 0.5.h),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             CircleAvatar(
-                              radius: 25,
+                              radius: 20.sp,
                               backgroundColor: Colors.grey[200],
                               child:
                                   item.photo == null
@@ -168,8 +168,8 @@ class _ForumListState extends State<ForumList> {
                           item.title ?? '',
                           maxLines: 3,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 14,
+                          style:  TextStyle(
+                            fontSize: 16.sp,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF45515C),
                           ),
@@ -191,7 +191,7 @@ class _ForumListState extends State<ForumList> {
                                       item.isLiked!
                                           ? Icons.favorite
                                           : Icons.favorite_border,
-                                      size: 16,
+                                      size: 18.sp,
                                       color:
                                           item.isLiked!
                                               ? Colors.red
@@ -201,18 +201,18 @@ class _ForumListState extends State<ForumList> {
                                   const SizedBox(width: 4),
                                   Text(
                                     '${item.likeCount ?? 0}',
-                                    style: const TextStyle(fontSize: 12),
+                                    style: TextStyle(fontSize: 15.sp),
                                   ),
                                   const SizedBox(width: 12),
-                                  const Icon(
+                                   Icon(
                                     Icons.comment,
-                                    size: 16,
+                                    size: 18.sp,
                                     color: Colors.grey,
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
                                     '${item.commentCount ?? 0} Comments',
-                                    style: const TextStyle(fontSize: 12),
+                                    style: TextStyle(fontSize: 15.sp),
                                   ),
                                 ],
                               ),

@@ -9,9 +9,10 @@ class AuthController extends GetxController {
   Rxn<LoginResponseModel> userModel = Rxn<LoginResponseModel>();
   Rxn<GuestModel> guestModel = Rxn<GuestModel>();
   final AuthApiService _authService = AuthApiService();
-
   bool get isGuest => userModel.value?.data.isGuest == 1;
   bool get isUser => userModel.value?.data.isGuest == 0;
+  RxString guestId = ''.obs;
+
   final isExpanded = false.obs;
   final isLoading = false.obs;
 
@@ -84,6 +85,49 @@ class AuthController extends GetxController {
     }
   }
 
+ Future<bool> sendOtpToGuest(String email) async {
+  try {
+    isLoading.value = true;
+
+    final response = await _authService.forgotPasswordGuest(email);
+
+    if (response['status'] == true) {
+      guestId.value = response['guste_id'].toString(); 
+      return true;
+    } else {
+      return false;
+    }
+  } catch (e) {
+    print("Failed to send mail: $e");
+    return false;
+  } finally {
+    isLoading.value = false;
+  }
+}
+
+Future<bool> resetGuestPassword(String password) async {
+  try {
+    if (guestId.value == '') {
+      throw Exception("Guest ID not found");
+    }
+
+    isLoading.value = true;
+
+    final result = await _authService.forgotupdateGuestPassword(
+      guestId: guestId.value,
+      password: password,
+    );
+
+    return result;
+  } catch (e) {
+    print("Reset failed: $e");
+    return false;
+  } finally {
+    isLoading.value = false;
+  }
+}
+
+
   Future<bool> guestResetPassword({
     required String email,
     required String oldPassword,
@@ -98,6 +142,21 @@ class AuthController extends GetxController {
       return false;
     }
   }
+
+  Future<bool> verifyOtp(String otp) async {
+  if (guestId.value == "") {
+    print("Guest ID is null");
+    return false;
+  }
+
+  isLoading.value = true;
+  try {
+    return await _authService.verifyGuestOtp(guestId.value, otp);
+  } finally {
+    isLoading.value = false;
+  }
+}
+
 
   Future<bool> logout() async {
     try {

@@ -7,9 +7,11 @@ import 'package:intl/intl.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/home_controller.dart';
 import 'package:kota/model/news_model.dart';
+import 'package:kota/views/home/widgets/details_shimmer.dart';
 import 'package:kota/views/widgets/top_bar.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shimmer/shimmer.dart';
 
 class NewsDetailScreen extends StatefulWidget {
   final String newsId;
@@ -24,7 +26,24 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
   final ValueNotifier<double> radiusNotifier = ValueNotifier<double>(30.0);
   final ValueNotifier<double> extentNotifier = ValueNotifier(0.6);
 
-  @override
+  bool _isSharing = false;
+
+  void _handleShare({required String title, required String url}) async {
+    if (_isSharing) return;
+
+    _isSharing = true;
+
+    final params = ShareParams(
+      title: title,
+      uri: Uri.parse(url),
+    );
+    SharePlus.instance.share(params);
+
+    await Future.delayed(const Duration(milliseconds: 200));
+    _isSharing = false;
+  }
+
+@override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -32,168 +51,154 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Obx(() {
-      final item = homeController.selectedNewsItem.value;
-      // final imageUrl = item!.newsImage;
-      if (item == null) {
-        return const Scaffold(body: Center(child: CircularProgressIndicator()));
-      }
-      return SafeArea(
-        child: Scaffold(
-          backgroundColor: AppColors.primaryBackground,
-          body: Stack(
-            children: [
-              // Background Image
-              Stack(
-                children: [
-                  Container(
-                    height: 40.h,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image:
-                            // imageUrl != null
-                            //     ? NetworkImage(imageUrl)
-                            //     :
-                            const AssetImage('assets/images/Group 315.png')
-                                as ImageProvider,
-                        fit: BoxFit.cover,
-                      ),
+ @override
+Widget build(BuildContext context) {
+  return Obx(() {
+    if (homeController.isLoadingNewsItem.value || homeController.selectedNewsItem.value == null) {
+      return DetailLoadingPlaceholder();
+    }
+
+    final item = homeController.selectedNewsItem.value!;
+    final imageUrl = item.newsImage;
+
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: AppColors.primaryBackground,
+        body: Stack(
+          children: [
+            // Background image
+            Stack(
+              children: [
+                Container(
+                  height: 40.h,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: imageUrl != null
+                          ? NetworkImage(imageUrl)
+                          : const AssetImage('assets/images/Group 315.png')
+                              as ImageProvider,
+                      fit: BoxFit.cover,
                     ),
                   ),
-                  Container(
-                    height: 40.h,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.black.withOpacity(0.8), // Top overlay
-                          Colors.transparent, // Middle (transparent)
-                          Colors.transparent, // Bottom overlay
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
-              // Draggable Scrollable Sheet
-              NotificationListener<DraggableScrollableNotification>(
-                onNotification: (notification) {
-                  double extent = notification.extent;
-                  double percentage = (extent - 0.5) / (1.0 - 0.5);
-                  double radius = 30 * (1 - percentage.clamp(0.0, 1.0));
-                  radiusNotifier.value = radius;
-
-                  extentNotifier.value = extent; // 👈 add this
-                  return true;
-                },
-
-                child: DraggableScrollableSheet(
-                  initialChildSize: 0.6, // Start height
-                  minChildSize: 0.6, // Minimum when collapsed
-                  maxChildSize: 1, // Maximum when expanded
-                  builder: (context, scrollController) {
-                    return ValueListenableBuilder<double>(
-                      valueListenable: radiusNotifier,
-                      builder: (context, radius, _) {
-                        return AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(radius),
-                            ),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 6.w),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ValueListenableBuilder<double>(
-                                  valueListenable: extentNotifier,
-                                  builder: (context, extent, _) {
-                                    double topPadding =
-                                        lerpDouble(
-                                          4.h,
-                                          8.h,
-                                          ((extent - 0.6) / (1.0 - 0.6)).clamp(
-                                            0.0,
-                                            1.0,
-                                          ),
-                                        )!;
-                                    return SizedBox(height: topPadding);
-                                  },
-                                ),
-                                _dateAndIcons(item),
-                                SizedBox(height: 2.h),
-                                _title(item),
-                                SizedBox(height: 2.h),
-                                _profileRow(),
-                                SizedBox(height: 2.h),
-                                const Divider(
-                                  color: Colors.grey,
-                                  thickness: 1,
-                                  height: 0,
-                                ),
-                                SizedBox(height: 1.h),
-                                // 👉 Now description scrolls separately
-                                Expanded(
-                                  child: SingleChildScrollView(
-                                    controller: scrollController,
-                                    child: _description(item),
-                                  ),
-                                ),
-                                SizedBox(height: 5.h),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  },
                 ),
-              ),
-
-              // Back button (Optional: if you want it floating)
-              ValueListenableBuilder<double>(
-                valueListenable: extentNotifier,
-                builder: (context, extent, _) {
-                  double percentage = ((extent - 0.6) / (1.0 - 0.6)).clamp(
-                    0.0,
-                    1.0,
-                  );
-                  Color? iconColor =
-                      percentage < 0.2
-                          ? Colors.white
-                          : AppColors
-                              .primaryButton; // 👈 You can adjust 0.2 threshold
-
-                  return Positioned(
-                    top: 1.h,
-                    left: 0,
-                    right: 10,
-                    child: TopBar(
-                      title: "",
-                      onTap: () => Get.back(),
-                      iconColor: Colors.white,
+                Container(
+                  height: 40.h,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.black.withOpacity(0.8),
+                        Colors.transparent,
+                        Colors.transparent,
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
                     ),
+                  ),
+                ),
+              ],
+            ),
+
+            // Draggable Scrollable Sheet
+            NotificationListener<DraggableScrollableNotification>(
+              onNotification: (notification) {
+                double extent = notification.extent;
+                double percentage = (extent - 0.5) / (1.0 - 0.5);
+                double radius = 30 * (1 - percentage.clamp(0.0, 1.0));
+                radiusNotifier.value = radius;
+                extentNotifier.value = extent;
+                return true;
+              },
+              child: DraggableScrollableSheet(
+                initialChildSize: 0.6,
+                minChildSize: 0.6,
+                maxChildSize: 1,
+                builder: (context, scrollController) {
+                  return ValueListenableBuilder<double>(
+                    valueListenable: radiusNotifier,
+                    builder: (context, radius, _) {
+                      return AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(radius),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 6.w),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ValueListenableBuilder<double>(
+                                valueListenable: extentNotifier,
+                                builder: (context, extent, _) {
+                                  double topPadding = lerpDouble(
+                                    4.h,
+                                    8.h,
+                                    ((extent - 0.6) / (1.0 - 0.6))
+                                        .clamp(0.0, 1.0),
+                                  )!;
+                                  return SizedBox(height: topPadding);
+                                },
+                              ),
+                              _dateAndIcons(item),
+                              SizedBox(height: 2.h),
+                              _title(item),
+                              SizedBox(height: 2.h),
+                              _profileRow(),
+                              SizedBox(height: 2.h),
+                              const Divider(color: Colors.grey, thickness: 1, height: 0),
+                              SizedBox(height: 1.h),
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  controller: scrollController,
+                                  child: _description(item),
+                                ),
+                              ),
+                              SizedBox(height: 5.h),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   );
                 },
               ),
-            ],
-          ),
+            ),
+
+            // Back Button
+            ValueListenableBuilder<double>(
+              valueListenable: extentNotifier,
+              builder: (context, extent, _) {
+                Color iconColor = extent < 0.7
+                    ? Colors.white
+                    : AppColors.primaryButton;
+                return Positioned(
+                  top: 1.h,
+                  left: 0,
+                  right: 10,
+                  child: TopBar(
+                    title: "",
+                    onTap: () => Get.back(),
+                    iconColor: iconColor,
+                  ),
+                );
+              },
+            ),
+          ],
         ),
-      );
-    });
-  }
+      ),
+    );
+  });
+}
+
 
   Widget _dateAndIcons(NewsDatum item) {
+    final title = item.newsTitle ?? 'Check this out!';
+    final url = "https://dev.kbaiota.org/news/${item.newsId}";
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -223,19 +228,8 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
         Row(
           children: [
             GestureDetector(
-              onTap: () {
-                final title = item.newsTitle ?? 'Check this out!';
-                final newsId = item.newsId;
-                final params = ShareParams(
-                  title: title,
-                  uri: Uri.parse(
-                    "https://www.flutter-deep-link.com",
-                  ),
-                );
-                SharePlus.instance.share(params);
-              },
-
-              child: Image.asset(
+              onTap: () => _handleShare(title: title, url: url),
+                child: Image.asset(
                 'assets/icons/share.png',
                 height: 2.5.h,
                 width: 2.5.h, // use 2.h for both to maintain aspect ratio
@@ -263,6 +257,68 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
       ],
     );
   }
+
+Widget _loadingPlaceholder() {
+  final baseColor = Colors.grey.withOpacity(0.2);
+  final highlightColor = Colors.grey.withOpacity(0.3);
+
+  return SafeArea(
+    child: Scaffold(
+      backgroundColor: AppColors.primaryBackground,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Top image shimmer
+          Shimmer.fromColors(
+            baseColor: baseColor,
+            highlightColor: highlightColor,
+            child: Container(
+              height: 40.h,
+              width: double.infinity,
+              color: Colors.white,
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.all(15.sp),
+              child: Shimmer.fromColors(
+                baseColor: baseColor,
+                highlightColor: highlightColor,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Title
+                    Container(height: 2.5.h, width: 30.w, color: Colors.white),
+                    SizedBox(height: 2.h),
+
+                    // Subtitle or short detail
+                    Container(height: 2.5.h, width: double.infinity, color: Colors.white),
+                    SizedBox(height: 2.h),
+
+                    // Author or another metadata
+                    Container(height: 3.h, width: 40.w, color: Colors.white),
+                    SizedBox(height: 2.5.h),
+
+                    // Description lines (multiple)
+                    ...List.generate(13, (index) => Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: Container(
+                            height: 1.5.h,
+                            width: double.infinity,
+                            color: Colors.white,
+                          ),
+                        )),
+                  ],
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    ),
+  );
+}
+
 
   Widget _title(NewsDatum item) {
     return Text(

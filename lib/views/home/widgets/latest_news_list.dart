@@ -1,80 +1,105 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:kota/controller/home_controller.dart';
 import 'package:kota/data/dummy.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+
+import 'package:shimmer/shimmer.dart';
 
 class AdvertisementList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: 16.5.h, // Set the height for the news list container
+    return Obx(() {
+      final controller = Get.find<HomeController>();
+      final advertisements = controller.advertisements;
+
+      // Show shimmer while loading
+      if (advertisements.isEmpty) {
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: 3.w),
+          child: SizedBox(
+            height: 20.h,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount:
-                  DummyData.newsItems.length, // Use the list from DummyData
+              itemCount: 3, // Number of shimmer cards to show
               itemBuilder: (context, index) {
-                return AdvertisementCard(
-                  title:
-                      DummyData
-                          .newsItems[index], // Pass the title as a parameter
-                );
+                return const ShimmerCard();
               },
             ),
           ),
-        ],
-      ),
-    );
+        );
+      }
+
+      // Show actual data
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 3.w),
+        child: SizedBox(
+          height: 20.h,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: advertisements.length,
+            itemBuilder: (context, index) {
+              final ad = advertisements[index];
+              return AdvertisementCard(
+                imageUrl: ad.advtImage ?? '',
+              );
+            },
+          ),
+        ),
+      );
+    });
   }
 }
 
-class AdvertisementCard extends StatelessWidget {
-  final String title;
 
-  const AdvertisementCard({Key? key, required this.title}) : super(key: key);
+class AdvertisementCard extends StatelessWidget {
+  final String imageUrl;
+
+  const AdvertisementCard({Key? key, required this.imageUrl}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8),
-      child: Container(
-        width: 80.w,
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Colors.blue, Colors.deepPurple],
-          ),
-          borderRadius: BorderRadius.circular(16),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          width: 90.w,
+          height: 16.5.h,
+          color: Colors.grey[300],
+          child: imageUrl.isNotEmpty
+              ? Image.network(
+                  imageUrl,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: double.infinity,
+                )
+              : const Center(child: Text("No Image")),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
+      ),
+    );
+  }
+}
 
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 4.h),
-            Row(
-              children: [
-                const Icon(Icons.calendar_today, color: Colors.white, size: 14),
-                const SizedBox(width: 4),
-                Text(
-                  '16 Aug 2024',
-                  style: const TextStyle(fontSize: 12, color: Colors.white),
-                ),
-              ],
-            ),
-          ],
+class ShimmerCard extends StatelessWidget {
+  const ShimmerCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Shimmer.fromColors(
+         baseColor: Colors.grey.withOpacity(0.15),
+        highlightColor: Colors.grey.withOpacity(0.25),
+          child: Container(
+            width: 90.w,
+            height: 16.5.h,
+            color: Colors.white,
+          ),
         ),
       ),
     );

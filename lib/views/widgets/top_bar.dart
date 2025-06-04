@@ -98,7 +98,7 @@ class _TopBarState extends State<TopBar> {
                                             AppColors.primaryButton,
                                       ),
                                 ),
-                                SizedBox(width: 1.2.w),
+                                SizedBox(width: 2.w),
                                 Expanded(
                                   child: Text(
                                     widget.title ?? _getTitle(currentIndex),

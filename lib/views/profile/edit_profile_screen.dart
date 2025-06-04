@@ -45,7 +45,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       resizeToAvoidBottomInset: true,
       body: Obx(() {
         final user = userController.user.value;
-        final isLoading = userController.isLoading.value;
 
         return SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -62,13 +61,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   SizedBox(height: 2.h),
                   _buildAppBar(), // ✅ Always shown
 
-                  if (isLoading) ...[
-                    SizedBox(height: 4.h),
-                    const EditProfileShimmer(),
-                    SizedBox(height: 4.h),
-                    const ShimmerButtonPlaceholder(),
-                    SizedBox(height: 3.h),
-                  ] else if (user == null) ...[
+                  if 
+                  // (isLoading) ...[
+                  //   SizedBox(height: 4.h),
+                  //   const EditProfileShimmer(),
+                  //   SizedBox(height: 4.h),
+                  //   const ShimmerButtonPlaceholder(),
+                  //   SizedBox(height: 3.h),
+                  // ] else if 
+                  (user == null) ...[
                     SizedBox(height: 4.h),
                     const Center(
                       child: Text(
@@ -78,19 +79,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                   ] else ...[
                     SizedBox(height: 4.h),
-                    _buildProfilePictureSection(user),
+                   authController.isGuest ? SizedBox() : _buildProfilePictureSection(user),
                     SizedBox(height: 4.h),
                     _buildFormSection(userController),
                     SizedBox(height: 4.h),
                     Obx(
-                      () => CustomButton(
-                        text: "Update",
-                        isEnabled: userController.isChanged.value,
-                        onPressed: userController.isChanged.value
-                            ? () => userController.updateUserProfile()
-                            : null,
-                      ),
-                    ),
+  () => CustomButton(
+    text: userController.isLoading.value ? "Updating..." : "Update",
+    isEnabled: userController.isChanged.value && !userController.isLoading.value,
+    onPressed: (userController.isChanged.value && !userController.isLoading.value)
+        ? () => userController.updateUserProfile()
+        : null,
+  ),
+),
+
                     SizedBox(height: 3.h),
                   ]
                 ],

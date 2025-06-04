@@ -153,48 +153,48 @@ class DrawerHeaderWidget extends StatelessWidget {
     final user = userController.user.value;
 
     // If loading, show shimmer avatar placeholder
-    if (isLoading) {
-  return Shimmer.fromColors(
-    baseColor: Colors.grey.withOpacity(0.35),
-    highlightColor: Colors.grey.withOpacity(0.45),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-          height: 60,
-          width: 60,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.grey,
-          ),
-        ),
-        const SizedBox(width: 15),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: 120,
-              height: 18,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.grey,
-              ),
-            ),
-            const SizedBox(height: 6),
-            Container(
-              width: 80,
-              height: 14,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.grey.withOpacity(0.9),
-              ),
-            ),
-          ],
-        )
-      ],
-    ),
-  );
-}
+//     if (isLoading) {
+//   return Shimmer.fromColors(
+//     baseColor: Colors.grey.withOpacity(0.35),
+//     highlightColor: Colors.grey.withOpacity(0.45),
+//     child: Row(
+//       crossAxisAlignment: CrossAxisAlignment.center,
+//       children: [
+//         Container(
+//           height: 60,
+//           width: 60,
+//           decoration: BoxDecoration(
+//             shape: BoxShape.circle,
+//             color: Colors.grey,
+//           ),
+//         ),
+//         const SizedBox(width: 15),
+//         Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             Container(
+//               width: 120,
+//               height: 18,
+//               decoration: BoxDecoration(
+//                 borderRadius: BorderRadius.circular(10),
+//                 color: Colors.grey,
+//               ),
+//             ),
+//             const SizedBox(height: 6),
+//             Container(
+//               width: 80,
+//               height: 14,
+//               decoration: BoxDecoration(
+//                 borderRadius: BorderRadius.circular(10),
+//                 color: Colors.grey.withOpacity(0.9),
+//               ),
+//             ),
+//           ],
+//         )
+//       ],
+//     ),
+//   );
+// }
 
 
     // If user is still null after loading, show nothing

@@ -35,7 +35,6 @@ class AuthApiService {
         throw Exception('Login failed: ${response.statusMessage}');
       }
     } catch (e) {
-      print(e);
       throw Exception('Login failed: $e');
       
     }
@@ -53,15 +52,85 @@ class AuthApiService {
       );
 
       if (response.statusCode == 200) {
-        print("Mail sent succesfully");
       } else {
         throw Exception('Mail failed: ${response.statusMessage}');
       }
     } catch (e) {
-      print(e);
       throw Exception('Mail failed: $e');
     }
   }
+
+  Future<Map<String, dynamic>> forgotPasswordGuest(String email) async {
+  try {
+    FormData formData = FormData.fromMap({
+      'email': email,
+    });
+
+    final response = await _dio.post(
+      ApiEndpoints.forgotPasswordGuest,
+      data: formData,
+    );
+
+    if (response.statusCode == 200) {
+      print(response);
+      return response.data as Map<String, dynamic>; // Ensure proper type
+    } else {
+      throw Exception('Mail failed: ${response.statusMessage}');
+    }
+  } catch (e) {
+    throw Exception('Mail failed: $e');
+  }
+}
+
+Future<bool> verifyGuestOtp(String guestId, String otp) async {
+  try {
+    FormData formData = FormData.fromMap({
+      'user_id': guestId,
+      'otp': otp,
+    });
+
+    final response = await _dio.post(
+      ApiEndpoints.verifyGuestOtp,
+      data: formData,
+    );
+
+    if (response.statusCode == 200 && response.data['status'] == true) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (e) {
+    print('OTP verification failed: $e');
+    return false;
+  }
+}
+
+Future<bool> forgotupdateGuestPassword({
+  required String guestId,
+  required String password,
+}) async {
+  try {
+    FormData formData = FormData.fromMap({
+      'user_id': guestId,
+      'newpassword': password,
+    });
+
+    final response = await _dio.post(
+      ApiEndpoints.forgotupdateGuestPassword,
+      data: formData,
+    );
+
+    if (response.statusCode == 200 && response.data['status'] == true) {
+      return true;
+    } else {
+      throw Exception('Reset failed: ${response.data['message']}');
+    }
+  } catch (e) {
+    throw Exception('Reset error: $e');
+  }
+}
+
+
 
   Future<void> resetGuestPassword(String email,String oldPassword,String newPassword) async {
     try {
@@ -77,12 +146,10 @@ class AuthApiService {
       );
 
       if (response.statusCode == 200) {
-        print("Mail sent succesfully");
       } else {
         throw Exception('Mail failed: ${response.statusMessage}');
       }
     } catch (e) {
-      print(e);
       throw Exception('Mail failed: $e');
     }
   }
@@ -121,8 +188,6 @@ class AuthApiService {
     final authController = getx.Get.find<AuthController>();
       final userId = authController.userModel.value!.data.id;
     try {
-  print('Sending logout request...');
-  print('User ID: $userId, Guest: ${authController.isGuest ? 1 : 0}');
 
   FormData formData = FormData.fromMap({
     'user_id': userId,
@@ -139,21 +204,10 @@ class AuthApiService {
     ),
   );
 
-  print('Response status: ${response.statusCode}');
-  print('Response data: ${response.data}');
 } catch (e) {
   if (e is DioException) {
-    print('Dio error!');
-    print('Type: ${e.type}');
-    print('Message: ${e.message}');
-    print('URI: ${e.requestOptions.uri}');
-    print('Headers: ${e.requestOptions.headers}');
-    print('Data: ${e.requestOptions.data}');
   } else {
-    print('Unknown error: $e');
   }
 }
-
-
   }
 }

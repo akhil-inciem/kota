@@ -5,6 +5,7 @@ import 'package:kota/controller/auth_controller.dart';
 import 'package:kota/controller/forum_controller.dart';
 import 'package:kota/controller/user_controller.dart';
 import 'package:kota/views/forum/widgets/forum_body.dart';
+import 'package:kota/views/forum/widgets/forum_detail_shimmer.dart';
 import 'package:kota/views/forum/widgets/reply_tile.dart';
 import 'package:kota/views/widgets/top_bar.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -40,8 +41,8 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
 
           controller.selectedThreadId.value = widget.threadId;
 
-          if (item.id == null) {
-            return const Center(child: CircularProgressIndicator());
+        if (item == null) {
+            return const ForumShimmerLoader();
           }
 
           final imageUrls = item.images ?? [];
@@ -106,6 +107,7 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                           isLiked: controller.isLiked,
                           likes: controller.likeCount,
                           comments: controller.commentCount,
+                          id:widget.threadId,
                           onLikeToggle: () => controller.likeThread(),
                         ),
                       ),

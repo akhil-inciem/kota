@@ -9,9 +9,12 @@ import 'package:kota/controller/auth_controller.dart';
 import 'package:kota/views/base.dart';
 import 'package:kota/views/login/guest_registration.dart';
 import 'package:kota/views/login/widgets/custom_button.dart';
+import 'package:kota/views/login/widgets/guest_member_dialogues.dart';
 import 'package:kota/views/login/widgets/labelled_textfield.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'forget_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -183,7 +186,9 @@ class _LoginScreenState extends State<LoginScreen>
                   controller: passwordController,
                   label: 'Password',
                   rightLabel: 'Forgot Password?',
-                  onRightLabelTap: () {},
+                  onRightLabelTap: () {
+                    Get.dialog(const GuestMemberDialog());
+                  },
                   hintText: 'Enter password',
                   isPassword: true,
                   validator: (value) {
@@ -275,4 +280,6 @@ class _LoginScreenState extends State<LoginScreen>
       ),
     );
   }
+
+  
 }

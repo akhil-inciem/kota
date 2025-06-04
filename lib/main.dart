@@ -1,3 +1,4 @@
+import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kota/controller_initializer.dart';
@@ -8,8 +9,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final appLinks = AppLinks(); 
+final sub = appLinks.uriLinkStream.listen((uri) {
+   
+});
 
-  // Initialize SharedPreferences and controllers
   final prefs = await SharedPreferences.getInstance();
   await initializeControllers();
 

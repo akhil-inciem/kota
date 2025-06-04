@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:kota/constants/api.dart';
+import 'package:kota/model/advertisement_model.dart';
 import 'package:kota/model/news_model.dart';
 
 import '../controller/auth_controller.dart';
@@ -39,12 +42,32 @@ class NewsApiService {
     );
 
     if (response.statusCode == 200 && response.data['status'] == true) {
-      return NewsDatum.fromJson(response.data['data'][0]);
+      final responseString = response.data.toString().trim();
+      final jsonString = jsonDecode(responseString);
+      return NewsDatum.fromJson(jsonString['data'][0]);
     } else {
       throw Exception("Failed to load news item");
     }
   } catch (e) {
     print("Error fetching news by ID: $e");
+    return null;
+  }
+}
+
+Future<AdvertisementModel?> fetchAdvertisement() async {
+  try {
+    final response = await _dio.get(ApiEndpoints.advertisement);
+
+    if (response.statusCode == 200) {
+      final responseString = response.data.toString().trim();
+      final jsonString = jsonDecode(responseString);
+      return AdvertisementModel.fromJson(jsonString);
+    } else {
+      throw Exception("Failed to load advertisements");
+    }
+  } catch (e,st) {
+    print("Error fetching advertisements: $e");
+    print('=====$st');
     return null;
   }
 }

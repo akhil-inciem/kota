@@ -13,13 +13,11 @@ class UserController extends GetxController {
   var isLoading = false.obs;
   Rx<File?> selectedImage = Rx<File?>(null);
   var error = ''.obs;
-
   // Form Controllers
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final phoneController = TextEditingController();
   final emailController = TextEditingController();
-
   // Original snapshot to compare for changes
   late User _originalUser;
   var isChanged = false.obs;
@@ -35,22 +33,22 @@ class UserController extends GetxController {
   }
 
   void setProfileImage(File imageFile) {
-  selectedImage.value = imageFile;
-}
-
-void clearFields() {
-  final currentUser = user.value;
-  if (currentUser != null) {
-    firstNameController.text = currentUser.firstName ?? '';
-    lastNameController.text = currentUser.lastName ?? '';
-    phoneController.text = currentUser.primaryNumber ?? '';
-    emailController.text = currentUser.email ?? '';
+    selectedImage.value = imageFile;
+    isChanged.value = true;
   }
 
-  selectedImage.value = null;
-  isChanged.value = false;
-}
+  void clearFields() {
+    final currentUser = user.value;
+    if (currentUser != null) {
+      firstNameController.text = currentUser.firstName ?? '';
+      lastNameController.text = currentUser.lastName ?? '';
+      phoneController.text = currentUser.primaryNumber ?? '';
+      emailController.text = currentUser.email ?? '';
+    }
 
+    selectedImage.value = null;
+    isChanged.value = false;
+  }
 
   Future<void> loadUserProfile() async {
     isLoading.value = true;
@@ -75,28 +73,31 @@ void clearFields() {
   }
 
   Future<void> updateUserProfile() async {
-  isLoading.value = true;
-  error.value = '';
+    isLoading.value = true;
+    error.value = '';
 
-  try {
-    await _apiService.updateProfile(
-      firstName: firstNameController.text.trim(),
-      lastName: lastNameController.text.trim(),
-      primaryNumber: phoneController.text.trim(),
-      email: emailController.text.trim(),
-      image: selectedImage.value,
-    );
-    await loadUserProfile();
-    selectedImage.value = null;
-    CustomSnackbars.success( "Your profile has been successfully updated.","Profile updated");
-    Get.back(); 
-  } catch (e) {
-    error.value = e.toString();
-    CustomSnackbars.oops(e.toString(),"Update failed");
-  } finally {
-    isLoading.value = false;
+    try {
+      await _apiService.updateProfile(
+        firstName: firstNameController.text.trim(),
+        lastName: lastNameController.text.trim(),
+        primaryNumber: phoneController.text.trim(),
+        email: emailController.text.trim(),
+        image: selectedImage.value,
+      );
+      await loadUserProfile();
+      selectedImage.value = null;
+      CustomSnackbars.success(
+        "Your profile has been successfully updated.",
+        "Profile updated",
+      );
+      Get.back();
+    } catch (e) {
+      error.value = e.toString();
+      CustomSnackbars.oops(e.toString(), "Update failed");
+    } finally {
+      isLoading.value = false;
+    }
   }
-}
 
   void _checkForChanges() {
     isChanged.value =
@@ -105,7 +106,6 @@ void clearFields() {
         phoneController.text != _originalUser.primaryNumber ||
         emailController.text != _originalUser.email;
   }
-
 
   @override
   void onClose() {

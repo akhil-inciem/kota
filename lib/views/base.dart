@@ -4,6 +4,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:kota/apiServices/updates_api_services.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/auth_controller.dart';
+import 'package:kota/controller/drawer_controller.dart';
 import 'package:kota/controller/event_controller.dart';
 import 'package:kota/controller/favorite_controller.dart';
 import 'package:kota/controller/forum_controller.dart';
@@ -17,7 +18,8 @@ import 'package:kota/views/widgets/custom_bottom_nav_bar.dart';
 import 'package:kota/views/updates/updates_screen.dart';
 
 class BaseScreen extends StatefulWidget {
-  const BaseScreen({Key? key}) : super(key: key);
+  int? index;
+   BaseScreen({Key? key,this.index}) : super(key: key);
 
   @override
   State<BaseScreen> createState() => _BaseScreenState();
@@ -30,6 +32,7 @@ class _BaseScreenState extends State<BaseScreen> {
   final ForumController forumController = Get.put(ForumController());
   final EventController eventController = Get.put(EventController());
   final UpdateController updateController = Get.put(UpdateController());
+  final SideMenuController sideMenuController = Get.put(SideMenuController());
     final List<Widget> _pages = [
     HomeScreen(),
     EventScreen(),
@@ -38,24 +41,27 @@ class _BaseScreenState extends State<BaseScreen> {
     UpdatesScreen(),
   ];
 
-  // Create a PageController to control the PageView
   final PageController _pageController = PageController();
 
   @override
   void initState() {
     super.initState();
-    // Listen to changes in the index and move the page controller accordingly
-    ever(homeController.index, (index) {
-      _pageController.jumpToPage(
-        index,
-      ); // Manually change page when index changes
-    });
-  }
+     WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (widget.index != null) {
+      homeController.index.value = widget.index!;
+      _pageController.jumpToPage(widget.index!);
+    }
+  });
+
+  ever(homeController.index, (index) {
+    _pageController.jumpToPage(index);
+  });
+}
 
   @override
   void dispose() {
     _pageController
-        .dispose(); // Dispose the PageController when the screen is disposed
+        .dispose();
     super.dispose();
   }
 
@@ -67,7 +73,7 @@ class _BaseScreenState extends State<BaseScreen> {
         backgroundColor: AppColors.primaryBackground,
         body: PageView(
           controller: _pageController,
-          physics: const NeverScrollableScrollPhysics(), // Disable swipe
+          physics: const NeverScrollableScrollPhysics(),
           onPageChanged: (index) {
             homeController.index.value = index;
             homeController.searchController.clear();

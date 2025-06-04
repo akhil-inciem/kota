@@ -7,6 +7,7 @@ import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/event_controller.dart';
 import 'package:kota/controller/home_controller.dart';
 import 'package:kota/model/event_model.dart';
+import 'package:kota/views/home/widgets/details_shimmer.dart';
 import 'package:kota/views/widgets/top_bar.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:share_plus/share_plus.dart';
@@ -26,6 +27,23 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
   final ValueNotifier<double> radiusNotifier = ValueNotifier<double>(30.0);
   final ValueNotifier<double> extentNotifier = ValueNotifier(0.6);
 
+  bool _isSharing = false;
+
+  void _handleShare({required String title, required String url}) async {
+    if (_isSharing) return;
+
+    _isSharing = true;
+
+    final params = ShareParams(
+      title: title,
+      uri: Uri.parse(url),
+    );
+    SharePlus.instance.share(params);
+
+    await Future.delayed(const Duration(milliseconds: 200));
+    _isSharing = false;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -37,167 +55,168 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.primaryBackground,
-        body: Obx(() {
-          final item = eventController.selectedEvent.value;
-          // final imageUrl = item!.newsImage;
-          if (item == null) {
-            return const Scaffold(
-              body: Center(child: CircularProgressIndicator()),
-            );
-          }
-          return Stack(
-            children: [
-              // Background Image
-              Stack(
+      child: Obx(() {
+        final item = eventController.selectedEvent.value;
+
+      if (item == null) {
+        return const DetailLoadingPlaceholder(); // Already includes Scaffold
+      }
+          return Scaffold(
+            backgroundColor: AppColors.primaryBackground,
+            body:  Stack(
                 children: [
-                  Container(
-                    height: 40.h,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image:
-                            // imageUrl != null
-                            //     ? NetworkImage(imageUrl)
-                            //     :
-                            const AssetImage('assets/images/Group 315.png')
-                                as ImageProvider,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: 40.h,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.black.withOpacity(0.8), // Top overlay
-                          Colors.transparent, // Middle (transparent)
-                          Colors.transparent, // Bottom overlay
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
-              // Draggable Scrollable Sheet
-              NotificationListener<DraggableScrollableNotification>(
-                onNotification: (notification) {
-                  double extent = notification.extent;
-                  double percentage = (extent - 0.5) / (1.0 - 0.5);
-                  double radius = 30 * (1 - percentage.clamp(0.0, 1.0));
-                  radiusNotifier.value = radius;
-
-                  extentNotifier.value = extent; // 👈 add this
-                  return true;
-                },
-
-                child: DraggableScrollableSheet(
-                  initialChildSize: 0.6, // Start height
-                  minChildSize: 0.6, // Minimum when collapsed
-                  maxChildSize: 1, // Maximum when expanded
-                  builder: (context, scrollController) {
-                    return ValueListenableBuilder<double>(
-                      valueListenable: radiusNotifier,
-                      builder: (context, radius, _) {
-                        return AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(radius),
-                            ),
+                  // Background Image
+                  Stack(
+                    children: [
+                      Container(
+                        height: 40.h,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image:
+                                // imageUrl != null
+                                //     ? NetworkImage(imageUrl)
+                                //     :
+                                const AssetImage('assets/images/Group 315.png')
+                                    as ImageProvider,
+                            fit: BoxFit.cover,
                           ),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 6.w),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ValueListenableBuilder<double>(
-                                  valueListenable: extentNotifier,
-                                  builder: (context, extent, _) {
-                                    double topPadding =
-                                        lerpDouble(
-                                          4.h,
-                                          8.h,
-                                          ((extent - 0.6) / (1.0 - 0.6)).clamp(
-                                            0.0,
-                                            1.0,
-                                          ),
-                                        )!;
-                                    return SizedBox(height: topPadding);
-                                  },
-                                ),
-                                _dateAndIcons(item),
-                                SizedBox(height: 2.h),
-                                _title(item),
-                                SizedBox(height: 2.h),
-                                _profileRow(),
-                                SizedBox(height: 2.h),
-                                const Divider(
-                                  color: Colors.grey,
-                                  thickness: 1,
-                                  height: 0,
-                                ),
-                                SizedBox(height: 1.h),
-                                // 👉 Now description scrolls separately
-                                Expanded(
-                                  child: SingleChildScrollView(
-                                    controller: scrollController,
-                                    child: _description(item),
-                                  ),
-                                ),
-                                SizedBox(height: 5.h),
-                              ],
-                            ),
+                        ),
+                      ),
+                      Container(
+                        height: 40.h,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.black.withOpacity(0.8), // Top overlay
+                              Colors.transparent, // Middle (transparent)
+                              Colors.transparent, // Bottom overlay
+                            ],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
                           ),
+                        ),
+                      ),
+                    ],
+                  ),
+          
+                  // Draggable Scrollable Sheet
+                  NotificationListener<DraggableScrollableNotification>(
+                    onNotification: (notification) {
+                      double extent = notification.extent;
+                      double percentage = (extent - 0.5) / (1.0 - 0.5);
+                      double radius = 30 * (1 - percentage.clamp(0.0, 1.0));
+                      radiusNotifier.value = radius;
+          
+                      extentNotifier.value = extent; // 👈 add this
+                      return true;
+                    },
+          
+                    child: DraggableScrollableSheet(
+                      initialChildSize: 0.6, // Start height
+                      minChildSize: 0.6, // Minimum when collapsed
+                      maxChildSize: 1, // Maximum when expanded
+                      builder: (context, scrollController) {
+                        return ValueListenableBuilder<double>(
+                          valueListenable: radiusNotifier,
+                          builder: (context, radius, _) {
+                            return AnimatedContainer(
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(radius),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 6.w),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ValueListenableBuilder<double>(
+                                      valueListenable: extentNotifier,
+                                      builder: (context, extent, _) {
+                                        double topPadding =
+                                            lerpDouble(
+                                              4.h,
+                                              8.h,
+                                              ((extent - 0.6) / (1.0 - 0.6)).clamp(
+                                                0.0,
+                                                1.0,
+                                              ),
+                                            )!;
+                                        return SizedBox(height: topPadding);
+                                      },
+                                    ),
+                                    _dateAndIcons(item),
+                                    SizedBox(height: 2.h),
+                                    _title(item),
+                                    SizedBox(height: 2.h),
+                                    _profileRow(),
+                                    SizedBox(height: 2.h),
+                                    const Divider(
+                                      color: Colors.grey,
+                                      thickness: 1,
+                                      height: 0,
+                                    ),
+                                    SizedBox(height: 1.h),
+                                    // 👉 Now description scrolls separately
+                                    Expanded(
+                                      child: SingleChildScrollView(
+                                        controller: scrollController,
+                                        child: _description(item),
+                                      ),
+                                    ),
+                                    SizedBox(height: 5.h),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
                         );
                       },
-                    );
-                  },
-                ),
-              ),
-
-              // Back button (Optional: if you want it floating)
-              ValueListenableBuilder<double>(
-                valueListenable: extentNotifier,
-                builder: (context, extent, _) {
-                  double percentage = ((extent - 0.6) / (1.0 - 0.6)).clamp(
-                    0.0,
-                    1.0,
-                  );
-                  Color? iconColor =
-                      percentage < 0.2
-                          ? Colors.white
-                          : AppColors
-                              .primaryButton; // 👈 You can adjust 0.2 threshold
-
-                  return Positioned(
-                    top: 1.h,
-                    left: 0,
-                    right: 10,
-                    child: TopBar(
-                      title: "",
-                      onTap: () => Get.back(),
-                      iconColor: Colors.white,
                     ),
-                  );
-                },
-              ),
-            ],
+                  ),
+          
+                  // Back button (Optional: if you want it floating)
+                  ValueListenableBuilder<double>(
+                    valueListenable: extentNotifier,
+                    builder: (context, extent, _) {
+                      double percentage = ((extent - 0.6) / (1.0 - 0.6)).clamp(
+                        0.0,
+                        1.0,
+                      );
+                      Color? iconColor =
+                          percentage < 0.2
+                              ? Colors.white
+                              : AppColors
+                                  .primaryButton; // 👈 You can adjust 0.2 threshold
+          
+                      return Positioned(
+                        top: 1.h,
+                        left: 0,
+                        right: 10,
+                        child: TopBar(
+                          title: "",
+                          onTap: () => Get.back(),
+                          iconColor: Colors.white,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              )
           );
-        }),
+        }
       ),
     );
   }
 
   Widget _dateAndIcons(EventsDatum item) {
+    final title = item.eventName ?? 'Check this out!';
+    final url = "https://dev.kbaiota.org/news/${item.eventId}";
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -227,15 +246,18 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
         Row(
           children: [
             GestureDetector(
-              onTap: () {
-                final title = item.eventName ?? 'Check this out!';
-                // final link = widget.item.newsCategory ?? ''; // Replace with your actual link
-                final params = ShareParams(
-                  title: title,
-                  uri: Uri(scheme: 'https', host: 'crash.net'),
-                );
-                SharePlus.instance.share(params);
-              },
+              onTap: () => _handleShare(title: title, url: url),
+              // {
+              //   final title = item.eventName ?? 'Check this out!';
+              //   // final link = widget.item.newsCategory ?? ''; // Replace with your actual link
+              //   final params = ShareParams(
+              //     title: title,
+              //     uri: Uri.parse(
+              //       "https://dev.kbaiota.org/events/${item.eventId}",
+              //     ),
+              //   );
+              //   SharePlus.instance.share(params);
+              // },
               child: Image.asset(
                 'assets/icons/share.png',
                 height: 2.5.h,

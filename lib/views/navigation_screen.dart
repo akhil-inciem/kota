@@ -2,6 +2,11 @@ import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:kota/views/base.dart';
 import 'package:kota/views/drawer/executives_screen.dart';
+import 'package:kota/views/favourites/widgets/favourite_list.dart';
+import 'package:kota/views/forum/forum_detail_screen.dart';
+import 'package:kota/views/forum/forum_screen.dart';
+import 'package:kota/views/home/events_detail_screen.dart';
+import 'package:kota/views/home/news_detail_screen.dart';
 import 'package:kota/views/login/login_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
@@ -48,38 +53,65 @@ class _InitialNavigationScreenState extends State<InitialNavigationScreen> {
 
   /// Actual navigation based on URI and login status
   Future<void> _handleUri(Uri uri) async {
-  _navigating = true;
+    _navigating = true;
 
-  final prefs = await SharedPreferences.getInstance();
-  final isLoggedIn = prefs.getBool('is_logged_in') ?? false;
+    final prefs = await SharedPreferences.getInstance();
+    final isLoggedIn = prefs.getBool('is_logged_in') ?? false;
 
-  if (isLoggedIn) {
-    // Navigate to BaseScreen first
-    Get.offAll(() => const BaseScreen());
+    if (isLoggedIn) {
+      Get.offAll(() => BaseScreen());
+      await Future.delayed(const Duration(milliseconds: 100));
 
-    // Wait for a moment to ensure BaseScreen is mounted
-    await Future.delayed(const Duration(milliseconds: 100));
+      final pathSegments = uri.pathSegments; // e.g., ['news', '5']
 
-    // Then push ExecutivePage on top
-    Get.to(() => ExecutivePage());
-  } else {
-    Get.offAll(() => const LoginScreen());
+      if (pathSegments.isNotEmpty) {
+        final section = pathSegments[0]; // 'news', 'events', etc.
+
+        switch (section) {
+
+          case 'forum':
+          if (pathSegments.length > 1) {
+              final threadId = pathSegments[1];
+          Get.to(()=> ForumDetailScreen(threadId: threadId,));
+          }
+          break;
+
+          case 'executive':
+            Get.to(() => ExecutivePage());
+            break;
+
+          case 'news':
+            if (pathSegments.length > 1) {
+              final newsId = pathSegments[1];
+              Get.to(() => NewsDetailScreen(newsId: newsId));
+            }
+            break;
+          case 'events':
+            if (pathSegments.length > 1) {
+              final eventId = pathSegments[1];
+              Get.to(() => EventsDetailScreen(eventId: eventId));
+            }
+            break;
+          default:
+            break;
+        }
+      }
+    } else {
+      Get.offAll(() => const LoginScreen());
+    }
+
+    _navigating = false;
   }
-
-  _navigating = false;
-}
-
 
   /// If no initial deep link, navigate after delay
   Future<void> _navigateAfterDelay() async {
-
     if (_initialLinkHandled || _navigating) return;
 
     final prefs = await SharedPreferences.getInstance();
     final isLoggedIn = prefs.getBool('is_logged_in') ?? false;
 
     if (isLoggedIn) {
-      Get.offAll(() => const BaseScreen());
+      Get.offAll(() =>  BaseScreen());
     } else {
       Get.offAll(() => const LoginScreen());
     }
@@ -89,16 +121,16 @@ class _InitialNavigationScreenState extends State<InitialNavigationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xFF015FC9), Color(0xFF7001C5)],
-              ),
-            ),
-          )
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFF015FC9), Color(0xFF7001C5)],
+          ),
+        ),
+      ),
     );
   }
 }

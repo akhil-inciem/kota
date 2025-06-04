@@ -40,6 +40,7 @@ class EventController extends GetxController {
 
   Future<void> fetchSingleEventItem(String eventId) async {
     isLoading.value = true;
+    selectedEvent.value = null;
 
     try {
       final eventItem = await _eventsApiService.fetchEventsById(

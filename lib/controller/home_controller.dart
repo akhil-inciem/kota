@@ -5,6 +5,8 @@ import 'package:kota/apiServices/favorite_api_services.dart';
 import 'package:kota/apiServices/news_api_service.dart';
 import 'package:kota/model/news_model.dart';
 
+import '../model/advertisement_model.dart';
+
 class HomeController extends GetxController {
   RxInt index = 0.obs;
   var selectedTabIndex = 0.obs;
@@ -22,8 +24,10 @@ class HomeController extends GetxController {
 
   final _favApiService = FavoritesApiService();
   final _newsApiService = NewsApiService();
+  final RxBool isLoadingNewsItem = true.obs;
 
   final TextEditingController searchController = TextEditingController();
+  RxList<Advertisements> advertisements = <Advertisements>[].obs;
 
   @override
   void onInit() {
@@ -43,10 +47,16 @@ class HomeController extends GetxController {
     }
   }
 
+  Future<void> loadAdvertisements() async {
+  final adModel = await _newsApiService.fetchAdvertisement();
+  if (adModel != null && adModel.data?.advertisements != null) {
+    advertisements.assignAll(adModel.data!.advertisements!);
+  }
+}
+
   Future<void> fetchSingleNewsItem(String newsId) async {
     isLoading.value = true;
     selectedNewsItem.value = null;
-
     try {
       final newsItem = await _newsApiService.fetchNewsById(newsId: newsId);
 
@@ -69,6 +79,7 @@ class HomeController extends GetxController {
           bookmarkedStatus[newsItem.newsId!] = newsItem.favorites == 1;
         }
       }
+      isLoadingNewsItem.value = false;
     } catch (e) {
       print("Error fetching single news item: $e");
     } finally {
@@ -108,8 +119,4 @@ class HomeController extends GetxController {
     }
   }
 
-  void clearSelectedNews() {
-    selectedNewsItem.value = null;
-    bookmarkedStatus.clear();
-  }
 }

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:intl/intl.dart';
 import 'package:kota/controller/auth_controller.dart';
-import 'package:kota/controller/updates_controller.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class ProfileInfoWidget extends StatelessWidget {

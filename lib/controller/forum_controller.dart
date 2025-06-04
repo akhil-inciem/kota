@@ -25,7 +25,7 @@ class ForumController extends GetxController {
   final isPosting = false.obs;
 final hasText = false.obs;
   var comments = <Comments>[].obs;
-  final Rx<ForumData> singleThread = ForumData().obs;
+  final Rxn<ForumData> singleThread = Rxn<ForumData>();
   final ForumApiService _forumApiService = ForumApiService();
   final TextEditingController commentController = TextEditingController();
   final TextEditingController searchController = TextEditingController();
@@ -96,6 +96,7 @@ final hasText = false.obs;
   }
 
   Future<ForumData> loadSingleThread(String id) async {
+    singleThread.value = null;
     try {
       final thread = await _forumApiService.fetchSingleThread(id);
       singleThread.value = thread;
@@ -356,12 +357,4 @@ final hasText = false.obs;
     return "Something went wrong. Please try again.";
   }
 }
-
-
-  @override
-  void onClose() {
-    titleController.dispose();
-    descriptionController.dispose();
-    super.onClose();
-  }
 }

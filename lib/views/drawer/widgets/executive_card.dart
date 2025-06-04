@@ -17,17 +17,14 @@ class ExecutiveCard extends StatelessWidget {
         // Executive Image
         ClipRRect(
           borderRadius: BorderRadius.circular(12),
-          child: 
-          // Image.network(
-          //   "https://media.istockphoto.com/id/1399565382/photo/young-happy-mixed-race-businessman-standing-with-his-arms-crossed-working-alone-in-an-office.jpg?s=612x612&w=0&k=20&c=buXwOYjA_tjt2O3-kcSKqkTp2lxKWJJ_Ttx2PhYe3VM=",
-             Image.network(
-              executive.portalImage!,
+          child: Image.network(
+            executive.portalImage!,
             width: double.infinity,
             height: 18.h,
             fit: BoxFit.cover,
           ),
         ),
-    
+
         // Info Section
         Container(
           height: 17.h,
@@ -43,7 +40,7 @@ class ExecutiveCard extends StatelessWidget {
                 executive.designation ?? '',
                 style: TextStyle(fontSize: 14.sp, color: Colors.black87),
               ),
-    
+
               /// First name
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -74,15 +71,15 @@ class ExecutiveCard extends StatelessWidget {
                   IconButton(
                     icon: Icon(Icons.share, size: 18.sp),
                     onPressed: () {
-                   final title = 'Check this out!';
-                final params = ShareParams(
-                  title: title,
-                  uri: Uri.parse(
-                    "https://dev.kbaiota.org",
-                  ),
-                );
-                SharePlus.instance.share(params);
-              },
+                      final title = 'Check this out!';
+                      final params = ShareParams(
+                        title: title,
+                        uri: Uri.parse("https://dev.kbaiota.org/executive"),
+                      );
+                      SharePlus.instance.share(
+                        params,
+                      ); // or however you're sharing
+                    },
                   ),
                 ],
               ),

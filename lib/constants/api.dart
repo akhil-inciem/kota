@@ -7,7 +7,10 @@ class ApiEndpoints {
   static const String register = '$baseUrl/news/register';
   static const String logout = '$baseUrl/news/logout';
   static const String resetPassword = '$baseUrl/news/passwordReset';
-  static const String resetGuestPassword = 'https://dev.kbaiota.org/api/news/reset_password_guest_user';
+  static const String forgotPasswordGuest = '$baseUrl/news/send_token_api';
+  static const String verifyGuestOtp = '$baseUrl/news/verify_token_api';
+  static const String resetGuestPassword = '$baseUrl/news/reset_password_guest_user';
+  static const String forgotupdateGuestPassword = '$baseUrl/news/change_password_api';
   static const String guestSignIn = '$baseUrl/news/guest-signin';
 
   //Forums
