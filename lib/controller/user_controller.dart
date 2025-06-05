@@ -13,13 +13,16 @@ class UserController extends GetxController {
   var isLoading = false.obs;
   Rx<File?> selectedImage = Rx<File?>(null);
   var error = ''.obs;
-  // Form Controllers
+
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final phoneController = TextEditingController();
   final emailController = TextEditingController();
-  // Original snapshot to compare for changes
+
   late User _originalUser;
+
+  var isImageChanged = false.obs;
+  var isTextChanged = false.obs;
   var isChanged = false.obs;
 
   @override
@@ -33,7 +36,12 @@ class UserController extends GetxController {
 
   void setProfileImage(File imageFile) {
     selectedImage.value = imageFile;
-    isChanged.value = true;
+    isImageChanged.value = true;
+    _updateIsChanged();
+  }
+
+  void _updateIsChanged() {
+    isChanged.value = isTextChanged.value || isImageChanged.value;
   }
 
   void clearFields() {
@@ -46,7 +54,9 @@ class UserController extends GetxController {
     }
 
     selectedImage.value = null;
-    isChanged.value = false;
+    isImageChanged.value = false;
+    isTextChanged.value = false;
+    _updateIsChanged();
   }
 
   Future<void> loadUserProfile() async {
@@ -57,13 +67,14 @@ class UserController extends GetxController {
       user.value = response;
       _originalUser = response;
 
-      // Populate controllers
       firstNameController.text = response.firstName!;
       lastNameController.text = response.lastName!;
       phoneController.text = response.primaryNumber!;
       emailController.text = response.email!;
 
-      isChanged.value = false;
+      isImageChanged.value = false;
+      isTextChanged.value = false;
+      _updateIsChanged();
     } catch (e) {
       error.value = e.toString();
     } finally {
@@ -83,7 +94,7 @@ class UserController extends GetxController {
         email: emailController.text.trim(),
         image: selectedImage.value,
       );
-      await loadUserProfile();
+      await loadUserProfile(); // will also reset flags
       selectedImage.value = null;
       CustomSnackbars.success(
         "Your profile has been successfully updated.",
@@ -99,11 +110,12 @@ class UserController extends GetxController {
   }
 
   void _checkForChanges() {
-    isChanged.value =
+    isTextChanged.value =
         firstNameController.text != _originalUser.firstName ||
         lastNameController.text != _originalUser.lastName ||
         phoneController.text != _originalUser.primaryNumber ||
         emailController.text != _originalUser.email;
+        _updateIsChanged();
   }
 
   @override

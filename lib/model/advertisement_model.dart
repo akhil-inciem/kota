@@ -59,7 +59,7 @@ class Advertisements {
   String? designation;
   String? contactPersonEmail;
   String? registrationType;
-  Null? registrationCertificate;
+  String? registrationCertificate;
   String? status;
   String? addedOn;
   String? addedBy;

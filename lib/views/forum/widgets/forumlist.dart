@@ -59,163 +59,186 @@ class _ForumListState extends State<ForumList> {
           ),
         );
       }
-      return ListView.builder(
-        padding: EdgeInsets.zero,
-        itemCount: items.length,
-        physics: const AlwaysScrollableScrollPhysics(),
-        itemBuilder: (context, index) {
-          final item = items[index];
-          return GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ForumDetailScreen(threadId: item.id!),
-                ),
-              );
-            },
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 3.w),
-                  child: Container(
-                    color: Colors.white,
-                    padding:  EdgeInsets.all(14.sp),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 0.5.h),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CircleAvatar(
-                              radius: 20.sp,
-                              backgroundColor: Colors.grey[200],
-                              child:
-                                  item.photo == null
-                                      ? Icon(
-                                        Icons.person,
-                                        size: 30,
-                                        color: Colors.grey,
-                                      )
-                                      : ClipOval(
-                                        child: Image.network(
-                                          item.photo!,
-                                          width: 50,
-                                          height: 50,
-                                          fit: BoxFit.cover,
-                                          loadingBuilder: (
-                                            context,
-                                            child,
-                                            loadingProgress,
-                                          ) {
-                                            if (loadingProgress == null)
-                                              return child;
-                                            return Center(
-                                              child: SizedBox(
-                                                width: 20,
-                                                height: 20,
-                                                child:
-                                                    CircularProgressIndicator(
-                                                      strokeWidth: 2,
-                                                    ),
-                                              ),
-                                            );
-                                          },
-                                          errorBuilder: (
-                                            context,
-                                            error,
-                                            stackTrace,
-                                          ) {
-                                            return Icon(
-                                              Icons.error,
-                                              size: 30,
-                                              color: Colors.red,
-                                            );
-                                          },
+      return RefreshIndicator(
+        onRefresh: () async {
+        await forumController.loadThreads(); // Replace with your actual method
+      },
+        child: ListView.builder(
+          padding: EdgeInsets.zero,
+          itemCount: items.length,
+          physics: const AlwaysScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            final item = items[index];
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ForumDetailScreen(threadId: item.id!),
+                  ),
+                );
+              },
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 3.w),
+                    child: Container(
+                      color: Colors.white,
+                      padding:  EdgeInsets.all(14.sp),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 0.5.h),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CircleAvatar(
+                                radius: 20.sp,
+                                backgroundColor: Colors.grey[200],
+                                child:
+                                    item.photo == null
+                                        ? Icon(
+                                          Icons.person,
+                                          size: 30,
+                                          color: Colors.grey,
+                                        )
+                                        : ClipOval(
+                                          child: Image.network(
+                                            item.photo!,
+                                            width: 50,
+                                            height: 50,
+                                            fit: BoxFit.cover,
+                                            loadingBuilder: (
+                                              context,
+                                              child,
+                                              loadingProgress,
+                                            ) {
+                                              if (loadingProgress == null)
+                                                return child;
+                                              return Center(
+                                                child: SizedBox(
+                                                  width: 20,
+                                                  height: 20,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                        strokeWidth: 2,
+                                                      ),
+                                                ),
+                                              );
+                                            },
+                                            errorBuilder: (
+                                              context,
+                                              error,
+                                              stackTrace,
+                                            ) {
+                                              return Icon(
+                                                Icons.error,
+                                                size: 30,
+                                                color: Colors.red,
+                                              );
+                                            },
+                                          ),
                                         ),
+                              ),
+        
+                              SizedBox(width: 8),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${item.firstName} ${item.lastName ?? ''}' ??
+                                          '',
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
                                       ),
-                            ),
-
-                            SizedBox(width: 8),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '${item.firstName} ${item.lastName ?? ''}' ??
-                                        '',
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
                                     ),
-                                  ),
-                                  SizedBox(height: 0.5.h),
-                                  Text(
-                                    timeAgo(item.createdAt!),
-                                    style: const TextStyle(
-                                      fontSize: 10,
+                                    SizedBox(height: 0.5.h),
+                                    Text(
+                                      timeAgo(item.createdAt!),
+                                      style: const TextStyle(
+                                        fontSize: 10,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 1.h),
+                          Text(
+                            item.title ?? '',
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                            style:  TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF45515C),
+                            ),
+                          ),
+                          SizedBox(height: 1.h),
+                          Padding(
+                            padding: EdgeInsets.only(right: 10.w),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                // Left side: Likes and comments
+                                Row(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        forumController.likeThread(item.id);
+                                      },
+                                      child: Icon(
+                                        item.isLiked!
+                                            ? Icons.favorite
+                                            : Icons.favorite_border,
+                                        size: 18.sp,
+                                        color:
+                                            item.isLiked!
+                                                ? Colors.red
+                                                : Colors.black,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      '${item.likeCount ?? 0}',
+                                      style: TextStyle(fontSize: 15.sp),
+                                    ),
+                                    const SizedBox(width: 12),
+                                     Icon(
+                                      Icons.comment,
+                                      size: 18.sp,
                                       color: Colors.grey,
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 1.h),
-                        Text(
-                          item.title ?? '',
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style:  TextStyle(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF45515C),
-                          ),
-                        ),
-                        SizedBox(height: 1.h),
-                        Padding(
-                          padding: EdgeInsets.only(right: 10.w),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              // Left side: Likes and comments
-                              Row(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      forumController.likeThread(item.id);
-                                    },
-                                    child: Icon(
-                                      item.isLiked!
-                                          ? Icons.favorite
-                                          : Icons.favorite_border,
-                                      size: 18.sp,
-                                      color:
-                                          item.isLiked!
-                                              ? Colors.red
-                                              : Colors.black,
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      '${item.commentCount ?? 0} Comments',
+                                      style: TextStyle(fontSize: 15.sp),
                                     ),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    '${item.likeCount ?? 0}',
-                                    style: TextStyle(fontSize: 15.sp),
-                                  ),
-                                  const SizedBox(width: 12),
-                                   Icon(
-                                    Icons.comment,
-                                    size: 18.sp,
-                                    color: Colors.grey,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    '${item.commentCount ?? 0} Comments',
-                                    style: TextStyle(fontSize: 15.sp),
-                                  ),
-                                ],
-                              ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Divider(color: Colors.grey.shade200, thickness: 1, height: 0),
+                  SizedBox(height: 1.h),
+                ],
+              ),
+            );
+          },
+        ),
+      );
+    });
+  }
+}
+
                               // Right side: Stacked avatars
                               // Stack(
                               //   clipBehavior: Clip.none,
@@ -267,20 +290,3 @@ class _ForumListState extends State<ForumList> {
                               //     ),
                               //   ],
                               // ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Divider(color: Colors.grey.shade200, thickness: 1, height: 0),
-                SizedBox(height: 1.h),
-              ],
-            ),
-          );
-        },
-      );
-    });
-  }
-}

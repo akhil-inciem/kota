@@ -1,4 +1,5 @@
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -186,11 +187,16 @@ class _EventsListState extends State<EventsList> {
                                           BoxFit
                                               .cover, // Ensure the image fits inside the box
                                     )
-                                    : Image.network(
-                                      item.image!,
-                                      fit:
-                                          BoxFit
-                                              .cover, // Ensure the image fits inside the box
+                                    : CachedNetworkImage(
+                                      imageUrl: item.image!,
+                                      fit: BoxFit.cover,
+                                      placeholder:
+                                          (context, url) => Center(
+                                            child: SizedBox.fromSize()
+                                          ),
+                                      errorWidget:
+                                          (context, url, error) =>
+                                              const Icon(Icons.error),
                                     ),
                           ),
                         ),

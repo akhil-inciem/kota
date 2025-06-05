@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ class NewsList extends StatefulWidget {
   final bool isFavourite; // <--- New parameter
   final ScrollController scrollController;
 
-   NewsList({
+  NewsList({
     Key? key,
     required this.isFavourite,
     required this.scrollController,
@@ -39,27 +40,26 @@ class _NewsListState extends State<NewsList> {
   Widget build(BuildContext context) {
     return Obx(() {
       if (homeController.isLoading.value) {
-        return const ListShimmer(); 
+        return const ListShimmer();
       }
 
       final items = homeController.filteredNewsItems;
 
       if (items.isEmpty) {
-  return Center(
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(Icons.newspaper, size: 48, color: Colors.grey),
-        SizedBox(height: 12),
-        Text(
-          'No News available',
-          style: TextStyle(fontSize: 18, color: Colors.black),
-        ),
-      ],
-    ),
-  );
-}
-
+        return Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.newspaper, size: 48, color: Colors.grey),
+              SizedBox(height: 12),
+              Text(
+                'No News available',
+                style: TextStyle(fontSize: 18, color: Colors.black),
+              ),
+            ],
+          ),
+        );
+      }
 
       return ListView.builder(
         padding: EdgeInsets.zero,
@@ -73,7 +73,7 @@ class _NewsListState extends State<NewsList> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => NewsDetailScreen(newsId: item.newsId!,),
+                  builder: (context) => NewsDetailScreen(newsId: item.newsId!),
                 ),
               );
             },
@@ -161,15 +161,18 @@ class _NewsListState extends State<NewsList> {
                                 item.newsImage == ''
                                     ? Image.asset(
                                       'assets/images/recommend_tile.jpg',
-                                      fit:
-                                          BoxFit
-                                              .cover, // Ensure the image fits inside the box
+                                      fit: BoxFit.cover,
                                     )
-                                    : Image.network(
-                                      item.newsImage!,
-                                      fit:
-                                          BoxFit
-                                              .cover, // Ensure the image fits inside the box
+                                    : CachedNetworkImage(
+                                      imageUrl: item.newsImage!,
+                                      fit: BoxFit.cover,
+                                      placeholder:
+                                          (context, url) => Center(
+                                            child: SizedBox.fromSize()
+                                          ),
+                                      errorWidget:
+                                          (context, url, error) =>
+                                              const Icon(Icons.error),
                                     ),
                           ),
                         ),

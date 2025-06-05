@@ -39,71 +39,74 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-  return SafeArea(
-    child: Scaffold(
-      backgroundColor: AppColors.primaryBackground,
-      resizeToAvoidBottomInset: true,
-      body: Obx(() {
-        final user = userController.user.value;
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: AppColors.primaryBackground,
+        resizeToAvoidBottomInset: true,
+        body: Obx(() {
+          final user = userController.user.value;
 
-        return SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Container(
-            constraints: BoxConstraints(
-              minHeight: MediaQuery.of(context).size.height -
-                  MediaQuery.of(context).padding.top,
-            ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 6.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: 2.h),
-                  _buildAppBar(), // ✅ Always shown
+          return SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Container(
+              constraints: BoxConstraints(
+                minHeight:
+                    MediaQuery.of(context).size.height -
+                    MediaQuery.of(context).padding.top,
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 6.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 2.h),
+                    _buildAppBar(), // ✅ Always shown
 
-                  if 
-                  // (isLoading) ...[
-                  //   SizedBox(height: 4.h),
-                  //   const EditProfileShimmer(),
-                  //   SizedBox(height: 4.h),
-                  //   const ShimmerButtonPlaceholder(),
-                  //   SizedBox(height: 3.h),
-                  // ] else if 
-                  (user == null) ...[
-                    SizedBox(height: 4.h),
-                    const Center(
-                      child: Text(
-                        'Failed to load user data',
-                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                    if (user == null) ...[
+                      SizedBox(height: 4.h),
+                      const Center(
+                        child: Text(
+                          'Failed to load user data',
+                          style: TextStyle(fontSize: 16, color: Colors.grey),
+                        ),
                       ),
-                    ),
-                  ] else ...[
-                    SizedBox(height: 4.h),
-                   authController.isGuest ? SizedBox() : _buildProfilePictureSection(user),
-                    SizedBox(height: 4.h),
-                    _buildFormSection(userController),
-                    SizedBox(height: 4.h),
-                    Obx(
-  () => CustomButton(
-    text: userController.isLoading.value ? "Updating..." : "Update",
-    isEnabled: userController.isChanged.value && !userController.isLoading.value,
-    onPressed: (userController.isChanged.value && !userController.isLoading.value)
-        ? () => userController.updateUserProfile()
-        : null,
-  ),
-),
+                    ] else ...[
+                      SizedBox(height: 4.h),
+                      authController.isGuest
+                          ? SizedBox()
+                          : _buildProfilePictureSection(user),
+                      SizedBox(height: 4.h),
+                      _buildFormSection(userController),
+                      SizedBox(height: 4.h),
+                      Obx(
+                        () => CustomButton(
+                          text:
+                              userController.isLoading.value
+                                  ? "Updating..."
+                                  : "Update",
+                          isEnabled:
+                              userController.isChanged.value &&
+                              !userController.isLoading.value,
+                          onPressed:
+                              (userController.isChanged.value &&
+                                      !userController.isLoading.value)
+                                  ? () => userController.updateUserProfile()
+                                  : null,
+                        ),
+                      ),
 
-                    SizedBox(height: 3.h),
-                  ]
-                ],
+                      SizedBox(height: 3.h),
+                    ],
+                  ],
+                ),
               ),
             ),
-          ),
-        );
-      }),
-    ),
-  );
-}
+          );
+        }),
+      ),
+    );
+  }
+
   Widget _buildAppBar() {
     return Row(
       children: [

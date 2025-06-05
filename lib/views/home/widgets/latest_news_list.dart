@@ -12,7 +12,6 @@ class AdvertisementList extends StatelessWidget {
       final controller = Get.find<HomeController>();
       final advertisements = controller.advertisements;
 
-      // Show shimmer while loading
       if (advertisements.isEmpty) {
         return Padding(
           padding: EdgeInsets.symmetric(horizontal: 3.w),
@@ -29,7 +28,6 @@ class AdvertisementList extends StatelessWidget {
         );
       }
 
-      // Show actual data
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 3.w),
         child: SizedBox(
@@ -63,7 +61,7 @@ class AdvertisementCard extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
         child: Container(
-          width: 90.w,
+          width: 85.w,
           height: 16.5.h,
           color: Colors.grey[300],
           child: imageUrl.isNotEmpty

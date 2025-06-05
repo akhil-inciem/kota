@@ -24,8 +24,6 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
   @override
   void initState() {
     super.initState();
-    
-    favController.fetchFilteredItems();
   }
 
   void openFilterBottomSheet() {

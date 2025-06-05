@@ -23,7 +23,6 @@ class _ForumScreenState extends State<ForumScreen> {
   @override
   void initState() {
     super.initState();
-    forumController.loadThreads();
   }
   @override
   Widget build(BuildContext context) {
