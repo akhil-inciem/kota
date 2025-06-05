@@ -14,7 +14,6 @@ import 'package:kota/views/home/widgets/list_shimmer.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class FavoriteList extends StatefulWidget {
-
   FavoriteList({Key? key}) : super(key: key);
 
   @override
@@ -22,8 +21,7 @@ class FavoriteList extends StatefulWidget {
 }
 
 class _FavoriteListState extends State<FavoriteList> {
-  final FavouriteController favController =
-      Get.find<FavouriteController>();
+  final FavouriteController favController = Get.find<FavouriteController>();
 
   String _htmlToPlainText(String htmlString) {
     final document = html_parser.parse(htmlString);
@@ -31,7 +29,7 @@ class _FavoriteListState extends State<FavoriteList> {
   }
 
   @override
- initState() {
+  initState() {
     // TODO: implement initState
     super.initState();
     // favController.fetchFilteredItems();
@@ -39,34 +37,46 @@ class _FavoriteListState extends State<FavoriteList> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Obx(() {
-      
       if (favController.isLoading.value) {
         return const ListShimmer(); // Show shimmer while loading
-      }else if(favController.filteredList.isEmpty){
-        return Center(
-  child: Column(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-       Image.asset( 'assets/icons/favorites_unselected.png',
-                  height: 8.h,
-                  width: 8.h,
+      } else if (favController.filteredList.isEmpty) {
+        return RefreshIndicator(
+          onRefresh: () async {
+          await favController
+              .fetchFilteredItems(); // Replace with your actual method
+        },
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: [
+              SizedBox(height: 20.h), // add space to allow pull
+              Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset(
+                      'assets/icons/favorites_unselected.png',
+                      height: 8.h,
+                      width: 8.h,
+                    ),
+                    const SizedBox(height: 12),
+                    const Text(
+                      "No Favourites Available",
+                      style: TextStyle(fontSize: 18, color: Colors.black),
+                    ),
+                  ],
                 ),
-      SizedBox(height: 12),
-      Text(
-        "No Favourites Available",
-        style: TextStyle(fontSize: 18, color: Colors.black),
-      ),
-    ],
-  ),
-);
+              ),
+            ],
+          ),
+        );
       }
       final items = favController.filteredList;
       return RefreshIndicator(
-         onRefresh: () async {
-        await favController.fetchFilteredItems(); // Replace with your actual method
-      },
+        onRefresh: () async {
+          await favController
+              .fetchFilteredItems(); // Replace with your actual method
+        },
         child: ListView.builder(
           padding: EdgeInsets.zero,
           itemCount: items.length,
@@ -77,7 +87,9 @@ class _FavoriteListState extends State<FavoriteList> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => FavoritesDetailScreen(item: item)),
+                  MaterialPageRoute(
+                    builder: (context) => FavoritesDetailScreen(item: item),
+                  ),
                 );
               },
               child: Column(
@@ -110,7 +122,9 @@ class _FavoriteListState extends State<FavoriteList> {
                                         item['badge'] ?? 'Badge',
                                         style: TextStyle(
                                           fontSize: 10,
-                                          color: getBadgeTextColor(item['badge']),
+                                          color: getBadgeTextColor(
+                                            item['badge'],
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -193,7 +207,7 @@ class _FavoriteListState extends State<FavoriteList> {
                                         fit: BoxFit.cover,
                                         placeholder:
                                             (context, url) => Center(
-                                              child: SizedBox.fromSize()
+                                              child: SizedBox.fromSize(),
                                             ),
                                         errorWidget:
                                             (context, url, error) =>

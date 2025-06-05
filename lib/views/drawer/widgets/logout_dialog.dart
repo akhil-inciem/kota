@@ -24,23 +24,28 @@ class LogoutConfirmationDialog extends StatelessWidget {
         "Logout ?",
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
-      content: const Text("Are you sure you want to logout?"),
-      actions: [
+      content: Column(
+  mainAxisSize: MainAxisSize.min,
+  children: [
+    const Text("Are you sure you want to logout?"),
+    SizedBox(height: 2.h),
+    Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
         CustomButton(
-          width: 35.w,
+          width: 33.w,
           textColor: Colors.black,
           backgroundColor: Colors.white,
           onPressed: () => Get.back(),
           text: "Cancel",
         ),
-        SizedBox(height: 1.h),
+
         CustomButton(
-          width: 35.w,
+          width: 33.w,
           onPressed: () async {
             Get.back();
             bool result = await authController.logout();
             if (result) {
-              // await Get.delete<AuthController>();
               await Get.delete<UserController>();
               Get.offAll(() => const LoginScreen());
             } else {
@@ -53,6 +58,10 @@ class LogoutConfirmationDialog extends StatelessWidget {
           text: "Logout",
         ),
       ],
+    ),
+  ],
+),
+
     );
   }
 }

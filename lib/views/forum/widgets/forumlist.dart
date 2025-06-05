@@ -45,15 +45,31 @@ class _ForumListState extends State<ForumList> {
 
       final items = forumController.threadsList;
       if (items.isEmpty) {
-        return Center(
-          child: Column(
+        return RefreshIndicator(
+          onRefresh: () async {
+          await forumController
+              .loadThreads(); // Replace with your actual method
+        },
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
             children: [
-              SizedBox(height: 25.h,),
-              Icon(Icons.newspaper, size: 35.sp, color: Colors.grey),
-              SizedBox(height: 1.h),
-              Text(
-                "No Forums Available",
-                style: TextStyle(fontSize: 18, color: Colors.black),
+              SizedBox(height: 20.h), // add space to allow pull
+              Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset(
+                      'assets/icons/favorites_unselected.png',
+                      height: 8.h,
+                      width: 8.h,
+                    ),
+                    const SizedBox(height: 12),
+                    const Text(
+                      "No Favourites Available",
+                      style: TextStyle(fontSize: 18, color: Colors.black),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
