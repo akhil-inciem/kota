@@ -1,9 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:kota/controller/auth_controller.dart';
 import 'package:kota/views/login/widgets/labelled_textfield.dart';
-import 'package:kota/views/profile/profile_screen.dart';
 import 'package:kota/views/widgets/custom_snackbar.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import '../login/widgets/custom_button.dart';
@@ -78,10 +79,12 @@ class _GuestResetPasswordScreenState extends State<GuestResetPasswordScreen> {
                     hintText: 'Enter previous password',
                     isPassword: true,
                     validator: (value) {
-                      if (value == null || value.isEmpty)
+                      if (value == null || value.isEmpty) {
                         return 'Previous password is required';
-                      if (value.length < 6)
+                      }
+                      if (value.length < 6) {
                         return 'Password must be at least 6 characters';
+                      }
                       return null;
                     },
                   ),
@@ -95,10 +98,12 @@ class _GuestResetPasswordScreenState extends State<GuestResetPasswordScreen> {
                     hintText: 'Enter new password',
                     isPassword: true,
                     validator: (value) {
-                      if (value == null || value.isEmpty)
+                      if (value == null || value.isEmpty) {
                         return 'New password is required';
-                      if (value.length < 6)
+                      }
+                      if (value.length < 6) {
                         return 'Password must be at least 6 characters';
+                      }
                       return null;
                     },
                   ),
@@ -112,10 +117,12 @@ class _GuestResetPasswordScreenState extends State<GuestResetPasswordScreen> {
                     hintText: 'Re-enter new password',
                     isPassword: true,
                     validator: (value) {
-                      if (value == null || value.isEmpty)
+                      if (value == null || value.isEmpty) {
                         return 'Please confirm your new password';
-                      if (value != _newPasswordController.text)
+                      }
+                      if (value != _newPasswordController.text) {
                         return 'Passwords do not match';
+                      }
                       return null;
                     },
                   ),

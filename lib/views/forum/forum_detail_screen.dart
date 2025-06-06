@@ -27,6 +27,7 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
   @override
   void initState() {
     super.initState();
+    controller.singleThread.value = null;
     userController.loadUserProfile();
     controller.loadSingleThread(widget.threadId);
   }
@@ -170,76 +171,103 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-        child: Row(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            CircleAvatar(
-              radius: 20,
-              backgroundColor: Colors.grey.shade300,
-              backgroundImage:
-                  user?.photo != null ? NetworkImage(user!.photo!) : null,
-              child: user == null
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          Colors.grey,
-                        ),
-                      ),
-                    )
-                  : user.photo == null
-                      ? Icon(Icons.person, color: Colors.grey.shade700)
-                      : null,
-            ),
-            SizedBox(width: 3.w),
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(10),
+            if (isReply)
+              Row(
+                children: [
+                  Text(
+                    'Replying to ${controller.replyingToName}',
+                    style: TextStyle(
+                      color: AppColors.primaryText,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Spacer(),
+                  IconButton(
+                    icon: Icon(Icons.close, color: Colors.grey),
+                    onPressed: () {
+                      controller.cancelReply();
+                    },
+                  )
+                ],
+              ),
+            Row(
+              children: [
+                // Avatar
+                CircleAvatar(
+                  radius: 20,
+                  backgroundColor: Colors.grey.shade300,
+                  backgroundImage:
+                      user?.photo != null ? NetworkImage(user!.photo!) : null,
+                  child: user == null
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.grey,
+                            ),
+                          ),
+                        )
+                      : user.photo == null
+                          ? Icon(Icons.person, color: Colors.grey.shade700)
+                          : null,
                 ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: controller.commentController,
-                        focusNode: controller.commentFocusNode,
-                        decoration: InputDecoration(
-                          hintText: isReply
-                              ? 'Post your reply here'
-                              : 'Post your comment here',
-                          border: InputBorder.none,
-                          hintStyle: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey,
+                SizedBox(width: 3.w),
+                // Input Field
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: controller.commentController,
+                            focusNode: controller.commentFocusNode,
+                            decoration: InputDecoration(
+                              hintText: isReply
+                                  ? 'Post your reply here'
+                                  : 'Post your comment here',
+                              border: InputBorder.none,
+                              hintStyle: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                        IconButton(
+                          onPressed: canSend
+                              ? () async {
+                                  controller.isPosting.value = true;
+                                  await controller.postCommentOrReply();
+                                  controller.isPosting.value = false;
+                                }
+                              : null,
+                          icon: isSending
+                              ? const SizedBox(
+                                  width: 18,
+                                  height: 18,
+                                  child:
+                                      CircularProgressIndicator(strokeWidth: 2),
+                                )
+                              : Icon(Icons.send,
+                                  color: canSend
+                                      ? AppColors.primaryText
+                                      : Colors.grey.shade400),
+                        ),
+                      ],
                     ),
-                    IconButton(
-                      onPressed: canSend
-                          ? () async {
-                              controller.isPosting.value = true;
-                              await controller.postCommentOrReply();
-                              controller.isPosting.value = false;
-                            }
-                          : null,
-                      icon: isSending
-                          ? const SizedBox(
-                              width: 18,
-                              height: 18,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
-                          : Icon(Icons.send,
-                              color: canSend
-                                  ? AppColors.primaryText
-                                  : Colors.grey.shade400),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
           ],
         ),
@@ -247,4 +275,5 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
     );
   });
 }
+
 }

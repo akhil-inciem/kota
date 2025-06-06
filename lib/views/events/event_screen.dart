@@ -3,19 +3,11 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/event_controller.dart';
-import 'package:kota/data/dummy.dart';
-import 'package:kota/model/event_model.dart';
 import 'package:kota/views/events/widgets/custom_calendar.dart';
 import 'package:kota/views/events/widgets/today_event_card.dart';
 import 'package:kota/views/events/widgets/upcoming_event_card.dart';
-import 'package:kota/views/home/widgets/news_list.dart';
 import 'package:kota/views/widgets/top_bar.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:table_calendar/table_calendar.dart';
-
 import '../widgets/search_bar.dart';
 
 class EventScreen extends StatelessWidget {

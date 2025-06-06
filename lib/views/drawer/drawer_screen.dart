@@ -9,9 +9,7 @@ import 'package:kota/views/drawer/executives_screen.dart';
 import 'package:kota/views/drawer/faq.screen.dart';
 import 'package:kota/views/drawer/find/find_screen.dart';
 import 'package:kota/views/drawer/mission_screen.dart';
-import 'package:kota/views/login/login_screen.dart';
 import 'package:kota/views/profile/profile_screen.dart';
-import 'package:kota/views/widgets/custom_snackbar.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -162,53 +160,7 @@ class _DrawerHeaderWidgetState extends State<DrawerHeaderWidget> {
   bottom: 25,
   left: 30,
   child: Obx(() {
-    final isLoading = userController.isLoading.value;
     final user = userController.user.value;
-
-    // If loading, show shimmer avatar placeholder
-//     if (isLoading) {
-//   return Shimmer.fromColors(
-//     baseColor: Colors.grey.withOpacity(0.35),
-//     highlightColor: Colors.grey.withOpacity(0.45),
-//     child: Row(
-//       crossAxisAlignment: CrossAxisAlignment.center,
-//       children: [
-//         Container(
-//           height: 60,
-//           width: 60,
-//           decoration: BoxDecoration(
-//             shape: BoxShape.circle,
-//             color: Colors.grey,
-//           ),
-//         ),
-//         const SizedBox(width: 15),
-//         Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Container(
-//               width: 120,
-//               height: 18,
-//               decoration: BoxDecoration(
-//                 borderRadius: BorderRadius.circular(10),
-//                 color: Colors.grey,
-//               ),
-//             ),
-//             const SizedBox(height: 6),
-//             Container(
-//               width: 80,
-//               height: 14,
-//               decoration: BoxDecoration(
-//                 borderRadius: BorderRadius.circular(10),
-//                 color: Colors.grey.withOpacity(0.9),
-//               ),
-//             ),
-//           ],
-//         )
-//       ],
-//     ),
-//   );
-// }
-
 
     // If user is still null after loading, show nothing
     if (user == null) {
@@ -282,11 +234,11 @@ class DrawerItem extends StatelessWidget {
   final Function()? onPressed;
 
   const DrawerItem({
-    Key? key,
+    super.key,
     required this.icon,
     required this.title,
     this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -308,7 +260,7 @@ class DrawerItem extends StatelessWidget {
 }
 
 class ViewProfileItem extends StatelessWidget {
-  const ViewProfileItem({Key? key}) : super(key: key);
+  const ViewProfileItem({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -1,17 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/find_controller.dart';
-import 'package:kota/views/drawer/widgets/custom_expansion_tile.dart';
 import 'package:kota/views/drawer/find/widgets/find_clinic_tab.dart';
 import 'package:kota/views/drawer/find/widgets/find_therapist_tab.dart';
-import 'package:kota/views/drawer/widgets/labelled_dropdown.dart';
-import 'package:kota/views/widgets/top_bar.dart';
-import 'package:kota/views/login/widgets/custom_button.dart';
-import 'package:kota/views/login/widgets/custom_checkbox.dart';
-import 'package:kota/views/login/widgets/labelled_textfield.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class FindScreen extends StatefulWidget {

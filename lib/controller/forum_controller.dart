@@ -96,7 +96,6 @@ final hasText = false.obs;
   }
 
   Future<ForumData> loadSingleThread(String id) async {
-    singleThread.value = null;
     try {
       final thread = await _forumApiService.fetchSingleThread(id);
       singleThread.value = thread;
@@ -121,17 +120,19 @@ final hasText = false.obs;
       selectedImages.removeAt(index);
     }
   }
-  void startReply({required String id}) {
-    replyingToId.value = id;
-    isReplying.value = true;
-    commentFocusNode.requestFocus();
-  }
+  void startReply({required String id, required String name}) {
+  replyingToId.value = id;
+  replyingToName.value = name; // Save for UI
+  isReplying.value = true;
+  commentFocusNode.requestFocus();
+}
 
-  void cancelReply() {
-    isReplying.value = false;
-    replyingToId.value = '';
-    commentController.clear();
-  }
+void cancelReply() {
+  isReplying.value = false;
+  replyingToId.value = '';
+  replyingToName.value = '';
+  commentController.clear();
+}
 
   Future<void> postCommentOrReply() async {
     final text = commentController.text.trim();

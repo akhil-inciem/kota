@@ -5,7 +5,6 @@ import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/drawer_controller.dart';
 import 'package:kota/views/home/widgets/list_shimmer.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:shimmer/shimmer.dart';
 
 class FaqScreen extends StatefulWidget {
 

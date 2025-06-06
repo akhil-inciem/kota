@@ -60,7 +60,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(height: 2.h),
-                    _buildAppBar(), // ✅ Always shown
+                    _buildAppBar(),
 
                     if (user == null) ...[
                       SizedBox(height: 4.h),
@@ -90,7 +90,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           onPressed:
                               (userController.isChanged.value &&
                                       !userController.isLoading.value)
-                                  ? () => userController.updateUserProfile()
+                                  ? () {
+                                    FocusScope.of(context).unfocus();
+                                    userController.updateUserProfile();
+                                  }
                                   : null,
                         ),
                       ),

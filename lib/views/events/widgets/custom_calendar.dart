@@ -138,33 +138,4 @@ lastDay: DateTime(DateTime.now().year, 12, 31),
     });
   }
 
-  int _getRowIndex(DateTime date) {
-    final firstDayOfMonth = DateTime(date.year, date.month, 1);
-    final weekOffset = firstDayOfMonth.weekday;
-    return ((date.day + weekOffset - 1) / 7).floor();
-  }
-
-  String _getDayName(int weekday) {
-    const weekdays = [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday',
-    ];
-    return weekdays[weekday - 1];
-  }
-
-  Widget _buildDot(Color color) {
-    return Positioned(
-      bottom: 1.h,
-      child: Container(
-        width: 6,
-        height: 6,
-        decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-      ),
-    );
-  }
 }

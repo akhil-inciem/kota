@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kota/constants/colors.dart';
@@ -6,7 +8,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:html/parser.dart' show parse;
 
 class MissionPage extends StatefulWidget {
-   MissionPage({super.key});
+   const MissionPage({super.key});
 
   @override
   State<MissionPage> createState() => _MissionPageState();

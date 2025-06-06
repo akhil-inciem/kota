@@ -9,7 +9,7 @@ import '../../../controller/forum_controller.dart';
 class ReplyTile extends StatelessWidget {
   final Replies reply;
 
-   ReplyTile({Key? key, required this.reply}) : super(key: key);
+  ReplyTile({Key? key, required this.reply}) : super(key: key);
   final authController = Get.find<AuthController>();
 
   @override
@@ -23,29 +23,29 @@ class ReplyTile extends StatelessWidget {
           // Profile & Name
           Row(
             children: [
-               reply.photo != null
-        ? CircleAvatar(
-            radius: 20,
-            backgroundImage: NetworkImage(reply.photo!),
-          )
-        : const CircleAvatar(
-            radius: 20,
-            child: Icon(Icons.person, color: Colors.white),
-            backgroundColor: Colors.grey,
-          ),
+              reply.photo != null
+                  ? CircleAvatar(
+                    radius: 20,
+                    backgroundImage: NetworkImage(reply.photo!),
+                  )
+                  : const CircleAvatar(
+                    radius: 20,
+                    child: Icon(Icons.person, color: Colors.white),
+                    backgroundColor: Colors.grey,
+                  ),
               SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${reply.firstName}${reply.lastName ?? ''}',
+                    '${reply.firstName} ${reply.lastName ?? ''}',
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
                     ),
                   ),
-                   Text(
+                  Text(
                     authController.isGuest ? "KOTA Guest" : "KOTA Member",
                     style: TextStyle(
                       fontSize: 12,
@@ -82,7 +82,10 @@ class ReplyTile extends StatelessWidget {
               SizedBox(width: 20),
               GestureDetector(
                 onTap: () {
-                  _forumController.startReply(id: reply.commentId ?? '');
+                  _forumController.startReply(
+                    id: reply.commentId ?? '',
+                    name: '${reply.firstName} ${reply.lastName ?? ''}',
+                  );
                 },
                 child: Row(
                   children: [
@@ -105,7 +108,7 @@ class ReplyTile extends StatelessWidget {
 class CommentTile extends StatelessWidget {
   final Comments comment;
 
-   CommentTile({Key? key, required this.comment}) : super(key: key);
+  CommentTile({Key? key, required this.comment}) : super(key: key);
   final authController = Get.find<AuthController>();
   @override
   Widget build(BuildContext context) {
@@ -118,29 +121,29 @@ class CommentTile extends StatelessWidget {
           // Profile & Name
           Row(
             children: [
-               comment.photo != null
-        ? CircleAvatar(
-            radius: 20,
-            backgroundImage: NetworkImage(comment.photo!),
-          )
-        : const CircleAvatar(
-            radius: 20,
-            child: Icon(Icons.person, color: Colors.white),
-            backgroundColor: Colors.grey,
-          ),
+              comment.photo != null
+                  ? CircleAvatar(
+                    radius: 20,
+                    backgroundImage: NetworkImage(comment.photo!),
+                  )
+                  : const CircleAvatar(
+                    radius: 20,
+                    child: Icon(Icons.person, color: Colors.white),
+                    backgroundColor: Colors.grey,
+                  ),
               SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${comment.firstName}${comment.lastName ?? ''}',
+                    '${comment.firstName} ${comment.lastName ?? ''}',
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
                     ),
                   ),
-                   Text(
+                  Text(
                     authController.isGuest ? "KOTA Guest" : "KOTA Member",
                     style: TextStyle(
                       fontSize: 12,
@@ -178,7 +181,10 @@ class CommentTile extends StatelessWidget {
 
               GestureDetector(
                 onTap: () {
-                  _forumController.startReply(id: comment.id ?? '');
+                  _forumController.startReply(
+                    id: comment.id ?? '',
+                    name: '${comment.firstName} ${comment.lastName ?? ''}',
+                  );
                 },
                 child: Row(
                   children: [

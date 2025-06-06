@@ -143,18 +143,15 @@ class _ForumPostBodyState extends State<ForumPostBody> {
     const SizedBox(width: 4),
     Obx(() => Text(widget.likes.value, style: const TextStyle(fontSize: 14))),
     const SizedBox(width: 20),
-    GestureDetector(
-      onTap: controller.cancelReply,
-      child: Row(
-        children: [
-          const Icon(Icons.comment, size: 20, color: Colors.grey),
-          const SizedBox(width: 4),
-          Obx(() => Text(
-            '${widget.comments} Comments',
-            style: const TextStyle(fontSize: 14),
-          )),
-        ],
-      ),
+    Row(
+      children: [
+        const Icon(Icons.comment, size: 20, color: Colors.grey),
+        const SizedBox(width: 4),
+        Obx(() => Text(
+          '${widget.comments} Comments',
+          style: const TextStyle(fontSize: 14),
+        )),
+      ],
     ),
     const SizedBox(width: 20),
     GestureDetector(
