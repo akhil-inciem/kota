@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/material.dart';
@@ -119,42 +120,22 @@ class _ForumListState extends State<ForumList> {
                                           color: Colors.grey,
                                         )
                                         : ClipOval(
-                                          child: Image.network(
-                                            item.photo!,
-                                            width: 50,
-                                            height: 50,
-                                            fit: BoxFit.cover,
-                                            loadingBuilder: (
-                                              context,
-                                              child,
-                                              loadingProgress,
-                                            ) {
-                                              if (loadingProgress == null)
-                                                return child;
-                                              return Center(
-                                                child: SizedBox(
-                                                  width: 20,
-                                                  height: 20,
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                        strokeWidth: 2,
-                                                      ),
-                                                ),
-                                              );
-                                            },
-                                            errorBuilder: (
-                                              context,
-                                              error,
-                                              stackTrace,
-                                            ) {
-                                              return Icon(
-                                                Icons.error,
-                                                size: 30,
-                                                color: Colors.red,
-                                              );
-                                            },
-                                          ),
-                                        ),
+  child: CachedNetworkImage(
+    imageUrl: item.photo!,
+    width: 50,
+    height: 50,
+    fit: BoxFit.cover,
+    placeholder: (context, url) => const Center(
+      child: SizedBox(
+        width: 20,
+        height: 20,
+        child: CircularProgressIndicator(strokeWidth: 2),
+      ),
+    ),
+    errorWidget: (context, url, error) => const Icon(Icons.error, size: 30, color: Colors.red),
+  ),
+),
+
                               ),
         
                               SizedBox(width: 8),

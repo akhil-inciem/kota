@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kota/model/executive_model.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -15,15 +16,20 @@ class ExecutiveCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Executive Image
-        ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: Image.network(
-            executive.portalImage!,
-            width: double.infinity,
-            height: 18.h,
-            fit: BoxFit.cover,
-          ),
-        ),
+       ClipRRect(
+  borderRadius: BorderRadius.circular(12),
+  child: CachedNetworkImage(
+    imageUrl: executive.portalImage!,
+    width: double.infinity,
+    height: 18.h,
+    fit: BoxFit.cover,
+    placeholder: (context, url) => Container(
+      color: Colors.grey[300],
+    ),
+    errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.red),
+  ),
+),
+
 
         // Info Section
         Container(

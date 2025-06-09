@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kota/controller/auth_controller.dart';
@@ -26,7 +27,24 @@ class ReplyTile extends StatelessWidget {
               reply.photo != null
                   ? CircleAvatar(
                     radius: 20,
-                    backgroundImage: NetworkImage(reply.photo!),
+                    backgroundColor: Colors.grey.shade300,
+                    child: ClipOval(
+                      child: CachedNetworkImage(
+                        imageUrl: reply.photo!,
+                        width: 40, // 2 * radius
+                        height: 40,
+                        fit: BoxFit.cover,
+                        placeholder:
+                            (context, url) => const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                        errorWidget:
+                            (context, url, error) =>
+                                const Icon(Icons.error, color: Colors.red),
+                      ),
+                    ),
                   )
                   : const CircleAvatar(
                     radius: 20,
@@ -124,7 +142,24 @@ class CommentTile extends StatelessWidget {
               comment.photo != null
                   ? CircleAvatar(
                     radius: 20,
-                    backgroundImage: NetworkImage(comment.photo!),
+                    backgroundColor: Colors.grey.shade300,
+                    child: ClipOval(
+                      child: CachedNetworkImage(
+                        imageUrl: comment.photo!,
+                        width: 40, // 2 * radius
+                        height: 40,
+                        fit: BoxFit.cover,
+                        placeholder:
+                            (context, url) => const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                        errorWidget:
+                            (context, url, error) =>
+                                const Icon(Icons.error, color: Colors.red),
+                      ),
+                    ),
                   )
                   : const CircleAvatar(
                     radius: 20,

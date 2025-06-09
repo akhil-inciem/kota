@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kota/controller/home_controller.dart';
@@ -37,9 +38,7 @@ class AdvertisementList extends StatelessWidget {
             itemCount: advertisements.length,
             itemBuilder: (context, index) {
               final ad = advertisements[index];
-              return AdvertisementCard(
-                imageUrl: ad.advtImage ?? '',
-              );
+              return AdvertisementCard(imageUrl: ad.advtImage ?? '');
             },
           ),
         ),
@@ -47,7 +46,6 @@ class AdvertisementList extends StatelessWidget {
     });
   }
 }
-
 
 class AdvertisementCard extends StatelessWidget {
   final String imageUrl;
@@ -64,14 +62,20 @@ class AdvertisementCard extends StatelessWidget {
           width: 85.w,
           height: 16.5.h,
           color: Colors.grey[300],
-          child: imageUrl.isNotEmpty
-              ? Image.network(
-                  imageUrl,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: double.infinity,
-                )
-              : const Center(child: Text("No Image")),
+          child:
+              imageUrl.isNotEmpty
+                  ? CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: double.infinity,
+                    placeholder:
+                        (context, url) => Container(color: Colors.grey[300]),
+                    errorWidget:
+                        (context, url, error) =>
+                            const Icon(Icons.error, color: Colors.red),
+                  )
+                  : const Center(child: Text("No Image")),
         ),
       ),
     );
@@ -88,13 +92,9 @@ class ShimmerCard extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
         child: Shimmer.fromColors(
-         baseColor: Colors.grey.withOpacity(0.15),
-        highlightColor: Colors.grey.withOpacity(0.25),
-          child: Container(
-            width: 90.w,
-            height: 16.5.h,
-            color: Colors.white,
-          ),
+          baseColor: Colors.grey.withOpacity(0.15),
+          highlightColor: Colors.grey.withOpacity(0.25),
+          child: Container(width: 90.w, height: 16.5.h, color: Colors.white),
         ),
       ),
     );

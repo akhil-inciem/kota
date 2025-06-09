@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:get/get.dart';
@@ -94,7 +95,6 @@ class DrawerHeaderWidget extends StatelessWidget {
   DrawerHeaderWidget({Key? key}) : super(key: key);
 
   final userController = Get.find<UserController>();
-
   final authController = Get.find<AuthController>();
 
   @override
@@ -147,71 +147,65 @@ class DrawerHeaderWidget extends StatelessWidget {
 
           // Avatar and user info
           Positioned(
-  bottom: 25,
-  left: 30,
-  child: Obx(() {
-    final user = userController.user.value;
+            bottom: 25,
+            left: 30,
+            child: Obx(() {
+              final user = userController.user.value;
 
-    // If user is still null after loading, show nothing
-    if (user == null) {
-      return const SizedBox(height: 60, width: 60);
-    }
+              if (user == null) {
+                return const SizedBox(height: 60, width: 60);
+              }
 
-    final imageUrl = user.photo?.isNotEmpty == true
-        ? user.photo!
-        : 'https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName ?? ''}&background=random&color=fff';
+              final imageUrl = user.photo?.isNotEmpty == true
+                  ? user.photo!
+                  : 'https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName ?? ''}&background=random&color=fff';
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        SizedBox(
-          height: 60,
-          width: 60,
-          child: ClipOval(
-            child: Image.network(
-              imageUrl,
-              fit: BoxFit.cover,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Shimmer.fromColors(
-                  baseColor: Colors.grey.shade300,
-                  highlightColor: Colors.grey.shade100,
-                  child: Container(
-                    color: Colors.grey,
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 60,
+                    width: 60,
+                    child: ClipOval(
+                      child: CachedNetworkImage(
+                        imageUrl: imageUrl,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Shimmer.fromColors(
+                          baseColor: Colors.grey.shade300,
+                          highlightColor: Colors.grey.shade100,
+                          child: Container(color: Colors.grey),
+                        ),
+                        errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.red),
+                      ),
+                    ),
                   ),
-                );
-              },
-              errorBuilder: (context, error, stackTrace) => const Icon(Icons.error, color: Colors.red),
-            ),
+                  const SizedBox(width: 15),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${user.firstName}${user.lastName != null && user.lastName!.isNotEmpty ? ' ${user.lastName}' : ''}',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        authController.isGuest ? "KOTA Guest" : "KOTA Member",
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w300,
+                          color: Colors.white70,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            }),
           ),
-        ),
-        const SizedBox(width: 15),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '${user.firstName}${user.lastName != null && user.lastName!.isNotEmpty ? ' ${user.lastName}' : ''}',
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              authController.isGuest ? "KOTA Guest" : "KOTA Member",
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w300,
-                color: Colors.white70,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }),
-),
         ],
       ),
     );

@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:html/parser.dart' as html_parser;
@@ -44,7 +45,6 @@ class _FavoritesDetailScreenState extends State<FavoritesDetailScreen> {
     _isSharing = false;
   }
 
-
   String _htmlToPlainText(String htmlString) {
     final document = html_parser.parse(htmlString);
     return document.body?.text.trim() ?? '';
@@ -60,21 +60,28 @@ class _FavoritesDetailScreenState extends State<FavoritesDetailScreen> {
         body: Stack(
           children: [
             // Background Image
-            Container(
-              height: 40.h, // Adjust as needed
+            SizedBox(
+              height: 40.h,
               width: double.infinity,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image:
-                      imageUrl != null
-                          ? NetworkImage(imageUrl)
-                          : const AssetImage('assets/images/Group 315.png')
-                              as ImageProvider,
-                  fit: BoxFit.cover,
-                ),
-              ),
+              child:
+                  imageUrl != null
+                      ? CachedNetworkImage(
+                        imageUrl: imageUrl,
+                        fit: BoxFit.cover,
+                        placeholder:
+                            (context, url) =>
+                                Container(color: Colors.grey[300]),
+                        errorWidget:
+                            (context, url, error) => Image.asset(
+                              'assets/images/Group 315.png',
+                              fit: BoxFit.cover,
+                            ),
+                      )
+                      : Image.asset(
+                        'assets/images/Group 315.png',
+                        fit: BoxFit.cover,
+                      ),
             ),
-
             // Draggable Scrollable Sheet
             NotificationListener<DraggableScrollableNotification>(
               onNotification: (notification) {
@@ -273,7 +280,7 @@ class _FavoritesDetailScreenState extends State<FavoritesDetailScreen> {
 
   Widget _description() {
     return Text(
-     _htmlToPlainText(widget.item['description']),
+      _htmlToPlainText(widget.item['description']),
       style: TextStyle(fontSize: 15.sp, color: Colors.black54),
     );
   }

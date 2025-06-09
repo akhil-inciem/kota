@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -150,20 +151,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ],
             ),
             child: CircleAvatar(
-              radius: 8.h,
-              backgroundImage:
-                  selectedImage != null
-                      ? FileImage(selectedImage)
-                      : (user.photo != null && user.photo!.isNotEmpty
-                          ? NetworkImage(user.photo!) as ImageProvider
-                          : null),
-              backgroundColor: Colors.grey[200],
-              child:
-                  selectedImage == null &&
-                          (user.photo == null || user.photo!.isEmpty)
-                      ? Icon(Icons.person, size: 8.h, color: Colors.grey[400])
-                      : null,
-            ),
+  radius: 8.h,
+  backgroundImage: selectedImage != null
+      ? FileImage(selectedImage)
+      : (user.photo != null && user.photo!.isNotEmpty
+          ? CachedNetworkImageProvider(user.photo!) as ImageProvider
+          : null),
+  backgroundColor: Colors.grey[200],
+  child: selectedImage == null &&
+          (user.photo == null || user.photo!.isEmpty)
+      ? Icon(Icons.person, size: 8.h, color: Colors.grey[400])
+      : null,
+),
+
           ),
           Positioned(
             bottom: 0,

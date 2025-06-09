@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kota/constants/colors.dart';
@@ -104,13 +105,18 @@ class _ForumPostBodyState extends State<ForumPostBody> {
               },
               itemBuilder: (_, index) {
                 return ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.network(
-                    widget.imageUrls[index],
-                    width: double.infinity,
-                    fit: BoxFit.fitWidth,
-                  ),
-                );
+  borderRadius: BorderRadius.circular(12),
+  child: CachedNetworkImage(
+    imageUrl: widget.imageUrls[index],
+    width: double.infinity,
+    fit: BoxFit.fitWidth,
+    placeholder: (context, url) => Container(
+      height: 200, // adjust if needed
+      color: Colors.grey[300],
+    ),
+    errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.red),
+  ),
+);
               },
             ),
           ),

@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -70,18 +71,18 @@ Widget build(BuildContext context) {
             Stack(
               children: [
                 Container(
-                  height: 40.h,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: imageUrl != null
-                          ? NetworkImage(imageUrl)
-                          : const AssetImage('assets/images/Group 315.png')
-                              as ImageProvider,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
+  height: 40.h,
+  width: double.infinity,
+  decoration: BoxDecoration(
+    image: DecorationImage(
+      image: imageUrl != null && imageUrl.isNotEmpty
+          ? CachedNetworkImageProvider(imageUrl)
+          : const AssetImage('assets/images/Group 315.png'),
+      fit: BoxFit.cover,
+    ),
+  ),
+),
+
                 Container(
                   height: 40.h,
                   width: double.infinity,

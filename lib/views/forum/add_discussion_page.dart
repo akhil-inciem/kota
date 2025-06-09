@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -93,13 +94,22 @@ Widget build(BuildContext context) {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               CircleAvatar(
-                                radius: 30,
-                                backgroundImage: NetworkImage(
-                                  user.photo?.isNotEmpty == true
-                                      ? user.photo!
-                                      : 'https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=random&color=fff',
-                                ),
-                              ),
+  radius: 30,
+  backgroundColor: Colors.grey[300], // optional fallback background
+  child: ClipOval(
+    child: CachedNetworkImage(
+      imageUrl: user.photo?.isNotEmpty == true
+          ? user.photo!
+          : 'https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=random&color=fff',
+      fit: BoxFit.cover,
+      width: 60, // diameter (2 * radius)
+      height: 60,
+      placeholder: (context, url) => const CircularProgressIndicator(strokeWidth: 2),
+      errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.red),
+    ),
+  ),
+),
+
                               const SizedBox(width: 15),
                               Text(
                                 '${user.firstName} ${user.lastName ?? ''}',
