@@ -8,7 +8,7 @@ import 'package:kota/views/drawer/widgets/labelled_dropdown.dart';
 import 'package:kota/views/login/widgets/custom_button.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class SearchFormWidget extends StatefulWidget {
+class SearchFormWidget extends StatelessWidget {
   final FindController controller;
   final VoidCallback onSearch;
 
@@ -17,12 +17,6 @@ class SearchFormWidget extends StatefulWidget {
     required this.controller,
     required this.onSearch,
   });
-
-  @override
-  State<SearchFormWidget> createState() => _SearchFormWidgetState();
-}
-
-class _SearchFormWidgetState extends State<SearchFormWidget> {
 
   @override
   Widget build(BuildContext context) {
@@ -34,27 +28,27 @@ class _SearchFormWidgetState extends State<SearchFormWidget> {
           LabelledDropdown<District>(
             label: 'District',
             hintText: "Select a district",
-            items: widget.controller.districts,
-            selectedValue: widget.controller.selectedDistrict.value,
+            items: controller.districts,
+            selectedValue: controller.selectedDistrict.value,
             itemAsString: (district) => district.district ?? '',
-            onChanged: (val) => widget.controller.selectedDistrict.value = val,
+            onChanged: (val) => controller.selectedDistrict.value = val,
           ),
           SizedBox(height: 2.h),
           LabelledDropdown<Gender>(
             label: 'Gender',
             hintText: "Select a gender",
-            items: widget.controller.genders,
-            selectedValue: widget.controller.selectedGender.value,
-            onChanged: (val) => widget.controller.selectedGender.value = val,
+            items: controller.genders,
+            selectedValue: controller.selectedGender.value,
+            onChanged: (val) => controller.selectedGender.value = val,
             itemAsString: (gender) => gender.gender ?? '',
           ),
           SizedBox(height: 2.h),
           LabelledDropdown<PracticeArea>(
             label: 'Area of practice',
             hintText: "Select a practice",
-            items: widget.controller.practiceAreas,
-            selectedValue: widget.controller.selectedPracticeArea.value,
-            onChanged: (val) => widget.controller.selectedPracticeArea.value = val,
+            items: controller.practiceAreas,
+            selectedValue: controller.selectedPracticeArea.value,
+            onChanged: (val) => controller.selectedPracticeArea.value = val,
             itemAsString: (practiceArea) => practiceArea.specialization ?? '',
           ),
           SizedBox(height: 4.h),
@@ -62,7 +56,7 @@ class _SearchFormWidgetState extends State<SearchFormWidget> {
             text: "Search",
             backgroundColor: AppColors.primaryButton,
             textColor: Colors.white,
-            onPressed: widget.onSearch,
+            onPressed: onSearch,
           ),
           SizedBox(height: 3.h),
           ExpansionTileGroup()

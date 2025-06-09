@@ -29,10 +29,6 @@ class HomeController extends GetxController {
   final TextEditingController searchController = TextEditingController();
   RxList<Advertisements> advertisements = <Advertisements>[].obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
   void toggleBookmark(String id) async {
     final currentStatus = bookmarkedStatus[id] ?? false;

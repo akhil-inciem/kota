@@ -90,22 +90,12 @@ class DrawerPage extends StatelessWidget {
   }
 }
 
-class DrawerHeaderWidget extends StatefulWidget {
+class DrawerHeaderWidget extends StatelessWidget {
   DrawerHeaderWidget({Key? key}) : super(key: key);
 
-  @override
-  State<DrawerHeaderWidget> createState() => _DrawerHeaderWidgetState();
-}
-
-class _DrawerHeaderWidgetState extends State<DrawerHeaderWidget> {
   final userController = Get.find<UserController>();
 
   final authController = Get.find<AuthController>();
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

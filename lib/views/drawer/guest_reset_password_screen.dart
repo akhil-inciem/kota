@@ -45,7 +45,6 @@ class _GuestResetPasswordScreenState extends State<GuestResetPasswordScreen> {
 
   if (success) {
     CustomSnackbars.success('Password changed successfully', 'Success');
-
     _oldPasswordController.clear();
     _newPasswordController.clear();
     _confirmPasswordController.clear();
@@ -90,7 +89,6 @@ class _GuestResetPasswordScreenState extends State<GuestResetPasswordScreen> {
                   ),
 
                   SizedBox(height: 3.h),
-
                   // New Password Field
                   LabelledTextField(
                     controller: _newPasswordController,
@@ -107,7 +105,6 @@ class _GuestResetPasswordScreenState extends State<GuestResetPasswordScreen> {
                       return null;
                     },
                   ),
-
                   SizedBox(height: 2.h),
 
                   // Confirm New Password Field

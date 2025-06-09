@@ -50,7 +50,13 @@ class DetailLoadingPlaceholder extends StatelessWidget {
                       SizedBox(height: 2.h),
 
                       // Author/meta
-                      _shimmerBox(height: 3.h, width: 40.w),
+                      Row(
+                        children: [
+                          CircleAvatar(),
+                          SizedBox(width: 4.w,),
+                          _shimmerBox(height: 3.h, width: 40.w),
+                        ],
+                      ),
                       SizedBox(height: 2.5.h),
 
                       // Description lines

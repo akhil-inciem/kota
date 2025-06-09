@@ -65,7 +65,6 @@ final filteredClinicList = <Clinic>[].obs;
       ...practiceAreaList,
     ];
 
-    // ✅ Mark data as loaded
     isDropdownDataLoaded.value = true;
   } catch (e) {
     print("Error fetching dropdown data: $e");

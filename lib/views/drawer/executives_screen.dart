@@ -5,20 +5,10 @@ import 'package:kota/controller/drawer_controller.dart';
 import 'package:kota/views/drawer/widgets/executive_card.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class ExecutivePage extends StatefulWidget {
-  const ExecutivePage({super.key});
+class ExecutivePage extends StatelessWidget {
+   ExecutivePage({super.key});
 
-  @override
-  State<ExecutivePage> createState() => _ExecutivePageState();
-}
-
-class _ExecutivePageState extends State<ExecutivePage> {
   final SideMenuController menuController = Get.find<SideMenuController>();
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

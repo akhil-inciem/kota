@@ -7,26 +7,16 @@ import 'package:kota/controller/drawer_controller.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:html/parser.dart' show parse;
 
-class MissionPage extends StatefulWidget {
-   const MissionPage({super.key});
+class MissionPage extends StatelessWidget {
+    MissionPage({super.key});
 
-  @override
-  State<MissionPage> createState() => _MissionPageState();
-}
-
-class _MissionPageState extends State<MissionPage> {
   final SideMenuController controller = Get.find<SideMenuController>();
-  
+
   String cleanHtml(String htmlString) {
   final document = parse(htmlString);
   final text = document.body?.text.trim() ?? '';
   return text.replaceAll(RegExp(r'\n\s*'), '\n').trim();
 }
-
-@override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

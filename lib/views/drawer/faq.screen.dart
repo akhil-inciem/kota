@@ -6,23 +6,12 @@ import 'package:kota/controller/drawer_controller.dart';
 import 'package:kota/views/home/widgets/list_shimmer.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class FaqScreen extends StatefulWidget {
+class FaqScreen extends StatelessWidget {
 
   FaqScreen({super.key});
 
-  @override
-  State<FaqScreen> createState() => _FaqScreenState();
-}
-
-class _FaqScreenState extends State<FaqScreen> {
   final SideMenuController controller = Get.find<SideMenuController>();
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  
   @override
   Widget build(BuildContext context) {
     return SafeArea(

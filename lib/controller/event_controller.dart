@@ -20,10 +20,6 @@ class EventController extends GetxController {
   final EventsApiService _eventsApiService = EventsApiService();
   final TextEditingController searchController = TextEditingController();
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
   Future<void> fetchEventItems() async {
     isLoading.value = true;
