@@ -174,7 +174,7 @@ class _GuestResetPasswordScreenState extends State<GuestResetPasswordScreen> {
         SizedBox(width: 4.w),
         Text(
           "Reset Password",
-          style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.w600),
         ),
       ],
     );

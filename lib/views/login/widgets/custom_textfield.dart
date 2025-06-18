@@ -10,7 +10,7 @@ class CustomTextField extends StatelessWidget {
   final Color? fillColor;
   final bool isPassword;
   final TextEditingController? controller;
-  final String? Function(String?)? validator; 
+  final String? Function(String?)? validator;
 
   const CustomTextField({
     Key? key,
@@ -27,40 +27,51 @@ class CustomTextField extends StatelessWidget {
     final RxBool _obscureText = true.obs;
     if (!isPassword) _obscureText.value = false;
 
-    return Obx(() => TextFormField(
-          controller: controller,
-          obscureText: _obscureText.value,
-          validator: validator,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          decoration: InputDecoration(
-            hintText: hintText,
-            hintStyle: const TextStyle(fontSize: 14, color: Color(0xFF839099)),
-            filled: true,
-            isDense: true,
-            fillColor:fillColor ?? AppColors.primaryBackground,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15),
-              borderSide: BorderSide.none,
+    return Obx(
+      () => TextFormField(
+        controller: controller,
+        obscureText: _obscureText.value,
+        validator: validator,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: const TextStyle(fontSize: 14, color: Color(0xFF839099)),
+          filled: true,
+          isDense: true,
+          fillColor: fillColor ?? AppColors.primaryBackground,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide.none,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide.none,
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(
+              color: AppColors.primaryButton.withOpacity(0.4),
+              width: 1.5,
             ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15),
-              borderSide: BorderSide.none,
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15),
-              borderSide: BorderSide.none,
-            ),
-            contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
-            suffixIcon: isPassword
-                ? IconButton(
+          ),
+          contentPadding: const EdgeInsets.symmetric(
+            vertical: 10.0,
+            horizontal: 12.0,
+          ),
+          suffixIcon:
+              isPassword
+                  ? IconButton(
                     icon: Icon(
-                      _obscureText.value ? Icons.visibility_off : Icons.visibility,
+                      _obscureText.value
+                          ? Icons.visibility_off
+                          : Icons.visibility,
                       color: AppColors.primaryButton,
                     ),
                     onPressed: () => _obscureText.toggle(),
                   )
-                : null,
-          ),
-        ));
+                  : null,
+        ),
+      ),
+    );
   }
 }

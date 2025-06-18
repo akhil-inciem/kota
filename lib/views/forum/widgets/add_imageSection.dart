@@ -32,7 +32,7 @@ class AddImageSection extends StatelessWidget {
         children: [
           Text(
             "Add Image",
-            style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w600),
           ),
           SizedBox(height: 2.h),
           Row(

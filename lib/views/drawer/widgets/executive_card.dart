@@ -12,97 +12,116 @@ class ExecutiveCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Executive Image
-       ClipRRect(
-  borderRadius: BorderRadius.circular(12),
-  child: CachedNetworkImage(
-    imageUrl: executive.portalImage!,
-    width: double.infinity,
-    height: 18.h,
-    fit: BoxFit.cover,
-    placeholder: (context, url) => Container(
-      color: Colors.grey[300],
-    ),
-    errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.red),
-  ),
-),
-
-
-        // Info Section
-        Container(
-          height: 17.h,
-          padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
-          decoration: BoxDecoration(
-            color: AppColors.primaryBackground,
-            borderRadius: BorderRadius.circular(12),
+    return Container(
+      padding: EdgeInsets.all(2.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
+        ],
+      ),
+      child: Row(
+        children: [
+          // Circular Image
+          ClipRRect(
+            borderRadius: BorderRadius.circular(2.w),
+            child: CachedNetworkImage(
+              imageUrl: executive.portalImage ?? '',
+              width: 30.w,
+              height: 35.w,
+              fit: BoxFit.cover,
+              placeholder:
+                  (context, url) => Container(
+                    width: 30.w,
+                    height: 35.w,
+                    color: Colors.grey[300],
+                  ),
+              errorWidget:
+                  (context, url, error) => Icon(Icons.error, color: Colors.red),
+            ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                executive.designation ?? '',
-                style: TextStyle(fontSize: 14.sp, color: Colors.black87),
-              ),
+          SizedBox(width: 4.w),
 
-              /// First name
-              Row(
+          // Info Section
+          Expanded(
+            child: SizedBox(
+              height: 35.w, // Match image height
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Top: Name, Designation, Share
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${executive.firstName ?? ''} ${executive.lastName ?? ''}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 15.sp,
+                              ),
+                            ),
+                            Text(
+                              executive.designation ?? '',
+                              style: TextStyle(
+                                fontStyle: FontStyle.italic,
+                                color: Colors.grey[600],
+                                fontSize: 13.sp,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.share_outlined, size: 18.sp),
+                        onPressed: () {
+                          SharePlus.instance.share(
+                            ShareParams(
+                              title: 'Check this out!',
+                              uri: Uri.parse(
+                                "https://dev.kbaiota.org/executive",
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+
+                  // Bottom: Divider, Contact Info
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Divider(thickness: 1, color: Colors.grey[300]),
                       Text(
-                        executive.firstName ?? '',
+                        executive.officialMobile ?? '',
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
                           fontSize: 14.sp,
+                          color: Colors.black87,
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        executive.lastName ?? '',
+                        executive.officialEmail ?? '',
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
                           fontSize: 14.sp,
+                          color: Colors.grey[600],
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
-                  IconButton(
-                    icon: Icon(Icons.share, size: 18.sp),
-                    onPressed: () {
-                      final title = 'Check this out!';
-                      final params = ShareParams(
-                        title: title,
-                        uri: Uri.parse("https://dev.kbaiota.org/executive"),
-                      );
-                      SharePlus.instance.share(
-                        params,
-                      ); // or however you're sharing
-                    },
-                  ),
                 ],
               ),
-              Text(
-                executive.officialMobile ?? '',
-                style: TextStyle(fontSize: 13.sp, color: Colors.black87),
-              ),
-              Text(
-                executive.officialEmail ?? '',
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 13.sp, color: Colors.black54),
-              ),
-            ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

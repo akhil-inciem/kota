@@ -62,7 +62,7 @@ class ProfileHeader extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ],
@@ -79,13 +79,13 @@ class ProfileHeader extends StatelessWidget {
                 Column(
                   children: [
                     CircleAvatar(
-  radius: 30,
-  backgroundImage: CachedNetworkImageProvider(
-    user.photo?.isNotEmpty == true
-        ? user.photo!
-        : 'https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName ?? ''}&background=random&color=fff',
-  ),
-),
+                      radius: 30,
+                      backgroundImage: CachedNetworkImageProvider(
+                        user.photo?.isNotEmpty == true
+                            ? user.photo!
+                            : 'https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName ?? ''}&background=random&color=fff',
+                      ),
+                    ),
 
                     GestureDetector(
                       onTap: () {

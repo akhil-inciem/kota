@@ -12,6 +12,7 @@ class EventController extends GetxController {
   final Rx<DateTime> focusedDate = DateTime.now().obs;
   final RxList<EventsDatum> filteredEventsItems = <EventsDatum>[].obs;
   final Rxn<EventsDatum> selectedEvent = Rxn<EventsDatum>();
+  final RxInt selectedTabIndex = 0.obs;
   final allEvents = <EventsDatum>[].obs;
   RxBool isLoading = false.obs;
   final selectedWeekdayIndex = RxInt(-1);

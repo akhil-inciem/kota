@@ -22,7 +22,7 @@ class LogoutConfirmationDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: const Text(
         "Logout ?",
-        style: TextStyle(fontWeight: FontWeight.bold),
+        style: TextStyle(fontWeight: FontWeight.w600),
       ),
       content: Column(
   mainAxisSize: MainAxisSize.min,

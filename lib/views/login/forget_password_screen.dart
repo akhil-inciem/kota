@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
@@ -69,122 +70,134 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   @override
-Widget build(BuildContext context) {
-  final theme = Theme.of(context);
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
 
-  return SafeArea(
-    child: Scaffold(
-      backgroundColor: AppColors.primaryBackground,
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-            child: Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildAppBar(),
-                          SizedBox(height: 4.h),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: AppColors.primaryBackground,
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            return Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildAppBar(),
+                            SizedBox(height: 20.h),
 
-                          /// Centered Icon
-                          Center(
-                            child: Icon(
-                              Icons.lock_reset_rounded,
-                              size: 11.h,
-                              color: AppColors.primaryButton,
-                            ),
-                          ),
-                          SizedBox(height: 2.h),
-
-                          /// Title
-                          Center(
-                            child: Text(
-                              "Forgot Password",
-                              style: theme.textTheme.headlineSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                            /// SVG Image
+                            Center(
+                              child: Column(
+                                children: [
+                                  SvgPicture.asset(
+                                    'assets/images/forgot_password.svg', // Update this path based on your asset location
+                                    height: 13.h,
+                                  ),
+                                  SizedBox(height: 2.h,),
+                                  Text(
+                                    "Forgot Password",
+                                    style: theme.textTheme.headlineSmall
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.black,
+                                        ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ),
-                          SizedBox(height: 1.2.h),
+                            SizedBox(height: 1.2.h),
 
-                          /// Description
-                          Center(
-                            child: Text(
-                              widget.isGuest
-                                  ? "Enter your email to receive an OTP for password reset."
-                                  : "No worries! Enter your registered email and we'll send you a password reset link.",
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                color: Colors.grey[700],
+                            /// Description
+                            Padding(
+                              padding:  EdgeInsets.symmetric(horizontal: 5.w),
+                              child: Center(
+                                child: Text(
+                                  widget.isGuest
+                                      ? "Enter your email to receive an OTP for password reset."
+                                      : "No worries! Enter your registered email and we'll send you a password reset link.",
+                                  style: theme.textTheme.bodyLarge?.copyWith(
+                                    color: Colors.grey[700],
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
-                              textAlign: TextAlign.center,
                             ),
-                          ),
-                          SizedBox(height: 4.h),
+                            SizedBox(height: 3.h),
 
-                          /// Email Input
-                          LabelledTextField(
-                            fillColor: Colors.white,
-                            hintText: widget.isGuest
-                                ? "Guest email address"
-                                : "Your email address",
-                            controller: emailController,
-                            validator: (value) {
-                              if (value == null ||
-                                  value.isEmpty ||
-                                  !value.contains('@')) {
-                                return "Please enter a valid email";
-                              }
-                              return null;
-                            },
-                          ),
-                          SizedBox(height: 1.h),
-
-                          /// Subtext
-                          Text(
-                            widget.isGuest
-                                ? "Ensure you have access to this email to receive OTP."
-                                : "We'll never share your email with anyone else.",
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: Colors.grey,
+                            /// Email Input
+                            Padding(
+                               padding:  EdgeInsets.symmetric(horizontal: 1.w),
+                              child: LabelledTextField(
+                                fillColor: Colors.white,
+                                hintText:
+                                    widget.isGuest
+                                        ? "Guest email address"
+                                        : "Your email address",
+                                controller: emailController,
+                                validator: (value) {
+                                  if (value == null ||
+                                      value.isEmpty ||
+                                      !value.contains('@')) {
+                                    return "Please enter a valid email";
+                                  }
+                                  return null;
+                                },
+                              ),
                             ),
-                          ),
-                        ],
+                            SizedBox(height: 1.h),
+
+                            /// Subtext
+                            Padding(
+                               padding:  EdgeInsets.symmetric(horizontal: 1.w),
+                              child: Text(
+                                widget.isGuest
+                                    ? "Ensure you have access to this email to receive OTP."
+                                    : "We'll never share your email with anyone else.",
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
 
-                /// Action Button
-                Obx(
-                  () => CustomButton(
-                    text: authController.isLoading.value
-                        ? "Sending..."
-                        : "Send Reset Link",
-                    isEnabled: !authController.isLoading.value,
-                    onPressed: authController.isLoading.value
-                        ? null
-                        : () {
-                            if (_formKey.currentState!.validate()) {
-                              sendForgotPasswordRequest();
-                            }
-                          },
+                  /// Action Button
+                  Obx(
+                    () => CustomButton(
+                      text:
+                          authController.isLoading.value
+                              ? "Sending..."
+                              : "Send Reset Link",
+                      isEnabled: !authController.isLoading.value,
+                      onPressed:
+                          authController.isLoading.value
+                              ? null
+                              : () {
+                                if (_formKey.currentState!.validate()) {
+                                  sendForgotPasswordRequest();
+                                }
+                              },
+                    ),
                   ),
-                ),
-                SizedBox(height: 2.h),
-              ],
-            ),
-          );
-        },
+                  SizedBox(height: 2.h),
+                ],
+              ),
+            );
+          },
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _buildAppBar() {
     return Row(

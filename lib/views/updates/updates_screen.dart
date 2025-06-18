@@ -89,15 +89,15 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
                                   "Notifications",
                                   style: TextStyle(
                                     fontSize: 18,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 SizedBox(width: 2.w),
                                 Container(
-                                  width: 6.w,
-                                  height: 2.5.h,
+                                  width: 8.w,
+                                    height: 2.5.h,
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
+                                    borderRadius: BorderRadius.circular(10),
                                     color: const Color(0xFF0A57C9),
                                   ),
                                   child: Center(
@@ -146,16 +146,16 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
                                                     style: TextStyle(
                                                       fontSize: 16,
                                                       fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.red,
+                                                          FontWeight.w600,
+                                                      color: Color(0xFFE43434),
                                                     ),
                                                   ),
                                                   SizedBox(height: 0.5.h),
                                                   const Text(
                                                     "Your access has ended. Renew now to keep enjoying your benefits.",
                                                     style: TextStyle(
-                                                      fontSize: 13,
-                                                      color: Colors.black87,
+                                                      fontSize: 14,
+                                                      color: Color(0xFF69767E),
                                                     ),
                                                   ),
                                                   SizedBox(height: 0.5.h),
@@ -163,8 +163,7 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
                                                     "Expired on ${DateFormat('dd MMM yyyy').format(item!.membershipExpiryDate!)}",
                                                     style: TextStyle(
                                                       fontSize: 12,
-                                                      color:
-                                                          Colors.grey.shade700,
+                                                      color: Color(0xFF69767E),
                                                     ),
                                                   ),
                                                   SizedBox(height: 1.h),
@@ -175,7 +174,7 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
                                                       TextButton(
                                                         style: TextButton.styleFrom(
                                                           backgroundColor:
-                                                              Colors.red,
+                                                              Color(0xFFDD3D3D),
                                                           padding:
                                                               EdgeInsets.symmetric(
                                                                 horizontal: 16,
@@ -206,8 +205,7 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
                                             ),
 
                                           // Now check for notifications
-                                          if (filteredTodayList.isEmpty &&
-                                              filteredOlderList.isEmpty)
+                                          if (filteredTodayList.isEmpty && filteredOlderList.isEmpty && (!isExpired || isGuest))
                                             Center(
                                               child: Padding(
                                                 padding: EdgeInsets.only(
@@ -288,7 +286,7 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
           title,
           style: const TextStyle(
             color: Color(0xFF839099),
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),

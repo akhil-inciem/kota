@@ -51,7 +51,7 @@ class CustomExpansionTile extends StatelessWidget {
                           Text(
                             option.heading,
                             style: TextStyle(
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                               fontSize: 14,
                             ),
                           ),

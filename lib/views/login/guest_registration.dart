@@ -238,7 +238,7 @@ class _GuestRegistrationScreenState extends State<GuestRegistrationScreen>
                                       text: 'Sign In',
                                       style: const TextStyle(
                                         color: Colors.blue,
-                                        fontWeight: FontWeight.bold,
+                                        fontWeight: FontWeight.w600,
                                         fontSize: 12,
                                         decoration: TextDecoration.underline,
                                       ),

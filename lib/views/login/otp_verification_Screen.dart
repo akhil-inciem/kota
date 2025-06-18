@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/auth_controller.dart';
@@ -39,80 +40,101 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final maskedEmail = widget.email.replaceRange(1, widget.email.indexOf('@') - 1, '***');
+    final maskedEmail = widget.email.replaceRange(
+      1,
+      widget.email.indexOf('@') - 1,
+      '***',
+    );
     final theme = Theme.of(context);
 
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: true, // 👈 Important to avoid overflow
         appBar: AppBar(
-  backgroundColor: AppColors.primaryBackground,
-  elevation: 0, // removes the shadow
-  leading: IconButton(
-    icon: Icon(Icons.arrow_back_ios_sharp, color: Colors.black), // 👈 your custom icon
-    onPressed: () => Navigator.of(context).pop(),
-  ),
-)
-,
+          backgroundColor: AppColors.primaryBackground,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios_sharp, color: Colors.black),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
         backgroundColor: AppColors.primaryBackground,
         body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
-          child: Column(
-            children: [
-              Expanded(
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        "OTP Verification",
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20.sp,
-                        ),
-                        textAlign: TextAlign.center,
+          padding:  EdgeInsets.symmetric(horizontal: 6.w,vertical: 1.h),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight:
+                  MediaQuery.of(context).size.height -
+                  kToolbarHeight -
+                  MediaQuery.of(context).padding.top,
+            ),
+            child: IntrinsicHeight(
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SvgPicture.asset(
+                            'assets/images/otp_verification.svg',
+                            height: 13.h,
+                          ),
+                          SizedBox(height: 3.h),
+                          Text(
+                            "OTP Verification",
+                            style: theme.textTheme.headlineSmall?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 19.sp,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            "Enter the 6-digit code sent to\n$maskedEmail",
+                            style: theme.textTheme.bodyLarge?.copyWith(
+                              color: Colors.grey[700],
+                              fontSize: 16.sp,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 4.h),
+                          PinCodeTextField(
+                            cursorColor: AppColors.primaryButton,
+                            appContext: context,
+                            length: 6,
+                            onChanged: (value) => otpCode = value,
+                            keyboardType: TextInputType.number,
+                            autoFocus: true,
+                            pinTheme: PinTheme(
+                              shape: PinCodeFieldShape.box,
+                              borderRadius: BorderRadius.circular(2.w),
+                              fieldHeight: 6.h,
+                              fieldWidth: 11.w,
+                              activeColor: AppColors.primaryButton,
+                              inactiveColor: Colors.grey.shade300,
+                              selectedColor: AppColors.primaryButton,
+                              borderWidth: 1.2,
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(height: 1.5.h),
-                      Text(
-                        "Enter the 6-digit code sent to\n$maskedEmail",
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey[700],
-                          fontSize: 15.sp,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: 4.h),
-                      PinCodeTextField( 
-                        cursorColor: AppColors.primaryButton,
-                        appContext: context,
-                        length: 6,
-                        onChanged: (value) => otpCode = value,
-                        keyboardType: TextInputType.number,
-                        autoFocus: true,
-                        pinTheme: PinTheme(
-                          activeColor: AppColors.primaryButton,
-                          inactiveColor: Colors.grey,
-                          selectedColor: AppColors.primaryButton,
-                          shape: PinCodeFieldShape.box,
-                          borderRadius: BorderRadius.circular(2.w),
-                          fieldHeight: 6.h,
-                          fieldWidth: 11.w,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                  Obx(
+                    () => CustomButton(
+                      text:
+                          authController.isLoading.value
+                              ? "Verifying..."
+                              : "Verify OTP",
+                      isEnabled: !authController.isLoading.value,
+                      onPressed:
+                          authController.isLoading.value ? null : verifyOtp,
+                    ),
+                  ),
+                  SizedBox(height: 2.h),
+                ],
               ),
-        
-              /// Bottom Button
-              Obx(() => CustomButton(
-                    text: authController.isLoading.value
-                        ? "Verifying..."
-                        : "Verify OTP",
-                    isEnabled: !authController.isLoading.value,
-                    onPressed: authController.isLoading.value ? null : verifyOtp,
-                  )),
-              SizedBox(height: 2.h),
-            ],
+            ),
           ),
         ),
       ),

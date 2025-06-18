@@ -55,7 +55,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 18.sp,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

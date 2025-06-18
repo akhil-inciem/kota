@@ -55,54 +55,106 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     MediaQuery.of(context).size.height -
                     MediaQuery.of(context).padding.top,
               ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 6.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(height: 2.h),
-                    _buildAppBar(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 2.h),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 6.w),
+                    child: _buildAppBar(),
+                  ),
 
-                    if (user == null) ...[
-                      SizedBox(height: 4.h),
-                      const Center(
-                        child: Text(
-                          'Failed to load user data',
-                          style: TextStyle(fontSize: 16, color: Colors.grey),
-                        ),
+                  if (user == null) ...[
+                    SizedBox(height: 4.h),
+                    const Center(
+                      child: Text(
+                        'Failed to load user data',
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
                       ),
-                    ] else ...[
-                      SizedBox(height: 4.h),
-                      authController.isGuest
-                          ? SizedBox()
-                          : _buildProfilePictureSection(user),
-                      SizedBox(height: 4.h),
-                      _buildFormSection(userController),
-                      SizedBox(height: 4.h),
-                      Obx(
-                        () => CustomButton(
-                          text:
-                              userController.isLoading.value
-                                  ? "Updating..."
-                                  : "Update",
-                          isEnabled:
-                              userController.isChanged.value &&
-                              !userController.isLoading.value,
-                          onPressed:
-                              (userController.isChanged.value &&
-                                      !userController.isLoading.value)
-                                  ? () {
-                                    FocusScope.of(context).unfocus();
-                                    userController.updateUserProfile();
-                                  }
-                                  : null,
-                        ),
-                      ),
+                    ),
+                  ] else ...[
+                    SizedBox(
+                      height: 4.h,
+                    ), // Increased top space from AppBar to profile image
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        return Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            // White rounded container that stretches
+                            Container(
+                              width: double.infinity,
+                              constraints: BoxConstraints(
+                                minHeight:
+                                    MediaQuery.of(context).size.height * 0.85,
+                              ),
+                              margin: EdgeInsets.only(top: 8.h),
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(24),
+                                  topRight: Radius.circular(24),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 6.w,
+                                  vertical: 4.h,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      height: 6.h,
+                                    ), // space under overlapping image
+                                    _buildFormSection(userController),
+                                    SizedBox(height: 8.h),
+                                    Obx(
+                                      () => CustomButton(
+                                        text:
+                                            userController.isLoading.value
+                                                ? "Updating..."
+                                                : "Update",
+                                        isEnabled:
+                                            userController.isChanged.value &&
+                                            !userController.isLoading.value,
+                                        onPressed:
+                                            (userController.isChanged.value &&
+                                                    !userController
+                                                        .isLoading
+                                                        .value)
+                                                ? () {
+                                                  FocusScope.of(
+                                                    context,
+                                                  ).unfocus();
+                                                  userController
+                                                      .updateUserProfile();
+                                                }
+                                                : null,
+                                      ),
+                                    ),
+                                    SizedBox(height: 3.h),
+                                  ],
+                                ),
+                              ),
+                            ),
 
-                      SizedBox(height: 3.h),
-                    ],
+                            // Overlapping Profile Picture
+                            if (!authController.isGuest)
+                              Positioned(
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                child: Center(
+                                  child: _buildProfilePictureSection(user),
+                                ),
+                              ),
+                          ],
+                        );
+                      },
+                    ),
                   ],
-                ),
+                ],
               ),
             ),
           );
@@ -128,7 +180,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         SizedBox(width: 4.w),
         Text(
           "Edit profile",
-          style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.w600),
         ),
       ],
     );
@@ -151,19 +203,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ],
             ),
             child: CircleAvatar(
-  radius: 8.h,
-  backgroundImage: selectedImage != null
-      ? FileImage(selectedImage)
-      : (user.photo != null && user.photo!.isNotEmpty
-          ? CachedNetworkImageProvider(user.photo!) as ImageProvider
-          : null),
-  backgroundColor: Colors.grey[200],
-  child: selectedImage == null &&
-          (user.photo == null || user.photo!.isEmpty)
-      ? Icon(Icons.person, size: 8.h, color: Colors.grey[400])
-      : null,
-),
-
+              radius: 8.h,
+              backgroundImage:
+                  selectedImage != null
+                      ? FileImage(selectedImage)
+                      : (user.photo != null && user.photo!.isNotEmpty
+                          ? CachedNetworkImageProvider(user.photo!)
+                              as ImageProvider
+                          : null),
+              backgroundColor: Colors.grey[200],
+              child:
+                  selectedImage == null &&
+                          (user.photo == null || user.photo!.isEmpty)
+                      ? Icon(Icons.person, size: 8.h, color: Colors.grey[400])
+                      : null,
+            ),
           ),
           Positioned(
             bottom: 0,
@@ -202,19 +256,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Widget _buildFormSection(UserController userController) {
     final isGuest = authController.isGuest;
-    return Container(
-      padding: EdgeInsets.all(6.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 20,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 2.w),
       child: Column(
         children: [
           LabelledTextField(

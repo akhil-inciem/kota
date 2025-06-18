@@ -104,7 +104,7 @@ class _TopBarState extends State<TopBar> {
                                     widget.title ?? _getTitle(currentIndex),
                                     style: TextStyle(
                                       fontSize: 16.sp,
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w600,
                                     ),
                                     maxLines: 1,
                                   ),

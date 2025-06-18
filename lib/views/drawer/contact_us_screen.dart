@@ -53,7 +53,7 @@ class ContactUsScreen extends StatelessWidget {
               // Intro Text
               Text(
                 'Need assistance? Reach out to our experts.',
-                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600),
               ),
               SizedBox(height: 3.h),
               // Main Contact Info
@@ -134,7 +134,7 @@ class ContactUsScreen extends StatelessWidget {
               SizedBox(height: 3.h),
               Text(
                 "Executive Contacts",
-                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
               ),
               SizedBox(height: 2.h),
               // List of Contacts
@@ -175,7 +175,7 @@ class ContactUsScreen extends StatelessWidget {
                                   contact['name']!,
                                   style: TextStyle(
                                     fontSize: 16.sp,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 SizedBox(height: 0.5.h),
@@ -228,7 +228,7 @@ class ContactUsScreen extends StatelessWidget {
         SizedBox(width: 4.w),
         Text(
           "Contact Us",
-          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600),
         ),
       ],
     );

@@ -165,7 +165,7 @@ class _FavoriteListState extends State<FavoriteList> {
                                   maxLines: 2,
                                   style: const TextStyle(
                                     fontSize: 14,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 SizedBox(height: 1.h),

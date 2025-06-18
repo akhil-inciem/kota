@@ -41,7 +41,7 @@ class FaqScreen extends StatelessWidget {
                           maxLines: 2,
                           style: TextStyle(
                             fontSize: 20.sp,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
@@ -163,7 +163,7 @@ class FaqScreen extends StatelessWidget {
         SizedBox(width: 4.w),
         Text(
           "FAQ",
-          style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.w600),
         ),
       ],
     );

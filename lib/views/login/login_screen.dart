@@ -201,7 +201,7 @@ class _LoginScreenState extends State<LoginScreen>
                     return null;
                   },
                 ),
-                SizedBox(height: 5.h),
+                SizedBox(height: 4.h),
                 CustomButton(
                   text: 'I Am A Guest User',
                   backgroundColor: Colors.white,
@@ -252,7 +252,7 @@ class _LoginScreenState extends State<LoginScreen>
                           text: 'Register Here',
                           style: TextStyle(
                             color: Colors.blue,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                             fontSize: 12,
                             decoration: TextDecoration.underline,
                           ),

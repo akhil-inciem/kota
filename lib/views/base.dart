@@ -97,7 +97,7 @@ class _BaseScreenState extends State<BaseScreen> {
                       "Exit App",
                       style: TextStyle(
                         fontSize: 18.sp,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     SizedBox(height: 2.h),

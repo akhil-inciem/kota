@@ -42,7 +42,7 @@ class _NoInternetScreenState extends State<NoInternetScreen> with SingleTickerPr
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 22,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                     color: Colors.black87,
                   ),
                 ),

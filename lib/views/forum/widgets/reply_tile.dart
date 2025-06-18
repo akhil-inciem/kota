@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:kota/controller/auth_controller.dart';
 import 'package:kota/model/forum_model.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -64,13 +65,13 @@ class ReplyTile extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    authController.isGuest ? "KOTA Guest" : "KOTA Member",
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w300,
-                      color: Colors.grey,
-                    ),
-                  ),
+  formatDateTime(reply.createdAt),
+  style: const TextStyle(
+    fontSize: 12,
+    color: Colors.grey,
+  ),
+),
+
                 ],
               ),
             ],
@@ -96,7 +97,9 @@ class ReplyTile extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 1.w),
-              Text(reply.likeCount ?? ''),
+              if ((int.tryParse(reply.likeCount ?? '0') ?? 0) > 0)
+  Text(reply.likeCount!),
+
               SizedBox(width: 20),
               GestureDetector(
                 onTap: () {
@@ -178,14 +181,14 @@ class CommentTile extends StatelessWidget {
                       color: Colors.black,
                     ),
                   ),
-                  Text(
-                    authController.isGuest ? "KOTA Guest" : "KOTA Member",
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w300,
-                      color: Colors.grey,
-                    ),
-                  ),
+Text(
+  formatDateTime(comment.createdAt),
+  style: const TextStyle(
+    fontSize: 12,
+    color: Colors.grey,
+  ),
+),
+
                 ],
               ),
             ],
@@ -211,7 +214,8 @@ class CommentTile extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 1.w),
-              Text(comment.likeCount ?? ''),
+              if ((int.tryParse(comment.likeCount ?? '0') ?? 0) > 0)
+  Text(comment.likeCount!),
               SizedBox(width: 20),
 
               GestureDetector(
@@ -237,4 +241,12 @@ class CommentTile extends StatelessWidget {
       ),
     );
   }
+}
+String formatDateTime(String? dateTimeStr) {
+  if (dateTimeStr == null) return '';
+  final dateTime = DateTime.tryParse(dateTimeStr);
+  if (dateTime == null) return '';
+  final date = DateFormat("d MMM yyyy").format(dateTime); // e.g., 27 Apr 2025
+  final time = DateFormat("hh:mm a").format(dateTime);    // e.g., 04:09 PM
+  return '$date  |  $time';
 }

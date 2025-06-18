@@ -121,7 +121,7 @@
 //                             Text(isAttendanceMarked ? "Attendance marked" : 'Attendance not marked',
 //                               style: TextStyle(
 //                                   fontSize: 16.sp, color: Colors.white,
-//                                   fontWeight: FontWeight.bold
+//                                   fontWeight: FontWeight.w600
 //                               ),),
 //                             SizedBox(height: 0.5.h,),
 
@@ -136,7 +136,7 @@
 //                 if(zoomList.isNotEmpty)
 //                 Text("Classes on ${DateFormat('MMMM dd  yyyy').format(_selectedDate)}",
 //                   style: TextStyle(
-//                       fontSize: 17.sp, color: StaticColors.staticLabelWhite,fontWeight: FontWeight.bold),),
+//                       fontSize: 17.sp, color: StaticColors.staticLabelWhite,fontWeight: FontWeight.w600),),
 //                 // if(DateFormat('ddMMyyyy').format(_selectedDate) != DateFormat('ddMMyyyy').format(DateTime.now()))
 //                   SizedBox(
 //                     height: 1.h,
@@ -173,7 +173,7 @@
 //                                           child: Text(zoomList[index].title,
 //                                             style: TextStyle(
 //                                                 fontSize: 15.sp, color: Colors.white,
-//                                                 fontWeight: FontWeight.bold
+//                                                 fontWeight: FontWeight.w600
 //                                             ),
 //                                           ),
 //                                         ),
@@ -346,7 +346,7 @@
 //                     SizedBox(height: 1.h),
 //                     const Text(
 //                       "Select Year and Month",
-//                       style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+//                       style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.w600),
 //                     ),
 //                     SizedBox(height: 2.h),
 //                     Expanded(

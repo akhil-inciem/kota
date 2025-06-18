@@ -5,7 +5,7 @@ import 'package:kota/controller/home_controller.dart';
 import 'package:kota/controller/user_controller.dart';
 import 'package:kota/views/home/widgets/events_list.dart';
 import 'package:kota/views/home/widgets/home_tab_bar.dart';
-import 'package:kota/views/home/widgets/latest_news_list.dart';
+import 'package:kota/views/home/widgets/advertisement_list.dart';
 import 'package:kota/views/home/widgets/news_list.dart';
 import 'package:kota/views/widgets/search_bar.dart';
 import 'package:kota/views/widgets/top_bar.dart';
@@ -72,8 +72,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
               Positioned.fill(
                 child: DraggableScrollableSheet(
-                  initialChildSize: 0.7,
-                  minChildSize: 0.7,
+                  initialChildSize: 0.65,
+                  minChildSize: 0.65,
                   maxChildSize: 1.0,
                   builder: (
                     BuildContext context,
@@ -100,15 +100,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                     "Recommended",
                                     style: TextStyle(
                                       fontSize: 18.sp,
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
                                   SizedBox(width: 2.w),
                                   Container(
-                                    width: 10.w,
+                                    width: 8.w,
                                     height: 2.5.h,
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
+                                      borderRadius: BorderRadius.circular(10),
                                       color: Color(0xFF0A57C9),
                                     ),
                                     child: Center(
@@ -126,6 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   .filteredEventsItems
                                                   .length
                                                   .toString(),
+                                          // "678",
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 13.sp,

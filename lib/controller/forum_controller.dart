@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kota/apiServices/forum_api_services.dart';
+import 'package:kota/apiServices/discussion_api_services.dart';
 import 'package:kota/data/dummy.dart';
 import 'package:kota/model/forum_model.dart';
 import 'package:kota/views/widgets/custom_snackbar.dart';
@@ -26,6 +26,7 @@ class ForumController extends GetxController {
 final hasText = false.obs;
   var comments = <Comments>[].obs;
   final Rxn<ForumData> singleThread = Rxn<ForumData>();
+  final RxInt selectedTabIndex = 0.obs;
   final ForumApiService _forumApiService = ForumApiService();
   final TextEditingController commentController = TextEditingController();
   final TextEditingController searchController = TextEditingController();
@@ -42,6 +43,10 @@ final hasText = false.obs;
 
   RxString replyingToName = ''.obs; // Optional: To show UI hint
 
+  final polls = <Map<String, dynamic>>[].obs; // Later replace Map with a model
+final selectedPollAnswers = <int, Set<int>>{}.obs; // key: pollIndex, value: selected option indexes
+
+
   @override
   void onInit() {
     super.onInit();
@@ -52,6 +57,8 @@ final hasText = false.obs;
     descriptionController.addListener(_checkFields);
     loadThreads();
   }
+
+  // ------------------------------------------------------------- Discussions -----------------------------------------------------------------
 
   void _checkFields() {
     final title = titleController.text.trim();
@@ -297,8 +304,6 @@ void cancelReply() {
     }
   }
 
-  
-
   Future<void> replyToComment(String commentId, String content) async {
     try {
       await ForumApiService.postReply(
@@ -340,6 +345,26 @@ void cancelReply() {
       isLoading.value = false;
     }
   }
+
+  //------------------------------------------------------------- Polls ------------------------------------------------------------------------
+
+void togglePollOption(int pollIndex, int optionIndex, bool isMultiple) {
+  final selected = selectedPollAnswers[pollIndex] ?? {};
+
+  if (isMultiple) {
+    if (selected.contains(optionIndex)) {
+      selected.remove(optionIndex);
+    } else {
+      selected.add(optionIndex);
+    }
+  } else {
+    selected.clear();
+    selected.add(optionIndex);
+  }
+
+  selectedPollAnswers[pollIndex] = selected;
+  selectedPollAnswers.refresh();
+}
 
   String _getFriendlyErrorMessage(dynamic e) {
   if (e is DioError) {

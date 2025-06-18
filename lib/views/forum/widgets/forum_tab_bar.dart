@@ -2,17 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import 'package:flutter/material.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
-
-import 'package:flutter/material.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
-
-class HomeTabBar extends StatelessWidget {
+class ForumTabBar extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onTabSelected;
 
-  const HomeTabBar({
+  const ForumTabBar({
     Key? key,
     required this.selectedIndex,
     required this.onTabSelected,
@@ -20,7 +14,7 @@ class HomeTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tabs = ['News', 'Events'];
+    final tabs = ['Discussions', 'Polls'];
     return Column(
       children: [
         SizedBox(
@@ -54,7 +48,7 @@ class TabItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(right: 24),
+      margin:  EdgeInsets.only(right: 10.sp),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end, // text sticks down
         children: [
@@ -69,7 +63,7 @@ class TabItem extends StatelessWidget {
           const SizedBox(height: 4),
           Container(
             height: 4,
-            width: 14.w,
+            width: 24.w,
             decoration: BoxDecoration(
               color: isSelected ? AppColors.primaryText : Colors.transparent,
               borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10))

@@ -48,9 +48,9 @@ class _ForumListState extends State<ForumList> {
       if (items.isEmpty) {
         return RefreshIndicator(
           onRefresh: () async {
-          await forumController
-              .loadThreads(); // Replace with your actual method
-        },
+            await forumController
+                .loadThreads(); // Replace with your actual method
+          },
           child: ListView(
             physics: const AlwaysScrollableScrollPhysics(),
             children: [
@@ -78,8 +78,9 @@ class _ForumListState extends State<ForumList> {
       }
       return RefreshIndicator(
         onRefresh: () async {
-        await forumController.loadThreads(); // Replace with your actual method
-      },
+          await forumController
+              .loadThreads(); // Replace with your actual method
+        },
         child: ListView.builder(
           padding: EdgeInsets.zero,
           itemCount: items.length,
@@ -101,7 +102,7 @@ class _ForumListState extends State<ForumList> {
                     padding: EdgeInsets.symmetric(horizontal: 3.w),
                     child: Container(
                       color: Colors.white,
-                      padding:  EdgeInsets.all(14.sp),
+                      padding: EdgeInsets.all(14.sp),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -120,24 +121,33 @@ class _ForumListState extends State<ForumList> {
                                           color: Colors.grey,
                                         )
                                         : ClipOval(
-  child: CachedNetworkImage(
-    imageUrl: item.photo!,
-    width: 50,
-    height: 50,
-    fit: BoxFit.cover,
-    placeholder: (context, url) => const Center(
-      child: SizedBox(
-        width: 20,
-        height: 20,
-        child: CircularProgressIndicator(strokeWidth: 2),
-      ),
-    ),
-    errorWidget: (context, url, error) => const Icon(Icons.error, size: 30, color: Colors.red),
-  ),
-),
-
+                                          child: CachedNetworkImage(
+                                            imageUrl: item.photo!,
+                                            width: 50,
+                                            height: 50,
+                                            fit: BoxFit.cover,
+                                            placeholder:
+                                                (context, url) => const Center(
+                                                  child: SizedBox(
+                                                    width: 20,
+                                                    height: 20,
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                          strokeWidth: 2,
+                                                        ),
+                                                  ),
+                                                ),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    const Icon(
+                                                      Icons.error,
+                                                      size: 30,
+                                                      color: Colors.red,
+                                                    ),
+                                          ),
+                                        ),
                               ),
-        
+
                               SizedBox(width: 8),
                               Expanded(
                                 child: Column(
@@ -148,7 +158,7 @@ class _ForumListState extends State<ForumList> {
                                           '',
                                       style: const TextStyle(
                                         fontSize: 16,
-                                        fontWeight: FontWeight.bold,
+                                        fontWeight: FontWeight.w600,
                                       ),
                                     ),
                                     SizedBox(height: 0.5.h),
@@ -169,9 +179,9 @@ class _ForumListState extends State<ForumList> {
                             item.title ?? '',
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,
-                            style:  TextStyle(
+                            style: TextStyle(
                               fontSize: 16.sp,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                               color: Color(0xFF45515C),
                             ),
                           ),
@@ -205,7 +215,7 @@ class _ForumListState extends State<ForumList> {
                                       style: TextStyle(fontSize: 15.sp),
                                     ),
                                     const SizedBox(width: 12),
-                                     Icon(
+                                    Icon(
                                       Icons.comment,
                                       size: 18.sp,
                                       color: Colors.grey,
@@ -279,7 +289,7 @@ class _ForumListState extends State<ForumList> {
                               //             style: TextStyle(
                               //               color: Colors.white,
                               //               fontSize: 8,
-                              //               fontWeight: FontWeight.bold,
+                              //               fontWeight: FontWeight.w600,
                               //             ),
                               //           ),
                               //         ),

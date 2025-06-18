@@ -127,7 +127,7 @@ final int notificationCount = 99;
           //           style:  TextStyle(
           //             color: Colors.white,
           //             fontSize: 12.sp,
-          //             fontWeight: FontWeight.bold,
+          //             fontWeight: FontWeight.w600,
           //           ),
           //           textAlign: TextAlign.center,
           //         ),

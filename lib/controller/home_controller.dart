@@ -10,6 +10,7 @@ import '../model/advertisement_model.dart';
 class HomeController extends GetxController {
   RxInt index = 0.obs;
   var selectedTabIndex = 0.obs;
+  RxInt currentAdIndex = 0.obs;
 
   final isLoading = false.obs;
   bool _hasFetchedNews = false;

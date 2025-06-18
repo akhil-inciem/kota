@@ -47,7 +47,7 @@ class MissionPage extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 18.sp,
                       color: Colors.black,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ],
@@ -129,7 +129,7 @@ final mission = cleanHtml(rawMission);
               title,
               style: TextStyle(
                 fontSize: 17.sp,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
                 color: AppColors.primaryText,
               ),
             ),

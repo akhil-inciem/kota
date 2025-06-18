@@ -85,7 +85,7 @@ class _MonthYearPickerState extends State<MonthYearPicker> {
                               : Color(0xFFA8B7C2),
                       fontSize: 16,
                       fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.normal,
+                          isSelected ? FontWeight.w600 : FontWeight.normal,
                     ),
                   ),
                 ),

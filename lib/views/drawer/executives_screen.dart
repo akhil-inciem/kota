@@ -22,7 +22,7 @@ class ExecutivePage extends StatelessWidget {
             children: [
               _buildAppBar(),
               SizedBox(height: 2.h),
-              _buildExecutiveGrid(),
+              buildExecutiveList(),
             ],
           ),
         ),
@@ -47,31 +47,26 @@ class ExecutivePage extends StatelessWidget {
           "KOTA Executives",
           style: TextStyle(
             fontSize: 17.sp,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ],
     );
   }
 
-  Widget _buildExecutiveGrid() {
-    final executives = menuController.executiveList;
-    return Obx(() {
-        return Expanded(
-          child: GridView.builder(
-            itemCount: executives.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 2.w,
-              mainAxisExtent: 35.h,
-            ),
-            itemBuilder: (context, index) {
-              final executive = executives[index];
-              return ExecutiveCard(executive: executive);
-            },
-          ),
-        );
-      }
+  Widget buildExecutiveList() {
+  final executives = menuController.executiveList;
+  return Obx(() {
+    return Expanded(
+      child: ListView.separated(
+        itemCount: executives.length,
+        separatorBuilder: (_, __) => SizedBox(height: 2.h),
+        itemBuilder: (context, index) {
+          final executive = executives[index];
+          return ExecutiveCard(executive: executive);
+        },
+      ),
     );
-  }
+  });
+}
 }

@@ -50,7 +50,7 @@ class CustomCalendar extends StatelessWidget {
                   borderRadius: BorderRadius.circular(5),
                 ),
                 selectedTextStyle: TextStyle(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                   fontSize: 17.sp,
                   color: Colors.white,
                 ),

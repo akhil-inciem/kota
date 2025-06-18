@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kota/constants/colors.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class SearchHeader extends StatefulWidget {
@@ -31,21 +32,6 @@ class _SearchHeaderState extends State<SearchHeader> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        // Back Button
-        GestureDetector(
-          onTap: widget.onReset,
-          child: Container(
-            width: 12.w,
-            height: 6.h,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.transparent),
-            ),
-            child: const Center(
-              child: Icon(Icons.arrow_back_ios_new),
-            ),
-          ),
-        ),
         // Search Field
         Expanded(
           child: Padding(
@@ -67,7 +53,7 @@ class _SearchHeaderState extends State<SearchHeader> {
                       )
                     : null,
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: AppColors.primaryBackground,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15),
                   borderSide: BorderSide.none,

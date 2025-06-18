@@ -56,203 +56,189 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
   }
 
   @override
-Widget build(BuildContext context) {
-  return SafeArea(
-    child: Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          // TopBar remains visible always
-          TopBar(
-            title: "Discussion",
-            leadingIconWidget: Icon(
-              Icons.close,
-              color: AppColors.primaryButton,
-              size: 22.sp,
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Column(
+          children: [
+            TopBar(
+              title: "Discussion",
+              leadingIconWidget: Icon(
+                Icons.close,
+                color: AppColors.primaryButton,
+                size: 22.sp,
+              ),
+              onTap: () => Get.back(),
             ),
-            onTap: () => Get.back(),
-          ),
-          SizedBox(height: 2.h),
+            SizedBox(height: 2.h),
 
-          // Main content: shimmer, form or error
-          Expanded(
-            child: Obx(() {
-              if (userController.isLoading.value) {
-                return const NewDiscussionShimmer();
-              } else if (userController.user.value == null) {
-                return const Center(child: Text('No user data found'));
-              } else {
-                final user = userController.user.value!;
-                return SingleChildScrollView(
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 6.w),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              CircleAvatar(
-  radius: 30,
-  backgroundColor: Colors.grey[300], // optional fallback background
-  child: ClipOval(
-    child: CachedNetworkImage(
-      imageUrl: user.photo?.isNotEmpty == true
-          ? user.photo!
-          : 'https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=random&color=fff',
-      fit: BoxFit.cover,
-      width: 60, // diameter (2 * radius)
-      height: 60,
-      placeholder: (context, url) => const CircularProgressIndicator(strokeWidth: 2),
-      errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.red),
-    ),
-  ),
-),
-
-                              const SizedBox(width: 15),
-                              Text(
-                                '${user.firstName} ${user.lastName ?? ''}',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black,
+            Expanded(
+              child: Obx(() {
+                if (userController.isLoading.value) {
+                  return const NewDiscussionShimmer();
+                } else if (userController.user.value == null) {
+                  return const Center(child: Text('No user data found'));
+                } else {
+                  final user = userController.user.value!;
+                  return SingleChildScrollView(
+                    padding: EdgeInsets.only(
+                      bottom: 2.h,
+                    ), // prevent content from getting cut off
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          /// Avatar + Name
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 6.w),
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 30,
+                                  backgroundColor: Colors.grey[300],
+                                  child: ClipOval(
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                          user.photo?.isNotEmpty == true
+                                              ? user.photo!
+                                              : 'https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=random&color=fff',
+                                      fit: BoxFit.cover,
+                                      width: 60,
+                                      height: 60,
+                                      placeholder:
+                                          (context, url) =>
+                                              const CircularProgressIndicator(
+                                                strokeWidth: 2,
+                                              ),
+                                      errorWidget:
+                                          (context, url, error) => const Icon(
+                                            Icons.error,
+                                            color: Colors.red,
+                                          ),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 4.h),
-
-                        /// Title Field
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 7.w),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              RichText(
-                                text: TextSpan(
-                                  text: 'Title ',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
+                                const SizedBox(width: 15),
+                                Text(
+                                  '${user.firstName} ${user.lastName ?? ''}',
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
                                     color: Colors.black,
                                   ),
-                                  children: [
-                                    TextSpan(
-                                      text: '*',
-                                      style: TextStyle(
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
                                 ),
-                              ),
-                              TextFormField(
-                                autofocus: false,
-                                controller: _forumController.titleController,
-                                inputFormatters: [CapitalizeFirstLetterFormatter()],
-                                maxLines: 2,
-                                decoration: InputDecoration(
-                                  hintText: 'Enter title',
-                                  hintStyle: TextStyle(fontSize: 16),
-                                  border: InputBorder.none,
-                                ),
-                                validator: (value) {
-                                  if (value == null || value.trim().isEmpty) {
-                                    return 'Title is required';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
+                          SizedBox(height: 4.h),
 
-                        /// Description Field
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 7.w),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              RichText(
-                                text: TextSpan(
-                                  text: 'Description ',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black,
-                                  ),
-                                  children: [
-                                    TextSpan(
-                                      text: '*',
-                                      style: TextStyle(
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              TextFormField(
-                                autofocus: false,
-                                controller: _forumController.descriptionController,
-                                inputFormatters: [CapitalizeFirstLetterFormatter()],
-                                maxLines: 8,
-                                decoration: InputDecoration(
-                                  hintText: 'Type your question/queries here...',
-                                  hintStyle: TextStyle(fontSize: 16),
-                                  border: InputBorder.none,
-                                ),
-                                validator: (value) {
-                                  if (value == null || value.trim().isEmpty) {
-                                    return 'Description is required';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ],
+                          /// Title
+                          _buildFieldLabel("Title *"),
+                          _buildTextField(
+                            controller: _forumController.titleController,
+                            hint: "Enter title",
+                            maxLines: 2,
                           ),
-                        ),
-                        SizedBox(height: 4.h),
 
-                        Divider(
-                          color: Colors.grey.shade300,
-                          thickness: 1,
-                          height: 1,
-                        ),
-                        SizedBox(height: 2.h),
-                        AddImageSection(),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 6.w),
-                          child: CustomButton(
-                            isEnabled: !_forumController.isLoading.value,
-                            text: _forumController.isLoading.value
-                                ? "Posting..."
-                                : "Create Discussion",
-                            backgroundColor: AppColors.primaryButton,
-                            textColor: Colors.white,
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                _forumController.createDiscussion();
-                              }
-                            },
+                          SizedBox(height: 2.h),
+
+                          /// Description
+                          _buildFieldLabel("Description *"),
+                          _buildTextField(
+                            controller: _forumController.descriptionController,
+                            hint: "Type your question/queries here...",
+                            maxLines: 8,
                           ),
-                        ),
-                      ],
+
+                          SizedBox(height: 2.h),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              }
-            }),
-          ),
-        ],
-      ),
-    ),
-  );
-}
+                  );
+                }
+              }),
+            ),
 
+            /// Divider and Button Area – sticks to bottom
+            Divider(color: Colors.grey.shade300, thickness: 1, height: 1),
+            AddImageSection(),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.h),
+              child: Obx(() {
+                return CustomButton(
+                  isEnabled: !_forumController.isLoading.value,
+                  text:
+                      _forumController.isLoading.value
+                          ? "Posting..."
+                          : "Create Discussion",
+                  backgroundColor: AppColors.primaryButton,
+                  textColor: Colors.white,
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      _forumController.createDiscussion();
+                    }
+                  },
+                );
+              }),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFieldLabel(String text) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 7.w),
+      child: RichText(
+        text: TextSpan(
+          text: text.split(" *")[0],
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+          children: [
+            if (text.contains("*"))
+              TextSpan(
+                text: ' *',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String hint,
+    int maxLines = 1,
+  }) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 7.w),
+      child: TextFormField(
+        controller: controller,
+        inputFormatters: [CapitalizeFirstLetterFormatter()],
+        maxLines: maxLines,
+        decoration: InputDecoration(
+          hintText: hint,
+          hintStyle: TextStyle(fontSize: 16),
+          border: InputBorder.none,
+        ),
+        validator:
+            (value) =>
+                (value == null || value.trim().isEmpty)
+                    ? 'This field is required'
+                    : null,
+      ),
+    );
+  }
 }
 
 class CapitalizeFirstLetterFormatter extends TextInputFormatter {

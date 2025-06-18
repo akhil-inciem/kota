@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/find_controller.dart';
+import 'package:kota/views/drawer/find/clinic_list_screen.dart';
 import 'package:kota/views/drawer/find/widgets/find_search_result_widget.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -14,28 +16,14 @@ class FindClinicTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final isClinicSearched = controller.isClinicSearched.value;
       final isClinicLoading = controller.isClinicLoading.value;
 
-      // 1. Show loading spinner while data is being fetched
       if (isClinicLoading) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
+        return const Center(child: CircularProgressIndicator());
       }
 
-      // 2. Show search results when data is fetched
-      if (isClinicSearched) {
-        return SearchResultClinicWidget(
-          results: controller.filteredClinicList.toList(),
-          onSearch: controller.filterClinics,
-          onReset: controller.resetClinicSearch,
-        );
-      }
-
-      // 3. Show clinic type options by default
       return Padding(
-        padding: EdgeInsets.symmetric(horizontal:2.w,vertical: 2.h),
+        padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 2.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -45,13 +33,19 @@ class FindClinicTab extends StatelessWidget {
             ClinicTypeTile(
               title: "Find Government Clinic",
               icon: Icons.local_hospital,
-              onTap: () => controller.searchClinic(isGov: true),
+              onTap: () {
+                controller.searchClinic(isGov: true);
+                Get.to(() => ClinicResultsScreen(controller: controller));
+              },
             ),
             SizedBox(height: 2.h),
             ClinicTypeTile(
               title: "Find Private Clinic",
               icon: Icons.local_hospital_outlined,
-              onTap: () => controller.searchClinic(isGov: false),
+              onTap: () {
+                controller.searchClinic(isGov: false);
+                Get.to(() => ClinicResultsScreen(controller: controller));
+              },
             ),
           ],
         ),
@@ -59,6 +53,7 @@ class FindClinicTab extends StatelessWidget {
     });
   }
 }
+
 
 class ClinicTypeTile extends StatelessWidget {
   final String title;

@@ -101,7 +101,7 @@ class _FindScreenState extends State<FindScreen>
         SizedBox(width: 4.w),
         Text(
           "Find",
-          style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.w600),
         ),
       ],
     );

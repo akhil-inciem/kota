@@ -109,8 +109,8 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                                   ),
                                 ),
                                 Text(
-                                  "KOTA Member",
-                                  style: TextStyle(
+                                  formatDateTime(item.createdAt),
+                                  style: const TextStyle(
                                     fontSize: 12,
                                     color: Colors.grey,
                                   ),
@@ -220,34 +220,44 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                 children: [
                   // Avatar
                   CircleAvatar(
-  radius: 20,
-  backgroundColor: Colors.grey.shade300,
-  child: user == null
-      ? const SizedBox(
-          width: 20,
-          height: 20,
-          child: CircularProgressIndicator(
-            strokeWidth: 2,
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
-          ),
-        )
-      : user.photo == null
-          ? Icon(Icons.person, color: Colors.grey.shade700)
-          : ClipOval(
-              child: CachedNetworkImage(
-                imageUrl: user.photo!,
-                width: 40, // 2 * radius
-                height: 40,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                ),
-                errorWidget: (context, url, error) => Icon(Icons.error, color: Colors.red.shade400),
-              ),
-            ),
-),
+                    radius: 20,
+                    backgroundColor: Colors.grey.shade300,
+                    child:
+                        user == null
+                            ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.grey,
+                                ),
+                              ),
+                            )
+                            : user.photo == null
+                            ? Icon(Icons.person, color: Colors.grey.shade700)
+                            : ClipOval(
+                              child: CachedNetworkImage(
+                                imageUrl: user.photo!,
+                                width: 40, // 2 * radius
+                                height: 40,
+                                fit: BoxFit.cover,
+                                placeholder:
+                                    (context, url) => const SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      ),
+                                    ),
+                                errorWidget:
+                                    (context, url, error) => Icon(
+                                      Icons.error,
+                                      color: Colors.red.shade400,
+                                    ),
+                              ),
+                            ),
+                  ),
 
                   SizedBox(width: 3.w),
                   // Input Field
