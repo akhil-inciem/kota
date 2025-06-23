@@ -13,7 +13,7 @@ class ApiEndpoints {
   static const String forgotupdateGuestPassword = '$baseUrl/news/change_password_api';
   static const String guestSignIn = '$baseUrl/news/guest-signin';
 
-  //Forums
+  //Discussions
   // Thread APIs
   static const String createThread = '$baseUrl/forums/createThread';
   static const String getAllThreads = '$baseUrl/forums/getAllThreads';
@@ -27,6 +27,13 @@ class ApiEndpoints {
   // Reply APIs
   static const String createCommentReply = '$baseUrl/forums/createCmtReply/';
   static const String likeReply = '$baseUrl/forums/likeReply/';
+
+  //polls
+  static const String createPoll = '$baseUrl/Polls/create_poll';
+  static const String editPoll = '$baseUrl/Polls/edit_poll';
+  static const String getAllPoll = '$baseUrl/Polls/get_all_polls';
+  static const String submitPoll = '$baseUrl/Polls/submit_poll_reaction';
+  static const String pollReaction = '$baseUrl/Polls/get_poll_reactions';
 
   // News
   static const String getNews = '$baseUrl/news/get-all-news';

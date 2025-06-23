@@ -6,8 +6,8 @@ import 'package:get/get.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/forum_controller.dart';
 import 'package:kota/data/dummy.dart';
-import 'package:kota/views/forum/forum_detail_screen.dart';
-import 'package:kota/views/forum/widgets/forum_shimmer.dart';
+import 'package:kota/views/forum/discussions/forum_detail_screen.dart';
+import 'package:kota/views/forum/discussions/widgets/forum_shimmer.dart';
 import 'package:kota/views/home/news_detail_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 

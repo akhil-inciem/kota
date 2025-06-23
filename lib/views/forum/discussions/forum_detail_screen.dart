@@ -5,9 +5,9 @@ import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/auth_controller.dart';
 import 'package:kota/controller/forum_controller.dart';
 import 'package:kota/controller/user_controller.dart';
-import 'package:kota/views/forum/widgets/forum_body.dart';
-import 'package:kota/views/forum/widgets/forum_detail_shimmer.dart';
-import 'package:kota/views/forum/widgets/reply_tile.dart';
+import 'package:kota/views/forum/discussions/widgets/forum_body.dart';
+import 'package:kota/views/forum/discussions/widgets/forum_detail_shimmer.dart';
+import 'package:kota/views/forum/discussions/widgets/reply_tile.dart';
 import 'package:kota/views/widgets/top_bar.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 

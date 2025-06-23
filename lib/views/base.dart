@@ -12,7 +12,7 @@ import 'package:kota/controller/home_controller.dart';
 import 'package:kota/controller/updates_controller.dart';
 import 'package:kota/views/events/event_screen.dart';
 import 'package:kota/views/favourites/favourite_screen.dart';
-import 'package:kota/views/forum/forum_screen.dart';
+import 'package:kota/views/forum/discussions/forum_screen.dart';
 import 'package:kota/views/home/home_screen.dart';
 import 'package:kota/views/login/widgets/custom_button.dart';
 import 'package:kota/views/widgets/custom_bottom_nav_bar.dart';

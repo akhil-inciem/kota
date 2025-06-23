@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/forum_controller.dart';
-import 'package:kota/views/forum/add_discussion_page.dart';
-import 'package:kota/views/forum/widgets/forumlist.dart';
+import 'package:kota/views/forum/discussions/add_discussion_page.dart';
+import 'package:kota/views/forum/discussions/widgets/forumlist.dart';
 import 'package:kota/views/login/widgets/custom_button.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 

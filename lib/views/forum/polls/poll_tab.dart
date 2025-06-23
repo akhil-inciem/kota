@@ -2,40 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/forum_controller.dart';
-import 'package:kota/views/forum/add_discussion_page.dart';
-import 'package:kota/views/forum/widgets/poll_list.dart';
+import 'package:kota/views/forum/discussions/add_discussion_page.dart';
+import 'package:kota/views/forum/polls/add_poll_screen.dart';
+import 'package:kota/views/forum/polls/widgets/poll_list.dart';
 import 'package:kota/views/login/widgets/custom_button.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class ForumPollTab extends StatelessWidget {
+class ForumPollTab extends StatefulWidget {
   const ForumPollTab({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final controller = Get.find<ForumController>();
-    controller.polls.value = [
-      {
-        "createdAt": "10 hours ago",
-        "question": "How Often Do You Modify Treatment Plans Mid-Cycle?",
-        "options": [
-          {"text": "Weekly", "votes": 2},
-          {"text": "Biweekly", "votes": 1},
-          {"text": "Only if progress plateaus", "votes": 6},
-          {"text": "Entirely on the client population", "votes": 9},
-        ],
-        "isEditable": true,
-      },
-      {
-        "createdAt": "12 June 2025 | 05:42 PM",
-        "question": "How Often Do You Modify Treatment Plans Mid-Cycle?",
-        "options": [
-          {"text": "Weekly", "votes": 2},
-          {"text": "Biweekly", "votes": 1},
-        ],
-        "isEditable": true,
-      },
-    ];
+  State<ForumPollTab> createState() => _ForumPollTabState();
+}
 
+class _ForumPollTabState extends State<ForumPollTab> {
+  final controller = Get.find<ForumController>();
+
+  @override
+  void initState() {
+    super.initState();
+    controller.loadPolls();
+  }
+  @override
+  Widget build(BuildContext context) {
     return  Container(
           decoration: const BoxDecoration(
             color: Colors.white,
@@ -55,7 +44,7 @@ class ForumPollTab extends StatelessWidget {
                       icon: const Icon(Icons.add, color: Colors.white),
                       backgroundColor: AppColors.primaryButton,
                       textColor: Colors.white,
-                      onPressed: () => Get.to(() => const NewDiscussionPage()),
+                      onPressed: () => Get.to(() => const NewPollPage()),
                     ),
                   ],
                 ),
@@ -66,9 +55,6 @@ class ForumPollTab extends StatelessWidget {
               ),
               Expanded(
               child: PollList(
-                polls: controller.polls,
-                selectedAnswers: controller.selectedPollAnswers,
-                onOptionToggle: controller.togglePollOption,
               ),
             ),
             ],

@@ -2,9 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kota/controller/forum_controller.dart';
-import 'package:kota/views/forum/forum_tab.dart';
-import 'package:kota/views/forum/poll_tab.dart';
-import 'package:kota/views/forum/widgets/forum_tab_bar.dart';
+import 'package:kota/views/forum/discussions/forum_tab.dart';
+import 'package:kota/views/forum/polls/poll_tab.dart';
+import 'package:kota/views/forum/discussions/widgets/forum_tab_bar.dart';
 import 'package:kota/views/home/widgets/home_tab_bar.dart';
 import 'package:kota/views/widgets/search_bar.dart';
 import 'package:kota/views/widgets/top_bar.dart';

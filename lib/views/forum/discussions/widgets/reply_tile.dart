@@ -6,7 +6,7 @@ import 'package:kota/controller/auth_controller.dart';
 import 'package:kota/model/forum_model.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import '../../../controller/forum_controller.dart';
+import '../../../../controller/forum_controller.dart';
 
 class ReplyTile extends StatelessWidget {
   final Replies reply;
