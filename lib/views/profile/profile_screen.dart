@@ -56,7 +56,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         SizedBox(height: 2.h),
                         ChangePasswordWidget(email: user.email!,),
                         SizedBox(height: 2.h),
-                        IdCardWidget(user: user),
+                        authController.isGuest ? SizedBox.shrink() : IdCardWidget(user: user),
                         SizedBox(height: 2.h),
                         authController.isGuest ? SizedBox.shrink() :
                         MyCertificationsWidget(

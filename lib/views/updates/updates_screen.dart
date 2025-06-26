@@ -7,6 +7,8 @@ import 'package:kota/views/widgets/search_bar.dart';
 import 'package:kota/views/widgets/top_bar.dart';
 import 'package:kota/views/updates/widgets/notification_list.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:shimmer/shimmer.dart';
+
 class UpdatesScreen extends StatefulWidget {
   UpdatesScreen({Key? key}) : super(key: key);
 
@@ -15,21 +17,19 @@ class UpdatesScreen extends StatefulWidget {
 }
 
 class _UpdatesScreenState extends State<UpdatesScreen> {
-  late final AuthController authController;
-  late final UpdateController updateController;
+  final AuthController authController = Get.find();
+  final UpdateController updateController = Get.find();
   late final bool isGuest;
 
   @override
-void initState() {
-  super.initState();
-  authController = Get.find<AuthController>();
-  updateController = Get.find<UpdateController>();
-  isGuest = authController.isGuest;
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-  updateController.clearNewUpdatesFlag();
-});
-}
-
+  void initState() {
+    super.initState();
+    updateController.getUpdates();
+    isGuest = authController.isGuest;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      updateController.clearNewUpdatesFlag();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +76,7 @@ void initState() {
               ),
               child:
                   updateController.isLoadingUpdates.value
-                      ? const Center(child: CircularProgressIndicator())
+                      ? const NotificationShimmer()
                       : Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -98,7 +98,7 @@ void initState() {
                                 SizedBox(width: 2.w),
                                 Container(
                                   width: 8.w,
-                                    height: 2.5.h,
+                                  height: 2.5.h,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
                                     color: const Color(0xFF0A57C9),
@@ -208,7 +208,9 @@ void initState() {
                                             ),
 
                                           // Now check for notifications
-                                          if (filteredTodayList.isEmpty && filteredOlderList.isEmpty && (!isExpired || isGuest))
+                                          if (filteredTodayList.isEmpty &&
+                                              filteredOlderList.isEmpty &&
+                                              (!isExpired || isGuest))
                                             Center(
                                               child: Padding(
                                                 padding: EdgeInsets.only(
@@ -219,7 +221,8 @@ void initState() {
                                                       MainAxisSize.min,
                                                   children: [
                                                     Icon(
-                                                      Icons.notifications_off_outlined,
+                                                      Icons
+                                                          .notifications_off_outlined,
                                                       size:
                                                           30.sp, // You can adjust size as needed
                                                       color: Colors.grey,
@@ -293,6 +296,56 @@ void initState() {
           ),
         ),
       ),
+    );
+  }
+}
+
+class NotificationShimmer extends StatelessWidget {
+  final int itemCount;
+
+  const NotificationShimmer({Key? key, this.itemCount = 7}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+      itemCount: itemCount,
+      itemBuilder: (_, index) {
+        return Padding(
+          padding: EdgeInsets.only(bottom: 2.h),
+          child: Shimmer.fromColors(
+            baseColor: Colors.grey.shade300,
+            highlightColor: Colors.grey.shade100,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 50.w,
+                  height: 14,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 1.h),
+                Container(
+                  width: double.infinity,
+                  height: 12,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 0.5.h),
+                Container(
+                  width: 80.w,
+                  height: 12,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 1.5.h),
+                Divider(
+                  color: Colors.grey.shade300,
+                  thickness: 1,
+                )
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

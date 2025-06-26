@@ -16,6 +16,7 @@ import '../apiServices/poll_api_services.dart';
 
 class ForumController extends GetxController {
   final isLoading = true.obs;
+  final isPollLoading = true.obs;
   final selectedImages = <XFile>[].obs;
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -385,7 +386,9 @@ class ForumController extends GetxController {
   try {
     isLoading.value = true;
     final fetchedPolls = await _pollApiService.fetchAllPoll();
+    
     pollsList.assignAll(fetchedPolls);
+    selectedPollAnswers.clear(); // clear previous selections
 
     // Initialize selected options for each poll
     for (int i = 0; i < pollsList.length; i++) {
@@ -400,15 +403,14 @@ class ForumController extends GetxController {
 }
 
 
+
   Future<void> loadPollReactions(String id) async {
     try {
-      isLoading.value = true;
       final fetchedReactions = await _pollApiService.fetchPollReactions(id);
       pollReactionList.assignAll(fetchedReactions);
     } catch (e) {
       print('Error loading poll reactions: $e');
     } finally {
-      isLoading.value = false;
     }
   }
 

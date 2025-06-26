@@ -43,6 +43,7 @@ class EventsDatum {
         required this.author,
         required this.feesPerSeat,
         required this.location,
+        required this.descriptionLinks,
         required this.onlineBooking,
         required this.badges,
         required this.favorites,
@@ -66,6 +67,7 @@ class EventsDatum {
     final String? location;
     final String? onlineBooking;
     final dynamic badges;
+    final List<DescriptionLink>? descriptionLinks;
     final dynamic favorites;
 
     factory EventsDatum.fromJson(Map<String, dynamic> json){ 
@@ -88,6 +90,9 @@ class EventsDatum {
             location: json["location"],
             onlineBooking: json["online_booking"],
             badges: json["badges"],
+            descriptionLinks: (json["description_links"] as List<dynamic>?)
+          ?.map((e) => DescriptionLink.fromJson(e))
+          .toList(),
             favorites: json["favorites"],
         );
     }
@@ -111,7 +116,33 @@ class EventsDatum {
         "location": location,
         "online_booking": onlineBooking,
         "badges": badges,
+        "description_links": descriptionLinks?.map((e) => e.toJson()).toList(),
         "favorites": favorites,
     };
 
+}
+class DescriptionLink {
+  DescriptionLink({
+    required this.placeholder,
+    required this.url,
+    required this.label,
+  });
+
+  final String? placeholder;
+  final String? url;
+  final String? label;
+
+  factory DescriptionLink.fromJson(Map<String, dynamic> json) {
+    return DescriptionLink(
+      placeholder: json["placeholder"],
+      url: json["url"],
+      label: json["label"],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        "placeholder": placeholder,
+        "url": url,
+        "label": label,
+      };
 }

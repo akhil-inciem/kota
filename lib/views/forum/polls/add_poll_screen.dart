@@ -35,13 +35,13 @@ class _NewPollPageState extends State<NewPollPage> {
       _forumController.pollTitleController.text =
           widget.pollToEdit!.title ?? '';
 
-       final expiryDateStr = widget.pollToEdit!.expairydate;
-    if (expiryDateStr != null ) {
-      final parsedDate = DateTime.tryParse(expiryDateStr.toString());
-      if (parsedDate != null) {
-        _forumController.pollExpiryDate.value = parsedDate;
+      final expiryDateStr = widget.pollToEdit!.expairydate;
+      if (expiryDateStr != null) {
+        final parsedDate = DateTime.tryParse(expiryDateStr.toString());
+        if (parsedDate != null) {
+          _forumController.pollExpiryDate.value = parsedDate;
+        }
       }
-    }
 
       final options = _parseOptions(widget.pollToEdit!.pollFeild ?? '');
       _forumController.pollFields.clear();
@@ -62,17 +62,17 @@ class _NewPollPageState extends State<NewPollPage> {
   }
 
   Future<void> _pickExpiryDate() async {
-  final DateTime? picked = await showDatePicker(
-    context: context,
-    initialDate: DateTime.now(),
-    firstDate: DateTime.now(),
-    lastDate: DateTime.now().add(Duration(days: 365)), // e.g., next 1 year
-  );
-  if (picked != null) {
-    _forumController.pollExpiryDate.value = picked;
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 365)), // e.g., next 1 year
+    );
+    if (picked != null) {
+      _forumController.pollExpiryDate.value = picked;
+      _forumController.validateCreatePoll();
+    }
   }
-}
-
 
   @override
   void dispose() {
@@ -302,27 +302,30 @@ class _NewPollPageState extends State<NewPollPage> {
                           }),
                         ],
                       ),
-                      SizedBox(height: 1.h,),
+                      SizedBox(height: 1.h),
                       Obx(() {
-  final selectedDate = _forumController.pollExpiryDate.value;
-  final isDateValid = selectedDate != null;
-  final showError = !isDateValid && _forumController.isCreatePollEnabled.value;
+                        final selectedDate =
+                            _forumController.pollExpiryDate.value;
+                        final isDateValid = selectedDate != null;
+                        final showError =
+                            !isDateValid &&
+                            _forumController.isCreatePollEnabled.value;
 
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      SizedBox(height: 1.h),
-      if (showError)
-        Text(
-          'Please select an expiry date',
-          style: TextStyle(
-            fontSize: 12.sp,
-            color: Colors.red,
-          ),
-        ),
-    ],
-  );
-}),
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 1.h),
+                            if (showError)
+                              Text(
+                                'Please select an expiry date',
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  color: Colors.red,
+                                ),
+                              ),
+                          ],
+                        );
+                      }),
 
                       SizedBox(height: 4.h),
 

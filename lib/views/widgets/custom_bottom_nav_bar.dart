@@ -101,10 +101,9 @@ class CustomBottomNavBar extends StatelessWidget {
             if (showDot)
                Positioned(
               top: -4,
-              right: -6,
+              right: -4,
               child: Container(
-                height: 2.h,
-                width: 2.h,
+                height: 1.5.h,
                 decoration: BoxDecoration(
                   color: Colors.red,
                   borderRadius: BorderRadius.circular(10),

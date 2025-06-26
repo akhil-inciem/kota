@@ -90,7 +90,7 @@ void clearNewUpdatesFlag() {
       final parsedDate = DateTime.tryParse(dateStr) ?? DateTime.now();
       tempCombined.add({
         'type': 'news',
-        'title': item['news_title'] ?? 'No Title',
+        'title': item['news_name'] ?? 'No Title',
         'description': item['news_sub_title'] ?? 'No Description',
         'date': parsedDate,
       });
@@ -101,8 +101,8 @@ void clearNewUpdatesFlag() {
       String? description;
 
       if (item is Map<String, dynamic>) {
-        dateStr = item['event_date'] ?? '';
-        title = item['event_title'] ?? 'Event';
+        dateStr = item['eventstart_date_date'] ?? '';
+        title = item['event_name'] ?? 'Event';
         description = item['event_description'] ?? item.toString();
       } else {
         dateStr = '';

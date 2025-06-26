@@ -9,6 +9,7 @@ import 'package:kota/controller/forum_controller.dart';
 import 'package:kota/model/poll_model.dart';
 import 'package:kota/views/forum/polls/widgets/poll_response_dialog.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../add_poll_screen.dart';
 
@@ -22,22 +23,32 @@ class PollList extends StatefulWidget {
 class _PollListState extends State<PollList> {
   final controller = Get.put(ForumController());
 
-  @override
-  Widget build(BuildContext context) {
+ @override
+Widget build(BuildContext context) {
+  return Obx(() {
+    if (controller.isLoading.value) {
+      return const Center(child: PollShimmer());
+    }
+
     return ListView.separated(
       itemCount: controller.pollsList.length,
       separatorBuilder: (_, __) => Divider(color: Colors.grey.shade300),
-      itemBuilder:
-          (context, index) => Obx(() {
-            return PollCard(
-              poll: controller.pollsList[index],
-              pollIndex: index,
-              selectedOptions: controller.selectedPollAnswers[index] ?? {},
-              onToggle: controller.togglePollOption,
-            );
-          }),
+      itemBuilder: (context, index) {
+        return Obx(() {
+          final poll = controller.pollsList[index];
+          final selected = controller.selectedPollAnswers[index] ?? {};
+          return PollCard(
+            poll: poll,
+            pollIndex: index,
+            selectedOptions: selected,
+            onToggle: controller.togglePollOption,
+          );
+        });
+      },
     );
-  }
+  });
+}
+
 }
 
 class PollCard extends StatelessWidget {
@@ -319,5 +330,56 @@ selectedOptions.isEmpty
     } catch (e) {
       return '';
     }
+  }
+}
+class PollShimmer extends StatelessWidget {
+  final int itemCount;
+
+  const PollShimmer({Key? key, this.itemCount = 7}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+      itemCount: itemCount,
+      itemBuilder: (_, index) {
+        return Padding(
+          padding: EdgeInsets.only(bottom: 2.h),
+          child: Shimmer.fromColors(
+            baseColor: Colors.grey.shade300,
+            highlightColor: Colors.grey.shade100,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 50.w,
+                  height: 14,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 2.h),
+                Container(
+                  width: double.infinity,
+                  height: 1.5.h,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 2.h),
+                Container(
+                  width: 80.w,
+                  height: 1.5.h,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 2.h,),
+                Align(alignment: Alignment.centerRight,child: Container(height: 3.h,width: 20.w,color: Colors.white,)),
+                SizedBox(height: 1.h),
+                Divider(
+                  color: Colors.grey.shade300,
+                  thickness: 1,
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

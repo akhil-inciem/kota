@@ -122,8 +122,8 @@ static Future<void> editPoll({
       MapEntry('title', title),
       MapEntry('discription', "description"),
       MapEntry('created_by', userId ?? ''),
-      MapEntry('expairydate', "2025-07-15"),
-      MapEntry('allowmultiple', allowMultiple == true ? '1' : '0'),
+      MapEntry('expairydate', expiryDate.split(' ').first), // just yyyy-MM-dd
+      MapEntry('allowmultiple', allowMultiple ? '1' : '0'),
       MapEntry('is_guste', authController.isGuest ? '1' : '0'),
     ]);
 

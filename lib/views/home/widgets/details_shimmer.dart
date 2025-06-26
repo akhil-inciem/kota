@@ -22,7 +22,7 @@ class DetailLoadingPlaceholder extends StatelessWidget {
               baseColor: baseColor,
               highlightColor: highlightColor,
               child: Container(
-                height: 40.h,
+                height: 38.h,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: Colors.white,

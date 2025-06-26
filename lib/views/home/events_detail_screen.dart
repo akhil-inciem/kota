@@ -1,7 +1,10 @@
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
+import 'package:html/dom.dart' as dom;
 import 'package:intl/intl.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/event_controller.dart';
@@ -11,6 +14,7 @@ import 'package:kota/views/home/widgets/details_shimmer.dart';
 import 'package:kota/views/widgets/top_bar.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class EventsDetailScreen extends StatefulWidget {
   final String eventId;
@@ -74,9 +78,9 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
                         decoration: BoxDecoration(
                           image: DecorationImage(
                             image:
-                                // imageUrl != null
-                                //     ? NetworkImage(imageUrl)
-                                //     :
+                                item.image != null
+                                    ? NetworkImage(item.image!)
+                                    :
                                 const AssetImage('assets/images/Group 315.png')
                                     as ImageProvider,
                             fit: BoxFit.cover,
@@ -154,7 +158,7 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
                                     SizedBox(height: 2.h),
                                     _title(item),
                                     SizedBox(height: 2.h),
-                                    _profileRow(),
+                                    _profileRow(item),
                                     SizedBox(height: 2.h),
                                     const Divider(
                                       color: Colors.grey,
@@ -216,7 +220,7 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
 
   Widget _dateAndIcons(EventsDatum item) {
     final title = item.eventName ?? 'Check this out!';
-    final url = "https://dev.kbaiota.org/?news/${item.eventId}";
+    final url = "https://dev.kbaiota.org/?events/${item.eventId}";
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -287,27 +291,34 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
     );
   }
 
-  Widget _profileRow() {
+  Widget _profileRow(EventsDatum item) {
+    final hasAuthor = item.author != null && item.author.isNotEmpty;
+
+    if (!hasAuthor) {
+      // If no author, return an empty SizedBox (nothing visible)
+      return const SizedBox.shrink();
+    }
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const CircleAvatar(
+        CircleAvatar(
           radius: 20,
-          backgroundImage: NetworkImage('https://i.pravatar.cc/300'),
+          backgroundImage: CachedNetworkImageProvider(item.author),
         ),
         const SizedBox(width: 15),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             Text(
-              'John Alexander',
-              style: TextStyle(
+              item.author ?? "",
+              style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: Colors.black,
               ),
             ),
-            Text(
+            const Text(
               'President KOTA',
               style: TextStyle(
                 fontSize: 10,
@@ -322,9 +333,40 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
   }
 
   Widget _description(EventsDatum item) {
-    return Text(
-      item.eventDescription ?? '',
-      style: TextStyle(fontSize: 15.sp, color: Colors.black54),
-    );
+  String formattedDescription = item.eventDescription ?? '';
+
+  // Replace placeholders with actual HTML links
+  for (var link in item.descriptionLinks ?? []) {
+    if (link.placeholder != null && link.url != null && link.label != null) {
+      formattedDescription = formattedDescription.replaceAll(
+        link.placeholder!,
+        '<a href="${link.url}">${link.label}</a>',
+      );
+    }
   }
+
+  // Replace \n and \t with <br> or just \n with <br>
+  formattedDescription = formattedDescription.replaceAll(RegExp(r'[\n\t]+'), '<br>');
+
+  return Html(
+    data: formattedDescription,
+    style: {
+      "*": Style(
+        fontSize: FontSize(15.sp),
+        color: Colors.black54,
+      ),
+      "a": Style(
+      color: AppColors.primaryColor, // Set link color
+      textDecoration: TextDecoration.underline, // Optional: add underline
+    ),
+    },
+    onLinkTap: (String? url, Map<String, String> attributes, dom.Element? element) {
+      if (url != null) {
+        launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+      }
+    },
+  );
+}
+
+
 }
