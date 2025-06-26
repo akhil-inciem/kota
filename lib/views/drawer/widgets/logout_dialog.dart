@@ -30,35 +30,36 @@ class LogoutConfirmationDialog extends StatelessWidget {
     const Text("Are you sure you want to logout?"),
     SizedBox(height: 2.h),
     Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        CustomButton(
-          width: 33.w,
-          textColor: Colors.black,
-          backgroundColor: Colors.white,
-          onPressed: () => Get.back(),
-          text: "Cancel",
-        ),
-
-        CustomButton(
-          width: 33.w,
-          onPressed: () async {
-            Get.back();
-            bool result = await authController.logout();
-            if (result) {
-              await Get.delete<UserController>();
-              Get.offAll(() => const LoginScreen());
-            } else {
-              CustomSnackbars.failure(
-                'Something went wrong. Please try again.',
-                'Logout Failed',
-              );
-            }
-          },
-          text: "Logout",
-        ),
-      ],
+  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  children: [
+    CustomButton(
+      width: 30.w,
+      textColor: Colors.black,
+      backgroundColor: Colors.white,
+      onPressed: () => Get.back(),
+      text: "Cancel",
     ),
+    SizedBox(width: 5.w,),
+    CustomButton(
+      width: 30.w,
+      onPressed: () async {
+        Get.back();
+        bool result = await authController.logout();
+        if (result) {
+          await Get.delete<UserController>();
+          Get.offAll(() => const LoginScreen());
+        } else {
+          CustomSnackbars.failure(
+            'Something went wrong. Please try again.',
+            'Logout Failed',
+          );
+        }
+      },
+      text: "Logout",
+    ),
+  ],
+)
+
   ],
 ),
 

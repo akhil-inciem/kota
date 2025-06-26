@@ -16,11 +16,9 @@ class AllEventsTab extends StatelessWidget {
     return Column(
       children: [
         SizedBox(height: 1.h),
-        CustomSearchBar(controller: controller.searchController),
-        SizedBox(height: 1.h),
         Expanded(
           child: Obx(() {
-            final events = controller.allEvents;
+            final events = controller.filteredEventsItems;
 
             if (events.isEmpty) {
               return Center(

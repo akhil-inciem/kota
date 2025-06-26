@@ -5,7 +5,7 @@ import 'package:get/get.dart' as getx;
 import 'package:kota/constants/api.dart';
 import 'package:kota/controller/auth_controller.dart';
 import 'package:kota/model/favorite_model.dart';
-import 'package:kota/model/news_model.dart';
+import 'package:kota/views/widgets/custom_snackbar.dart';
 
 class FavoritesApiService {
   final Dio _dio = Dio();
@@ -57,10 +57,23 @@ class FavoritesApiService {
       ),
     );
     if (response.statusCode == 200) {
-      print('Bookmark status updated successfully');
-    } else {
-      print('Failed to update: ${response.statusCode}');
-    }
+  final data = response.data.toString().toLowerCase();
+  if (data.contains('removed')) {
+    // Show a snackbar using GetX or your preferred method
+    CustomSnackbars.success(
+      'This item has been removed from your favoruites.',
+      'Removed from Favourites',
+    );
+  } else {
+    CustomSnackbars.success(
+      'This item has been added to your favoruites.',
+      'Added to Favourites',
+    );
+  }
+} else {
+  print('Failed to update: ${response.statusCode}');
+}
+
   } catch (e) {
     print('Error sending bookmark status: $e');
     rethrow;
@@ -88,7 +101,19 @@ Future<void> sendEventsBookmarkStatusToApi(String id, bool status) async {
     );
 
     if (response.statusCode == 200) {
-      print('Bookmark status updated successfully');
+      final data = response.data.toString().toLowerCase();
+      if (data.contains('removed')) {
+    // Show a snackbar using GetX or your preferred method
+    CustomSnackbars.success(
+      'This item has been removed from your favoruites.',
+      'Removed from Favourites',
+    );
+  } else {
+    CustomSnackbars.success(
+      'This item has been added to your favoruites.',
+      'Added to Favourites',
+    );
+  }
     } else {
       print('Failed to update: ${response.statusCode}');
     }

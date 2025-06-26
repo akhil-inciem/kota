@@ -6,6 +6,8 @@ import 'package:kota/model/executive_model.dart';
 import 'package:kota/model/faq_model.dart';
 import 'package:kota/model/vision_mission_model.dart';
 
+import '../model/colleges_model.dart';
+
 class DrawerApiServices {
   final Dio _dio = Dio();
 
@@ -44,6 +46,32 @@ Future<List<AbMemberFaq>> fetchMemberFaqs() async {
       throw Exception("Failed to fetch FAQs");
     }
   } catch (e) {
+    throw Exception("API error: $e");
+  }
+}
+Future<Map<String, List<OtCollegesKerala>>> fetchColleges() async {
+  try {
+    final response = await _dio.get(ApiEndpoints.colleges);
+
+    if (response.statusCode == 200) {
+      final decodedJson = response.data is String
+          ? jsonDecode(response.data)
+          : response.data;
+
+      if (decodedJson['status'] == true) {
+        final data = CollegeData.fromJson(decodedJson['data']);
+        return {
+          'kerala': data.otCollegesKerala,
+          'nonKerala': data.otCollegesNonKerala,
+        };
+      } else {
+        throw Exception("Failed to fetch colleges: ${decodedJson['messege']}");
+      }
+    } else {
+      throw Exception("Failed to fetch colleges: ${response.statusCode}");
+    }
+  } catch (e) {
+    print("API error: $e");
     throw Exception("API error: $e");
   }
 }

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_switch/flutter_advanced_switch.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/forum_controller.dart';
 import 'package:kota/views/login/widgets/custom_button.dart';
@@ -12,14 +13,13 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import '../../../model/poll_model.dart';
 
 class NewPollPage extends StatefulWidget {
-  final PollData? pollToEdit;  // If null => create mode
+  final PollData? pollToEdit; // If null => create mode
 
   const NewPollPage({super.key, this.pollToEdit});
 
   @override
   State<NewPollPage> createState() => _NewPollPageState();
 }
-
 
 class _NewPollPageState extends State<NewPollPage> {
   final ForumController _forumController = Get.find<ForumController>();
@@ -31,23 +31,48 @@ class _NewPollPageState extends State<NewPollPage> {
     super.initState();
 
     if (widget.pollToEdit != null) {
-      // Pre-fill title
+      // Prefill for edit mode
       _forumController.pollTitleController.text =
           widget.pollToEdit!.title ?? '';
 
-      // Pre-fill options
+       final expiryDateStr = widget.pollToEdit!.expairydate;
+    if (expiryDateStr != null ) {
+      final parsedDate = DateTime.tryParse(expiryDateStr.toString());
+      if (parsedDate != null) {
+        _forumController.pollExpiryDate.value = parsedDate;
+      }
+    }
+
       final options = _parseOptions(widget.pollToEdit!.pollFeild ?? '');
       _forumController.pollFields.clear();
       _forumController.pollFields.addAll(
         options.map((opt) => TextEditingController(text: opt)).toList(),
       );
 
-      // Pre-fill allow multiple
       final allowMultiple =
           widget.pollToEdit!.allowmultiple?.toLowerCase() == 'true';
       _forumController.allowMultipleSwitchController.value = allowMultiple;
+    } else {
+      // Fresh state for new poll
+      _forumController.pollExpiryDate.value = null;
+      _forumController.pollTitleController.clear();
+      _forumController.pollFields.clear();
+      _forumController.allowMultipleSwitchController.value = false;
     }
   }
+
+  Future<void> _pickExpiryDate() async {
+  final DateTime? picked = await showDatePicker(
+    context: context,
+    initialDate: DateTime.now(),
+    firstDate: DateTime.now(),
+    lastDate: DateTime.now().add(Duration(days: 365)), // e.g., next 1 year
+  );
+  if (picked != null) {
+    _forumController.pollExpiryDate.value = picked;
+  }
+}
+
 
   @override
   void dispose() {
@@ -70,7 +95,7 @@ class _NewPollPageState extends State<NewPollPage> {
               title: widget.pollToEdit == null ? "New Poll" : "Edit Poll",
               leadingIconWidget: Icon(
                 Icons.close,
-                color: AppColors.primaryButton,
+                color: AppColors.primaryColor,
                 size: 22.sp,
               ),
               onTap: () => Get.back(),
@@ -165,7 +190,7 @@ class _NewPollPageState extends State<NewPollPage> {
                                   onTap: _addOption,
                                   child: Icon(
                                     Icons.add_circle,
-                                    color: AppColors.primaryButton,
+                                    color: AppColors.primaryColor,
                                     size: 22.sp,
                                   ),
                                 ),
@@ -233,7 +258,73 @@ class _NewPollPageState extends State<NewPollPage> {
                           ],
                         ),
                       ),
-                      SizedBox(height: 6.h),
+                      SizedBox(height: 4.h),
+
+                      // Poll Expiry Date
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Pick Expiry Date',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
+                          ),
+                          Obx(() {
+                            final selectedDate =
+                                _forumController.pollExpiryDate.value;
+                            return GestureDetector(
+                              onTap: _pickExpiryDate,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 3.w,
+                                  vertical: 1.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade200,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  selectedDate != null
+                                      ? DateFormat(
+                                        'dd MMM yyyy',
+                                      ).format(selectedDate)
+                                      : 'Select Date',
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }),
+                        ],
+                      ),
+                      SizedBox(height: 1.h,),
+                      Obx(() {
+  final selectedDate = _forumController.pollExpiryDate.value;
+  final isDateValid = selectedDate != null;
+  final showError = !isDateValid && _forumController.isCreatePollEnabled.value;
+
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      SizedBox(height: 1.h),
+      if (showError)
+        Text(
+          'Please select an expiry date',
+          style: TextStyle(
+            fontSize: 12.sp,
+            color: Colors.red,
+          ),
+        ),
+    ],
+  );
+}),
+
+                      SizedBox(height: 4.h),
 
                       /// Allow Multiple Selection
                       Row(
@@ -250,7 +341,7 @@ class _NewPollPageState extends State<NewPollPage> {
                           AdvancedSwitch(
                             controller:
                                 _forumController.allowMultipleSwitchController,
-                            activeColor: AppColors.primaryButton,
+                            activeColor: AppColors.primaryColor,
                             inactiveColor: Colors.grey.shade300,
                             borderRadius: BorderRadius.circular(20),
                             width: 60.0,
@@ -284,16 +375,18 @@ class _NewPollPageState extends State<NewPollPage> {
                       _forumController.isLoading.value
                           ? "Posting..."
                           : "Create Poll",
-                  backgroundColor: AppColors.primaryButton,
+                  backgroundColor: AppColors.primaryColor,
                   textColor: Colors.white,
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       if (widget.pollToEdit == null) {
-                        _forumController.submitPoll();
+                        await _forumController.submitPoll();
+                        _forumController.loadPolls();
                       } else {
-                        _forumController.updatePoll(
+                        await _forumController.updatePoll(
                           widget.pollToEdit!.id ?? '',
                         );
+                        _forumController.loadPolls();
                       }
                     }
                   },
@@ -307,17 +400,16 @@ class _NewPollPageState extends State<NewPollPage> {
   }
 
   List<String> _parseOptions(String pollFeild) {
-  try {
-    final decoded = jsonDecode(pollFeild);
-    if (decoded is List) {
-      return decoded.map((e) => e.toString().trim()).toList();
+    try {
+      final decoded = jsonDecode(pollFeild);
+      if (decoded is List) {
+        return decoded.map((e) => e.toString().trim()).toList();
+      }
+    } catch (e) {
+      // fallback
     }
-  } catch (e) {
-    // fallback
+    return pollFeild.split(',').map((e) => e.trim()).toList();
   }
-  return pollFeild.split(',').map((e) => e.trim()).toList();
-}
-
 
   void _addOption() {
     if (optionController.text.isNotEmpty) {

@@ -225,7 +225,7 @@ class _RegistrationScreenState extends State<RegistrationScreen>
           SizedBox(height: 2.h),
           CustomButton(
             text: "Register",
-            backgroundColor: AppColors.primaryButton,
+            backgroundColor: AppColors.primaryColor,
             textColor: Colors.white,
           ),
         ],

@@ -205,7 +205,7 @@ class _LoginScreenState extends State<LoginScreen>
                 CustomButton(
                   text: 'I Am A Guest User',
                   backgroundColor: Colors.white,
-                  textColor: AppColors.primaryButton,
+                  textColor: AppColors.primaryColor,
                   onPressed: () => Get.offAll(GuestRegistrationScreen()),
                   isGuestButton: true,
                 ),
@@ -216,7 +216,7 @@ class _LoginScreenState extends State<LoginScreen>
                         authController.isLoading.value
                             ? 'Signing In...'
                             : 'Sign In',
-                    backgroundColor: AppColors.primaryButton,
+                    backgroundColor: AppColors.primaryColor,
                     textColor: Colors.white,
                     isGuestButton: false,
                     isEnabled: !authController.isLoading.value,
@@ -260,10 +260,9 @@ class _LoginScreenState extends State<LoginScreen>
                               TapGestureRecognizer()
                                 ..onTap = () async {
                                   const url =
-                                      'http://dev.kbaiota.org/index/memberSignUp';
+                                      'https://kbaiota.org/index/memberSignUp';
                                   if (await canLaunchUrl(Uri.parse(url))) {
-                                    await launchUrl(Uri.parse(url));
-                                    // await launch(url, forceWebView: true, enableJavaScript: true);
+                                    await launchUrl(Uri.parse(url),mode: LaunchMode.externalApplication,);
                                   } else {
                                     throw 'Could not launch $url';
                                   }

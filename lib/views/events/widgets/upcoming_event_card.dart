@@ -62,37 +62,6 @@ class UpcomingEventCard extends StatelessWidget {
                   ),
                 ],
               ),
-          
-              // Bottom-right: Time container
-              Positioned(
-          bottom: 0,
-          right: 0,
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 0.5.h, vertical: 0.5.h),
-            decoration: BoxDecoration(
-              // color: event.color.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.access_time,
-                  size: 14,
-                  // color: event.color,
-                ),
-                SizedBox(width: 4),
-                Text(
-                  formatDate(event.addedOn!), // This will be like "18:00 IST"
-                  style: TextStyle(
-                    fontSize: 10,
-                    // color: event.color,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
             ],
           ),
         ),

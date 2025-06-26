@@ -50,7 +50,7 @@ class _ForumPostBodyState extends State<ForumPostBody> {
     final title = widget.title ?? 'Check this out!';
     final params = ShareParams(
       title: title,
-      uri: Uri.parse("https://dev.kbaiota.org/forum/${widget.id}"),
+      uri: Uri.parse("https://dev.kbaiota.org/?forum/${widget.id}"),
     );
     SharePlus.instance.share(params);
 
@@ -126,7 +126,7 @@ class _ForumPostBodyState extends State<ForumPostBody> {
               controller: _pageController,
               count: widget.imageUrls.length,
               effect: WormEffect(
-                activeDotColor: AppColors.primaryButton,
+                activeDotColor: AppColors.primaryColor,
                 dotHeight: 8,
                 dotWidth: 8,
               ),

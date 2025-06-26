@@ -21,19 +21,30 @@ class EventController extends GetxController {
   final EventsApiService _eventsApiService = EventsApiService();
   final TextEditingController searchController = TextEditingController();
 
+  @override
+void onInit() {
+  super.onInit();
+  searchController.addListener(() {
+    filterAllEvents(searchController.text);
+  });
+}
+
+
 
   Future<void> fetchEventItems() async {
-    isLoading.value = true;
-    try {
-      final fetchedEvents = await _eventsApiService.fetchEvents();
-      allEvents.assignAll(fetchedEvents);
-      filteredEventsItems.assignAll(fetchedEvents);
-    } catch (e) {
-      print("Error fetching events: $e");
-    } finally {
-      isLoading.value = false;
-    }
+  isLoading.value = true;
+  try {
+    final fetchedEvents = await _eventsApiService.fetchEvents();
+    final reversedEvents = fetchedEvents.reversed.toList();
+    allEvents.assignAll(reversedEvents);
+    filteredEventsItems.assignAll(reversedEvents);
+  } catch (e) {
+    print("Error fetching events: $e");
+  } finally {
+    isLoading.value = false;
   }
+}
+
 
   Future<void> fetchSingleEventItem(String eventId) async {
     isLoading.value = true;
@@ -129,6 +140,19 @@ class EventController extends GetxController {
                     query.toLowerCase(),
                   ) ==
                   true,
+        ),
+      );
+    }
+  }
+  void filterAllEvents(String query) {
+    if (query.isEmpty) {
+      filteredEventsItems.assignAll(allEvents);
+    } else {
+      filteredEventsItems.assignAll(
+        allEvents.where(
+          (item) =>
+              item.eventName?.toLowerCase().contains(query.toLowerCase()) ==
+                  true 
         ),
       );
     }

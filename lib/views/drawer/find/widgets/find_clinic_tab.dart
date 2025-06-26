@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:kota/constants/colors.dart';
@@ -32,7 +33,7 @@ class FindClinicTab extends StatelessWidget {
             SizedBox(height: 2.h),
             ClinicTypeTile(
               title: "Find Government Clinic",
-              icon: Icons.local_hospital,
+              svg: 'assets/icons/gov_clinic_icon.svg',
               onTap: () {
                 controller.searchClinic(isGov: true);
                 Get.to(() => ClinicResultsScreen(controller: controller));
@@ -41,7 +42,7 @@ class FindClinicTab extends StatelessWidget {
             SizedBox(height: 2.h),
             ClinicTypeTile(
               title: "Find Private Clinic",
-              icon: Icons.local_hospital_outlined,
+             svg: 'assets/icons/private_clinic_logo.svg',
               onTap: () {
                 controller.searchClinic(isGov: false);
                 Get.to(() => ClinicResultsScreen(controller: controller));
@@ -57,13 +58,13 @@ class FindClinicTab extends StatelessWidget {
 
 class ClinicTypeTile extends StatelessWidget {
   final String title;
-  final IconData icon;
+  final String svg;
   final VoidCallback onTap;
 
   const ClinicTypeTile({
     super.key,
     required this.title,
-    required this.icon,
+    required this.svg,
     required this.onTap,
   });
 
@@ -73,7 +74,13 @@ class ClinicTypeTile extends StatelessWidget {
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: ListTile(
-        leading: Icon(icon, color: AppColors.primaryText),
+        leading: SvgPicture.asset(
+      svg,
+      color: AppColors.primaryColor, // Apply tint if needed
+      width: 5.w,
+      height: 5.w,
+      fit: BoxFit.contain,
+    ),
         title: Text(title),
         trailing: Icon(Icons.arrow_forward_ios, size: 16),
         onTap: onTap,

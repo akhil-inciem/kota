@@ -61,6 +61,7 @@ class ApiEndpoints {
   static const String getMembers = '$baseUrl/news/kbaiotamemebers';
   static const String memberBenefits = '$baseUrl/news/benifitsofmember';
   static const String faq = '$baseUrl/news/faq';
+  static const String colleges = '$baseUrl/news/ot_colleges';
 
   //Find
   static const String therapistDropdownData = '$baseUrl/news/finedtherapistform';

@@ -11,7 +11,7 @@ class AppColors {
   static const Color linkText = Color(0xFF1E88E5);  // Blue for links
 
   // Button Colors
-  static const Color primaryButton = Color(0xFF0A58C9);  // Blue button background
+  static const Color primaryColor = Color(0xFF0A58C9);  // Blue button background
   static const Color buttonText = Color(0xFFFFFFFF);  // White text for buttons
 
   // Border Colors

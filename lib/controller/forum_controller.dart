@@ -6,7 +6,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kota/apiServices/discussion_api_services.dart';
-import 'package:kota/data/dummy.dart';
 import 'package:kota/model/forum_model.dart';
 import 'package:kota/model/poll_model.dart';
 import 'package:kota/model/poll_reaction_model.dart';
@@ -50,7 +49,6 @@ class ForumController extends GetxController {
   //polls
   final pollTitleController = TextEditingController();
   final pollDescriptionController = TextEditingController();
-  final expiryDate = ''.obs;
   final pollFields = <TextEditingController>[].obs;
   final isCreatePollEnabled = false.obs;
   final allowMultiple = false.obs;
@@ -58,6 +56,10 @@ class ForumController extends GetxController {
   final allowMultipleSwitchController = ValueNotifier<bool>(false);
   final pollsList = <PollData>[];
   final selectedPollAnswers = <int, Set<int>>{}.obs;
+  final Rx<DateTime?> pollExpiryDate = Rx<DateTime?>(null);
+  final Map<String, Set<int>> userSelectedOptionsCache = {};
+
+
 
   @override
   void onInit() {
@@ -380,16 +382,23 @@ class ForumController extends GetxController {
   //------------------------------------------------------------- Polls ------------------------------------------------------------------------
 
   Future<void> loadPolls() async {
-    try {
-      isLoading.value = true;
-      final fetchedPolls = await _pollApiService.fetchAllPoll();
-      pollsList.assignAll(fetchedPolls);
-    } catch (e) {
-      print('Error loading polls: $e');
-    } finally {
-      isLoading.value = false;
+  try {
+    isLoading.value = true;
+    final fetchedPolls = await _pollApiService.fetchAllPoll();
+    pollsList.assignAll(fetchedPolls);
+
+    // Initialize selected options for each poll
+    for (int i = 0; i < pollsList.length; i++) {
+      initializeSelectedOptions(pollsList[i], i);
     }
+
+  } catch (e) {
+    print('Error loading polls: $e');
+  } finally {
+    isLoading.value = false;
   }
+}
+
 
   Future<void> loadPollReactions(String id) async {
     try {
@@ -416,7 +425,7 @@ class ForumController extends GetxController {
         title: pollTitleController.text.trim(),
         description: pollDescriptionController.text.trim(),
         pollFields: pollFields,
-        expiryDate: expiryDate.value,
+        expiryDate: pollExpiryDate.value.toString(),
         allowMultiple: allowMultiple.value,
       );
 
@@ -424,7 +433,7 @@ class ForumController extends GetxController {
       // Optionally clear the form after success
       pollTitleController.clear();
       pollDescriptionController.clear();
-      expiryDate.value = '';
+      pollExpiryDate.value = null;
       pollFields.clear();
       allowMultiple.value = false;
     } catch (e) {
@@ -443,7 +452,7 @@ class ForumController extends GetxController {
         title: pollTitleController.text.trim(),
         description: pollDescriptionController.text.trim(),
         pollFields: pollFields,
-        expiryDate: expiryDate.value,
+        expiryDate: pollExpiryDate.value.toString(),
         allowMultiple: allowMultiple.value,
       );
 
@@ -451,7 +460,7 @@ class ForumController extends GetxController {
       // Optionally clear the form after success
       pollTitleController.clear();
       pollDescriptionController.clear();
-      expiryDate.value = '';
+      pollExpiryDate.value = null;
       pollFields.clear();
       allowMultiple.value = false;
     } catch (e) {
@@ -462,52 +471,95 @@ class ForumController extends GetxController {
 }
 
 
-  void validateCreatePoll() {
-    final hasQuestion = pollTitleController.text.trim().isNotEmpty;
-    final hasEnoughOptions = pollFields.length >= 2;
+void validateCreatePoll() {
+  final hasQuestion = pollTitleController.text.trim().isNotEmpty;
+  final hasEnoughOptions = pollFields.length >= 2;
+  final hasExpiryDate = pollExpiryDate.value != null;
 
-    isCreatePollEnabled.value = hasQuestion && hasEnoughOptions;
+  isCreatePollEnabled.value = hasQuestion && hasEnoughOptions && hasExpiryDate;
+}
+
+
+void initializeSelectedOptions(PollData poll, int pollIndex) {
+  final selected = <int>{};
+  final options = _parseOptions(poll.pollFeild ?? '');
+
+  if (poll.userVote != null) {
+    try {
+      final decoded = jsonDecode(poll.userVote!);
+
+      if (decoded is List) {
+        for (var vote in decoded) {
+          final idx = options.indexOf(vote.toString());
+          if (idx != -1) selected.add(idx);
+        }
+      } else if (decoded is String) {
+        final idx = options.indexOf(decoded);
+        if (idx != -1) selected.add(idx);
+      }
+    } catch (e) {
+      // If jsonDecode fails, treat userVote as plain string (non-JSON)
+      final rawVote = poll.userVote!;
+      final idx = options.indexOf(rawVote);
+      if (idx != -1) selected.add(idx);
+
+      debugPrint('Error decoding user_vote, treating as plain string: $e');
+    }
   }
+
+  selectedPollAnswers[pollIndex] = selected;
+}
+
+
 
   // In ForumController.dart
-  void togglePollOption(int pollIndex, int optionIndex, bool isMultiple) {
-  final selected = selectedPollAnswers[pollIndex] ?? {};
-  if (isMultiple) {
-    selected.contains(optionIndex)
-        ? selected.remove(optionIndex)
-        : selected.add(optionIndex);
-  } else {
-    selected.clear();
-    selected.add(optionIndex);
-  }
-  selectedPollAnswers[pollIndex] = selected;
-
+void togglePollOption(int pollIndex, int optionIndex, bool isMultiple) {
+  final selected = selectedPollAnswers[pollIndex] ?? <int>{};
   final pollData = pollsList[pollIndex];
-  final selectedOptionsList = selected.toList();
+  final options = _parseOptions(pollData.pollFeild ?? '');
+  final updatedCounts = Map<String, num>.from(pollData.reactionCounts);
 
-  // ✅ Get the selected option name (first one) 
-  final selectedOptionNames = _getSelectedOptionNames(
-    pollData,
-    selectedOptionsList,
-  );
-
-  if (selectedOptionNames.isNotEmpty) {
-    _submitPollVote(pollData.id ?? '', selectedOptionNames.first);
-  }
-}
-
-/// Extract options from JSON or comma separated text
-List<String> _parseOptions(String pollFeild) {
-  try {
-    final decoded = jsonDecode(pollFeild);
-    if (decoded is List) {
-      return decoded.map((e) => e.toString().trim()).toList();
+  if (isMultiple) {
+    if (selected.contains(optionIndex)) {
+      selected.remove(optionIndex);
+      // Decrement vote
+      final optionName = options[optionIndex];
+      updatedCounts[optionName] = (updatedCounts[optionName] ?? 1) - 1;
+    } else {
+      selected.add(optionIndex);
+      // Increment vote
+      final optionName = options[optionIndex];
+      updatedCounts[optionName] = (updatedCounts[optionName] ?? 0) + 1;
     }
-  } catch (e) {
-    print(e);
+  } else {
+    if (selected.contains(optionIndex)) {
+      // Unselecting the current one
+      selected.clear();
+      final optionName = options[optionIndex];
+      updatedCounts[optionName] = (updatedCounts[optionName] ?? 1) - 1;
+    } else {
+      // Remove previous selection's vote
+      if (selected.isNotEmpty) {
+        final prevIndex = selected.first;
+        final prevOptionName = options[prevIndex];
+        updatedCounts[prevOptionName] = (updatedCounts[prevOptionName] ?? 1) - 1;
+      }
+      selected..clear()..add(optionIndex);
+      final optionName = options[optionIndex];
+      updatedCounts[optionName] = (updatedCounts[optionName] ?? 0) + 1;
+    }
   }
-  return pollFeild.split(',').map((e) => e.trim()).toList();
+
+  selectedPollAnswers[pollIndex] = selected;
+  pollsList[pollIndex] = pollData.copyWith(reactionCounts: updatedCounts);
+
+  // Submit updated vote to backend if needed
+  if (selected.isNotEmpty) {
+    final selectedOptionNames = selected.map((i) => options[i]).toList();
+    _submitPollVote(pollData.id ?? '',  selectedOptionNames.first);
+  }
 }
+
 
 
 /// Get names for selected indexes
@@ -548,4 +600,19 @@ Future<void> _submitPollVote(String pollId, String reaction) async {
       return "Something went wrong. Please try again.";
     }
   }
+
+
+
+/// Extract options from JSON or comma separated text
+List<String> _parseOptions(String pollFeild) {
+  try {
+    final decoded = jsonDecode(pollFeild);
+    if (decoded is List) {
+      return decoded.map((e) => e.toString().trim()).toList();
+    }
+  } catch (e) {
+    print(e);
+  }
+  return pollFeild.split(',').map((e) => e.trim()).toList();
+}
 }

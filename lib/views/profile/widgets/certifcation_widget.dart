@@ -24,8 +24,6 @@ class MyCertificationsWidget extends StatelessWidget {
   void _openPdfViewer(BuildContext context) {
     Get.to(() => PDFViewerScreen(pdfUrl: imagePath));
   }
-// final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-//     FlutterLocalNotificationsPlugin();
 
 Future<void> downloadPdf(
   String url,

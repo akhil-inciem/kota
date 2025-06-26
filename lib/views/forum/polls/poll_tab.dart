@@ -21,7 +21,7 @@ class _ForumPollTabState extends State<ForumPollTab> {
   @override
   void initState() {
     super.initState();
-    controller.loadPolls();
+     controller.loadPolls();
   }
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class _ForumPollTabState extends State<ForumPollTab> {
                       height: 4.h,
                       text: 'New',
                       icon: const Icon(Icons.add, color: Colors.white),
-                      backgroundColor: AppColors.primaryButton,
+                      backgroundColor: AppColors.primaryColor,
                       textColor: Colors.white,
                       onPressed: () => Get.to(() => const NewPollPage()),
                     ),

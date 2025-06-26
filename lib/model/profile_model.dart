@@ -42,6 +42,7 @@ class User {
   final String? graduationCertificate;
   final String? pgCertificate;
   final String? aiotaCertificate;
+  final String? sign;
 
   User({
     this.id,
@@ -61,6 +62,7 @@ class User {
     this.graduationCertificate,
     this.pgCertificate,
     this.aiotaCertificate,
+    this.sign
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -82,6 +84,7 @@ class User {
       graduationCertificate: json['graduation_certificate'],
       pgCertificate: json['pg_certificate'],
       aiotaCertificate: json['aiota_certificate'],
+      sign: json['sign']
     );
   }
 
@@ -103,6 +106,7 @@ class User {
         'graduation_certificate': graduationCertificate,
         'pg_certificate': pgCertificate,
         'aiota_certificate': aiotaCertificate,
+        'sign':sign
       };
 
       User copyWith({
@@ -123,6 +127,7 @@ class User {
   String? graduationCertificate,
   String? pgCertificate,
   String? aiotaCertificate,
+  String? sign
 }) {
   return User(
     id: id ?? this.id,
@@ -142,6 +147,7 @@ class User {
     graduationCertificate: graduationCertificate ?? this.graduationCertificate,
     pgCertificate: pgCertificate ?? this.pgCertificate,
     aiotaCertificate: aiotaCertificate ?? this.aiotaCertificate,
+    sign: sign ?? this.sign
   );
 }
 

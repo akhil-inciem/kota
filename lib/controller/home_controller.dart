@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:kota/apiServices/favorite_api_services.dart';
 import 'package:kota/apiServices/news_api_service.dart';
 import 'package:kota/model/news_model.dart';
+import 'package:kota/views/widgets/custom_snackbar.dart';
 
 import '../model/advertisement_model.dart';
 
@@ -91,8 +92,9 @@ class HomeController extends GetxController {
 
   try {
     final List<NewsDatum> fetchedNews = await _newsApiService.fetchNews();
-    masterNewsItems.assignAll(fetchedNews);
-    filteredNewsItems.assignAll(fetchedNews);
+    final List<NewsDatum> reversedNews = fetchedNews.reversed.toList();
+    masterNewsItems.assignAll(reversedNews);
+    filteredNewsItems.assignAll(reversedNews);
     _hasFetchedNews = true;
   } catch (e) {
     print("Error fetching news: $e");
@@ -100,6 +102,7 @@ class HomeController extends GetxController {
     isLoading.value = false;
   }
 }
+
 
   void filterNews(String query) {
     if (query.isEmpty) {

@@ -54,7 +54,7 @@ class SearchFormWidget extends StatelessWidget {
           SizedBox(height: 4.h),
           CustomButton(
             text: "Search",
-            backgroundColor: AppColors.primaryButton,
+            backgroundColor: AppColors.primaryColor,
             textColor: Colors.white,
             onPressed: onSearch,
           ),

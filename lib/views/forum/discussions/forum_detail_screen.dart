@@ -84,6 +84,7 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                                           width: 20,
                                           height: 20,
                                           child: CircularProgressIndicator(
+                                            color: AppColors.primaryColor,
                                             strokeWidth: 2,
                                           ),
                                         ),

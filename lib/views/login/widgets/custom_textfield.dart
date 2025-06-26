@@ -50,7 +50,7 @@ class CustomTextField extends StatelessWidget {
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(
-              color: AppColors.primaryButton.withOpacity(0.4),
+              color: AppColors.primaryColor.withOpacity(0.4),
               width: 1.5,
             ),
           ),
@@ -65,7 +65,7 @@ class CustomTextField extends StatelessWidget {
                       _obscureText.value
                           ? Icons.visibility_off
                           : Icons.visibility,
-                      color: AppColors.primaryButton,
+                      color: AppColors.primaryColor,
                     ),
                     onPressed: () => _obscureText.toggle(),
                   )

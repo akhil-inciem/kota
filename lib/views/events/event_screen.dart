@@ -22,32 +22,54 @@ class EventScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.primaryBackground,
       body: Column(
-        children: [
-          TopBar(isEvent: true),
-          SizedBox(height: 1.h),
+  children: [
+    TopBar(isEvent: true),
+    SizedBox(height: 1.h),
 
-          // Custom Tab Bar
-          Obx(() => EventTabBar(
-                selectedIndex: controller.selectedTabIndex.value,
-                onTabSelected: (index) =>
-                    controller.selectedTabIndex.value = index,
-              )),
+    // Show search bar only for All Events tab
+    Obx(() {
+      if (controller.selectedTabIndex.value == 0) {
+        return Column(
+          children: [
+            CustomSearchBar(controller: controller.searchController),
+            SizedBox(height: 1.h),
+          ],
+        );
+      } else {
+        // Clear search text when switching tabs
+        if (controller.searchController.text.isNotEmpty) {
+          controller.searchController.clear();
+        }
+        return const SizedBox.shrink();
+      }
+    }),
 
-          // Tab Views
-          Expanded(
-            child: Obx(() {
-              switch (controller.selectedTabIndex.value) {
-                case 0:
-                  return AllEventsTab();
-                case 1:
-                  return EventCalendarTab();
-                default:
-                  return const SizedBox.shrink();
-              }
-            }),
-          ),
-        ],
-      ),
+    // Custom Tab Bar
+    Obx(() => EventTabBar(
+          selectedIndex: controller.selectedTabIndex.value,
+          onTabSelected: (index) {
+            controller.selectedTabIndex.value = index;
+          },
+        )),
+
+    SizedBox(height: 1.h),
+
+    // Tab Views
+    Expanded(
+      child: Obx(() {
+        switch (controller.selectedTabIndex.value) {
+          case 0:
+            return AllEventsTab(); 
+          case 1:
+            return EventCalendarTab(); 
+          default:
+            return const SizedBox.shrink();
+        }
+      }),
+    ),
+  ],
+),
+
     );
   }
 }

@@ -51,11 +51,11 @@ class PollResponsesDialog extends StatelessWidget {
                       vertical: 0.5.h,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.primaryButton,
+                      color: AppColors.primaryColor,
                       borderRadius: BorderRadius.circular(10.sp),
                     ),
                     child: Text(
-                      '0${reactions.length} Votes',
+                      '${reactions.length} Votes',
                       style: TextStyle(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w600,
@@ -86,7 +86,10 @@ class PollResponsesDialog extends StatelessWidget {
             // Divider
             Divider(color: Colors.grey.shade400),
             // List of reactions
-            Flexible(
+           reactions.isEmpty ? Padding(
+             padding:  EdgeInsets.all(18.sp),
+             child: Text("No votes yet"),
+           ): Flexible(
               child: ListView.separated(
                 shrinkWrap: true,
                 separatorBuilder:
@@ -208,25 +211,45 @@ class PollResponsesDialog extends StatelessWidget {
   }
 
   String _formatTime(String? createdAt) {
-    if (createdAt == null || createdAt.isEmpty) {
-      return "05:42 PM";
-    }
-
-    // If the createdAt is already in the desired format, return it
-    if (createdAt.contains("PM") || createdAt.contains("AM")) {
-      return createdAt;
-    }
-
-    // Otherwise, try to parse and format it
-    try {
-      DateTime dateTime = DateTime.parse(createdAt);
-      int hour = dateTime.hour;
-      int minute = dateTime.minute;
-      String amPm = hour >= 12 ? 'PM' : 'AM';
-      hour = hour > 12 ? hour - 12 : (hour == 0 ? 12 : hour);
-      return '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')} $amPm';
-    } catch (e) {
-      return "05:42 PM";
-    }
+  if (createdAt == null || createdAt.isEmpty) {
+    return "N/A";
   }
+
+  try {
+    final dateTime = DateTime.parse(createdAt);
+    final now = DateTime.now();
+
+    final isToday = dateTime.year == now.year &&
+        dateTime.month == now.month &&
+        dateTime.day == now.day;
+
+    int hour = dateTime.hour;
+    int minute = dateTime.minute;
+    String amPm = hour >= 12 ? 'PM' : 'AM';
+    hour = hour % 12 == 0 ? 12 : hour % 12;
+
+    String timeStr =
+        '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')} $amPm';
+
+    if (isToday) {
+      return timeStr;
+    } else {
+      String day = dateTime.day.toString().padLeft(2, '0');
+      String monthName = _monthName(dateTime.month);
+      String year = dateTime.year.toString();
+      return '$day $monthName $year $timeStr';
+    }
+  } catch (e) {
+    return "N/A";
+  }
+}
+
+String _monthName(int month) {
+  const months = [
+    '', 'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  return months[month];
+}
+
 }

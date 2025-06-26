@@ -127,7 +127,7 @@ class _ChangePasswordWidgetState extends State<ChangePasswordWidget>
                                 //       child: SpinKitWave(
                                 //         color:
                                 //             AppColors
-                                //                 .primaryButton, // change to match your theme
+                                //                 .primaryColor, // change to match your theme
                                 //         size: 18.sp,
                                 //       ),
                                 //     )

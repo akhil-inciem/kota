@@ -91,7 +91,7 @@ class AddImageSection extends StatelessWidget {
                                     height: 2.5.h,
                                     width: 2.5.h,
                                     decoration: BoxDecoration(
-                                      color: AppColors.primaryButton,
+                                      color: AppColors.primaryColor,
                                       shape: BoxShape.circle,
                                     ),
                                     child: const Center(

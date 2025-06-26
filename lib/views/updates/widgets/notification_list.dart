@@ -1,13 +1,36 @@
 import 'package:flutter/material.dart';
-
-import 'package:flutter/material.dart';
+import 'package:html/parser.dart' as html_parser;
 import 'package:intl/intl.dart';
-import 'package:kota/data/dummy.dart';
-import 'package:kota/views/home/news_detail_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+
 class NotificationTile extends StatelessWidget {
   final Map<String, dynamic> item;
   const NotificationTile({Key? key, required this.item}) : super(key: key);
+
+  String timeAgo(String createdAt) {
+    final createdTime = DateTime.parse(createdAt);
+    final now = DateTime.now();
+    final difference = now.difference(createdTime);
+
+    if (difference.inDays > 10) {
+      return DateFormat('dd MMM yyyy').format(createdTime);
+    }
+
+    if (difference.inMinutes < 1) {
+      return 'Just now';
+    } else if (difference.inMinutes < 60) {
+      return '${difference.inMinutes} minute${difference.inMinutes == 1 ? '' : 's'} ago';
+    } else if (difference.inHours < 24) {
+      return '${difference.inHours} hour${difference.inHours == 1 ? '' : 's'} ago';
+    } else {
+      return '${difference.inDays} day${difference.inDays == 1 ? '' : 's'} ago';
+    }
+  }
+
+  String _htmlToPlainText(String htmlString) {
+    final document = html_parser.parse(htmlString);
+    return document.body?.text.trim() ?? '';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +71,8 @@ class NotificationTile extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 6.w),
                         child: Text(
-                          item['description'] ?? '',
-                          maxLines: 2,
+                          _htmlToPlainText(item['description'] ?? ''),
+                          maxLines: 10,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                             fontSize: 12,
@@ -74,7 +97,7 @@ class NotificationTile extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Text(
-                                  DateFormat('dd MMM yyyy').format(date),
+                                  timeAgo(date.toIso8601String()),
                                   style: const TextStyle(
                                     fontSize: 10,
                                     color: Color(0xFF2640C8),
@@ -102,12 +125,12 @@ class NotificationTile extends StatelessWidget {
                           ],
                         ),
                       ),
-                      SizedBox(height: 1.h,),
+                      SizedBox(height: 1.h),
                       Divider(
-          color: Colors.grey.shade300,
-          thickness: 1,
-          height: 1,
-        ),
+                        color: Colors.grey.shade300,
+                        thickness: 1,
+                        height: 1,
+                      ),
                     ],
                   ),
                 ),

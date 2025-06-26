@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:kota/apiServices/drawer_api_services.dart';
+import 'package:kota/model/colleges_model.dart';
 import 'package:kota/model/executive_model.dart';
 import 'package:kota/model/faq_model.dart';
 import 'package:kota/model/vision_mission_model.dart';
@@ -12,6 +13,8 @@ class SideMenuController extends GetxController {
   final visionMission = <VisionDatum>[].obs;
   RxBool isLoading = false.obs;
   RxList<AbMemberFaq> faqList = <AbMemberFaq>[].obs;
+  RxList<OtCollegesKerala> keralaColleges = <OtCollegesKerala>[].obs;
+  RxList<OtCollegesKerala> nonKeralaColleges = <OtCollegesKerala>[].obs; 
   final DrawerApiServices _drawerApiServices = DrawerApiServices();
   RxInt expandedIndex = (-1).obs;
 
@@ -21,6 +24,7 @@ class SideMenuController extends GetxController {
     loadFaqs();
   fetchVisionAndMission();
   fetchExecutives();
+  loadColleges();
   }
 
   Future<void> fetchExecutives() async {
@@ -32,6 +36,20 @@ class SideMenuController extends GetxController {
       }
     } catch (e) {
       print("Error fetching executives: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> loadColleges() async {
+    try {
+      isLoading.value = true;
+      final data = await _drawerApiServices.fetchColleges();
+      keralaColleges.value = data['kerala'] ?? [];
+      nonKeralaColleges.value = data['nonKerala'] ?? [];
+    } catch (e) {
+      print("Controller error: $e");
+      Get.snackbar("Error", e.toString());
     } finally {
       isLoading.value = false;
     }

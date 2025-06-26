@@ -10,6 +10,7 @@ import 'package:kota/views/home/news_detail_screen.dart';
 import 'package:kota/views/login/login_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class InitialNavigationScreen extends StatefulWidget {
   const InitialNavigationScreen({super.key});
@@ -53,55 +54,66 @@ class _InitialNavigationScreenState extends State<InitialNavigationScreen> {
 
   /// Actual navigation based on URI and login status
   Future<void> _handleUri(Uri uri) async {
-    _navigating = true;
+  _navigating = true;
 
-    final prefs = await SharedPreferences.getInstance();
-    final isLoggedIn = prefs.getBool('is_logged_in') ?? false;
+  final urlString = uri.toString();
 
-    if (isLoggedIn) {
-      Get.offAll(() => BaseScreen());
-      await Future.delayed(const Duration(milliseconds: 100));
+  // 👉 If the link is the registration page, open externally
+  if (urlString.contains('index/memberSignUp')) {
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
+    _navigating = false;
+    return;
+  }
 
-      final pathSegments = uri.pathSegments; // e.g., ['news', '5']
+  final prefs = await SharedPreferences.getInstance();
+  final isLoggedIn = prefs.getBool('is_logged_in') ?? false;
 
-      if (pathSegments.isNotEmpty) {
-        final section = pathSegments[0]; // 'news', 'events', etc.
+  if (isLoggedIn) {
+    Get.offAll(() => BaseScreen());
+    await Future.delayed(const Duration(milliseconds: 100));
 
-        switch (section) {
+    List<String> segments = uri.pathSegments;
 
-          case 'forum':
-          if (pathSegments.length > 1) {
-              final threadId = pathSegments[1];
-          Get.to(()=> ForumDetailScreen(threadId: threadId,));
+    // If pathSegments is empty, try splitting the query as fallback
+    if (segments.isEmpty && uri.query.isNotEmpty) {
+      segments = uri.query.split('/');
+    }
+
+    if (segments.isNotEmpty) {
+      final section = segments[0];
+
+      switch (section) {
+        case 'forum':
+          if (segments.length > 1) {
+            final threadId = segments[1];
+            Get.to(() => ForumDetailScreen(threadId: threadId));
           }
           break;
 
-          case 'executive':
-            Get.to(() => ExecutivePage());
-            break;
+        case 'news':
+          if (segments.length > 1) {
+            final newsId = segments[1];
+            Get.to(() => NewsDetailScreen(newsId: newsId));
+          }
+          break;
 
-          case 'news':
-            if (pathSegments.length > 1) {
-              final newsId = pathSegments[1];
-              Get.to(() => NewsDetailScreen(newsId: newsId));
-            }
-            break;
-          case 'events':
-            if (pathSegments.length > 1) {
-              final eventId = pathSegments[1];
-              Get.to(() => EventsDetailScreen(eventId: eventId));
-            }
-            break;
-          default:
-            break;
-        }
+        case 'events':
+          if (segments.length > 1) {
+            final eventId = segments[1];
+            Get.to(() => EventsDetailScreen(eventId: eventId));
+          }
+          break;
+
+        default:
+          break;
       }
-    } else {
-      Get.offAll(() => const LoginScreen());
     }
-
-    _navigating = false;
+  } else {
+    Get.offAll(() => const LoginScreen());
   }
+
+  _navigating = false;
+}
 
   /// If no initial deep link, navigate after delay
   Future<void> _navigateAfterDelay() async {

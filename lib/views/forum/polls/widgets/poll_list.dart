@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:kota/constants/colors.dart';
+import 'package:kota/controller/auth_controller.dart';
 import 'package:kota/controller/forum_controller.dart';
 import 'package:kota/model/poll_model.dart';
 import 'package:kota/views/forum/polls/widgets/poll_response_dialog.dart';
@@ -53,17 +55,20 @@ class PollCard extends StatelessWidget {
   });
 
   final ForumController forumController = Get.find<ForumController>();
+  final authController = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
     final options = _parseOptions(poll.pollFeild ?? '');
     final votes = _parseVotes(options);
-    final isMultiple = poll.allowmultiple?.toLowerCase() == 'true';
+    final isMultiple = poll.allowmultiple?.toLowerCase() == '1';
     final adjustedVotesList = _getAdjustedVotes(votes);
     final adjustedTotalVotes = adjustedVotesList.fold<int>(
       0,
       (sum, v) => sum + v,
     );
+
+    final isExpired = poll.expired == true; // 👈 Check expiry
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -73,6 +78,13 @@ class PollCard extends StatelessWidget {
         children: [
           _buildHeader(),
           const SizedBox(height: 8),
+          // Show expired message
+          if (isExpired)
+            const Text(
+              "This poll has expired",
+              style: TextStyle(color: Colors.red, fontWeight: FontWeight.w400),
+            ),
+          if (isExpired) const SizedBox(height: 8),
           Text(
             poll.title ?? "",
             style: const TextStyle(
@@ -82,6 +94,7 @@ class PollCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
+
           ...List.generate(options.length, (i) {
             final adjustedOptionVotes = adjustedVotesList[i];
             final percent =
@@ -96,6 +109,7 @@ class PollCard extends StatelessWidget {
               isSelected: selectedOptions.contains(i),
               adjustedOptionVotes: adjustedOptionVotes,
               percent: percent,
+              isExpired: isExpired, // 👈 pass to row
             );
           }),
           const SizedBox(height: 16),
@@ -118,45 +132,49 @@ class PollCard extends StatelessWidget {
   }
 
   List<String> _parseVotes(List<String> options) {
-    return options.map((opt) {
-      final raw = poll.reactionCounts?.toJson()[opt]?.toString();
-      return raw ?? '0';
-    }).toList();
-  }
+  return options.map((opt) {
+    final raw = poll.reactionCounts[opt]; // directly access the map
+    print("Option: $opt => Votes: $raw");
+    return raw?.toString() ?? '0'; // fallback to '0' if null
+  }).toList();
+}
+
 
   List<int> _getAdjustedVotes(List<String> votes) {
     return List.generate(votes.length, (i) {
       final originalVotes = int.tryParse(votes[i]) ?? 0;
-      return selectedOptions.contains(i) ? originalVotes + 1 : originalVotes;
+      return originalVotes;
     });
   }
 
   Widget _buildHeader() {
-    // Extract time portion if possible
-    String timeText = '';
-    if ((poll.createdAt ?? '').contains(' ')) {
-      timeText = (poll.createdAt ?? '').split(' ').last;
-    }
+    String displayTime = _formatTime(poll.createdAt.toString());
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          timeText,
+          displayTime,
           style: const TextStyle(color: Colors.grey, fontSize: 12),
         ),
-        poll.editable! ? GestureDetector(
-          onTap: () {
-            Get.to(() => NewPollPage(pollToEdit: poll));
-          },
-          child: Container(
-            padding: EdgeInsets.all(8.sp),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12.sp),
-              color: AppColors.primaryBackground,
-            ),
-            child: const Icon(Icons.edit_outlined),
-          ),
-        ) : SizedBox.shrink(),
+        authController.userModel.value?.data.id == poll.createdBy &&
+poll.editable! &&
+selectedOptions.isEmpty
+
+            ? GestureDetector(
+              onTap: () {
+                Get.to(() => NewPollPage(pollToEdit: poll));
+              },
+              child: Container(
+                padding: EdgeInsets.all(8.sp),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.sp),
+                  color: AppColors.primaryBackground,
+                ),
+                child: const Icon(Icons.edit_outlined),
+              ),
+            )
+            : const SizedBox.shrink(),
       ],
     );
   }
@@ -168,29 +186,37 @@ class PollCard extends StatelessWidget {
     required bool isSelected,
     required int adjustedOptionVotes,
     required double percent,
+    required bool isExpired, // 👈 add param
   }) {
     return InkWell(
-      onTap: () => onToggle(pollIndex, index, isMultiple),
+      onTap:
+          isExpired
+              ? null
+              : () => onToggle(
+                pollIndex,
+                index,
+                isMultiple,
+              ), // 👈 disable if expired
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Row(
           children: [
             Icon(
-              isMultiple
-                  ? (isSelected
-                      ? Icons.check_box
-                      : Icons.check_box_outline_blank)
-                  : (isSelected
-                      ? Icons.radio_button_checked
-                      : Icons.radio_button_off),
+              (isSelected ? Icons.check_circle : Icons.radio_button_off),
               size: 20,
+              color: isExpired ? Colors.grey : null, // dim icon if expired
             ),
             const SizedBox(width: 8),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(optionText),
+                  Text(
+                    optionText,
+                    style: TextStyle(
+                      color: isExpired ? Colors.grey : Colors.black, // dim text
+                    ),
+                  ),
                   const SizedBox(height: 4),
                   Stack(
                     children: [
@@ -224,20 +250,34 @@ class PollCard extends StatelessWidget {
     );
   }
 
+  bool _isLoadingVotes = false;
+
   Widget _buildViewVotesButton() {
     return Align(
       alignment: Alignment.centerRight,
       child: InkWell(
         onTap: () async {
-          await forumController.loadPollReactions(poll.id ?? "0");
-          showDialog(
-            context: Get.context!,
-            builder: (context) {
-              return PollResponsesDialog(
-                reactions: forumController.pollReactionList,
+          if (_isLoadingVotes) return; // Block rapid clicks
+
+          _isLoadingVotes = true;
+          try {
+            await forumController.loadPollReactions(poll.id ?? "0");
+            if (Get.context != null) {
+              await showDialog(
+                context: Get.context!,
+                builder: (context) {
+                  return PollResponsesDialog(
+                    reactions: forumController.pollReactionList,
+                  );
+                },
               );
-            },
-          );
+            }
+          } catch (e) {
+            // Optionally show a snackbar or log error
+            print("Error loading poll reactions: $e");
+          } finally {
+            _isLoadingVotes = false;
+          }
         },
         borderRadius: BorderRadius.circular(10),
         child: Container(
@@ -256,5 +296,28 @@ class PollCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+
+  String _formatTime(String? createdAt) {
+    if (createdAt == null || createdAt.isEmpty) return '';
+
+    try {
+      final createdDate = DateTime.parse(createdAt);
+      final now = DateTime.now();
+      final diff = now.difference(createdDate);
+
+      if (diff.inMinutes < 1) {
+        return 'Just now';
+      } else if (diff.inMinutes < 60) {
+        return '${diff.inMinutes} minutes ago';
+      } else if (diff.inHours < 24) {
+        return '${diff.inHours} hours ago';
+      } else {
+        return DateFormat('dd MMMM yyyy hh:mma').format(createdDate);
+      }
+    } catch (e) {
+      return '';
+    }
   }
 }

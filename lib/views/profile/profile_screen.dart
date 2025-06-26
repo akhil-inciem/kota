@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/auth_controller.dart';
 import 'package:kota/controller/user_controller.dart';
-import 'package:kota/views/drawer/drawer_screen.dart';
-import 'package:kota/views/widgets/top_bar.dart';
+import 'package:kota/views/profile/widgets/id_card.dart';
 import 'package:kota/views/profile/widgets/certifcation_widget.dart';
 import 'package:kota/views/profile/widgets/profile_change_password.dart';
 import 'package:kota/views/profile/widgets/profile_header.dart';
@@ -57,6 +55,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         SizedBox(height: 2.h),
                         ChangePasswordWidget(email: user.email!,),
+                        SizedBox(height: 2.h),
+                        IdCardWidget(user: user),
                         SizedBox(height: 2.h),
                         authController.isGuest ? SizedBox.shrink() :
                         MyCertificationsWidget(

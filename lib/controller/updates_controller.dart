@@ -14,7 +14,8 @@ class UpdateController extends GetxController {
   RxList<Map<String, dynamic>> combinedList = <Map<String, dynamic>>[].obs;
   RxList<Map<String, dynamic>> todayList = <Map<String, dynamic>>[].obs;
   RxList<Map<String, dynamic>> olderList = <Map<String, dynamic>>[].obs;
-
+  RxBool hasNewUpdates = false.obs;
+  DateTime? _latestFetchedDate;
   RxString searchQuery = ''.obs;
   RxList<Map<String, dynamic>> filteredList = <Map<String, dynamic>>[].obs;
   final TextEditingController searchController = TextEditingController();
@@ -31,19 +32,51 @@ class UpdateController extends GetxController {
   }
 
   Future<void> getUpdates() async {
-    try {
-      isLoadingUpdates.value = true;
-      final result = await _apiService.fetchUpdates();
-      final memberShip = await _apiService.fetchMembership();
-      updatesModel.value = result;
-      memberModel.value = memberShip;
-      _processUpdates(result);
-    } catch (e) {
-      print('Controller error fetching updates: $e');
-    } finally {
-      isLoadingUpdates.value = false;
+  try {
+    isLoadingUpdates.value = true;
+    final result = await _apiService.fetchUpdates();
+    final memberShip = await _apiService.fetchMembership();
+    updatesModel.value = result;
+    memberModel.value = memberShip;
+
+    bool isNewData = _checkForNewData(result);
+    if (isNewData) {
+      hasNewUpdates.value = true;
     }
+
+    _processUpdates(result);
+  } catch (e) {
+    print('Controller error fetching updates: $e');
+  } finally {
+    isLoadingUpdates.value = false;
   }
+}
+
+bool _checkForNewData(UpdatesModel? model) {
+  final newsList = model?.data?.news ?? [];
+  final eventsList = model?.data?.events ?? [];
+
+  final allDates = [
+    ...newsList.map((e) => DateTime.tryParse(e['news_date'] ?? '') ?? DateTime.fromMillisecondsSinceEpoch(0)),
+    ...eventsList.map((e) => DateTime.tryParse(e['event_date'] ?? '') ?? DateTime.fromMillisecondsSinceEpoch(0)),
+  ];
+
+  if (allDates.isEmpty) return false;
+
+  allDates.sort((a, b) => b.compareTo(a));  // Latest date at top
+  final latestDate = allDates.first;
+
+  if (_latestFetchedDate == null || latestDate.isAfter(_latestFetchedDate!)) {
+    _latestFetchedDate = latestDate;
+    return true;
+  }
+
+  return false;
+}
+
+void clearNewUpdatesFlag() {
+  hasNewUpdates.value = false;
+}
 
   void _processUpdates(UpdatesModel? model) {
     final newsList = model?.data?.news ?? [];
@@ -68,7 +101,7 @@ class UpdateController extends GetxController {
       String? description;
 
       if (item is Map<String, dynamic>) {
-        dateStr = item['event_date'] ?? ''; 
+        dateStr = item['event_date'] ?? '';
         title = item['event_title'] ?? 'Event';
         description = item['event_description'] ?? item.toString();
       } else {
@@ -100,6 +133,7 @@ class UpdateController extends GetxController {
         }).toList();
     filteredList.value = tempCombined;
   }
+
   void _applySearch() {
     final query = searchQuery.value.toLowerCase();
     if (query.isEmpty) {
@@ -113,10 +147,12 @@ class UpdateController extends GetxController {
           }).toList();
     }
   }
+
   void updateSearch(String value) {
     searchQuery.value = value;
     _applySearch();
   }
+
   void clearSearch() {
     searchQuery.value = '';
     searchController.clear();

@@ -10,6 +10,7 @@ import 'package:kota/views/drawer/executives_screen.dart';
 import 'package:kota/views/drawer/faq.screen.dart';
 import 'package:kota/views/drawer/find/find_screen.dart';
 import 'package:kota/views/drawer/mission_screen.dart';
+import 'package:kota/views/drawer/ot_colleges_screen.dart';
 import 'package:kota/views/profile/profile_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shimmer/shimmer.dart';
@@ -48,6 +49,13 @@ class DrawerPage extends StatelessWidget {
                     title: 'KOTA Executives',
                     onPressed: () {
                       Get.to(() => ExecutivePage());
+                    },
+                  ),
+                  DrawerItem(
+                    icon: Icons.school,
+                    title: 'OT Colleges',
+                    onPressed: () {
+                      Get.to(() => CollegesScreen());
                     },
                   ),
                   DrawerItem(

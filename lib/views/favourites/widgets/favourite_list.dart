@@ -212,20 +212,6 @@ class _FavoriteListState extends State<FavoriteList> {
                                       ),
                             ),
                           ),
-                          // Container(
-                          //   width: 24.w,
-                          //   height: 16.h,
-                          //   decoration: BoxDecoration(
-                          //     borderRadius: BorderRadius.circular(15),
-                          //     color: Colors.grey.shade300,
-                          //   ),
-                          //   child:  Image(
-                          //     image: NetworkImage(
-                          //       item['image'],
-                          //     ),
-                          //     fit: BoxFit.fill,
-                          //   ),
-                          // ),
                         ],
                       ),
                     ),

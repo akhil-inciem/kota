@@ -40,6 +40,7 @@ class EventsDatum {
         required this.image,
         required this.document,
         required this.status,
+        required this.author,
         required this.feesPerSeat,
         required this.location,
         required this.onlineBooking,
@@ -60,6 +61,7 @@ class EventsDatum {
     final String? image;
     final String? document;
     final String? status;
+    final dynamic author;
     final String? feesPerSeat;
     final String? location;
     final String? onlineBooking;
@@ -81,6 +83,7 @@ class EventsDatum {
             image: json["image"],
             document: json["document"],
             status: json["status"],
+            author: json["author"],
             feesPerSeat: json["fees_per_seat"],
             location: json["location"],
             onlineBooking: json["online_booking"],
@@ -103,6 +106,7 @@ class EventsDatum {
         "image": image,
         "document": document,
         "status": status,
+        "author": author,
         "fees_per_seat": feesPerSeat,
         "location": location,
         "online_booking": onlineBooking,

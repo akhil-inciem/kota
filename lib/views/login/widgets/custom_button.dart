@@ -28,7 +28,7 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final defaultBg = AppColors.primaryButton;
+    final defaultBg = AppColors.primaryColor;
     final defaultText = Colors.white;
 
     final effectiveBackgroundColor = isEnabled

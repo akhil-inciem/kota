@@ -14,24 +14,31 @@ class PollApiService {
   static final dio.Dio _dio = dio.Dio();
 
   Future<List<PollData>> fetchAllPoll() async {
-    try {
-      final response = await _dio.get(
-        ApiEndpoints.getAllPoll
-      );
+  final authController = Get.find<AuthController>();
+  final String? userId = authController.userModel.value?.data.id;
 
-      if (response.statusCode == 200 && response.data['status'] == true) {
-        final List<dynamic> dataJson = response.data['data'];
-        final List<PollData> pollList =
-            dataJson.map((e) => PollData.fromJson(e)).toList();
-        return pollList;
-      } else {
-        throw Exception("Failed to fetch reactions");
-      }
-    } catch (e) {
-      print("Error in fetchreactions: $e");
-      rethrow;
+  try {
+    final response = await _dio.get(
+      ApiEndpoints.getAllPoll,
+      queryParameters: {
+        if (userId != null) 'user_id': userId,
+      },
+    );
+
+    if (response.statusCode == 200 && response.data['status'] == true) {
+      final List<dynamic> dataJson = response.data['data'];
+      final List<PollData> pollList =
+          dataJson.map((e) => PollData.fromJson(e)).toList();
+      return pollList;
+    } else {
+      throw Exception("Failed to fetch reactions");
     }
+  } catch (e) {
+    print("Error in fetchreactions: $e");
+    rethrow;
   }
+}
+
 
   Future<List<ReactionData>> fetchPollReactions(String id) async {
     try {
@@ -39,7 +46,7 @@ class PollApiService {
         '${ApiEndpoints.pollReaction}/$id',
       );
 
-      if (response.statusCode == 200 && response.data['status'] == true) {
+      if (response.statusCode == 200 ) {
         final List<dynamic> dataJson = response.data['data'];
         final List<ReactionData> reactionDataList =
             dataJson.map((e) => ReactionData.fromJson(e)).toList();
@@ -72,7 +79,7 @@ class PollApiService {
       MapEntry('title', title),
       MapEntry('discription', "description"),
       MapEntry('created_by', userId ?? ''),
-      MapEntry('expairydate', "2025-07-15"),
+      MapEntry('expairydate', expiryDate),
       MapEntry('allowmultiple', allowMultiple == true ? '1' : '0'),
       MapEntry('is_guste', authController.isGuest ? '1' : '0'),
     ]);

@@ -1,9 +1,4 @@
-// This is where you store your dummy data for the app
 
-import 'package:flutter/material.dart';
-import 'package:kota/helper/date_helper.dart';
-import 'package:kota/model/event_model.dart';
-import 'package:kota/model/news_model.dart';
 
 class DummyData {
   static const List<String> newsItems = [
@@ -17,9 +12,6 @@ class DummyData {
   static List<Map<String, dynamic>> recommendedItems = [
     {
       'badge': 'News',
-    },
-    {
-      'badge': 'Forum',
     },
     {
       'badge': 'Event',

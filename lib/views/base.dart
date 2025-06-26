@@ -156,14 +156,16 @@ class _BaseScreenState extends State<BaseScreen> {
           ),
 
           bottomNavigationBar: Obx(
-            () => CustomBottomNavBar(
-              currentIndex: homeController.index.value,
-              onTap: (index) {
-                homeController.index.value = index;
-                _pageController.jumpToPage(index);
-              },
-            ),
-          ),
+  () => CustomBottomNavBar(
+    currentIndex: homeController.index.value,
+    onTap: (index) {
+      homeController.index.value = index;
+      _pageController.jumpToPage(index);
+    },
+    hasNewUpdates: updateController.hasNewUpdates.value,  // 👈 pass the reactive value
+  ),
+)
+,
         ),
       ),
     );

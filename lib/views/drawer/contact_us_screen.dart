@@ -24,19 +24,15 @@ class ContactUsScreen extends StatelessWidget {
   }
 
   void _sendEmail(String email) async {
-  final Uri emailUri = Uri(
-    scheme: 'mailto',
-    path: email,
-  );
+    final Uri emailUri = Uri(scheme: 'mailto', path: email);
 
-  if (await canLaunchUrl(emailUri)) {
-    await launchUrl(emailUri);
-  } else {
-    // You can show a toast or dialog here
-    debugPrint('Could not launch email client');
+    if (await canLaunchUrl(emailUri)) {
+      await launchUrl(emailUri);
+    } else {
+      // You can show a toast or dialog here
+      debugPrint('Could not launch email client');
+    }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +48,7 @@ class ContactUsScreen extends StatelessWidget {
               SizedBox(height: 3.h),
               // Intro Text
               Text(
-                'Need assistance? Reach out to our experts.',
+                'Need assistance? Reach out to our experts',
                 style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600),
               ),
               SizedBox(height: 3.h),
@@ -70,67 +66,78 @@ class ContactUsScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: Row(
-  children: [
-    GestureDetector(
-      onTap: () {
-        _callNumber(contactPhone);
-      },
-      child: CircleAvatar(
-        radius: 3.5.h,
-        backgroundColor: Colors.blue.shade100,
-        child: Icon(Icons.phone, color: AppColors.primaryButton, size: 3.h),
-      ),
-    ),
-    SizedBox(width: 4.w),
-    Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            contactPhone,
-            style: TextStyle(
-              fontSize: 16.sp,
-              color: AppColors.primaryText,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          SizedBox(height: 0.8.h),
-          Row(
-  children: [
-    Expanded(
-      child: GestureDetector(
-        onTap: () {
-          // _sendEmail(contactEmail);
-        },
-        child: Text(
-          contactEmail,
-          style: TextStyle(
-            fontSize: 16.sp,
-            color: AppColors.primaryText,
-            fontWeight: FontWeight.w500,
-            // decoration: TextDecoration.underline, // Underline to indicate it's clickable
-          ),
-          overflow: TextOverflow.ellipsis,
-        ),
-      ),
-    ),
-  ],
-),
-
-        ],
-      ),
-    ),
-  ],
-),
-
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            _callNumber(contactPhone);
+                          },
+                          child: CircleAvatar(
+                            radius: 3.5.h,
+                            backgroundColor: Colors.blue.shade100,
+                            child: Icon(
+                              Icons.phone,
+                              color: AppColors.primaryColor,
+                              size: 3.h,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 4.w),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                contactPhone,
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                  color: AppColors.primaryText,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              SizedBox(height: 0.8.h),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        // _sendEmail(contactEmail);
+                                      },
+                                      child: Text(
+                                        contactEmail,
+                                        style: TextStyle(
+                                          fontSize: 16.sp,
+                                          color: AppColors.primaryText,
+                                          fontWeight: FontWeight.w500,
+                                          // decoration: TextDecoration.underline, // Underline to indicate it's clickable
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 1.h),
+                    Divider(thickness: 1, color: Colors.grey[300]),
+                    SizedBox(height: 1.h),
+                    Text(
+                      address,
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  ],
+                ),
               ),
 
-              SizedBox(height: 2.h),
-              Text(
-                address,
-                style: TextStyle(fontSize: 14.sp, color: Colors.grey[700]),
-              ),
               SizedBox(height: 3.h),
               Text(
                 "Executive Contacts",
@@ -164,7 +171,10 @@ class ContactUsScreen extends StatelessWidget {
                         children: [
                           CircleAvatar(
                             backgroundColor: Colors.blue.shade50,
-                            child: Icon(Icons.person, color: AppColors.primaryButton),
+                            child: Icon(
+                              Icons.person,
+                              color: AppColors.primaryColor,
+                            ),
                           ),
                           SizedBox(width: 4.w),
                           Expanded(
@@ -198,7 +208,7 @@ class ContactUsScreen extends StatelessWidget {
                           IconButton(
                             icon: Icon(
                               Icons.call,
-                              color: AppColors.primaryButton,
+                              color: AppColors.primaryColor,
                               size: 3.h,
                             ),
                             onPressed: () {

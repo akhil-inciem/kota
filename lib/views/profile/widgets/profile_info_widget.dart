@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:intl/intl.dart';
 import 'package:kota/controller/auth_controller.dart';
+import 'package:kota/controller/updates_controller.dart' show UpdateController;
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class ProfileInfoWidget extends StatelessWidget {
+class ProfileInfoWidget extends StatefulWidget {
   final String email;
   final String phoneNumber;
   final String role;
@@ -15,19 +19,45 @@ class ProfileInfoWidget extends StatelessWidget {
     required this.phoneNumber,
     required this.role,
   }) : super(key: key);
+
+  @override
+  State<ProfileInfoWidget> createState() => _ProfileInfoWidgetState();
+}
+
+class _ProfileInfoWidgetState extends State<ProfileInfoWidget> {
   final authController = Get.find<AuthController>();
-  // final updateController = Get.put(UpdateController());
+  final updateController = Get.put(UpdateController());
+
+  DateTime? _lastCopyTime;
 
   bool _isExpired(DateTime expiryDate) {
     final now = DateTime.now();
     return expiryDate.isBefore(now) || expiryDate.isAtSameMomentAs(now);
   }
 
+  void _copyToClipboard(String text, String label) {
+  final now = DateTime.now();
+
+  if (_lastCopyTime == null || now.difference(_lastCopyTime!) > const Duration(seconds: 1)) {
+    Clipboard.setData(ClipboardData(text: text));
+    _lastCopyTime = now;
+
+    Fluttertoast.showToast(
+      msg: "$label copied",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.black87,
+      textColor: Colors.white,
+      fontSize: 14.0,
+    );
+  }
+}
+
   @override
   Widget build(BuildContext context) {
-    // final item = updateController.memberModel.value!.data;
-    // final expiryDate = item!.membershipExpiryDate!; // already DateTime
-    // final expired = _isExpired(expiryDate);
+    final item = updateController.memberModel.value!.data;
+    final expiryDate = item!.membershipExpiryDate!; // already DateTime
+    final expired = _isExpired(expiryDate);
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 5.w),
@@ -43,39 +73,49 @@ class ProfileInfoWidget extends StatelessWidget {
             SizedBox(height: 1.h),
             // Email Row
             Row(
-              children: [
-                const Icon(Icons.email_outlined, color: Colors.black54),
-                SizedBox(width: 5.w),
-                Expanded(
-                  child: Text(
-                    email,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black87,
-                    ),
-                  ),
+          children: [
+            const Icon(Icons.email_outlined, color: Colors.black54),
+            SizedBox(width: 5.w),
+            Expanded(
+              child: Text(
+                widget.email,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black87,
                 ),
-              ],
+              ),
             ),
-            SizedBox(height: 3.h),
-            // Phone Row
-            Row(
-              children: [
-                const Icon(Icons.phone_outlined, color: Colors.black54),
-                SizedBox(width: 5.w),
-                Expanded(
-                  child: Text(
-                    phoneNumber,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black87,
-                    ),
-                  ),
+            InkWell(
+              onTap: () => _copyToClipboard(widget.email, "Email"),
+              child: const Icon(Icons.copy, size: 18, color: Colors.black54),
+            ),
+          ],
+        ),
+        SizedBox(height: 3.h),
+
+        // Phone Row
+        Row(
+          children: [
+            const Icon(Icons.phone_outlined, color: Colors.black54),
+            SizedBox(width: 5.w),
+            Expanded(
+              child: Text(
+                widget.phoneNumber,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black87,
                 ),
-              ],
+              ),
             ),
+            InkWell(
+              onTap: () => _copyToClipboard(widget.phoneNumber, "Phone number"),
+              child: const Icon(Icons.copy, size: 18, color: Colors.black54),
+            ),
+          ],
+        ),
+
             SizedBox(height: 3.h),
             // Role and Expiry Row
             authController.isGuest
@@ -93,7 +133,7 @@ class ProfileInfoWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            role,
+                            widget.role,
                             style: const TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w400,
@@ -101,49 +141,49 @@ class ProfileInfoWidget extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: 0.5.h),
-                          // Text(
-                          //   expired
-                          //       ? 'Membership expired on ${DateFormat('dd MMM yyyy').format(expiryDate)}'
-                          //       : 'Membership valid until ${DateFormat('dd MMM yyyy').format(expiryDate)}',
-                          //   style: TextStyle(
-                          //     color:
-                          //         _isExpired(item.membershipExpiryDate!)
-                          //             ? Colors.red
-                          //             : Colors.green,
-                          //     fontSize: 12,
-                          //   ),
-                          // ),
+                          Text(
+                            expired
+                                ? 'Membership expired on ${DateFormat('dd MMM yyyy').format(expiryDate)}'
+                                : 'Membership valid until ${DateFormat('dd MMM yyyy').format(expiryDate)}',
+                            style: TextStyle(
+                              color:
+                                  _isExpired(item.membershipExpiryDate!)
+                                      ? Colors.red
+                                      : Colors.green,
+                              fontSize: 12,
+                            ),
+                          ),
                         ],
                       ),
                     ),
                   ],
                 ),
 
-            // authController.isGuest || !expired
-            //     ? SizedBox.shrink()
-            //     : SizedBox(height: 2.h),
+            authController.isGuest || !expired
+                ? SizedBox.shrink()
+                : SizedBox(height: 2.h),
 
-            // authController.isGuest || !expired
-            //     ? SizedBox.shrink()
-            //     : Align(
-            //       alignment: Alignment.centerRight,
-            //       child: Container(
-            //         decoration: BoxDecoration(
-            //           borderRadius: BorderRadius.circular(10),
-            //           color: const Color(0xFFDD3D3D),
-            //         ),
-            //         child: Padding(
-            //           padding: EdgeInsets.symmetric(
-            //             horizontal: 4.w,
-            //             vertical: 1.h,
-            //           ),
-            //           child: const Text(
-            //             "Renew Membership",
-            //             style: TextStyle(color: Colors.white, fontSize: 12),
-            //           ),
-            //         ),
-            //       ),
-            //     ),
+            authController.isGuest || !expired
+                ? SizedBox.shrink()
+                : Align(
+                  alignment: Alignment.centerRight,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: const Color(0xFFDD3D3D),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 4.w,
+                        vertical: 1.h,
+                      ),
+                      child: const Text(
+                        "Renew Membership",
+                        style: TextStyle(color: Colors.white, fontSize: 12),
+                      ),
+                    ),
+                  ),
+                ),
           ],
         ),
       ),

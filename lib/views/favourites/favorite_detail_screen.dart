@@ -173,7 +173,7 @@ class _FavoritesDetailScreenState extends State<FavoritesDetailScreen> {
                     percentage < 0.2
                         ? Colors.white
                         : AppColors
-                            .primaryButton; // 👈 You can adjust 0.2 threshold
+                            .primaryColor; // 👈 You can adjust 0.2 threshold
 
                 return Positioned(
                   top: 1.h,

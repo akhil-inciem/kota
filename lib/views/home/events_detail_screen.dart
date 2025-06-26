@@ -189,10 +189,10 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
                         1.0,
                       );
                       Color? iconColor =
-                          percentage < 0.2
+                          percentage < 0.6
                               ? Colors.white
                               : AppColors
-                                  .primaryButton; // 👈 You can adjust 0.2 threshold
+                                  .primaryColor; // 👈 You can adjust 0.2 threshold
           
                       return Positioned(
                         top: 1.h,
@@ -201,7 +201,7 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
                         child: TopBar(
                           title: "",
                           onTap: () => Get.back(),
-                          iconColor: Colors.white,
+                          iconColor: iconColor,
                         ),
                       );
                     },
@@ -216,7 +216,7 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
 
   Widget _dateAndIcons(EventsDatum item) {
     final title = item.eventName ?? 'Check this out!';
-    final url = "https://dev.kbaiota.org/news/${item.eventId}";
+    final url = "https://dev.kbaiota.org/?news/${item.eventId}";
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -247,17 +247,6 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
           children: [
             GestureDetector(
               onTap: () => _handleShare(title: title, url: url),
-              // {
-              //   final title = item.eventName ?? 'Check this out!';
-              //   // final link = widget.item.newsCategory ?? ''; // Replace with your actual link
-              //   final params = ShareParams(
-              //     title: title,
-              //     uri: Uri.parse(
-              //       "https://dev.kbaiota.org/events/${item.eventId}",
-              //     ),
-              //   );
-              //   SharePlus.instance.share(params);
-              // },
               child: Image.asset(
                 'assets/icons/share.png',
                 height: 2.5.h,

@@ -105,7 +105,7 @@ class FilterBottomSheetWidget extends StatelessWidget {
               children: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryButton,
+                    backgroundColor: AppColors.primaryColor,
                     padding:  EdgeInsets.symmetric(
                       vertical: 1.h,
                       horizontal: 10.w,
@@ -129,7 +129,7 @@ class FilterBottomSheetWidget extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: favController.resetFilters,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primaryButton,
+                        backgroundColor: AppColors.primaryColor,
                         padding:  EdgeInsets.symmetric(
                           vertical: 1.h,
                           horizontal: 4.w,

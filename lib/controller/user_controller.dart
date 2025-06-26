@@ -96,11 +96,11 @@ class UserController extends GetxController {
       );
       await loadUserProfile(); // will also reset flags
       selectedImage.value = null;
+      Get.back();
       CustomSnackbars.success(
         "Your profile has been successfully updated.",
         "Profile updated",
       );
-      Get.back();
     } catch (e) {
       error.value = e.toString();
       CustomSnackbars.oops(e.toString(), "Update failed");

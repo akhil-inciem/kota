@@ -66,7 +66,7 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
               title: "Discussion",
               leadingIconWidget: Icon(
                 Icons.close,
-                color: AppColors.primaryButton,
+                color: AppColors.primaryColor,
                 size: 22.sp,
               ),
               onTap: () => Get.back(),
@@ -173,7 +173,7 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
                       _forumController.isLoading.value
                           ? "Posting..."
                           : "Create Discussion",
-                  backgroundColor: AppColors.primaryButton,
+                  backgroundColor: AppColors.primaryColor,
                   textColor: Colors.white,
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {

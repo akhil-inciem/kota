@@ -154,7 +154,7 @@ class SearchResultClinicWidget extends StatelessWidget {
                 )
               : ListView.builder(
   itemCount: results.length,
-  padding: EdgeInsets.symmetric(horizontal: 3.w,),
+  padding: EdgeInsets.symmetric(horizontal: 3.w,vertical: 1.h),
   itemBuilder: (context, index) {
     final result = results[index];
     return ClinicTile(clinic: result, index: index);
@@ -180,12 +180,12 @@ class ClinicTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.5.h),
+      margin: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(3.w),
         border: Border.all(
-          color: Colors.grey.shade300,
+          color: Colors.grey.shade400,
           width: 0.15.w,
         ),
       ),

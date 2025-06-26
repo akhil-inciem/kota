@@ -127,6 +127,7 @@ void filterClinics(String query) {
             (item.district ?? '').toLowerCase().contains(query.toLowerCase()))
         .toList();
   }
+  
 }
 
   void resetClinicSearch() {

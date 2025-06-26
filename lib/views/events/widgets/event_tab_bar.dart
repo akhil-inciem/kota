@@ -21,7 +21,7 @@ class EventTabBar extends StatelessWidget {
           height: 4.5.h,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            padding: EdgeInsets.symmetric(horizontal: 6.w),
+            padding: EdgeInsets.symmetric(horizontal: 2.w),
             itemCount: tabs.length,
             itemBuilder: (context, index) {
               return GestureDetector(

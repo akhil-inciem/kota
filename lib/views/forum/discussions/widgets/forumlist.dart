@@ -60,13 +60,13 @@ class _ForumListState extends State<ForumList> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Image.asset(
-                      'assets/icons/favorites_unselected.png',
+                      'assets/icons/forum_unselected.png',
                       height: 8.h,
                       width: 8.h,
                     ),
                     const SizedBox(height: 12),
                     const Text(
-                      "No Favourites Available",
+                      "No Discussions Available",
                       style: TextStyle(fontSize: 18, color: Colors.black),
                     ),
                   ],
@@ -133,6 +133,7 @@ class _ForumListState extends State<ForumList> {
                                                     height: 20,
                                                     child:
                                                         CircularProgressIndicator(
+                                                          color: AppColors.primaryColor,
                                                           strokeWidth: 2,
                                                         ),
                                                   ),

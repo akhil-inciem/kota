@@ -224,7 +224,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             right: 0,
             child: Container(
               decoration: BoxDecoration(
-                color: AppColors.primaryButton,
+                color: AppColors.primaryColor,
                 shape: BoxShape.circle,
                 border: Border.all(color: Colors.white, width: 3),
                 boxShadow: [
@@ -364,7 +364,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
         child: Column(
           children: [
-            Icon(icon, size: 25.sp, color: AppColors.primaryButton),
+            Icon(icon, size: 25.sp, color: AppColors.primaryColor),
             SizedBox(height: 1.h),
             Text(
               label,

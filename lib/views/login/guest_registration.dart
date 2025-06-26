@@ -204,7 +204,7 @@ class _GuestRegistrationScreenState extends State<GuestRegistrationScreen>
                             SizedBox(height: 5.h),
                             CustomButton(
                               text: 'Sign In as a Guest',
-                              backgroundColor: AppColors.primaryButton,
+                              backgroundColor: AppColors.primaryColor,
                               textColor: Colors.white,
                               isGuestButton: false,
                               onPressed: () async {

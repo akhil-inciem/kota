@@ -95,7 +95,7 @@ class _TopBarState extends State<TopBar> {
                                         height: 24,
                                         color:
                                             widget.iconColor ??
-                                            AppColors.primaryButton,
+                                            AppColors.primaryColor,
                                       ),
                                 ),
                                 SizedBox(width: 2.w),
@@ -119,12 +119,12 @@ class _TopBarState extends State<TopBar> {
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: CustomButton(
                         text: "Register",
-                        backgroundColor: AppColors.primaryButton,
+                        backgroundColor: AppColors.primaryColor,
                         textColor: Colors.white,
                         height: 5.h,
                         onPressed: () async {
                           const url =
-                              'http://dev.kbaiota.org/index/memberSignUp';
+                              'https://kbaiota.org/index/memberSignUp';
                           if (await canLaunchUrl(Uri.parse(url))) {
                             await launchUrl(Uri.parse(url));
                             // await launch(url, forceWebView: true, enableJavaScript: true);

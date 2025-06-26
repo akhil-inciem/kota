@@ -2,8 +2,10 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:html/dom.dart' as dom;
 import 'package:intl/intl.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/home_controller.dart';
@@ -13,6 +15,7 @@ import 'package:kota/views/widgets/top_bar.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NewsDetailScreen extends StatefulWidget {
   final String newsId;
@@ -183,7 +186,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                 valueListenable: extentNotifier,
                 builder: (context, extent, _) {
                   Color iconColor =
-                      extent < 0.7 ? Colors.white : AppColors.primaryButton;
+                      extent < 0.7 ? Colors.white : AppColors.primaryColor;
                   return Positioned(
                     top: 1.h,
                     left: 0,
@@ -205,7 +208,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
 
   Widget _dateAndIcons(NewsDatum item) {
     final title = item.newsTitle ?? 'Check this out!';
-    final url = "https://dev.kbaiota.org/news/${item.newsId}";
+    final url = "https://dev.kbaiota.org/?news/${item.newsId}";
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -311,8 +314,8 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                       SizedBox(height: 2.h),
 
                       // Author or another metadata
-                      Container(height: 3.h, width: 40.w, color: Colors.white),
-                      SizedBox(height: 2.5.h),
+                      Container(height: 2.h, width: 40.w, color: Colors.white),
+                      SizedBox(height: 2.h),
 
                       // Description lines (multiple)
                       ...List.generate(
@@ -349,28 +352,33 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
   }
 
   Widget _profileRow(NewsDatum item) {
+    final hasAuthor = item.author != null && item.author.isNotEmpty;
+
+    if (!hasAuthor) {
+      // If no author, return an empty SizedBox (nothing visible)
+      return const SizedBox.shrink();
+    }
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-         CircleAvatar(
-        radius: 20,
-        backgroundImage: item.author != null && item.author.isNotEmpty
-            ? CachedNetworkImageProvider(item.author)
-            : const CachedNetworkImageProvider('https://i.pravatar.cc/300'),
-      ),
+        CircleAvatar(
+          radius: 20,
+          backgroundImage: CachedNetworkImageProvider(item.author),
+        ),
         const SizedBox(width: 15),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children:  [
+          children: [
             Text(
-              item.newsAuthor!,
-              style: TextStyle(
+              item.newsAuthor ?? "",
+              style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: Colors.black,
               ),
             ),
-            Text(
+            const Text(
               'President KOTA',
               style: TextStyle(
                 fontSize: 10,
@@ -384,10 +392,42 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
     );
   }
 
-  Widget _description(NewsDatum item) {
-    return Text(
-      item.newsDescription ?? '',
-      style: TextStyle(fontSize: 15.sp, color: Colors.black54),
-    );
+
+Widget _description(NewsDatum item) {
+  String formattedDescription = item.newsDescription ?? '';
+
+  // Replace placeholders with actual HTML links
+  for (var link in item.descriptionLinks ?? []) {
+    if (link.placeholder != null && link.url != null && link.label != null) {
+      formattedDescription = formattedDescription.replaceAll(
+        link.placeholder!,
+        '<a href="${link.url}">${link.label}</a>',
+      );
+    }
   }
+
+  // Replace \n and \t with <br> or just \n with <br>
+  formattedDescription = formattedDescription.replaceAll(RegExp(r'[\n\t]+'), '<br>');
+
+  return Html(
+    data: formattedDescription,
+    style: {
+      "*": Style(
+        fontSize: FontSize(15.sp),
+        color: Colors.black54,
+      ),
+      "a": Style(
+      color: AppColors.primaryColor, // Set link color
+      textDecoration: TextDecoration.underline, // Optional: add underline
+    ),
+    },
+    onLinkTap: (String? url, Map<String, String> attributes, dom.Element? element) {
+      if (url != null) {
+        launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+      }
+    },
+  );
+}
+
+
 }

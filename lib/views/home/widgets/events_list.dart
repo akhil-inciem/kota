@@ -1,4 +1,3 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -46,18 +45,18 @@ class _EventsListState extends State<EventsList> {
 
       if (items.isEmpty) {
         return Center(
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(Icons.newspaper, size: 48, color: Colors.grey),
-        SizedBox(height: 12),
-        Text(
-          'No Events available',
-          style: TextStyle(fontSize: 18, color: Colors.black),
-        ),
-      ],
-    ),
-  );
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.newspaper, size: 48, color: Colors.grey),
+              SizedBox(height: 12),
+              Text(
+                'No Events available',
+                style: TextStyle(fontSize: 18, color: Colors.black),
+              ),
+            ],
+          ),
+        );
       }
 
       return ListView.builder(
@@ -72,7 +71,8 @@ class _EventsListState extends State<EventsList> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => EventsDetailScreen(eventId: item.eventId!,),
+                  builder:
+                      (context) => EventsDetailScreen(eventId: item.eventId!),
                 ),
               );
             },
@@ -91,29 +91,6 @@ class _EventsListState extends State<EventsList> {
                             children: [
                               Row(
                                 children: [
-                                  // if (isFavourite) ...[
-                                  //   Container(
-                                  //     padding: const EdgeInsets.symmetric(
-                                  //       horizontal: 8,
-                                  //       vertical: 4,
-                                  //     ),
-                                  //     decoration: BoxDecoration(
-                                  //       color: getBadgeContainerColor(
-                                  //         item.badges,
-                                  //       ),
-                                  //       borderRadius: BorderRadius.circular(8),
-                                  //     ),
-                                  //     child: Text(
-                                  //       item.badges ?? 'Badge', // Badge Text
-                                  //       style: TextStyle(
-                                  //         fontSize: 10,
-                                  //         color: getBadgeTextColor(item.badges),
-                                  //       ),
-                                  //     ),
-                                  //   ),
-
-                                  //   SizedBox(width: 2.w),
-                                  // ],
                                   Container(
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 8,
@@ -180,23 +157,24 @@ class _EventsListState extends State<EventsList> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(15),
                             child:
-                                item.image == ''
-                                    ? Image.asset(
-                                      'assets/images/recommend_tile.jpg',
-                                      fit:
-                                          BoxFit
-                                              .cover, // Ensure the image fits inside the box
-                                    )
-                                    : CachedNetworkImage(
+                                (item.image != null &&
+                                        item.image!.trim().isNotEmpty)
+                                    ? CachedNetworkImage(
                                       imageUrl: item.image!,
                                       fit: BoxFit.cover,
                                       placeholder:
-                                          (context, url) => Center(
-                                            child: SizedBox.fromSize()
+                                          (context, url) => const Center(
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                            ),
                                           ),
                                       errorWidget:
                                           (context, url, error) =>
                                               const Icon(Icons.error),
+                                    )
+                                    : Image.asset(
+                                      'assets/images/recommend_tile.jpg',
+                                      fit: BoxFit.cover,
                                     ),
                           ),
                         ),

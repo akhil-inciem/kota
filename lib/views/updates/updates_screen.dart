@@ -7,7 +7,6 @@ import 'package:kota/views/widgets/search_bar.dart';
 import 'package:kota/views/widgets/top_bar.dart';
 import 'package:kota/views/updates/widgets/notification_list.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-
 class UpdatesScreen extends StatefulWidget {
   UpdatesScreen({Key? key}) : super(key: key);
 
@@ -21,12 +20,16 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
   late final bool isGuest;
 
   @override
-  void initState() {
-    super.initState();
-    authController = Get.find<AuthController>();
-    updateController = Get.find<UpdateController>();
-    isGuest = authController.isGuest;
-  }
+void initState() {
+  super.initState();
+  authController = Get.find<AuthController>();
+  updateController = Get.find<UpdateController>();
+  isGuest = authController.isGuest;
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+  updateController.clearNewUpdatesFlag();
+});
+}
+
 
   @override
   Widget build(BuildContext context) {
