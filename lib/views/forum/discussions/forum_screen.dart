@@ -29,21 +29,39 @@ class _ForumScreenState extends State<ForumScreen> {
       children: [
         TopBar(),
         SizedBox(height: 0.5.h),
-        CustomSearchBar(
-          controller: forumController.searchController,
-          onChanged: (value) => forumController.setSearchQuery(value),
-        ),
+       CustomSearchBar(
+  controller: forumController.searchController,
+  onChanged: (value) {
+    if (forumController.selectedTabIndex.value == 0) {
+    forumController.setSearchQuery(value); // For Discussions
+    } else {
+      forumController.setPollSearchQuery(value); // 👈 Add this for Polls
+    }
+  },
+),
+
         SizedBox(height: 1.h),
 
         // If not guest, show tabs
         if (!isGuest)
           ForumTabBar(
-            selectedIndex: forumController.selectedTabIndex.value,
-            onTabSelected: (index) =>
-                setState(() => forumController.selectedTabIndex.value = index),
-          ),
+  selectedIndex: forumController.selectedTabIndex.value,
+  onTabSelected: (index) {
+    setState(() {
+      forumController.selectedTabIndex.value = index;
 
-        // Content
+      forumController.searchController.clear();
+
+      if (index == 0) {
+        forumController.setSearchQuery('');
+      } else {
+        forumController.setPollSearchQuery('');
+      }
+    });
+  },
+),
+
+
         Expanded(
           child: isGuest
               ? const ForumDiscussionTab() // Always show discussion tab for guest

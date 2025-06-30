@@ -64,6 +64,7 @@ class FavoriteEvent {
         required this.status,
         required this.feesPerSeat,
         required this.location,
+        required this.descriptionLinks,
         required this.onlineBooking,
         required this.badges,
     });
@@ -82,6 +83,7 @@ class FavoriteEvent {
     final String? image;
     final String? document;
     final String? status;
+    final List<DescriptionLink>? descriptionLinks;
     final String? feesPerSeat;
     final String? location;
     final String? onlineBooking;
@@ -105,6 +107,9 @@ class FavoriteEvent {
             status: json["status"],
             feesPerSeat: json["fees_per_seat"],
             location: json["location"],
+            descriptionLinks: (json["description_links"] as List<dynamic>?)
+          ?.map((e) => DescriptionLink.fromJson(e))
+          .toList(),
             onlineBooking: json["online_booking"],
             badges: json["badges"],
         );
@@ -127,6 +132,7 @@ class FavoriteEvent {
         "status": status,
         "fees_per_seat": feesPerSeat,
         "location": location,
+        "description_links": descriptionLinks?.map((e) => e.toJson()).toList(),
         "online_booking": onlineBooking,
         "badges": badges,
     };
@@ -149,6 +155,7 @@ class FavoriteNew {
         required this.newsCategory,
         required this.author,
         required this.newsAuthor,
+        required this.descriptionLinks,
         required this.badges,
     });
 
@@ -165,6 +172,7 @@ class FavoriteNew {
     final String? status;
     final String? newsCategory;
     final dynamic author;
+    final List<DescriptionLink>? descriptionLinks;
     final String? newsAuthor;
     final String? badges;
 
@@ -183,6 +191,9 @@ class FavoriteNew {
             status: json["status"],
             newsCategory: json["news_category"],
             author: json["author"],
+            descriptionLinks: (json["description_links"] as List<dynamic>?)
+          ?.map((e) => DescriptionLink.fromJson(e))
+          .toList(),
             newsAuthor: json["news_author"],
             badges: json["badges"],
         );
@@ -200,10 +211,36 @@ class FavoriteNew {
         "added_on": addedOn,
         "added_by": addedBy,
         "status": status,
+        "description_links": descriptionLinks?.map((e) => e.toJson()).toList(),
         "news_category": newsCategory,
         "author": author,
         "news_author": newsAuthor,
         "badges": badges,
     };
 
+}
+class DescriptionLink {
+  DescriptionLink({
+    required this.placeholder,
+    required this.url,
+    required this.label,
+  });
+
+  final String? placeholder;
+  final String? url;
+  final String? label;
+
+  factory DescriptionLink.fromJson(Map<String, dynamic> json) {
+    return DescriptionLink(
+      placeholder: json["placeholder"],
+      url: json["url"],
+      label: json["label"],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        "placeholder": placeholder,
+        "url": url,
+        "label": label,
+      };
 }

@@ -38,7 +38,7 @@ class LabelledTextField extends StatelessWidget {
           Text(
             label ?? '',
             style: TextStyle(
-              color: Colors.blue.shade900,
+              color: AppColors.primaryColor,
               fontWeight: FontWeight.w600,
               fontSize: 12,
             ),
@@ -60,7 +60,7 @@ class LabelledTextField extends StatelessWidget {
       labelWidget = Text(
         label ?? '',
         style: TextStyle(
-          color: AppColors.labelText,
+          color: AppColors.primaryColor,
           fontWeight: FontWeight.w600,
           fontSize: 12,
         ),

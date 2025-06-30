@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:kota/apiServices/updates_api_services.dart';
 import 'package:kota/model/membership_model.dart';
 import 'package:kota/model/updates_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart' as DateUtils;
 
 class UpdateController extends GetxController {
@@ -39,12 +40,23 @@ class UpdateController extends GetxController {
     updatesModel.value = result;
     memberModel.value = memberShip;
 
-    bool isNewData = _checkForNewData(result);
-    if (isNewData) {
-      hasNewUpdates.value = true;
+    _processUpdates(result);
+
+    final prefs = await SharedPreferences.getInstance();
+    final lastSeenDateStr = prefs.getString('last_seen_update_date');
+    DateTime? lastSeenDate =
+        lastSeenDateStr != null ? DateTime.tryParse(lastSeenDateStr) : null;
+
+    bool isNewData = false;
+    if (combinedList.isNotEmpty) {
+      final latestDate = combinedList.first['date'] as DateTime;
+      if (lastSeenDate == null || latestDate.isAfter(lastSeenDate)) {
+        isNewData = true;
+      }
     }
 
-    _processUpdates(result);
+    hasNewUpdates.value = isNewData;
+
   } catch (e) {
     print('Controller error fetching updates: $e');
   } finally {
@@ -52,33 +64,7 @@ class UpdateController extends GetxController {
   }
 }
 
-bool _checkForNewData(UpdatesModel? model) {
-  final newsList = model?.data?.news ?? [];
-  final eventsList = model?.data?.events ?? [];
-
-  final allDates = [
-    ...newsList.map((e) => DateTime.tryParse(e['news_date'] ?? '') ?? DateTime.fromMillisecondsSinceEpoch(0)),
-    ...eventsList.map((e) => DateTime.tryParse(e['event_date'] ?? '') ?? DateTime.fromMillisecondsSinceEpoch(0)),
-  ];
-
-  if (allDates.isEmpty) return false;
-
-  allDates.sort((a, b) => b.compareTo(a));  // Latest date at top
-  final latestDate = allDates.first;
-
-  if (_latestFetchedDate == null || latestDate.isAfter(_latestFetchedDate!)) {
-    _latestFetchedDate = latestDate;
-    return true;
-  }
-
-  return false;
-}
-
-void clearNewUpdatesFlag() {
-  hasNewUpdates.value = false;
-}
-
-  void _processUpdates(UpdatesModel? model) {
+void _processUpdates(UpdatesModel? model) {
     final newsList = model?.data?.news ?? [];
     final eventsList = model?.data?.events ?? [];
 
@@ -86,12 +72,12 @@ void clearNewUpdatesFlag() {
 
     // Normalize News
     for (final item in newsList) {
-      final dateStr = item['news_date'] ?? '';
+      final dateStr = item['added_on'] ?? '';
       final parsedDate = DateTime.tryParse(dateStr) ?? DateTime.now();
       tempCombined.add({
         'type': 'news',
-        'title': item['news_name'] ?? 'No Title',
-        'description': item['news_sub_title'] ?? 'No Description',
+        'title': item['news_title'] ?? 'No Title',
+        'description': item['news_description'] ?? 'No Description',
         'date': parsedDate,
       });
     }
@@ -101,7 +87,7 @@ void clearNewUpdatesFlag() {
       String? description;
 
       if (item is Map<String, dynamic>) {
-        dateStr = item['eventstart_date_date'] ?? '';
+        dateStr = item['added_on'] ?? '';
         title = item['event_name'] ?? 'Event';
         description = item['event_description'] ?? item.toString();
       } else {
@@ -134,6 +120,41 @@ void clearNewUpdatesFlag() {
     filteredList.value = tempCombined;
   }
 
+// bool _checkForNewData(UpdatesModel? model) {
+//   final newsList = model?.data?.news ?? [];
+//   final eventsList = model?.data?.events ?? [];
+
+//   final allDates = [
+//     ...newsList.map((e) => DateTime.tryParse(e['news_date'] ?? '') ?? DateTime.fromMillisecondsSinceEpoch(0)),
+//     ...eventsList.map((e) => DateTime.tryParse(e['event_date'] ?? '') ?? DateTime.fromMillisecondsSinceEpoch(0)),
+//   ];
+
+//   if (allDates.isEmpty) return false;
+
+//   allDates.sort((a, b) => b.compareTo(a));  // Latest date at top
+//   final latestDate = allDates.first;
+
+//   if (_latestFetchedDate == null || latestDate.isAfter(_latestFetchedDate!)) {
+//     _latestFetchedDate = latestDate;
+//     return true;
+//   }
+
+//   return false;
+// }
+
+void clearNewUpdatesFlag() {
+  hasNewUpdates.value = false;
+
+  // Save latest date to prefs
+  if (combinedList.isNotEmpty) {
+    final latestDate = combinedList.first['date'] as DateTime;
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setString('last_seen_update_date', latestDate.toIso8601String());
+    });
+  }
+}
+
+  
   void _applySearch() {
     final query = searchQuery.value.toLowerCase();
     if (query.isEmpty) {

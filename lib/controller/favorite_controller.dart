@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kota/apiServices/favorite_api_services.dart';
@@ -43,6 +45,7 @@ class FavouriteController extends GetxController {
             'badge': news.badges ?? '',
             'image': news.newsImage ?? '',
             'data': news,
+            'descriptionLinks' : news.descriptionLinks
           });
         }
       }
@@ -58,6 +61,7 @@ class FavouriteController extends GetxController {
             'badge': event.badges ?? '',
             'image': event.image ?? '',
             'data': event,
+            'descriptionLinks' : event.descriptionLinks
           });
         }
       }

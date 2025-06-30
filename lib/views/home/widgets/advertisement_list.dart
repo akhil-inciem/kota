@@ -58,7 +58,7 @@ class _AdvertisementListState extends State<AdvertisementList> {
         return Padding(
           padding: EdgeInsets.symmetric(horizontal: 3.w),
           child: SizedBox(
-            height: 30.h,
+            height: 22.h,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: 3,
@@ -70,51 +70,58 @@ class _AdvertisementListState extends State<AdvertisementList> {
 
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 3.w),
-        child: Column(
-          children: [
-            SizedBox(
-              height: 22.h,
-              child: PageView.builder(
-                controller: _pageController,
-                itemCount: advertisements.length,
-                onPageChanged: (index) {
-                  controller.currentAdIndex.value = index;
-                },
-                itemBuilder: (context, index) {
-                  final ad = advertisements[index];
-                  return AdvertisementCard(imageUrl: ad.advtImage ?? '');
-                },
+        child: SizedBox(
+          height: 22.h, // total height including PageView and dots
+          child: Column(
+            children: [
+              SizedBox(
+                height: 20.5.h,
+                child: ScrollConfiguration(
+                  behavior: ScrollConfiguration.of(context).copyWith(
+                    scrollbars: false,
+                    overscroll: false,
+                    physics:
+                        const ClampingScrollPhysics(), // disables iOS bouncing
+                  ),
+                  child: PageView.builder(
+                    controller: _pageController,
+                    itemCount: advertisements.length,
+                    onPageChanged: (index) {
+                      controller.currentAdIndex.value = index;
+                    },
+                    itemBuilder: (context, index) {
+                      final ad = advertisements[index];
+                      return AdvertisementCard(imageUrl: ad.advtImage ?? '');
+                    },
+                  ),
+                ),
               ),
-            ),
-            if (advertisements.length > 1)
-              Padding(
-                padding: const EdgeInsets.only(top: 2),
-                child: Obx(() {
+              if (advertisements.length > 1)
+                Obx(() {
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(advertisements.length, (index) {
                       final isActive = index == controller.currentAdIndex.value;
                       return AnimatedContainer(
-                        duration: const Duration(milliseconds: 1500),
-                        margin: const EdgeInsets.symmetric(horizontal: 4),
-                        width: isActive ? 12 : 8,
-                        height: 8,
+                        duration: const Duration(milliseconds: 500),
+                        margin: EdgeInsets.symmetric(horizontal: 1.w),
+                        width: isActive ? 3.w : 2.w,
+                        height: 1.h,
                         decoration: BoxDecoration(
                           color: isActive ? Colors.black : Colors.grey,
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(1.w),
                         ),
                       );
                     }),
                   );
                 }),
-              ),
-          ],
+            ],
+          ),
         ),
       );
     });
   }
 }
-
 
 class AdvertisementCard extends StatelessWidget {
   final String imageUrl;
@@ -124,12 +131,12 @@ class AdvertisementCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8),
+      padding: EdgeInsets.all(2.w),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(3.w),
         child: Container(
-          width: 85.w,
-          height: 16.5.h,
+          width: 90.w,
+          height: 20.h,
           color: Colors.grey[300],
           child:
               imageUrl.isNotEmpty
@@ -144,7 +151,9 @@ class AdvertisementCard extends StatelessWidget {
                         (context, url, error) =>
                             const Icon(Icons.error, color: Colors.red),
                   )
-                  : const Center(child: Text("No Image")),
+                  : Center(
+                    child: Text("No Image", style: TextStyle(fontSize: 12.sp)),
+                  ),
         ),
       ),
     );
@@ -157,13 +166,13 @@ class ShimmerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8),
+      padding: EdgeInsets.all(2.w),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(3.w),
         child: Shimmer.fromColors(
           baseColor: Colors.grey.withOpacity(0.15),
           highlightColor: Colors.grey.withOpacity(0.25),
-          child: Container(width: 90.w, height: 16.5.h, color: Colors.white),
+          child: Container(width: 90.w, height: 16.h, color: Colors.white),
         ),
       ),
     );

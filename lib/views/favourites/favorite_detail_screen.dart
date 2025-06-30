@@ -2,7 +2,9 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
+import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' as html_parser;
 import 'package:intl/intl.dart';
 import 'package:kota/constants/colors.dart';
@@ -12,6 +14,7 @@ import 'package:kota/model/event_model.dart';
 import 'package:kota/views/widgets/top_bar.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FavoritesDetailScreen extends StatefulWidget {
   final Map<String, dynamic> item;
@@ -279,9 +282,73 @@ class _FavoritesDetailScreenState extends State<FavoritesDetailScreen> {
   }
 
   Widget _description() {
-    return Text(
-      _htmlToPlainText(widget.item['description']),
-      style: TextStyle(fontSize: 15.sp, color: Colors.black54),
-    );
+    String formattedDescription = widget.item['description'] ?? '';
+
+    // Replace placeholders with actual HTML links
+  for (var link in widget.item['descriptionLinks'] ?? []) {
+    if (link.placeholder != null && link.url != null && link.label != null) {
+      formattedDescription = formattedDescription.replaceAll(
+        link.placeholder!,
+        '<a href="${link.url}">${link.label}</a>',
+      );
+    }
   }
+
+  // Replace \n and \t with <br> or just \n with <br>
+  formattedDescription = formattedDescription.replaceAll(RegExp(r'[\n\t]+'), '<br>');
+
+  return Html(
+    data: formattedDescription,
+    style: {
+      "*": Style(
+        fontSize: FontSize(15.sp),
+        color: Colors.black54,
+      ),
+      "a": Style(
+      color: AppColors.primaryColor, // Set link color
+      textDecoration: TextDecoration.underline, // Optional: add underline
+    ),
+    },
+    onLinkTap: (String? url, Map<String, String> attributes, dom.Element? element) {
+      if (url != null) {
+        launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+      }
+    },
+  );
+  }
+//   Widget _description(NewsDatum item) {
+//   String formattedDescription = item.newsDescription ?? '';
+
+//   // Replace placeholders with actual HTML links
+//   for (var link in item.descriptionLinks ?? []) {
+//     if (link.placeholder != null && link.url != null && link.label != null) {
+//       formattedDescription = formattedDescription.replaceAll(
+//         link.placeholder!,
+//         '<a href="${link.url}">${link.label}</a>',
+//       );
+//     }
+//   }
+
+//   // Replace \n and \t with <br> or just \n with <br>
+//   formattedDescription = formattedDescription.replaceAll(RegExp(r'[\n\t]+'), '<br>');
+
+//   return Html(
+//     data: formattedDescription,
+//     style: {
+//       "*": Style(
+//         fontSize: FontSize(15.sp),
+//         color: Colors.black54,
+//       ),
+//       "a": Style(
+//       color: AppColors.primaryColor, // Set link color
+//       textDecoration: TextDecoration.underline, // Optional: add underline
+//     ),
+//     },
+//     onLinkTap: (String? url, Map<String, String> attributes, dom.Element? element) {
+//       if (url != null) {
+//         launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+//       }
+//     },
+//   );
+// }
 }

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:kota/controller/drawer_controller.dart';
 import 'package:kota/model/colleges_model.dart';
 import 'package:kota/views/drawer/widgets/college_tab_bar.dart';
 import 'package:kota/views/home/widgets/home_tab_bar.dart';
+import 'package:kota/views/widgets/search_bar.dart';
 
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -20,6 +22,7 @@ class _CollegesScreenState extends State<CollegesScreen> {
     setState(() {
       selectedIndex = index;
     });
+    controller.clearSearch(index == 0); // clear search and reset list
   }
 
   @override
@@ -32,6 +35,12 @@ class _CollegesScreenState extends State<CollegesScreen> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
               child: _buildAppBar(),
+            ),
+            CustomSearchBar(
+              controller: controller.searchController,
+              onChanged: (query) {
+                controller.filterColleges(selectedIndex == 0);
+              },
             ),
             CollegeTabBar(
               selectedIndex: selectedIndex,
@@ -52,6 +61,7 @@ class _CollegesScreenState extends State<CollegesScreen> {
       ),
     );
   }
+
   Widget _buildAppBar() {
     return Row(
       children: [
@@ -67,10 +77,7 @@ class _CollegesScreenState extends State<CollegesScreen> {
         SizedBox(width: 4.w),
         Text(
           "OT Colleges",
-          style: TextStyle(
-            fontSize: 17.sp,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.w600),
         ),
       ],
     );
@@ -89,35 +96,62 @@ class _CollegesScreenState extends State<CollegesScreen> {
       separatorBuilder: (_, __) => SizedBox(height: 2.h),
       itemBuilder: (context, index) {
         final college = colleges[index];
+        final fullDetails = _buildFullDetailsText(college, index);
+
         return Card(
           elevation: 2,
           child: Padding(
             padding: EdgeInsets.all(3.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Stack(
               children: [
-                Text(
-                  "${index + 1}. ${college.collegeName}",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16.sp,
+                Padding(
+                  padding: EdgeInsets.only(right: 36), // Leave space for icon
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "${index + 1}. ${college.collegeName}",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16.sp,
+                        ),
+                      ),
+                      SizedBox(height: 2.h),
+                      _buildInfoRow(Icons.school, college.university),
+                      SizedBox(height: 1.h),
+                      _buildInfoRow(Icons.person, college.principal),
+                      SizedBox(height: 1.h),
+                      _buildInfoRow(Icons.location_on, college.address),
+                      SizedBox(height: 1.h),
+                      _buildInfoRow(
+                        Icons.location_city,
+                        "${college.city}, ${college.state}",
+                      ),
+                      SizedBox(height: 1.h),
+                      _buildInfoRow(Icons.book, _buildCoursesText(college)),
+                      SizedBox(height: 1.h),
+                      _buildInfoRow(
+                        Icons.verified,
+                        _buildAccreditationText(college),
+                        iconColor: Colors.green,
+                      ),
+                    ],
                   ),
                 ),
-                SizedBox(height: 2.h),
-                _buildInfoRow(Icons.school, college.university),
-                SizedBox(height: 1.h),
-                _buildInfoRow(Icons.person, college.principal),
-                SizedBox(height: 1.h),
-                _buildInfoRow(Icons.location_on, college.address),
-                SizedBox(height: 1.h),
-                _buildInfoRow(Icons.location_city, "${college.city}, ${college.state}"),
-                SizedBox(height: 1.h),
-                _buildInfoRow(Icons.book, _buildCoursesText(college)),
-                SizedBox(height: 1.h),
-                _buildInfoRow(
-                  Icons.verified,
-                  _buildAccreditationText(college),
-                  iconColor: Colors.green,
+                Positioned(
+                  top: 4,
+                  right: 4,
+                  child: IconButton(
+                    icon: Icon(Icons.copy, size: 20.sp),
+                    onPressed: () {
+                      Clipboard.setData(ClipboardData(text: fullDetails));
+                      Get.snackbar(
+                        "Copied",
+                        "College details copied to clipboard",
+                        snackPosition: SnackPosition.BOTTOM,
+                      );
+                    },
+                  ),
                 ),
               ],
             ),
@@ -125,6 +159,18 @@ class _CollegesScreenState extends State<CollegesScreen> {
         );
       },
     );
+  }
+
+  String _buildFullDetailsText(OtCollegesKerala college, int index) {
+    return '''
+${index + 1}. ${college.collegeName}
+University: ${college.university}
+Principal: ${college.principal}
+Address: ${college.address}
+City/State: ${college.city}, ${college.state}
+${_buildCoursesText(college)}
+${_buildAccreditationText(college)}
+''';
   }
 
   Widget _buildInfoRow(

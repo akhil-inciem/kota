@@ -23,39 +23,44 @@ class PollList extends StatefulWidget {
 class _PollListState extends State<PollList> {
   final controller = Get.put(ForumController());
 
- @override
-Widget build(BuildContext context) {
-  return Obx(() {
-    if (controller.isLoading.value) {
-      return const Center(child: PollShimmer());
-    }
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      if (controller.isLoading.value) {
+        return const Center(child: PollShimmer());
+      }
 
-    return ListView.separated(
-      itemCount: controller.pollsList.length,
-      separatorBuilder: (_, __) => Divider(color: Colors.grey.shade300),
-      itemBuilder: (context, index) {
-        return Obx(() {
-          final poll = controller.pollsList[index];
-          final selected = controller.selectedPollAnswers[index] ?? {};
-          return PollCard(
-            poll: poll,
-            pollIndex: index,
-            selectedOptions: selected,
-            onToggle: controller.togglePollOption,
+      final items = controller.filteredPolls.value; // ✅ access .value
+
+      return ListView.separated(
+        itemCount: items.length,
+        separatorBuilder: (_, __) => Divider(color: Colors.grey.shade300),
+        itemBuilder: (context, index) {
+          final poll = items[index];
+          // final fullIndex = controller.pollsList.indexWhere((e) => e.id == poll.id);
+          // final selected = controller.selectedPollAnswers[fullIndex] ?? {};
+          return Obx(() {
+              return PollCard(
+                poll: poll,
+                pollIndex: index, // Optional now
+                selectedOptions: controller.selectedPollAnswers[poll.id] ?? {},
+                onToggle: controller.togglePollOption,
+              );
+            }
           );
-        });
-      },
-    );
-  });
+
+        },
+      );
+    });
+  }
 }
 
-}
 
 class PollCard extends StatelessWidget {
   final PollData poll;
   final int pollIndex;
   final Set<int> selectedOptions;
-  final void Function(int pollIndex, int optionIndex, bool isMultiple) onToggle;
+  final void Function(String pollIndex, int optionIndex, bool isMultiple) onToggle;
 
   PollCard({
     super.key,
@@ -203,11 +208,7 @@ selectedOptions.isEmpty
       onTap:
           isExpired
               ? null
-              : () => onToggle(
-                pollIndex,
-                index,
-                isMultiple,
-              ), // 👈 disable if expired
+              : () => onToggle(poll.id!, index, isMultiple), // 👈 disable if expired
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Row(

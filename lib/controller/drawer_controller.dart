@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:kota/apiServices/drawer_api_services.dart';
@@ -13,11 +14,14 @@ class SideMenuController extends GetxController {
   final visionMission = <VisionDatum>[].obs;
   RxBool isLoading = false.obs;
   RxList<AbMemberFaq> faqList = <AbMemberFaq>[].obs;
+  List<OtCollegesKerala> allKeralaColleges = [];
+List<OtCollegesKerala> allNonKeralaColleges = [];
   RxList<OtCollegesKerala> keralaColleges = <OtCollegesKerala>[].obs;
   RxList<OtCollegesKerala> nonKeralaColleges = <OtCollegesKerala>[].obs; 
   final DrawerApiServices _drawerApiServices = DrawerApiServices();
   RxInt expandedIndex = (-1).obs;
-
+  final TextEditingController searchController = TextEditingController();
+  
   @override
   void onInit() {
     super.onInit();
@@ -25,6 +29,28 @@ class SideMenuController extends GetxController {
   fetchVisionAndMission();
   fetchExecutives();
   loadColleges();
+  }
+
+  void filterColleges(bool isKerala) {
+    final query = searchController.text.toLowerCase();
+    if (isKerala) {
+      keralaColleges.assignAll(
+        allKeralaColleges.where((c) => c.collegeName.toLowerCase().contains(query)),
+      );
+    } else {
+      nonKeralaColleges.assignAll(
+        allNonKeralaColleges.where((c) => c.collegeName.toLowerCase().contains(query)),
+      );
+    }
+  }
+
+  void clearSearch(bool isKerala) {
+    searchController.clear();
+    if (isKerala) {
+      keralaColleges.assignAll(allKeralaColleges);
+    } else {
+      nonKeralaColleges.assignAll(allNonKeralaColleges);
+    }
   }
 
   Future<void> fetchExecutives() async {
@@ -42,18 +68,25 @@ class SideMenuController extends GetxController {
   }
 
   Future<void> loadColleges() async {
-    try {
-      isLoading.value = true;
-      final data = await _drawerApiServices.fetchColleges();
-      keralaColleges.value = data['kerala'] ?? [];
-      nonKeralaColleges.value = data['nonKerala'] ?? [];
-    } catch (e) {
-      print("Controller error: $e");
-      Get.snackbar("Error", e.toString());
-    } finally {
-      isLoading.value = false;
-    }
+  try {
+    isLoading.value = true;
+    final data = await _drawerApiServices.fetchColleges();
+
+    // Store the master data
+    allKeralaColleges = data['kerala'] ?? [];
+    allNonKeralaColleges = data['nonKerala'] ?? [];
+
+    // Set default lists
+    keralaColleges.assignAll(allKeralaColleges);
+    nonKeralaColleges.assignAll(allNonKeralaColleges);
+  } catch (e) {
+    print("Controller error: $e");
+    Get.snackbar("Error", e.toString());
+  } finally {
+    isLoading.value = false;
   }
+}
+
 
   void toggleExpansion(int index) {
     expandedIndex.value = index;

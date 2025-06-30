@@ -55,9 +55,12 @@ class ForumController extends GetxController {
   final allowMultiple = false.obs;
   final pollReactionList = <ReactionData>[];
   final allowMultipleSwitchController = ValueNotifier<bool>(false);
-  final pollsList = <PollData>[];
-  final selectedPollAnswers = <int, Set<int>>{}.obs;
+  final pollsList = <PollData>[].obs;
+  final filteredPolls = <PollData>[].obs;
+  final selectedPollAnswers = <String, Set<int>>{}.obs; // key = poll.id
+
   final Rx<DateTime?> pollExpiryDate = Rx<DateTime?>(null);
+  final pollSearchQuery = ''.obs;
   final Map<String, Set<int>> userSelectedOptionsCache = {};
 
 
@@ -208,8 +211,7 @@ class ForumController extends GetxController {
     final filtered =
         originalThreadsList.where((thread) {
           final title = thread.title?.toLowerCase() ?? '';
-          final description = thread.content?.toLowerCase() ?? '';
-          return title.contains(query) || description.contains(query);
+          return title.contains(query);
         }).toList();
 
     threadsList.assignAll(filtered);
@@ -388,11 +390,12 @@ class ForumController extends GetxController {
     final fetchedPolls = await _pollApiService.fetchAllPoll();
     
     pollsList.assignAll(fetchedPolls);
+    filteredPolls.assignAll(pollsList);
     selectedPollAnswers.clear(); // clear previous selections
 
-    // Initialize selected options for each poll
-    for (int i = 0; i < pollsList.length; i++) {
-      initializeSelectedOptions(pollsList[i], i);
+    // Initialize selected options using poll.id as key
+    for (final poll in pollsList) {
+      initializeSelectedOptions(poll); // 👈 pass PollData only
     }
 
   } catch (e) {
@@ -403,6 +406,22 @@ class ForumController extends GetxController {
 }
 
 
+void setPollSearchQuery(String query) {
+  pollSearchQuery.value = query;
+  filterPolls();
+}
+
+void filterPolls() {
+  final query = pollSearchQuery.value.toLowerCase();
+  if (query.isEmpty) {
+    filteredPolls.assignAll(pollsList);
+  } else {
+    filteredPolls.assignAll(
+      pollsList.where((poll) =>
+          poll.title?.toLowerCase().contains(query) == true),
+    );
+  }
+}
 
   Future<void> loadPollReactions(String id) async {
     try {
@@ -439,7 +458,7 @@ class ForumController extends GetxController {
       pollFields.clear();
       allowMultiple.value = false;
     } catch (e) {
-      Get.snackbar('Error', e.toString());
+      CustomSnackbars.oops("Poll creation failed", "Oops");
     } finally {
       isLoading.value = false;
     }
@@ -466,7 +485,7 @@ class ForumController extends GetxController {
       pollFields.clear();
       allowMultiple.value = false;
     } catch (e) {
-      Get.snackbar('Error', e.toString());
+      CustomSnackbars.oops("Poll creation failed", "Oops");
     } finally {
       isLoading.value = false;
     }
@@ -482,7 +501,7 @@ void validateCreatePoll() {
 }
 
 
-void initializeSelectedOptions(PollData poll, int pollIndex) {
+void initializeSelectedOptions(PollData poll) {
   final selected = <int>{};
   final options = _parseOptions(poll.pollFeild ?? '');
 
@@ -500,78 +519,66 @@ void initializeSelectedOptions(PollData poll, int pollIndex) {
         if (idx != -1) selected.add(idx);
       }
     } catch (e) {
-      // If jsonDecode fails, treat userVote as plain string (non-JSON)
-      final rawVote = poll.userVote!;
-      final idx = options.indexOf(rawVote);
+      final idx = options.indexOf(poll.userVote!);
       if (idx != -1) selected.add(idx);
-
-      debugPrint('Error decoding user_vote, treating as plain string: $e');
     }
   }
 
-  selectedPollAnswers[pollIndex] = selected;
+  selectedPollAnswers[poll.id!] = selected; // use poll.id
 }
-
 
 
   // In ForumController.dart
-void togglePollOption(int pollIndex, int optionIndex, bool isMultiple) {
-  final selected = selectedPollAnswers[pollIndex] ?? <int>{};
+void togglePollOption(String pollId, int optionIndex, bool isMultiple) {
+  final pollIndex = pollsList.indexWhere((p) => p.id == pollId);
+  if (pollIndex == -1) return;
+
+  final selected = selectedPollAnswers[pollId] ?? <int>{};
   final pollData = pollsList[pollIndex];
   final options = _parseOptions(pollData.pollFeild ?? '');
   final updatedCounts = Map<String, num>.from(pollData.reactionCounts);
+  final tappedOptionName = options[optionIndex];
 
+  // Update logic same as before
   if (isMultiple) {
     if (selected.contains(optionIndex)) {
       selected.remove(optionIndex);
-      // Decrement vote
-      final optionName = options[optionIndex];
-      updatedCounts[optionName] = (updatedCounts[optionName] ?? 1) - 1;
+      updatedCounts[tappedOptionName] = (updatedCounts[tappedOptionName] ?? 1) - 1;
     } else {
       selected.add(optionIndex);
-      // Increment vote
-      final optionName = options[optionIndex];
-      updatedCounts[optionName] = (updatedCounts[optionName] ?? 0) + 1;
+      updatedCounts[tappedOptionName] = (updatedCounts[tappedOptionName] ?? 0) + 1;
     }
   } else {
     if (selected.contains(optionIndex)) {
-      // Unselecting the current one
       selected.clear();
-      final optionName = options[optionIndex];
-      updatedCounts[optionName] = (updatedCounts[optionName] ?? 1) - 1;
+      updatedCounts[tappedOptionName] = (updatedCounts[tappedOptionName] ?? 1) - 1;
     } else {
-      // Remove previous selection's vote
       if (selected.isNotEmpty) {
-        final prevIndex = selected.first;
-        final prevOptionName = options[prevIndex];
+        final prevOptionName = options[selected.first];
         updatedCounts[prevOptionName] = (updatedCounts[prevOptionName] ?? 1) - 1;
       }
-      selected..clear()..add(optionIndex);
-      final optionName = options[optionIndex];
-      updatedCounts[optionName] = (updatedCounts[optionName] ?? 0) + 1;
+      selected
+        ..clear()
+        ..add(optionIndex);
+      updatedCounts[tappedOptionName] = (updatedCounts[tappedOptionName] ?? 0) + 1;
     }
   }
 
-  selectedPollAnswers[pollIndex] = selected;
-  pollsList[pollIndex] = pollData.copyWith(reactionCounts: updatedCounts);
+  selectedPollAnswers[pollId] = selected;
 
-  // Submit updated vote to backend if needed
-  if (selected.isNotEmpty) {
-    final selectedOptionNames = selected.map((i) => options[i]).toList();
-    _submitPollVote(pollData.id ?? '',  selectedOptionNames.first);
+  // ✅ Update both lists
+  final updatedPoll = pollData.copyWith(reactionCounts: updatedCounts);
+  pollsList[pollIndex] = updatedPoll;
+
+  final filteredIndex = filteredPolls.indexWhere((p) => p.id == pollId);
+  if (filteredIndex != -1) {
+    filteredPolls[filteredIndex] = updatedPoll;
   }
+
+  // Send single tapped item to backend
+  _submitPollVote(pollId, tappedOptionName);
 }
 
-
-
-/// Get names for selected indexes
-List<String> _getSelectedOptionNames(
-  PollData poll,
-  List<int> selectedIndexes,
-) {
-  final options = _parseOptions(poll.pollFeild ?? '');
-  return selectedIndexes.map((i) => options[i]).toList();
-}
 
 /// Final method now only needs pollId and selected reaction
 Future<void> _submitPollVote(String pollId, String reaction) async {

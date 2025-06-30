@@ -256,28 +256,25 @@ class ViewProfileItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 2.5.w),
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.w),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 2.5.w),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white, // Retain white background
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: ListTile(
+          contentPadding: EdgeInsets.symmetric(horizontal: 2.w),
+          leading: const Icon(Icons.person_outline, color: Colors.black),
+          title: const Text(
+            'View Profile',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
           ),
-          child: Row(
-            children: const [
-              Icon(Icons.person_outline, color: Colors.black),
-              SizedBox(width: 16),
-              Text(
-                'View Profile',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-              ),
-            ],
-          ),
+          onTap: () => Get.to(() => ProfilePage()),
         ),
       ),
-      onTap: () => Get.to(() => ProfilePage()),
     );
   }
 }
+
+

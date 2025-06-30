@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/forum_controller.dart';
-import 'package:kota/views/login/widgets/custom_button.dart';
+import 'package:kota/views/widgets/custom_snackbar.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class AddImageSection extends StatelessWidget {
@@ -18,7 +18,18 @@ class AddImageSection extends StatelessWidget {
     final List<XFile>? pickedImages = await _picker.pickMultiImage();
     if (pickedImages != null && pickedImages.isNotEmpty) {
       for (final image in pickedImages) {
-        _forumController.addImage(image); // using controller method
+        final file = File(image.path);
+        final fileSizeInBytes = await file.length();
+        final fileSizeInMB = fileSizeInBytes / (1024*1024);
+
+        if (fileSizeInMB > 5) {
+          CustomSnackbars.oops(
+            'Please select images smaller than 5 MB',
+            'Image too large',
+          );
+          continue;
+        }
+        _forumController.addImage(image);
       }
     }
   }
@@ -63,51 +74,56 @@ class AddImageSection extends StatelessWidget {
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: List.generate(_forumController.selectedImages.length, (index) {
-                        final image = _forumController.selectedImages[index];
-                        return Padding(
-                          padding: EdgeInsets.only(right: 2.w, top: 1.h),
-                          child: Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              Container(
-                                height: 11.h,
-                                width: 13.h,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: AppColors.primaryBackground,
-                                  image: DecorationImage(
-                                    image: FileImage(File(image.path)),
-                                    fit: BoxFit.cover,
+                      children: List.generate(
+                        _forumController.selectedImages.length,
+                        (index) {
+                          final image = _forumController.selectedImages[index];
+                          return Padding(
+                            padding: EdgeInsets.only(right: 2.w, top: 1.h),
+                            child: Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                Container(
+                                  height: 11.h,
+                                  width: 13.h,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: AppColors.primaryBackground,
+                                    image: DecorationImage(
+                                      image: FileImage(File(image.path)),
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Positioned(
-                                top: -1.h,
-                                right: -1.w,
-                                child: GestureDetector(
-                                  onTap: () => _forumController.removeImage(index),
-                                  child: Container(
-                                    height: 2.5.h,
-                                    width: 2.5.h,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.primaryColor,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: const Center(
-                                      child: Icon(
-                                        Icons.close,
-                                        color: Colors.white,
-                                        size: 16,
+                                Positioned(
+                                  top: -1.h,
+                                  right: -1.w,
+                                  child: GestureDetector(
+                                    onTap:
+                                        () =>
+                                            _forumController.removeImage(index),
+                                    child: Container(
+                                      height: 2.5.h,
+                                      width: 2.5.h,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.primaryColor,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: const Center(
+                                        child: Icon(
+                                          Icons.close,
+                                          color: Colors.white,
+                                          size: 16,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -115,7 +131,6 @@ class AddImageSection extends StatelessWidget {
             ],
           ),
           SizedBox(height: 4.h),
-         
         ],
       ),
     );

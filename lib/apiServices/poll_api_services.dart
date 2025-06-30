@@ -79,7 +79,7 @@ class PollApiService {
       MapEntry('title', title),
       MapEntry('discription', "description"),
       MapEntry('created_by', userId ?? ''),
-      MapEntry('expairydate', expiryDate),
+      MapEntry('expairydate',  expiryDate.split(' ').first),
       MapEntry('allowmultiple', allowMultiple == true ? '1' : '0'),
       MapEntry('is_guste', authController.isGuest ? '1' : '0'),
     ]);
@@ -97,7 +97,9 @@ class PollApiService {
       throw Exception("Failed to create poll: ${response.data}");
     }
   } catch (e) {
+    print(e);
     throw Exception("Create poll error: $e");
+    
   }
 }
 
@@ -161,7 +163,6 @@ static Future<void> editPoll({
 
     try {
       final response = await _dio.post(ApiEndpoints.submitPoll, data: formData);
-
       if (response.statusCode == 200 && response.data['status'] == true) {
         print("Poll reaction submitted successfully");
       } else {

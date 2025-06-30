@@ -65,10 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Stack(
             children: [
               // Advertisement list at the bottom
-              ListView(
-                padding: EdgeInsets.zero,
-                children: [AdvertisementList()],
-              ),
+              AdvertisementList(),
 
               Positioned.fill(
                 child: DraggableScrollableSheet(
