@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -8,7 +9,7 @@ import 'package:kota/model/favorite_model.dart';
 class FavouriteController extends GetxController {
   Rx<DateTime?> selectedDate = Rx<DateTime?>(null);
   Rx<String?> selectedCategory = Rx<String?>(null);
-  final isLoading = true.obs;
+  final isLoading = false.obs; // Initially false, shimmer shows only on data change
   final searchQuery = ''.obs;
   final TextEditingController searchController = TextEditingController();
 
@@ -16,8 +17,38 @@ class FavouriteController extends GetxController {
   final filteredList = <Map<String, dynamic>>[].obs;
 
   final FavoritesApiService _favoritesApiService = FavoritesApiService();
-  
-  bool _hasFetchedFavorites = false; // <-- NEW FLAG
+
+  /// Compares current data with new data to detect change
+  bool _hasDataChanged(List<Map<String, dynamic>> newData) {
+  if (allItems.length != newData.length) return true;
+
+  for (int i = 0; i < newData.length; i++) {
+    final oldJson = jsonEncode(normalizeMap(allItems[i]));
+    final newJson = jsonEncode(normalizeMap(newData[i]));
+    if (oldJson != newJson) return true;
+  }
+  return false;
+}
+
+  Map<String, dynamic> normalizeMap(Map<String, dynamic> input) {
+  return input.map((key, value) {
+    if (value is DateTime) {
+      return MapEntry(key, value.toIso8601String());
+    } else if (value is Map<String, dynamic>) {
+      return MapEntry(key, normalizeMap(value));
+    } else if (value is List) {
+      return MapEntry(
+        key,
+        value.map((e) {
+          if (e is DateTime) return e.toIso8601String();
+          if (e is Map<String, dynamic>) return normalizeMap(e);
+          return e;
+        }).toList(),
+      );
+    }
+    return MapEntry(key, value);
+  });
+}
 
   @override
   void onInit() {
@@ -26,15 +57,12 @@ class FavouriteController extends GetxController {
   }
 
   Future<void> fetchFilteredItems() async {
-
     try {
-      isLoading.value = true;
-
-      FavoritesModel favoritesModel = await _favoritesApiService.fetchFavorites();
+      // Fetch new data first (without setting shimmer)
+      final FavoritesModel favoritesModel = await _favoritesApiService.fetchFavorites();
 
       final List<Map<String, dynamic>> combinedList = [];
 
-      // Combine news
       if (favoritesModel.data?.favoriteNews != null) {
         for (var news in favoritesModel.data!.favoriteNews!) {
           combinedList.add({
@@ -45,12 +73,12 @@ class FavouriteController extends GetxController {
             'badge': news.badges ?? '',
             'image': news.newsImage ?? '',
             'data': news,
-            'descriptionLinks' : news.descriptionLinks
+            'created_at': DateTime.tryParse(news.createdAt ?? '') ?? DateTime.now(),
+            'descriptionLinks': news.descriptionLinks,
           });
         }
       }
 
-      // Combine events
       if (favoritesModel.data?.favoriteEvents != null) {
         for (var event in favoritesModel.data!.favoriteEvents!) {
           combinedList.add({
@@ -61,17 +89,36 @@ class FavouriteController extends GetxController {
             'badge': event.badges ?? '',
             'image': event.image ?? '',
             'data': event,
-            'descriptionLinks' : event.descriptionLinks
+            'created_at': DateTime.tryParse(event.createdAt ?? '') ?? DateTime.now(),
+            'descriptionLinks': event.descriptionLinks,
           });
         }
       }
 
-      allItems.assignAll(combinedList);
-      filteredList.assignAll(combinedList);
-      _hasFetchedFavorites = true; // <-- Mark as fetched
+      combinedList.sort((a, b) {
+        final aDate = a['created_at'] as DateTime;
+        final bDate = b['created_at'] as DateTime;
+        return bDate.compareTo(aDate);
+      });
+
+      // Check if data changed compared to current
+      final bool changed = _hasDataChanged(combinedList);
+
+      if (changed) {
+        isLoading.value = true; // Show shimmer only if data changes
+
+        // Small delay to show shimmer smoothly (optional)
+        await Future.delayed(const Duration(milliseconds: 300));
+
+        allItems.assignAll(combinedList);
+        filteredList.assignAll(combinedList);
+
+        isLoading.value = false;
+      } else {
+        // Data same - no shimmer, no UI update needed
+      }
     } catch (e) {
       print("Error fetching favorites: $e");
-    } finally {
       isLoading.value = false;
     }
   }

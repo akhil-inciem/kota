@@ -24,8 +24,7 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final RxBool _obscureText = true.obs;
-    if (!isPassword) _obscureText.value = false;
+    final RxBool _obscureText = isPassword.obs;
 
     return Obx(
       () => TextFormField(
@@ -35,10 +34,14 @@ class CustomTextField extends StatelessWidget {
         autovalidateMode: AutovalidateMode.onUserInteraction,
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: const TextStyle(fontSize: 14, color: Color(0xFF839099)),
+          hintStyle: TextStyle(fontSize: 14.sp, color: const Color(0xFF839099)),
           filled: true,
-          isDense: true,
           fillColor: fillColor ?? AppColors.primaryBackground,
+          isDense: true,
+          contentPadding: EdgeInsets.symmetric(
+            vertical: 1.3.h, // balanced vertical padding
+            horizontal: 4.w,
+          ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide.none,
@@ -54,22 +57,21 @@ class CustomTextField extends StatelessWidget {
               width: 1.5,
             ),
           ),
-          contentPadding: const EdgeInsets.symmetric(
-            vertical: 10.0,
-            horizontal: 12.0,
-          ),
-          suffixIcon:
-              isPassword
-                  ? IconButton(
+          suffixIcon: isPassword
+              ? Padding(
+                  padding: EdgeInsets.only(right: 2.w),
+                  child: IconButton(
                     icon: Icon(
                       _obscureText.value
                           ? Icons.visibility_off
                           : Icons.visibility,
+                      size: 18.sp,
                       color: AppColors.primaryColor,
                     ),
                     onPressed: () => _obscureText.toggle(),
-                  )
-                  : null,
+                  ),
+                )
+              : null,
         ),
       ),
     );

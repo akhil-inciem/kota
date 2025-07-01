@@ -17,6 +17,7 @@ class UpdateController extends GetxController {
   RxList<Map<String, dynamic>> olderList = <Map<String, dynamic>>[].obs;
   RxBool hasNewUpdates = false.obs;
   DateTime? _latestFetchedDate;
+  RxInt newItemsCount = 0.obs;
   RxString searchQuery = ''.obs;
   RxList<Map<String, dynamic>> filteredList = <Map<String, dynamic>>[].obs;
   final TextEditingController searchController = TextEditingController();
@@ -48,7 +49,16 @@ class UpdateController extends GetxController {
         lastSeenDateStr != null ? DateTime.tryParse(lastSeenDateStr) : null;
 
     bool isNewData = false;
+    int newCount = 0;
+
     if (combinedList.isNotEmpty) {
+      for (final item in combinedList) {
+        final itemDate = item['date'] as DateTime;
+        if (lastSeenDate == null || itemDate.isAfter(lastSeenDate)) {
+          newCount++;
+        }
+      }
+
       final latestDate = combinedList.first['date'] as DateTime;
       if (lastSeenDate == null || latestDate.isAfter(lastSeenDate)) {
         isNewData = true;
@@ -56,6 +66,7 @@ class UpdateController extends GetxController {
     }
 
     hasNewUpdates.value = isNewData;
+    newItemsCount.value = newCount;
 
   } catch (e) {
     print('Controller error fetching updates: $e');
@@ -64,83 +75,74 @@ class UpdateController extends GetxController {
   }
 }
 
+
 void _processUpdates(UpdatesModel? model) {
-    final newsList = model?.data?.news ?? [];
-    final eventsList = model?.data?.events ?? [];
+  final newsList = model?.data?.news ?? [];
+  final eventsList = model?.data?.events ?? [];
 
-    final List<Map<String, dynamic>> tempCombined = [];
+  final List<Map<String, dynamic>> tempCombined = [];
 
-    // Normalize News
-    for (final item in newsList) {
-      final dateStr = item['added_on'] ?? '';
-      final parsedDate = DateTime.tryParse(dateStr) ?? DateTime.now();
-      tempCombined.add({
-        'type': 'news',
-        'title': item['news_title'] ?? 'No Title',
-        'description': item['news_description'] ?? 'No Description',
-        'date': parsedDate,
-      });
-    }
-    for (final item in eventsList) {
-      String? dateStr;
-      String? title;
-      String? description;
-
-      if (item is Map<String, dynamic>) {
-        dateStr = item['added_on'] ?? '';
-        title = item['event_name'] ?? 'Event';
-        description = item['event_description'] ?? item.toString();
-      } else {
-        dateStr = '';
-        title = 'Event';
-        description = item.toString();
-      }
-      final parsedDate = DateTime.tryParse(dateStr ?? '') ?? DateTime.now();
-      tempCombined.add({
-        'type': 'event',
-        'title': title,
-        'description': description,
-        'date': parsedDate,
-      });
-    }
-    tempCombined.sort(
-      (a, b) => (b['date'] as DateTime).compareTo(a['date'] as DateTime),
-    );
-    combinedList.value = tempCombined;
-    todayList.value =
-        tempCombined.where((item) {
-          final date = item['date'] as DateTime;
-          return DateUtils.isSameDay(date, DateTime.now());
-        }).toList();
-    olderList.value =
-        tempCombined.where((item) {
-          final date = item['date'] as DateTime;
-          return !DateUtils.isSameDay(date, DateTime.now());
-        }).toList();
-    filteredList.value = tempCombined;
+  // Normalize News
+  for (final item in newsList) {
+    final dateStr = item['added_on'] ?? '';
+    final parsedDate = DateTime.tryParse(dateStr) ?? DateTime.now();
+    tempCombined.add({
+      'type': 'news',
+      'title': item['news_title'] ?? 'No Title',
+      'description': item['news_sub_title'] ?? 'No Description',
+      'date': parsedDate,
+      'news_id': item['news_id'], // ✅ Include news_id
+    });
   }
 
-// bool _checkForNewData(UpdatesModel? model) {
-//   final newsList = model?.data?.news ?? [];
-//   final eventsList = model?.data?.events ?? [];
+  // Normalize Events
+  for (final item in eventsList) {
+    String? dateStr;
+    String? title;
+    String? description;
+    String? eventId;
 
-//   final allDates = [
-//     ...newsList.map((e) => DateTime.tryParse(e['news_date'] ?? '') ?? DateTime.fromMillisecondsSinceEpoch(0)),
-//     ...eventsList.map((e) => DateTime.tryParse(e['event_date'] ?? '') ?? DateTime.fromMillisecondsSinceEpoch(0)),
-//   ];
+    if (item is Map<String, dynamic>) {
+      dateStr = item['added_on'] ?? '';
+      title = item['event_name'] ?? 'Event';
+      description = item['event_short_description'] ?? item.toString();
+      eventId = item['event_id']; // ✅ Include event_id
+    } else {
+      dateStr = '';
+      title = 'Event';
+      description = item.toString();
+      eventId = null;
+    }
 
-//   if (allDates.isEmpty) return false;
+    final parsedDate = DateTime.tryParse(dateStr ?? '') ?? DateTime.now();
+    tempCombined.add({
+      'type': 'event',
+      'title': title,
+      'description': description,
+      'date': parsedDate,
+      'event_id': eventId, // ✅ Include event_id
+    });
+  }
 
-//   allDates.sort((a, b) => b.compareTo(a));  // Latest date at top
-//   final latestDate = allDates.first;
+  tempCombined.sort(
+    (a, b) => (b['date'] as DateTime).compareTo(a['date'] as DateTime),
+  );
 
-//   if (_latestFetchedDate == null || latestDate.isAfter(_latestFetchedDate!)) {
-//     _latestFetchedDate = latestDate;
-//     return true;
-//   }
+  combinedList.value = tempCombined;
 
-//   return false;
-// }
+  todayList.value = tempCombined.where((item) {
+    final date = item['date'] as DateTime;
+    return DateUtils.isSameDay(date, DateTime.now());
+  }).toList();
+
+  olderList.value = tempCombined.where((item) {
+    final date = item['date'] as DateTime;
+    return !DateUtils.isSameDay(date, DateTime.now());
+  }).toList();
+
+  filteredList.value = tempCombined;
+}
+
 
 void clearNewUpdatesFlag() {
   hasNewUpdates.value = false;
@@ -154,7 +156,6 @@ void clearNewUpdatesFlag() {
   }
 }
 
-  
   void _applySearch() {
     final query = searchQuery.value.toLowerCase();
     if (query.isEmpty) {

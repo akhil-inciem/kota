@@ -121,6 +121,53 @@ class NewsDatum {
         "description_links": descriptionLinks?.map((e) => e.toJson()).toList(),
         "favorites": favorites,
       };
+
+      NewsDatum copyWith({
+  String? newsId,
+  String? newsTitle,
+  String? newsSubTitle,
+  String? newsDescription,
+  String? newsImage,
+  DateTime? newsDate,
+  String? attachment,
+  String? addedOn,
+  String? addedBy,
+  String? status,
+  String? newsCategory,
+  dynamic author,
+  String? newsAuthor,
+  String? badges,
+  String? adminImage,
+  String? adminRoleId,
+  String? adminRoleTitle,
+  String? addedAdminName,
+  List<DescriptionLink>? descriptionLinks,
+  int? favorites,
+}) {
+  return NewsDatum(
+    newsId: newsId ?? this.newsId,
+    newsTitle: newsTitle ?? this.newsTitle,
+    newsSubTitle: newsSubTitle ?? this.newsSubTitle,
+    newsDescription: newsDescription ?? this.newsDescription,
+    newsImage: newsImage ?? this.newsImage,
+    newsDate: newsDate ?? this.newsDate,
+    attachment: attachment ?? this.attachment,
+    addedOn: addedOn ?? this.addedOn,
+    addedBy: addedBy ?? this.addedBy,
+    status: status ?? this.status,
+    newsCategory: newsCategory ?? this.newsCategory,
+    author: author ?? this.author,
+    newsAuthor: newsAuthor ?? this.newsAuthor,
+    badges: badges ?? this.badges,
+    adminImage: adminImage ?? this.adminImage,
+    adminRoleId: adminRoleId ?? this.adminRoleId,
+    adminRoleTitle: adminRoleTitle ?? this.adminRoleTitle,
+    addedAdminName: addedAdminName ?? this.addedAdminName,
+    descriptionLinks: descriptionLinks ?? this.descriptionLinks,
+    favorites: favorites ?? this.favorites,
+  );
+}
+
 }
 
 class DescriptionLink {

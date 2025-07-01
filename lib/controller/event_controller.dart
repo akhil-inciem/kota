@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kota/apiServices/events_api_services.dart';
@@ -14,6 +16,7 @@ class EventController extends GetxController {
   final Rxn<EventsDatum> selectedEvent = Rxn<EventsDatum>();
   final RxInt selectedTabIndex = 0.obs;
   final allEvents = <EventsDatum>[].obs;
+  final Rx<DateTime> selectedMonth = DateTime.now().obs;
   RxBool isLoading = false.obs;
   final selectedWeekdayIndex = RxInt(-1);
   var bookmarkedStatus = <String, bool>{}.obs;
@@ -22,72 +25,176 @@ class EventController extends GetxController {
   final TextEditingController searchController = TextEditingController();
 
   @override
-void onInit() {
-  super.onInit();
-  searchController.addListener(() {
-    filterAllEvents(searchController.text);
-  });
-}
+  void onInit() {
+    super.onInit();
+    searchController.addListener(() {
+      filterAllEvents(searchController.text);
+    });
+  }
 
+  /// Compare current and new event lists to detect changes
+  bool _hasDataChanged(List<EventsDatum> newData) {
+    if (allEvents.length != newData.length) return true;
 
+    for (int i = 0; i < newData.length; i++) {
+      // Use JSON stringification for deep equality check
+      final oldJson = jsonEncode(allEvents[i].toJson());
+      final newJson = jsonEncode(newData[i].toJson());
+      if (oldJson != newJson) return true;
+    }
+    return false;
+  }
 
   Future<void> fetchEventItems() async {
-  isLoading.value = true;
+    try {
+      final fetchedEvents = await _eventsApiService.fetchEvents();
+      final reversedEvents = fetchedEvents.reversed.toList();
+
+      // Check if data changed
+      final changed = _hasDataChanged(reversedEvents);
+
+      if (changed) {
+        isLoading.value = true;
+
+        // Optional small delay for shimmer effect
+        await Future.delayed(const Duration(milliseconds: 300));
+
+        allEvents.assignAll(reversedEvents);
+        filteredEventsItems.assignAll(reversedEvents);
+
+        isLoading.value = false;
+      }
+      // else: data unchanged, no shimmer or UI update
+    } catch (e) {
+      print("Error fetching events: $e");
+      isLoading.value = false;
+    }
+  }
+
+  void toggleBookmark(String id) async {
+  final currentStatus = bookmarkedStatus[id] ?? false;
+  final newStatus = !currentStatus;
+
+  // Update observable map
+  bookmarkedStatus[id] = newStatus;
+  bookmarkedStatus.refresh();
+
+  // ✅ Update in allEvents
+  final index = allEvents.indexWhere((item) => item.eventId == id);
+  if (index != -1) {
+    allEvents[index] = allEvents[index].copyWith(
+      favorites: newStatus ? 1 : 0,
+    );
+  }
+
+  // ✅ Update in selectedEvent if currently open
+  final selected = selectedEvent.value;
+  if (selected != null && selected.eventId == id) {
+    selectedEvent.value = selected.copyWith(
+      favorites: newStatus ? 1 : 0,
+    );
+  }
+
   try {
-    final fetchedEvents = await _eventsApiService.fetchEvents();
-    final reversedEvents = fetchedEvents.reversed.toList();
-    allEvents.assignAll(reversedEvents);
-    filteredEventsItems.assignAll(reversedEvents);
+    await _favApiService.sendEventsBookmarkStatusToApi(id, newStatus);
   } catch (e) {
-    print("Error fetching events: $e");
+    print("Failed to update bookmark status: $e");
+
+    // Rollback observable
+    bookmarkedStatus[id] = currentStatus;
+    bookmarkedStatus.refresh();
+
+    // Rollback model changes
+    if (index != -1) {
+      allEvents[index] = allEvents[index].copyWith(
+        favorites: currentStatus ? 1 : 0,
+      );
+    }
+
+    if (selected != null && selected.eventId == id) {
+      selectedEvent.value = selected.copyWith(
+        favorites: currentStatus ? 1 : 0,
+      );
+    }
+  }
+}
+
+Future<void> fetchSingleEventItem(String eventId) async {
+  final cachedItem = allEvents.cast<EventsDatum?>().firstWhere(
+    (item) => item?.eventId == eventId && item?.favorites != null,
+    orElse: () => null,
+  );
+
+  if (cachedItem != null) {
+    selectedEvent.value = cachedItem;
+    isLoading.value = false;
+
+    bookmarkedStatus[cachedItem.eventId!] = cachedItem.favorites == 1;
+    bookmarkedStatus.refresh();
+    return;
+  }
+
+  // ❗ API call fallback
+  isLoading.value = true;
+  selectedEvent.value = null;
+
+  try {
+    final eventItem = await _eventsApiService.fetchEventsById(eventsId: eventId);
+
+    if (eventItem != null) {
+      selectedEvent.value = eventItem;
+
+      final index = allEvents.indexWhere((item) => item.eventId == eventId);
+      if (index != -1) {
+        allEvents[index] = eventItem;
+        final filteredIndex = filteredEventsItems.indexWhere((item) => item.eventId == eventId);
+        if (filteredIndex != -1) {
+          filteredEventsItems[filteredIndex] = eventItem;
+        }
+      } else {
+        allEvents.add(eventItem);
+        filteredEventsItems.add(eventItem);
+      }
+
+      if (eventItem.eventId != null) {
+        bookmarkedStatus[eventItem.eventId!] = eventItem.favorites == 1;
+        bookmarkedStatus.refresh(); // ✅ Important
+      }
+    }
+
+    isLoading.value = false;
+  } catch (e) {
+    print("Error fetching single event item: $e");
   } finally {
     isLoading.value = false;
   }
 }
 
 
-  Future<void> fetchSingleEventItem(String eventId) async {
-    isLoading.value = true;
-    selectedEvent.value = null;
+ 
 
-    try {
-      final eventItem = await _eventsApiService.fetchEventsById(
-        eventsId: eventId,
-      );
+  void filterEventsByMonth(DateTime month) {
+    todayEvents.clear();
+    upcomingEvents.clear();
 
-      if (eventItem != null) {
-        selectedEvent.value = eventItem;
-        final index = allEvents.indexWhere((item) => item.eventId == eventId);
-        if (index != -1) {
-          allEvents[index] = eventItem;
-          filteredEventsItems[index] = eventItem;
-        } else {
-          allEvents.add(eventItem);
-          filteredEventsItems.add(eventItem);
-        }
-        if (eventItem.eventId != null) {
-          bookmarkedStatus[eventItem.eventId!] = eventItem.favorites == 1;
-        }
+    for (var event in allEvents) {
+      final eventDate = event.eventstartDateDate;
+      if (eventDate == null) continue;
+
+      final isSameMonth =
+          eventDate.month == month.month && eventDate.year == month.year;
+
+      if (!isSameMonth) continue;
+
+      if (isSameDate(eventDate, selectedDate.value)) {
+        todayEvents.add(event);
+      } else if (eventDate.isAfter(selectedDate.value)) {
+        upcomingEvents.add(event);
       }
-    } catch (e) {
-      print("Error fetching single news item: $e");
-    } finally {
-      isLoading.value = false;
     }
   }
 
-  void toggleBookmark(String id) async {
-    final currentStatus = bookmarkedStatus[id] ?? false;
-    final newStatus = !currentStatus;
-    bookmarkedStatus[id] = newStatus;
-    try {
-      await _favApiService.sendEventsBookmarkStatusToApi(id, newStatus);
-    } catch (e) {
-      print("Failed to update bookmark status: $e");
-      bookmarkedStatus[id] = currentStatus;
-    }
-  }
-
+  
   void updateSelectedWeekday(DateTime date) {
     selectedWeekdayIndex.value = date.weekday % 7;
   }
@@ -144,6 +251,7 @@ void onInit() {
       );
     }
   }
+
   void filterAllEvents(String query) {
     if (query.isEmpty) {
       filteredEventsItems.assignAll(allEvents);
@@ -152,14 +260,14 @@ void onInit() {
         allEvents.where(
           (item) =>
               item.eventName?.toLowerCase().contains(query.toLowerCase()) ==
-                  true 
+              true,
         ),
       );
     }
   }
-  void clearSelectedEvent() {
-  selectedEvent.value = null;
-  bookmarkedStatus.clear();
-}
 
+  void clearSelectedEvent() {
+    selectedEvent.value = null;
+    bookmarkedStatus.clear();
+  }
 }

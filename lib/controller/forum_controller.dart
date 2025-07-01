@@ -16,7 +16,9 @@ import '../apiServices/poll_api_services.dart';
 
 class ForumController extends GetxController {
   final isLoading = true.obs;
+  final isThreadLoading = false.obs;
   final isPollLoading = true.obs;
+  final RxBool isCropping = false.obs;
   final selectedImages = <XFile>[].obs;
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -63,8 +65,6 @@ class ForumController extends GetxController {
   final pollSearchQuery = ''.obs;
   final Map<String, Set<int>> userSelectedOptionsCache = {};
 
-
-
   @override
   void onInit() {
     super.onInit();
@@ -95,6 +95,20 @@ class ForumController extends GetxController {
     final desc = descriptionController.text.trim();
     isButtonEnabled.value = title.isNotEmpty && desc.isNotEmpty;
   }
+
+  void _syncThreadIntoList(ForumData updatedThread) {
+  final index = threadsList.indexWhere((t) => t.id == updatedThread.id);
+  if (index != -1) {
+    threadsList[index] = updatedThread;
+    threadsList.refresh();
+  }
+
+  final originalIndex = originalThreadsList.indexWhere((t) => t.id == updatedThread.id);
+  if (originalIndex != -1) {
+    originalThreadsList[originalIndex] = updatedThread;
+  }
+}
+
 
   String _capitalizeFirst(String input) {
     if (input.isEmpty) return input;
@@ -134,19 +148,49 @@ class ForumController extends GetxController {
     setSearchQuery('');
   }
 
-  Future<ForumData> loadSingleThread(String id) async {
-    try {
-      final thread = await _forumApiService.fetchSingleThread(id);
-      singleThread.value = thread;
-      comments.value = thread.comments ?? [];
-      isLiked.value = thread.isLiked ?? false;
-      likeCount.value = thread.likeCount?.toString() ?? '0';
-      commentCount.value = thread.commentCount?.toString() ?? '0';
-      return thread;
-    } catch (e) {
-      print('Error loading threads: $e');
-      rethrow;
+  Future<ForumData> loadSingleThread(String id, {bool forceRefresh = false}) async {
+  if (!forceRefresh) {
+    final cached = originalThreadsList.firstWhereOrNull(
+      (t) => t.id == id && t.content != null,
+    );
+
+    if (cached != null) {
+      singleThread.value = cached;
+      comments.value = cached.comments ?? [];
+      selectedThreadId.value = id;
+      isLiked.value = cached.isLiked ?? false;
+      likeCount.value = cached.likeCount?.toString() ?? '0';
+      commentCount.value = cached.commentCount?.toString() ?? '0';
+      return cached;
     }
+  }
+
+  isThreadLoading.value = true;
+
+  try {
+    final thread = await _forumApiService.fetchSingleThread(id);
+
+    selectedThreadId.value = id;
+    singleThread.value = thread;
+    comments.value = thread.comments ?? [];
+    isLiked.value = thread.isLiked ?? false;
+    likeCount.value = thread.likeCount?.toString() ?? '0';
+    commentCount.value = thread.commentCount?.toString() ?? '0';
+
+    final index = originalThreadsList.indexWhere((t) => t.id == id);
+    if (index != -1) {
+      originalThreadsList[index] = thread;
+    } else {
+      originalThreadsList.add(thread);
+    }
+
+    return thread;
+  } catch (e) {
+    print('Error loading thread: $e');
+    rethrow;
+  } finally {
+    isThreadLoading.value = false;
+  }
   }
 
   void addImage(XFile image) {
@@ -185,7 +229,8 @@ class ForumController extends GetxController {
       await postComment();
     }
     cancelReply();
-    loadSingleThread(selectedThreadId.value); // Reload thread
+    await loadSingleThread(selectedThreadId.value, forceRefresh: true); // Reload thread
+    _syncThreadIntoList(singleThread.value!);
   }
 
   Future<void> postComment() async {
@@ -194,7 +239,8 @@ class ForumController extends GetxController {
         threadId: selectedThreadId.value,
         comment: commentController.text,
       );
-      await loadSingleThread(selectedThreadId.value);
+      await loadSingleThread(selectedThreadId.value, forceRefresh: true);
+      _syncThreadIntoList(singleThread.value!);
     } catch (e) {
       String message = _getFriendlyErrorMessage(e);
       CustomSnackbars.failure(message, "Failed to post Comment");
@@ -316,7 +362,8 @@ class ForumController extends GetxController {
       await ForumApiService.likeThread(id);
 
       // Optional: reload the updated thread from server
-      final updatedThread = await loadSingleThread(id);
+      final updatedThread = await loadSingleThread(id, forceRefresh: true);
+      _syncThreadIntoList(singleThread.value!);
 
       threadsList[index] = updatedThread;
 
@@ -347,7 +394,8 @@ class ForumController extends GetxController {
         commentId: commentId,
         reply: content,
       );
-      await loadSingleThread(selectedThreadId.value);
+      await loadSingleThread(selectedThreadId.value, forceRefresh: true);
+      _syncThreadIntoList(singleThread.value!);
     } catch (e) {
       String message = _getFriendlyErrorMessage(e);
       CustomSnackbars.failure(message, "Failed to Reply");
@@ -385,43 +433,64 @@ class ForumController extends GetxController {
   //------------------------------------------------------------- Polls ------------------------------------------------------------------------
 
   Future<void> loadPolls() async {
-  try {
-    isLoading.value = true;
-    final fetchedPolls = await _pollApiService.fetchAllPoll();
-    
-    pollsList.assignAll(fetchedPolls);
-    filteredPolls.assignAll(pollsList);
-    selectedPollAnswers.clear(); // clear previous selections
+    try {
+      final fetchedPolls = await _pollApiService.fetchAllPoll();
 
-    // Initialize selected options using poll.id as key
-    for (final poll in pollsList) {
-      initializeSelectedOptions(poll); // 👈 pass PollData only
+      // Check if data changed compared to current pollsList
+      bool dataChanged = _hasPollsDataChanged(fetchedPolls);
+
+      if (dataChanged) {
+        isLoading.value = true;
+
+        // Optional delay for shimmer visibility
+        await Future.delayed(const Duration(milliseconds: 300));
+
+        pollsList.assignAll(fetchedPolls);
+        filteredPolls.assignAll(pollsList);
+        selectedPollAnswers.clear();
+
+        for (final poll in pollsList) {
+          initializeSelectedOptions(poll);
+        }
+
+        isLoading.value = false;
+      }
+      // else data same, no shimmer or UI update needed
+    } catch (e) {
+      print('Error loading polls: $e');
+      isLoading.value = false;
     }
-
-  } catch (e) {
-    print('Error loading polls: $e');
-  } finally {
-    isLoading.value = false;
   }
-}
 
+  /// Helper method to compare current pollsList with new fetched polls
+  bool _hasPollsDataChanged(List<PollData> newPolls) {
+    if (pollsList.length != newPolls.length) return true;
 
-void setPollSearchQuery(String query) {
-  pollSearchQuery.value = query;
-  filterPolls();
-}
-
-void filterPolls() {
-  final query = pollSearchQuery.value.toLowerCase();
-  if (query.isEmpty) {
-    filteredPolls.assignAll(pollsList);
-  } else {
-    filteredPolls.assignAll(
-      pollsList.where((poll) =>
-          poll.title?.toLowerCase().contains(query) == true),
-    );
+    for (int i = 0; i < newPolls.length; i++) {
+      final oldJson = jsonEncode(pollsList[i].toJson());
+      final newJson = jsonEncode(newPolls[i].toJson());
+      if (oldJson != newJson) return true;
+    }
+    return false;
   }
-}
+
+  void setPollSearchQuery(String query) {
+    pollSearchQuery.value = query;
+    filterPolls();
+  }
+
+  void filterPolls() {
+    final query = pollSearchQuery.value.toLowerCase();
+    if (query.isEmpty) {
+      filteredPolls.assignAll(pollsList);
+    } else {
+      filteredPolls.assignAll(
+        pollsList.where(
+          (poll) => poll.title?.toLowerCase().contains(query) == true,
+        ),
+      );
+    }
+  }
 
   Future<void> loadPollReactions(String id) async {
     try {
@@ -429,8 +498,7 @@ void filterPolls() {
       pollReactionList.assignAll(fetchedReactions);
     } catch (e) {
       print('Error loading poll reactions: $e');
-    } finally {
-    }
+    } finally {}
   }
 
   Future<void> submitPoll() async {
@@ -465,7 +533,7 @@ void filterPolls() {
   }
 
   Future<void> updatePoll(String pollId) async {
-  try {
+    try {
       isLoading.value = true;
 
       await PollApiService.editPoll(
@@ -489,108 +557,110 @@ void filterPolls() {
     } finally {
       isLoading.value = false;
     }
-}
+  }
 
+  void validateCreatePoll() {
+    final hasQuestion = pollTitleController.text.trim().isNotEmpty;
+    final hasEnoughOptions = pollFields.length >= 2;
+    final hasExpiryDate = pollExpiryDate.value != null;
 
-void validateCreatePoll() {
-  final hasQuestion = pollTitleController.text.trim().isNotEmpty;
-  final hasEnoughOptions = pollFields.length >= 2;
-  final hasExpiryDate = pollExpiryDate.value != null;
+    isCreatePollEnabled.value =
+        hasQuestion && hasEnoughOptions && hasExpiryDate;
+  }
 
-  isCreatePollEnabled.value = hasQuestion && hasEnoughOptions && hasExpiryDate;
-}
+  void initializeSelectedOptions(PollData poll) {
+    final selected = <int>{};
+    final options = _parseOptions(poll.pollFeild ?? '');
 
+    if (poll.userVote != null) {
+      try {
+        final decoded = jsonDecode(poll.userVote!);
 
-void initializeSelectedOptions(PollData poll) {
-  final selected = <int>{};
-  final options = _parseOptions(poll.pollFeild ?? '');
-
-  if (poll.userVote != null) {
-    try {
-      final decoded = jsonDecode(poll.userVote!);
-
-      if (decoded is List) {
-        for (var vote in decoded) {
-          final idx = options.indexOf(vote.toString());
+        if (decoded is List) {
+          for (var vote in decoded) {
+            final idx = options.indexOf(vote.toString());
+            if (idx != -1) selected.add(idx);
+          }
+        } else if (decoded is String) {
+          final idx = options.indexOf(decoded);
           if (idx != -1) selected.add(idx);
         }
-      } else if (decoded is String) {
-        final idx = options.indexOf(decoded);
+      } catch (e) {
+        final idx = options.indexOf(poll.userVote!);
         if (idx != -1) selected.add(idx);
       }
-    } catch (e) {
-      final idx = options.indexOf(poll.userVote!);
-      if (idx != -1) selected.add(idx);
     }
+
+    selectedPollAnswers[poll.id!] = selected; // use poll.id
   }
-
-  selectedPollAnswers[poll.id!] = selected; // use poll.id
-}
-
 
   // In ForumController.dart
-void togglePollOption(String pollId, int optionIndex, bool isMultiple) {
-  final pollIndex = pollsList.indexWhere((p) => p.id == pollId);
-  if (pollIndex == -1) return;
+  void togglePollOption(String pollId, int optionIndex, bool isMultiple) {
+    final pollIndex = pollsList.indexWhere((p) => p.id == pollId);
+    if (pollIndex == -1) return;
 
-  final selected = selectedPollAnswers[pollId] ?? <int>{};
-  final pollData = pollsList[pollIndex];
-  final options = _parseOptions(pollData.pollFeild ?? '');
-  final updatedCounts = Map<String, num>.from(pollData.reactionCounts);
-  final tappedOptionName = options[optionIndex];
+    final selected = selectedPollAnswers[pollId] ?? <int>{};
+    final pollData = pollsList[pollIndex];
+    final options = _parseOptions(pollData.pollFeild ?? '');
+    final updatedCounts = Map<String, num>.from(pollData.reactionCounts);
+    final tappedOptionName = options[optionIndex];
 
-  // Update logic same as before
-  if (isMultiple) {
-    if (selected.contains(optionIndex)) {
-      selected.remove(optionIndex);
-      updatedCounts[tappedOptionName] = (updatedCounts[tappedOptionName] ?? 1) - 1;
-    } else {
-      selected.add(optionIndex);
-      updatedCounts[tappedOptionName] = (updatedCounts[tappedOptionName] ?? 0) + 1;
-    }
-  } else {
-    if (selected.contains(optionIndex)) {
-      selected.clear();
-      updatedCounts[tappedOptionName] = (updatedCounts[tappedOptionName] ?? 1) - 1;
-    } else {
-      if (selected.isNotEmpty) {
-        final prevOptionName = options[selected.first];
-        updatedCounts[prevOptionName] = (updatedCounts[prevOptionName] ?? 1) - 1;
+    // Update logic same as before
+    if (isMultiple) {
+      if (selected.contains(optionIndex)) {
+        selected.remove(optionIndex);
+        updatedCounts[tappedOptionName] =
+            (updatedCounts[tappedOptionName] ?? 1) - 1;
+      } else {
+        selected.add(optionIndex);
+        updatedCounts[tappedOptionName] =
+            (updatedCounts[tappedOptionName] ?? 0) + 1;
       }
-      selected
-        ..clear()
-        ..add(optionIndex);
-      updatedCounts[tappedOptionName] = (updatedCounts[tappedOptionName] ?? 0) + 1;
+    } else {
+      if (selected.contains(optionIndex)) {
+        selected.clear();
+        updatedCounts[tappedOptionName] =
+            (updatedCounts[tappedOptionName] ?? 1) - 1;
+      } else {
+        if (selected.isNotEmpty) {
+          final prevOptionName = options[selected.first];
+          updatedCounts[prevOptionName] =
+              (updatedCounts[prevOptionName] ?? 1) - 1;
+        }
+        selected
+          ..clear()
+          ..add(optionIndex);
+        updatedCounts[tappedOptionName] =
+            (updatedCounts[tappedOptionName] ?? 0) + 1;
+      }
+    }
+
+    selectedPollAnswers[pollId] = selected;
+
+    // ✅ Update both lists
+    final updatedPoll = pollData.copyWith(reactionCounts: updatedCounts);
+    pollsList[pollIndex] = updatedPoll;
+
+    final filteredIndex = filteredPolls.indexWhere((p) => p.id == pollId);
+    if (filteredIndex != -1) {
+      filteredPolls[filteredIndex] = updatedPoll;
+    }
+
+    // Send single tapped item to backend
+    _submitPollVote(pollId, tappedOptionName);
+  }
+
+  /// Final method now only needs pollId and selected reaction
+  Future<void> _submitPollVote(String pollId, String reaction) async {
+    try {
+      await PollApiService.submitPollReaction(
+        pollId: pollId,
+        reaction: reaction,
+      );
+    } catch (e) {
+      debugPrint('Error submitting poll vote: $e');
     }
   }
-
-  selectedPollAnswers[pollId] = selected;
-
-  // ✅ Update both lists
-  final updatedPoll = pollData.copyWith(reactionCounts: updatedCounts);
-  pollsList[pollIndex] = updatedPoll;
-
-  final filteredIndex = filteredPolls.indexWhere((p) => p.id == pollId);
-  if (filteredIndex != -1) {
-    filteredPolls[filteredIndex] = updatedPoll;
-  }
-
-  // Send single tapped item to backend
-  _submitPollVote(pollId, tappedOptionName);
-}
-
-
-/// Final method now only needs pollId and selected reaction
-Future<void> _submitPollVote(String pollId, String reaction) async {
-  try {
-    await PollApiService.submitPollReaction(
-      pollId: pollId,
-      reaction: reaction,
-    );
-  } catch (e) {
-    debugPrint('Error submitting poll vote: $e');
-  }
-}
 
   String _getFriendlyErrorMessage(dynamic e) {
     if (e is DioError) {
@@ -610,18 +680,16 @@ Future<void> _submitPollVote(String pollId, String reaction) async {
     }
   }
 
-
-
-/// Extract options from JSON or comma separated text
-List<String> _parseOptions(String pollFeild) {
-  try {
-    final decoded = jsonDecode(pollFeild);
-    if (decoded is List) {
-      return decoded.map((e) => e.toString().trim()).toList();
+  /// Extract options from JSON or comma separated text
+  List<String> _parseOptions(String pollFeild) {
+    try {
+      final decoded = jsonDecode(pollFeild);
+      if (decoded is List) {
+        return decoded.map((e) => e.toString().trim()).toList();
+      }
+    } catch (e) {
+      print(e);
     }
-  } catch (e) {
-    print(e);
+    return pollFeild.split(',').map((e) => e.trim()).toList();
   }
-  return pollFeild.split(',').map((e) => e.trim()).toList();
-}
 }

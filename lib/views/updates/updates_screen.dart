@@ -190,9 +190,7 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
                                                                 ),
                                                           ),
                                                         ),
-                                                        onPressed: () {
-                                                          // Trigger renew logic
-                                                        },
+                                                        onPressed: () {},
                                                         child: const Text(
                                                           "Renew Membership",
                                                           style: TextStyle(
@@ -250,6 +248,12 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
                                                     'description':
                                                         item['description'],
                                                     'date': item['date'],
+                                                    'type':
+                                                        item['type'], // 👈 Add type
+                                                    'news_id':
+                                                        item['news_id'], // 👈 Add news_id
+                                                    'event_id':
+                                                        item['event_id'], // 👈 Add event_id
                                                   },
                                                 ),
                                               ),
@@ -264,6 +268,12 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
                                                     'description':
                                                         item['description'],
                                                     'date': item['date'],
+                                                    'type':
+                                                        item['type'], // 👈 Add type
+                                                    'news_id':
+                                                        item['news_id'], // 👈 Add news_id
+                                                    'event_id':
+                                                        item['event_id'], // 👈 Add event_id
                                                   },
                                                 ),
                                               ),
@@ -319,11 +329,7 @@ class NotificationShimmer extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 50.w,
-                  height: 14,
-                  color: Colors.white,
-                ),
+                Container(width: 50.w, height: 14, color: Colors.white),
                 SizedBox(height: 1.h),
                 Container(
                   width: double.infinity,
@@ -331,16 +337,9 @@ class NotificationShimmer extends StatelessWidget {
                   color: Colors.white,
                 ),
                 SizedBox(height: 0.5.h),
-                Container(
-                  width: 80.w,
-                  height: 12,
-                  color: Colors.white,
-                ),
+                Container(width: 80.w, height: 12, color: Colors.white),
                 SizedBox(height: 1.5.h),
-                Divider(
-                  color: Colors.grey.shade300,
-                  thickness: 1,
-                )
+                Divider(color: Colors.grey.shade300, thickness: 1),
               ],
             ),
           ),

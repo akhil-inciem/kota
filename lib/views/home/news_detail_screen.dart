@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -43,6 +44,12 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
     await Future.delayed(const Duration(milliseconds: 200));
     _isSharing = false;
   }
+
+String getShareUrl(String newsId) {
+  return Platform.isIOS
+      ? "https://dev.kbaiota.org/news/$newsId"  // iOS: no question mark
+      : "https://dev.kbaiota.org/?news/$newsId"; // Android: with question mark
+}
 
   @override
   void initState() {
@@ -208,7 +215,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
 
   Widget _dateAndIcons(NewsDatum item) {
     final title = item.newsTitle ?? 'Check this out!';
-    final url = "https://dev.kbaiota.org/?news/${item.newsId}";
+    final url = "https://dev.kbaiota.org/index/newsDetails?newsId=${item.newsId}";
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -253,7 +260,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
               return GestureDetector(
                 onTap: () => homeController.toggleBookmark(item.newsId!),
                 child: Image.asset(
-                  isBookmarked
+                 isBookmarked
                       ? 'assets/icons/saved.png'
                       : 'assets/icons/favorites_unselected.png',
                   height: 2.5.h,

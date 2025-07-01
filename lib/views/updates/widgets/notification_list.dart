@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart' as html_parser;
 import 'package:intl/intl.dart';
+import 'package:kota/views/home/events_detail_screen.dart';
+import 'package:kota/views/home/news_detail_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:html/parser.dart' as html_parser;
+import 'package:intl/intl.dart';
 
 class NotificationTile extends StatelessWidget {
   final Map<String, dynamic> item;
@@ -32,6 +39,15 @@ class NotificationTile extends StatelessWidget {
     return document.body?.text.trim() ?? '';
   }
 
+  void _handleTap() {
+    final type = item['type'];
+    if (type == 'news' && item['news_id'] != null) {
+      Get.to(() => NewsDetailScreen(newsId: item['news_id']));
+    } else if (type == 'event' && item['event_id'] != null) {
+      Get.to(() => EventsDetailScreen(eventId: item['event_id']));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final DateTime? date = item['date'];
@@ -39,9 +55,7 @@ class NotificationTile extends StatelessWidget {
     return Column(
       children: [
         GestureDetector(
-          onTap: () {
-            // Handle tap if needed
-          },
+          onTap: _handleTap,
           child: Container(
             padding: EdgeInsets.only(top: 2.h),
             decoration: BoxDecoration(

@@ -30,7 +30,7 @@ class CustomCalendar extends StatelessWidget {
               controller.clearSelectedWeekday();
             },
           ),
-           SizedBox(height: 0.5.h),
+          SizedBox(height: 0.5.h),
           const WeekdayHeader(),
           Divider(),
           // TableCalendar
@@ -57,7 +57,7 @@ class CustomCalendar extends StatelessWidget {
               ),
               pageAnimationEnabled: true,
               firstDay: DateTime(DateTime.now().year, 1, 1),
-lastDay: DateTime(DateTime.now().year, 12, 31),
+              lastDay: DateTime(DateTime.now().year, 12, 31),
 
               focusedDay: focusedDate,
               selectedDayPredicate:
@@ -66,12 +66,27 @@ lastDay: DateTime(DateTime.now().year, 12, 31),
                 controller.setSelectedDate(selectedDay);
                 controller.setFocusedDate(focusedDay);
                 controller.updateSelectedWeekday(selectedDay);
+                final DateTime normalizedMonth = DateTime(
+                  selectedDay.year,
+                  selectedDay.month,
+                );
+                controller.selectedMonth.value = normalizedMonth;
+                controller.filterEventsByMonth(
+                  normalizedMonth,
+                );
               },
+
               onPageChanged: (focusedDay) {
+                final DateTime normalizedMonth = DateTime(
+                  focusedDay.year,
+                  focusedDay.month,
+                );
+                controller.selectedMonth.value = normalizedMonth;
+                controller.filterEventsByMonth(normalizedMonth);
                 controller.setFocusedDate(focusedDay);
-                controller
-                    .clearSelectedWeekday(); // 👈 Clear highlight on month change
+                controller.clearSelectedWeekday();
               },
+
               startingDayOfWeek: StartingDayOfWeek.sunday,
               calendarBuilders: CalendarBuilders(
                 defaultBuilder: (context, date, _) {
@@ -120,16 +135,6 @@ lastDay: DateTime(DateTime.now().year, 12, 31),
                     ),
                   );
                 },
-                // markerBuilder: (context, date, events) {
-                //   if (date.day == 10) return _buildDot(Colors.purple);
-                //   if (date.day == 13) return _buildDot(Colors.orange);
-                //   if (date.day == 14) return _buildDot(Colors.green);
-                //   if ([21, 28, 29].contains(date.day)) {
-                //     return _buildDot(Colors.purple);
-                //   }
-                //   if (date.day == 22) return _buildDot(Colors.red);
-                //   return null;
-                // },
               ),
             ),
           ),
@@ -137,5 +142,4 @@ lastDay: DateTime(DateTime.now().year, 12, 31),
       );
     });
   }
-
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -39,6 +41,12 @@ final RxString comments;
 class _ForumPostBodyState extends State<ForumPostBody> {
   final PageController _pageController = PageController();
   final ForumController controller = Get.find<ForumController>();
+  
+  String getForumShareUrl(String forumId) {
+  return Platform.isIOS
+      ? "https://dev.kbaiota.org/forum/$forumId"
+      : "https://dev.kbaiota.org/?forum/$forumId";
+}
 
   bool _isSharing = false;
 

@@ -60,6 +60,7 @@ class FavoriteEvent {
         required this.addedBy,
         required this.addedOn,
         required this.image,
+        required this.createdAt,
         required this.document,
         required this.status,
         required this.feesPerSeat,
@@ -78,6 +79,7 @@ class FavoriteEvent {
     final DateTime? eventstartDateDate;
     final DateTime? eventEndDate;
     final String? totalSeats;
+    final String? createdAt;
     final String? addedBy;
     final String? addedOn;
     final String? image;
@@ -107,6 +109,7 @@ class FavoriteEvent {
             status: json["status"],
             feesPerSeat: json["fees_per_seat"],
             location: json["location"],
+            createdAt: json["created_at"],
             descriptionLinks: (json["description_links"] as List<dynamic>?)
           ?.map((e) => DescriptionLink.fromJson(e))
           .toList(),
@@ -127,6 +130,7 @@ class FavoriteEvent {
         "total_seats": totalSeats,
         "added_by": addedBy,
         "added_on": addedOn,
+        "created_at": createdAt,
         "image": image,
         "document": document,
         "status": status,
@@ -149,6 +153,7 @@ class FavoriteNew {
         required this.newsImage,
         required this.newsDate,
         required this.attachment,
+        required this.createdAt,
         required this.addedOn,
         required this.addedBy,
         required this.status,
@@ -169,6 +174,7 @@ class FavoriteNew {
     final String? attachment;
     final String? addedOn;
     final String? addedBy;
+    final String? createdAt;
     final String? status;
     final String? newsCategory;
     final dynamic author;
@@ -189,6 +195,7 @@ class FavoriteNew {
             addedOn: json["added_on"],
             addedBy: json["added_by"],
             status: json["status"],
+            createdAt: json["created_at"],
             newsCategory: json["news_category"],
             author: json["author"],
             descriptionLinks: (json["description_links"] as List<dynamic>?)
@@ -210,6 +217,7 @@ class FavoriteNew {
         "attachment": attachment,
         "added_on": addedOn,
         "added_by": addedBy,
+        "created_at": createdAt,
         "status": status,
         "description_links": descriptionLinks?.map((e) => e.toJson()).toList(),
         "news_category": newsCategory,

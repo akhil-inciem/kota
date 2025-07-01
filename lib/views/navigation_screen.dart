@@ -58,7 +58,6 @@ class _InitialNavigationScreenState extends State<InitialNavigationScreen> {
 
   final urlString = uri.toString();
 
-  // 👉 If the link is the registration page, open externally
   if (urlString.contains('index/memberSignUp')) {
     await launchUrl(uri, mode: LaunchMode.externalApplication);
     _navigating = false;
@@ -72,48 +71,41 @@ class _InitialNavigationScreenState extends State<InitialNavigationScreen> {
     Get.offAll(() => BaseScreen());
     await Future.delayed(const Duration(milliseconds: 100));
 
-    List<String> segments = uri.pathSegments;
+    final path = uri.path.toLowerCase();
+    final queryParams = uri.queryParameters;
 
-    // If pathSegments is empty, try splitting the query as fallback
-    if (segments.isEmpty && uri.query.isNotEmpty) {
-      segments = uri.query.split('/');
+    switch (path) {
+      case '/index/newsdetails':
+        final newsId = queryParams['newsId'];
+        if (newsId != null) {
+          Get.to(() => NewsDetailScreen(newsId: newsId));
+        }
+        break;
+
+      case '/index/eventdetails':
+        final eventId = queryParams['eventId'];
+        if (eventId != null) {
+          Get.to(() => EventsDetailScreen(eventId: eventId));
+        }
+        break;
     }
 
-    if (segments.isNotEmpty) {
-      final section = segments[0];
-
-      switch (section) {
-        case 'forum':
-          if (segments.length > 1) {
-            final threadId = segments[1];
-            Get.to(() => ForumDetailScreen(threadId: threadId));
-          }
-          break;
-
-        case 'news':
-          if (segments.length > 1) {
-            final newsId = segments[1];
-            Get.to(() => NewsDetailScreen(newsId: newsId));
-          }
-          break;
-
-        case 'events':
-          if (segments.length > 1) {
-            final eventId = segments[1];
-            Get.to(() => EventsDetailScreen(eventId: eventId));
-          }
-          break;
-
-        default:
-          break;
+    final oldStylePath = uri.query; // gets `forum/123`
+    if (oldStylePath.isNotEmpty) {
+      final parts = oldStylePath.split('/');
+      if (parts.length == 2 && parts[0] == 'forum') {
+        final forumId = parts[1];
+        Get.to(() => ForumDetailScreen(threadId: forumId));
       }
     }
+
   } else {
     Get.offAll(() => const LoginScreen());
   }
 
   _navigating = false;
 }
+
 
   /// If no initial deep link, navigate after delay
   Future<void> _navigateAfterDelay() async {
@@ -123,7 +115,7 @@ class _InitialNavigationScreenState extends State<InitialNavigationScreen> {
     final isLoggedIn = prefs.getBool('is_logged_in') ?? false;
 
     if (isLoggedIn) {
-      Get.offAll(() =>  BaseScreen());
+      Get.offAll(() => BaseScreen());
     } else {
       Get.offAll(() => const LoginScreen());
     }

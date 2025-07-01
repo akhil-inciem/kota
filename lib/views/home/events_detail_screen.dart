@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -47,6 +48,12 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
     await Future.delayed(const Duration(milliseconds: 200));
     _isSharing = false;
   }
+  String getEventShareUrl(String eventId) {
+  return Platform.isIOS
+      ? "https://dev.kbaiota.org/events/$eventId"
+      : "https://dev.kbaiota.org/?events/$eventId";
+}
+
 
   @override
   void initState() {
@@ -220,7 +227,7 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
 
   Widget _dateAndIcons(EventsDatum item) {
     final title = item.eventName ?? 'Check this out!';
-    final url = "https://dev.kbaiota.org/?events/${item.eventId}";
+    final url = "https://dev.kbaiota.org/index/eventdetails?eventId=${item.eventId}";
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

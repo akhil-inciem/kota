@@ -43,11 +43,11 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
 
           controller.selectedThreadId.value = widget.threadId;
 
-          if (item == null) {
+          if (item == null && controller.isThreadLoading.value ) {
             return const ForumShimmerLoader();
           }
 
-          final imageUrls = item.images ?? [];
+          final imageUrls = item!.images ?? [];
           final title = item.title;
           final description = item.content;
           final userName = '${item.firstName ?? ''} ${item.lastName ?? ''}';

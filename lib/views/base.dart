@@ -162,7 +162,7 @@ class _BaseScreenState extends State<BaseScreen> {
       homeController.index.value = index;
       _pageController.jumpToPage(index);
     },
-    hasNewUpdates: updateController.hasNewUpdates.value,  // 👈 pass the reactive value
+    newUpdatesCount: updateController.newItemsCount.value,  // 👈 pass the reactive value
   ),
 )
 ,

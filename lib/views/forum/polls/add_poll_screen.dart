@@ -168,42 +168,11 @@ class _NewPollPageState extends State<NewPollPage> {
                         ),
                         child: Column(
                           children: [
-                            // Add new option field
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: TextFormField(
-                                    controller: optionController,
-                                    decoration: InputDecoration(
-                                      hintText: 'Add Option',
-                                      hintStyle: TextStyle(
-                                        color: Colors.grey.shade500,
-                                        fontSize: 16.sp,
-                                      ),
-                                      border: InputBorder.none,
-                                      contentPadding: EdgeInsets.zero,
-                                    ),
-                                    onSaved: (_) => _addOption(),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: _addOption,
-                                  child: Icon(
-                                    Icons.add_circle,
-                                    color: AppColors.primaryColor,
-                                    size: 22.sp,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            // Display added options
                             Obx(() {
                               final reversedOptions =
                                   _forumController.pollFields
                                       .asMap()
                                       .entries
-                                      .toList()
-                                      .reversed
                                       .toList();
                               return Column(
                                 children: List.generate(reversedOptions.length, (
@@ -255,6 +224,35 @@ class _NewPollPageState extends State<NewPollPage> {
                                 }),
                               );
                             }),
+                            SizedBox(height: 1.h,),
+                            // Add new option field
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: TextFormField(
+                                    controller: optionController,
+                                    decoration: InputDecoration(
+                                      hintText: 'Add Option',
+                                      hintStyle: TextStyle(
+                                        color: Colors.grey.shade500,
+                                        fontSize: 16.sp,
+                                      ),
+                                      border: InputBorder.none,
+                                      contentPadding: EdgeInsets.zero,
+                                    ),
+                                    onSaved: (_) => _addOption(),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: _addOption,
+                                  child: Icon(
+                                    Icons.add_circle,
+                                    color: AppColors.primaryColor,
+                                    size: 22.sp,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ),

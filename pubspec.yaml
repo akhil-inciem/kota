@@ -40,6 +40,11 @@ dependencies:
   flutter_advanced_switch: ^3.1.0
   fluttertoast: ^8.2.12
   image_gallery_saver_plus: ^4.0.1
+  image_cropper: ^9.1.0
+  image_cropping: ^0.0.15
+  crop_image: ^1.0.16
+  crop_your_image: ^2.0.0
+  image: ^4.5.4
 
 dev_dependencies:
   flutter_test:

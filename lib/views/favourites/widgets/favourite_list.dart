@@ -27,9 +27,8 @@ class _FavoriteListState extends State<FavoriteList> {
 
   @override
   initState() {
-    // TODO: implement initState
     super.initState();
-    // favController.fetchFilteredItems();
+    favController.fetchFilteredItems();
   }
 
   @override

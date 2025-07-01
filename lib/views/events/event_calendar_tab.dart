@@ -112,7 +112,7 @@ class EventCalendarTab extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 2.h),
-                  ...upcoming.map(
+                  ...upcoming.reversed.map(
                     (event) => Padding(
                       padding: EdgeInsets.only(bottom: 1.5.h),
                       child: UpcomingEventCard(event: event),
