@@ -24,7 +24,7 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
   @override
   void initState() {
     super.initState();
-    updateController.getUpdates();
+    updateController.getUpdates(shouldClear: true);
     isGuest = authController.isGuest;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       updateController.clearNewUpdatesFlag();

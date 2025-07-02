@@ -15,7 +15,7 @@ class HomeController extends GetxController {
   var selectedTabIndex = 0.obs;
   RxInt currentAdIndex = 0.obs;
 
-  final isLoading = false.obs;
+  final isLoading = true.obs;
   bool _hasFetchedNews = false;
 
   final RxList<NewsDatum> masterNewsItems = <NewsDatum>[].obs;

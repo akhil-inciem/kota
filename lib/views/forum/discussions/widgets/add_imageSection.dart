@@ -50,11 +50,9 @@ class _AddImageSectionState extends State<AddImageSection> {
               );
               return;
             }
-
             setState(() {
               _selectedImages.add(file);
             });
-
             // Optional: sync to controller as needed
             Get.find<ForumController>().addImage(XFile(file.path));
           },

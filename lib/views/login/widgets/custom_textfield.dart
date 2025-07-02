@@ -39,7 +39,7 @@ class CustomTextField extends StatelessWidget {
           fillColor: fillColor ?? AppColors.primaryBackground,
           isDense: true,
           contentPadding: EdgeInsets.symmetric(
-            vertical: 1.3.h, // balanced vertical padding
+            vertical: 1.5.h, // balanced vertical padding
             horizontal: 4.w,
           ),
           border: OutlineInputBorder(

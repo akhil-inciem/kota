@@ -9,11 +9,32 @@ import 'widgets/custom_calendar.dart';
 import 'widgets/today_event_card.dart';
 import 'widgets/upcoming_event_card.dart';
 
-class EventCalendarTab extends StatelessWidget {
+class EventCalendarTab extends StatefulWidget {
   EventCalendarTab({Key? key}) : super(key: key);
 
+  @override
+  State<EventCalendarTab> createState() => _EventCalendarTabState();
+}
+
+class _EventCalendarTabState extends State<EventCalendarTab> {
   final EventController controller = Get.find();
+
   final ValueNotifier<double> radiusNotifier = ValueNotifier(20.0);
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final today = DateTime.now();
+
+    controller.selectedDate.value = today;
+    controller.focusedDate.value = today;
+    controller.selectedMonth.value = DateTime(today.year, today.month);
+
+    // Automatically filter events for the current month
+    controller.filterEventsByMonth(controller.selectedMonth.value);
+    controller.updateSelectedWeekday(today);
+  }
 
   @override
   Widget build(BuildContext context) {

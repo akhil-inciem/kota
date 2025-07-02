@@ -33,9 +33,10 @@ class UpdateController extends GetxController {
     );
   }
 
-  Future<void> getUpdates() async {
+  Future<void> getUpdates({bool shouldClear = false}) async {
   try {
     isLoadingUpdates.value = true;
+
     final result = await _apiService.fetchUpdates();
     final memberShip = await _apiService.fetchMembership();
     updatesModel.value = result;
@@ -68,12 +69,16 @@ class UpdateController extends GetxController {
     hasNewUpdates.value = isNewData;
     newItemsCount.value = newCount;
 
+    // ✅ Clear new update flag if allowed
+    if (shouldClear) clearNewUpdatesFlag();
+
   } catch (e) {
     print('Controller error fetching updates: $e');
   } finally {
     isLoadingUpdates.value = false;
   }
 }
+
 
 
 void _processUpdates(UpdatesModel? model) {

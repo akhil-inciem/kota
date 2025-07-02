@@ -114,7 +114,7 @@ class _GuestRegistrationScreenState extends State<GuestRegistrationScreen>
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                    height: 72.h,
+                    height: 73.h,
                     width: double.infinity,
                     padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                     decoration: const BoxDecoration(
@@ -201,7 +201,7 @@ class _GuestRegistrationScreenState extends State<GuestRegistrationScreen>
                                 return null;
                               },
                             ),
-                            SizedBox(height: 5.h),
+                            SizedBox(height: 4.h),
                             CustomButton(
                               text: 'Sign In as a Guest',
                               backgroundColor: AppColors.primaryColor,

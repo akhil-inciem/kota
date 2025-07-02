@@ -30,6 +30,7 @@ class EventController extends GetxController {
     searchController.addListener(() {
       filterAllEvents(searchController.text);
     });
+    
   }
 
   /// Compare current and new event lists to detect changes

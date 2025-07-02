@@ -1,5 +1,6 @@
 import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
+import 'package:kota/controller/home_controller.dart';
 import 'package:kota/views/base.dart';
 import 'package:kota/views/drawer/executives_screen.dart';
 import 'package:kota/views/favourites/widgets/favourite_list.dart';
@@ -68,6 +69,16 @@ class _InitialNavigationScreenState extends State<InitialNavigationScreen> {
   final isLoggedIn = prefs.getBool('is_logged_in') ?? false;
 
   if (isLoggedIn) {
+    // If URL contains "?favourites", set homecontroller index = 3
+    if (urlString.contains('?favourites')) {
+      Get.offAll(() => BaseScreen());
+      await Future.delayed(const Duration(milliseconds: 100));
+      final homeController = Get.find<HomeController>();
+      homeController.index.value = 3;
+      _navigating = false;
+      return;
+    }
+
     Get.offAll(() => BaseScreen());
     await Future.delayed(const Duration(milliseconds: 100));
 
@@ -105,6 +116,7 @@ class _InitialNavigationScreenState extends State<InitialNavigationScreen> {
 
   _navigating = false;
 }
+
 
 
   /// If no initial deep link, navigate after delay
