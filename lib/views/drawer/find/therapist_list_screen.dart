@@ -53,14 +53,13 @@ class TherapistResultsScreen extends StatelessWidget {
           },
           child: Image.asset(
             'assets/icons/backbutton.png',
-            color: Colors.black,
             width: 6.w,
             height: 2.5.h,
           ),
         ),
         SizedBox(width: 4.w),
         Text(
-          "Search Results",
+          "Back",
           style: TextStyle(
             fontSize: 17.sp,
             fontWeight: FontWeight.w600,

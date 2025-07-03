@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:kota/constants/colors.dart';
 import 'package:kota/model/clinic_model.dart';
 import 'package:kota/model/therapist_model.dart';
 import 'package:kota/views/drawer/find/widgets/find_search.dart';
@@ -23,11 +24,11 @@ class SearchResultTherapistWidget extends StatelessWidget {
       children: [
         // Search and Back Row
         Padding(
-          padding: EdgeInsets.symmetric(vertical: 1.h,horizontal: 4.w),
+          padding: EdgeInsets.symmetric(vertical: 1.h, horizontal: 4.w),
           child: SearchHeader(
             onReset: onReset,
             onSearch: onSearch,
-            hintText: 'Search Therapist..',
+            hintText: 'Search Therapist',
           ),
         ),
         // Results or Empty Message
@@ -82,7 +83,7 @@ class TherapistTile extends StatelessWidget {
           CircleAvatar(
             radius: 24,
             backgroundColor: Colors.blue.shade100,
-            child: Icon(Icons.person, size: 28, color: Colors.blue),
+            child: Icon(Icons.person, size: 28, color: AppColors.primaryColor),
           ),
           SizedBox(width: 3.w),
 
@@ -104,7 +105,7 @@ class TherapistTile extends StatelessWidget {
                   "District : ${therapist.district ?? 'N/A'}",
                   style: TextStyle(
                     fontSize: 15.sp,
-                    color: Colors.grey,
+                    color: Colors.grey.shade700,
                     fontStyle: FontStyle.italic,
                   ),
                 ),
@@ -134,33 +135,36 @@ class SearchResultClinicWidget extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(vertical: 1.h,horizontal: 5.w),
+          padding: EdgeInsets.symmetric(vertical: 1.h, horizontal: 5.w),
           child: SearchHeader(
             onReset: onReset,
             onSearch: onSearch,
-            hintText: 'Search Clinic..',
+            hintText: 'Search Clinic',
           ),
         ),
         Expanded(
-          child: results.isEmpty
-              ? const Center(
-                  child: Text(
-                    'No results available',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
+          child:
+              results.isEmpty
+                  ? const Center(
+                    child: Text(
+                      'No results available',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
+                  )
+                  : ListView.builder(
+                    itemCount: results.length,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 3.w,
+                      vertical: 1.h,
+                    ),
+                    itemBuilder: (context, index) {
+                      final result = results[index];
+                      return ClinicTile(clinic: result, index: index);
+                    },
                   ),
-                )
-              : ListView.builder(
-  itemCount: results.length,
-  padding: EdgeInsets.symmetric(horizontal: 3.w,vertical: 1.h),
-  itemBuilder: (context, index) {
-    final result = results[index];
-    return ClinicTile(clinic: result, index: index);
-  },
-),
-
         ),
       ],
     );
@@ -171,11 +175,7 @@ class ClinicTile extends StatelessWidget {
   final Clinic clinic;
   final int index;
 
-  const ClinicTile({
-    super.key,
-    required this.clinic,
-    required this.index,
-  });
+  const ClinicTile({super.key, required this.clinic, required this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -184,10 +184,7 @@ class ClinicTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(3.w),
-        border: Border.all(
-          color: Colors.grey.shade400,
-          width: 0.15.w,
-        ),
+        border: Border.all(color: Colors.grey.shade400, width: 0.15.w),
       ),
       child: Padding(
         padding: EdgeInsets.all(3.w),
@@ -196,25 +193,27 @@ class ClinicTile extends StatelessWidget {
           children: [
             // Hospital Icon
             Container(
-  width: 10.w,
-  height: 10.w,
-  decoration: BoxDecoration(
-    color: const Color(0xFF4A90E2).withOpacity(0.1),
-    borderRadius: BorderRadius.circular(6.w),
-  ),
-  child: Padding(
-    padding: EdgeInsets.all(2.w), // Optional, adjust to center the SVG
-    child: SvgPicture.asset(
-      'assets/icons/gov_clinic_icon.svg',
-      color: const Color(0xFF4A90E2), // Apply tint if needed
-      width: 6.w,
-      height: 6.w,
-      fit: BoxFit.contain,
-    ),
-  ),
-),
+              width: 10.w,
+              height: 10.w,
+              decoration: BoxDecoration(
+                color: const Color(0xFF4A90E2).withOpacity(0.3),
+                borderRadius: BorderRadius.circular(6.w),
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(
+                  2.5.w,
+                ), // Optional, adjust to center the SVG
+                child: SvgPicture.asset(
+                  'assets/icons/gov_clinic_icon.svg',
+                  color: AppColors.primaryColor, // Apply tint if needed
+                  width: 6.w,
+                  height: 6.w,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
             SizedBox(width: 4.w),
-            
+
             // Hospital Details
             Expanded(
               child: Column(
@@ -222,7 +221,8 @@ class ClinicTile extends StatelessWidget {
                 children: [
                   // Hospital Name
                   Text(
-                    clinic.nameAndPlaceOfInstitution ?? 'Government Medical College Hospital',
+                    clinic.nameAndPlaceOfInstitution ??
+                        'Government Medical College Hospital',
                     style: TextStyle(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
@@ -231,25 +231,27 @@ class ClinicTile extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 1.h),
-                  
+
                   // Address
                   Text(
                     _formatAddress(),
                     style: TextStyle(
                       fontSize: 14.sp,
-                      color: Colors.grey[600],
+                      fontStyle: FontStyle.italic,
+                      color: Colors.grey[800],
                       height: 1.3,
                     ),
                   ),
                   SizedBox(height: 1.h),
-                  
+
                   // Phone Numbers
                   if (_getPhoneNumbers().isNotEmpty)
                     Text(
                       _getPhoneNumbers(),
                       style: TextStyle(
                         fontSize: 14.sp,
-                        color: Colors.grey[600],
+                        fontStyle: FontStyle.italic,
+                        color: Colors.grey[800],
                         height: 1.3,
                       ),
                     ),
@@ -296,5 +298,3 @@ class ClinicTile extends StatelessWidget {
     return phoneNumbers.join(', ');
   }
 }
-
-

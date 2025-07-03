@@ -4,6 +4,7 @@ import 'package:kota/controller/find_controller.dart' show FindController;
 import 'package:kota/views/drawer/find/therapist_list_screen.dart';
 import 'package:kota/views/drawer/find/widgets/find_search_form_widget.dart';
 import 'package:kota/views/drawer/find/widgets/find_search_result_widget.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class FindTherapistTab extends StatelessWidget {
   final FindController controller;
@@ -19,12 +20,18 @@ class FindTherapistTab extends StatelessWidget {
         return const Center(child: CircularProgressIndicator());
       }
 
-      return SearchFormWidget(
-        controller: controller,
-        onSearch: () {
-          controller.findTherapist();
-          Get.to(() => TherapistResultsScreen(controller: controller));
-        },
+      return Container(
+        color: Colors.white,
+        child: Padding(
+          padding:  EdgeInsets.symmetric(horizontal: 4.w),
+          child: SearchFormWidget(
+            controller: controller,
+            onSearch: () {
+              controller.findTherapist();
+              Get.to(() => TherapistResultsScreen(controller: controller));
+            },
+          ),
+        ),
       );
     });
   }

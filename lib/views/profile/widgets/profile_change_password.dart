@@ -80,7 +80,10 @@ class _ChangePasswordWidgetState extends State<ChangePasswordWidget>
                         : authController.toggleExpansion,
                 child: Row(
                   children: [
-                    const Icon(Icons.key),
+                    Image.asset('assets/icons/change_password.png',
+                  height: 2.5.h,
+                  width: 2.5.h,
+                ),
                     SizedBox(width: 5.w),
                     const Text('Change Password'),
                     const Spacer(),
@@ -90,6 +93,7 @@ class _ChangePasswordWidgetState extends State<ChangePasswordWidget>
                           authController.isExpanded.value
                               ? Icons.keyboard_arrow_up
                               : Icons.keyboard_arrow_down,
+                              color: AppColors.primaryColor,
                         ),
                   ],
                 ),

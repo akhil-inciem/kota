@@ -76,7 +76,10 @@ Widget build(BuildContext context) {
           /// Email Row
           Row(
             children: [
-              const Icon(Icons.email_outlined, color: Colors.black54),
+              Image.asset('assets/icons/email.png',
+                  height: 2.h,
+                  width: 2.h,
+                ),
               SizedBox(width: 5.w),
               Expanded(
                 child: Text(
@@ -100,7 +103,10 @@ Widget build(BuildContext context) {
           /// Phone Row
           Row(
             children: [
-              const Icon(Icons.phone_outlined, color: Colors.black54),
+              Image.asset('assets/icons/phone.png',
+                  height: 2.h,
+                  width: 2.h,
+                ),
               SizedBox(width: 5.w),
               Expanded(
                 child: Text(
@@ -126,7 +132,10 @@ Widget build(BuildContext context) {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.people_alt_outlined, color: Colors.black54),
+                Image.asset('assets/icons/executives.png',
+                  height: 2.h,
+                  width: 2.h,
+                ),
                 SizedBox(width: 5.w),
                 Expanded(
                   child: Column(
@@ -163,13 +172,13 @@ Widget build(BuildContext context) {
               alignment: Alignment.centerRight,
               child: Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(5),
                   color: const Color(0xFFDD3D3D),
                 ),
                 child: Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: 4.w,
-                    vertical: 1.h,
+                    horizontal: 3.w,
+                    vertical: 0.5.h,
                   ),
                   child: const Text(
                     "Renew Membership",

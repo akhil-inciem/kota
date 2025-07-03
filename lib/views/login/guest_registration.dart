@@ -229,15 +229,15 @@ class _GuestRegistrationScreenState extends State<GuestRegistrationScreen>
                                 TextSpan(
                                   text: "Already have an account? ",
                                   style: const TextStyle(
-                                    color: Colors.blue,
-                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.primaryText,
+                                    fontWeight: FontWeight.w500,
                                     fontSize: 12,
                                   ),
                                   children: [
                                     TextSpan(
                                       text: 'Sign In',
                                       style: const TextStyle(
-                                        color: Colors.blue,
+                                        color: AppColors.primaryText,
                                         fontWeight: FontWeight.w600,
                                         fontSize: 12,
                                         decoration: TextDecoration.underline,

@@ -63,7 +63,7 @@ Widget build(BuildContext context) {
               ),
             ),
           ),
-          SizedBox(width: 5.w),
+          SizedBox(width: 4.w),
         ],
       ),
       SizedBox(height: 2.h),
@@ -89,6 +89,7 @@ Widget build(BuildContext context) {
                       "Favourites",
                       style: TextStyle(
                         fontSize: 18,
+                        color: Color(0xFF0A2C49),
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -97,7 +98,7 @@ Widget build(BuildContext context) {
                       width: 8.w,
                       height: 2.5.h,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(5),
                         color: const Color(0xFF0A57C9),
                       ),
                       child: Center(

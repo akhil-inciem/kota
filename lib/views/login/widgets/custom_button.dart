@@ -51,23 +51,26 @@ class CustomButton extends StatelessWidget {
               ? Border.all(color: effectiveTextColor, width: 1)
               : Border.all(color: Colors.transparent),
         ),
-        child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (icon != null) ...[
-                icon!,
-                SizedBox(width: 6),
-              ],
-              Text(
-                text,
-                style: TextStyle(
-                  color: effectiveTextColor,
-                  fontSize: 16.sp,
+        child: Padding(
+          padding:  EdgeInsets.symmetric(horizontal: 2.w),
+          child: Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (icon != null) ...[
+                  icon!,
+                  SizedBox(width: 6),
+                ],
+                Text(
+                  text,
+                  style: TextStyle(
+                    color: effectiveTextColor,
+                    fontSize: 16.sp,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

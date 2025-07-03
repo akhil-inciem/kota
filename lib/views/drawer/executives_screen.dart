@@ -37,7 +37,7 @@ class ExecutivePage extends StatelessWidget {
           onTap: () => Get.back(),
           child: Image.asset(
             'assets/icons/backbutton.png',
-            color: Colors.black,
+            color: AppColors.primaryColor,
             width: 6.w,
             height: 2.5.h,
           ),
@@ -46,7 +46,8 @@ class ExecutivePage extends StatelessWidget {
         Text(
           "KOTA Executives",
           style: TextStyle(
-            fontSize: 17.sp,
+            fontSize: 18.sp,
+            color: Color(0xFF0A2C49),
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -60,7 +61,7 @@ class ExecutivePage extends StatelessWidget {
     return Expanded(
       child: ListView.separated(
         itemCount: executives.length,
-        separatorBuilder: (_, __) => SizedBox(height: 2.h),
+        separatorBuilder: (_, __) => SizedBox(height: 1.5.h),
         itemBuilder: (context, index) {
           final executive = executives[index];
           return ExecutiveCard(executive: executive);

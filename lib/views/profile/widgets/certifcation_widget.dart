@@ -90,7 +90,10 @@ Future<void> downloadPdf(
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.badge),
+                    Image.asset('assets/icons/cerifications.png',
+                  height: 2.5.h,
+                  width: 2.5.h,
+                ),
                     SizedBox(width: 2.w),
                     Text('My Certifications ($certificationCount)'),
                   ],

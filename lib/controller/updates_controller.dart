@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:kota/apiServices/updates_api_services.dart';
 import 'package:kota/model/membership_model.dart';
 import 'package:kota/model/updates_model.dart';
@@ -33,50 +36,80 @@ class UpdateController extends GetxController {
     );
   }
 
-  Future<void> getUpdates({bool shouldClear = false}) async {
-  try {
-    isLoadingUpdates.value = true;
+ Future<void> getUpdates({bool shouldClear = false}) async {
+  final prefs = await SharedPreferences.getInstance();
+  final cachedJson = prefs.getString('cached_updates');
 
+  UpdatesModel? cachedModel;
+  if (cachedJson != null) {
+    final parsed = json.decode(cachedJson);
+    cachedModel = UpdatesModel.fromJson(parsed);
+  }
+
+  // Always fetch fresh data
+  try {
     final result = await _apiService.fetchUpdates();
     final memberShip = await _apiService.fetchMembership();
-    updatesModel.value = result;
-    memberModel.value = memberShip;
 
-    _processUpdates(result);
+    final resultJson = json.encode(result?.toJson());
 
-    final prefs = await SharedPreferences.getInstance();
-    final lastSeenDateStr = prefs.getString('last_seen_update_date');
-    DateTime? lastSeenDate =
-        lastSeenDateStr != null ? DateTime.tryParse(lastSeenDateStr) : null;
+    // 🔄 Compare current with cached
+    if (resultJson == cachedJson) {
+      debugPrint('[Updates] Data same as cache. Skipping shimmer.');
+      updatesModel.value = result;
+      memberModel.value = memberShip;
+      _processUpdates(result);
 
-    bool isNewData = false;
-    int newCount = 0;
-
-    if (combinedList.isNotEmpty) {
-      for (final item in combinedList) {
-        final itemDate = item['date'] as DateTime;
-        if (lastSeenDate == null || itemDate.isAfter(lastSeenDate)) {
-          newCount++;
-        }
-      }
-
-      final latestDate = combinedList.first['date'] as DateTime;
-      if (lastSeenDate == null || latestDate.isAfter(lastSeenDate)) {
-        isNewData = true;
-      }
+      // Still update new updates flags
+      await _handleNewUpdateFlags(prefs, shouldClear);
+      return;
     }
 
-    hasNewUpdates.value = isNewData;
-    newItemsCount.value = newCount;
+    // 🌀 New data: show shimmer
+    isLoadingUpdates.value = true;
 
-    // ✅ Clear new update flag if allowed
-    if (shouldClear) clearNewUpdatesFlag();
+    // Save new cache
+    await prefs.setString('cached_updates', resultJson);
 
+    updatesModel.value = result;
+    memberModel.value = memberShip;
+    _processUpdates(result);
+
+    await _handleNewUpdateFlags(prefs, shouldClear);
   } catch (e) {
     print('Controller error fetching updates: $e');
   } finally {
     isLoadingUpdates.value = false;
   }
+}
+
+Future<void> _handleNewUpdateFlags(
+    SharedPreferences prefs, bool shouldClear) async {
+  final lastSeenDateStr = prefs.getString('last_seen_update_date');
+  DateTime? lastSeenDate =
+      lastSeenDateStr != null ? DateTime.tryParse(lastSeenDateStr) : null;
+
+  bool isNewData = false;
+  int newCount = 0;
+
+  if (combinedList.isNotEmpty) {
+    for (final item in combinedList) {
+      final itemDate = item['date'] as DateTime;
+      if (lastSeenDate == null || itemDate.isAfter(lastSeenDate)) {
+        newCount++;
+      }
+    }
+
+    final latestDate = combinedList.first['date'] as DateTime;
+    if (lastSeenDate == null || latestDate.isAfter(lastSeenDate)) {
+      isNewData = true;
+    }
+  }
+
+  hasNewUpdates.value = isNewData;
+  newItemsCount.value = newCount;
+
+  if (shouldClear) clearNewUpdatesFlag();
 }
 
 
@@ -147,6 +180,20 @@ void _processUpdates(UpdatesModel? model) {
 
   filteredList.value = tempCombined;
 }
+
+bool get isMembershipExpired =>
+    memberModel.value?.data?.status == 'expired';
+
+bool get isMembershipExpiringSoon =>
+    memberModel.value?.data?.status == 'expiring_soon';
+
+String get expiryDateFormatted {
+  final date = memberModel.value?.data?.membershipExpiryDate;
+  return date != null ? DateFormat('dd MMM yyyy').format(date) : '';
+}
+
+num get daysRemaining => memberModel.value?.data?.daysRemaining ?? 0;
+num get daysExpired => memberModel.value?.data?.daysExpired ?? 0;
 
 
 void clearNewUpdatesFlag() {

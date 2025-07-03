@@ -43,7 +43,7 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
 
           controller.selectedThreadId.value = widget.threadId;
 
-          if (item == null && controller.isThreadLoading.value ) {
+          if (item == null && controller.isThreadLoading.value) {
             return const ForumShimmerLoader();
           }
 
@@ -54,14 +54,17 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
 
           return Column(
             children: [
+              /// 🔒 Fixed TopBar
+              TopBar(title: 'Back', onTap: () => Get.back()),
+              SizedBox(height: 2.h),
+
+              /// 🔽 Scrollable content
               Expanded(
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.only(bottom: 80),
+                  // padding: EdgeInsets.only(bottom: 1.h),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TopBar(title: 'Forum', onTap: () => Get.back()),
-                      SizedBox(height: 2.h),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 7.w),
                         child: Row(
@@ -76,7 +79,7 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                                           ? item.photo!
                                           : 'https://ui-avatars.com/api/?name=$userName&background=random&color=fff',
                                   fit: BoxFit.cover,
-                                  width: 60, // 2 * radius
+                                  width: 60,
                                   height: 60,
                                   placeholder:
                                       (context, url) => const Center(
@@ -97,7 +100,6 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                                 ),
                               ),
                             ),
-
                             SizedBox(width: 10),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,9 +113,10 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                                 ),
                                 Text(
                                   formatDateTime(item.createdAt),
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 12,
-                                    color: Colors.grey,
+                                    fontStyle: FontStyle.italic,
+                                    color: Colors.grey.shade600,
                                   ),
                                 ),
                               ],
@@ -161,6 +164,8 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                   ),
                 ),
               ),
+
+              /// 💬 Bottom input
               _buildCommentInput(),
             ],
           );
@@ -175,6 +180,19 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
       final isReply = controller.isReplying.value;
       final isSending = controller.isPosting.value;
       final canSend = controller.commentText.isNotEmpty && !isSending;
+
+      final authorFirstName = controller.singleThread.value?.firstName ?? '';
+      final authorLastName = controller.singleThread.value?.lastName ?? '';
+      final authorName = '$authorFirstName $authorLastName'.trim();
+
+      if (!isReply &&
+          controller.commentController.text.isEmpty &&
+          authorName.isNotEmpty) {
+        controller.commentController.text = '@$authorName ';
+        controller.commentController.selection = TextSelection.fromPosition(
+          TextPosition(offset: controller.commentController.text.length),
+        );
+      }
 
       return Container(
         padding: EdgeInsets.symmetric(horizontal: 1.w),

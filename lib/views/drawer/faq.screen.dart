@@ -18,7 +18,7 @@ class FaqScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: AppColors.primaryBackground,
         body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 10),
+          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -34,15 +34,12 @@ class FaqScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(height: 4.h),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 1.w),
-                        child: Text(
-                          "Frequently Asked Questions",
-                          maxLines: 2,
-                          style: TextStyle(
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w600,
-                          ),
+                      Text(
+                        "Frequently Asked Questions",
+                        maxLines: 2,
+                        style: TextStyle(
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -55,7 +52,7 @@ class FaqScreen extends StatelessWidget {
                             final faq = controller.faqList[index];
 
                             return Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 2.w),
+                              padding: EdgeInsets.symmetric(horizontal: 1.w),
                               child: Container(
                                 decoration: BoxDecoration(
                                   color: Colors.white,
@@ -155,7 +152,6 @@ class FaqScreen extends StatelessWidget {
           onTap: () => Get.back(),
           child: Image.asset(
             'assets/icons/backbutton.png',
-            color: Colors.black,
             width: 6.w,
             height: 2.5.h,
           ),

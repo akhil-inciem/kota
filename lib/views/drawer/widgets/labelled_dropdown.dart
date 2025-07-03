@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kota/constants/colors.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class LabelledDropdown<T> extends StatelessWidget {
@@ -30,39 +31,48 @@ class LabelledDropdown<T> extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label,
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500,color: AppColors.labelText)),
         SizedBox(height: 8),
-        DropdownButtonFormField<T>(
-          value: effectiveValue,
-          items: items.map((val) {
-            final label = itemAsString(val);
-            return DropdownMenuItem<T>(
-              value: val,
-              child: Tooltip(
-                message: label,
-                child: Container(
-                  width: double.infinity,
-                  child: Text(
-                    label,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                    softWrap: false,
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
-          onChanged: onChanged,
-          isExpanded: true,
-          decoration: InputDecoration(
-            hintText: hintText,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
+        Container(
+  decoration: BoxDecoration(
+    color: AppColors.primaryBackground, // Background color
+    borderRadius: BorderRadius.circular(10), // 🎯 Rounded corners here
+  ),
+  child: DropdownButtonFormField<T>(
+    value: effectiveValue,
+    items: items.map((val) {
+      final label = itemAsString(val);
+      return DropdownMenuItem<T>(
+        value: val,
+        child: Tooltip(
+          message: label,
+          child: SizedBox(
+            width: double.infinity,
+            child: Text(
+              label,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              softWrap: false,
             ),
           ),
         ),
+      );
+    }).toList(),
+    onChanged: onChanged,
+    isExpanded: true,
+    decoration: const InputDecoration(
+      hintText: "Select",
+      border: InputBorder.none,
+      enabledBorder: InputBorder.none,
+      focusedBorder: InputBorder.none,
+      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      filled: true,
+      fillColor: Colors.transparent, // So it doesn’t override container color
+    ),
+  ),
+)
+
+
       ],
     );
   }

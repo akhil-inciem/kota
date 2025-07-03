@@ -16,9 +16,9 @@ class ForumPostBody extends StatefulWidget {
   final String description;
   final List<String> imageUrls;
   final RxBool isLiked;
-final RxString likes;
-final String id;
-final RxString comments;
+  final RxString likes;
+  final String id;
+  final RxString comments;
 
   final VoidCallback onLikeToggle;
 
@@ -41,12 +41,12 @@ final RxString comments;
 class _ForumPostBodyState extends State<ForumPostBody> {
   final PageController _pageController = PageController();
   final ForumController controller = Get.find<ForumController>();
-  
+
   String getForumShareUrl(String forumId) {
-  return Platform.isIOS
-      ? "https://dev.kbaiota.org/forum/$forumId"
-      : "https://dev.kbaiota.org/?forum/$forumId";
-}
+    return Platform.isIOS
+        ? "https://dev.kbaiota.org/forum/$forumId"
+        : "https://dev.kbaiota.org/?forum/$forumId";
+  }
 
   bool _isSharing = false;
 
@@ -65,6 +65,7 @@ class _ForumPostBodyState extends State<ForumPostBody> {
     await Future.delayed(const Duration(milliseconds: 200));
     _isSharing = false;
   }
+
   int _currentIndex = 0;
 
   @override
@@ -83,7 +84,7 @@ class _ForumPostBodyState extends State<ForumPostBody> {
         Text(
           widget.title,
           style: const TextStyle(
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w600,
             fontSize: 14,
             color: Colors.black87,
           ),
@@ -91,8 +92,8 @@ class _ForumPostBodyState extends State<ForumPostBody> {
         const SizedBox(height: 12),
         Text(
           widget.description,
-          style: const TextStyle(
-            color: Colors.black54,
+          style: TextStyle(
+            color: Colors.grey.shade800,
             fontSize: 13,
             height: 1.5,
           ),
@@ -113,18 +114,21 @@ class _ForumPostBodyState extends State<ForumPostBody> {
               },
               itemBuilder: (_, index) {
                 return ClipRRect(
-  borderRadius: BorderRadius.circular(12),
-  child: CachedNetworkImage(
-    imageUrl: widget.imageUrls[index],
-    width: double.infinity,
-    fit: BoxFit.fitWidth,
-    placeholder: (context, url) => Container(
-      height: 200, // adjust if needed
-      color: Colors.grey[300],
-    ),
-    errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.red),
-  ),
-);
+                  borderRadius: BorderRadius.circular(12),
+                  child: CachedNetworkImage(
+                    imageUrl: widget.imageUrls[index],
+                    width: double.infinity,
+                    fit: BoxFit.fitWidth,
+                    placeholder:
+                        (context, url) => Container(
+                          height: 200, // adjust if needed
+                          color: Colors.grey[300],
+                        ),
+                    errorWidget:
+                        (context, url, error) =>
+                            const Icon(Icons.error, color: Colors.red),
+                  ),
+                );
               },
             ),
           ),
@@ -145,42 +149,61 @@ class _ForumPostBodyState extends State<ForumPostBody> {
 
         // Like, Comment, Share Row
         Row(
-  children: [
-    GestureDetector(
-      onTap: widget.onLikeToggle,
-      child: Obx(() => Icon(
-        widget.isLiked.value ? Icons.favorite : Icons.favorite_border,
-        size: 20,
-        color: widget.isLiked.value ? Colors.red : Colors.black,
-      )),
-    ),
-    const SizedBox(width: 4),
-    Obx(() => Text(widget.likes.value, style: const TextStyle(fontSize: 14))),
-    const SizedBox(width: 20),
-    Row(
-      children: [
-        const Icon(Icons.comment, size: 20, color: Colors.grey),
-        const SizedBox(width: 4),
-        Obx(() => Text(
-          '${widget.comments} Comments',
-          style: const TextStyle(fontSize: 14),
-        )),
-      ],
-    ),
-    const SizedBox(width: 20),
-    GestureDetector(
-      onTap: _handleShare,
-      behavior: HitTestBehavior.opaque, // Ensures tap works on padding areas too
-      child: Row(
-        children: const [
-          Icon(Icons.share, size: 20, color: Colors.grey),
-          SizedBox(width: 4),
-          Text('Share', style: TextStyle(fontSize: 14)),
-        ],
-      ),
-    )
-  ],
-),
+          children: [
+            GestureDetector(
+              onTap: widget.onLikeToggle,
+              child: Obx(
+                () => Icon(
+                  widget.isLiked.value ? Icons.favorite : Icons.favorite_border,
+                  size: 16.sp,
+                  color: widget.isLiked.value ? Colors.red : Colors.black,
+                ),
+              ),
+            ),
+            SizedBox(width: 1.5.w),
+            Obx(
+              () => Text(
+                widget.likes.value,
+                style:  TextStyle(fontSize: 14.sp),
+              ),
+            ),
+            SizedBox(width: 6.w),
+            Row(
+              children: [
+                Image.asset(
+                  'assets/icons/comments.png',
+                  height: 1.5.h,
+                  width: 1.5.h,
+                ),
+                SizedBox(width: 1.5.w),
+                Obx(
+                  () => Text(
+                    '${widget.comments} Comments',
+                    style:  TextStyle(fontSize: 14.sp),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(width: 20),
+            GestureDetector(
+              onTap: _handleShare,
+              behavior:
+                  HitTestBehavior
+                      .opaque, // Ensures tap works on padding areas too
+              child: Row(
+                children: [
+                  Image.asset(
+                  'assets/icons/share.png',
+                  height: 1.5.h,
+                  width: 1.5.h,
+                ),
+                  SizedBox(width: 1.5.w),
+                  Text('Share', style: TextStyle(fontSize: 14.sp)),
+                ],
+              ),
+            ),
+          ],
+        ),
 
         SizedBox(height: 1.5.h),
         const Divider(),

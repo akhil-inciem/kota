@@ -115,63 +115,72 @@ class AllEventCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final date = event.eventstartDateDate!.toLocal();
+Widget build(BuildContext context) {
+  final date = event.eventstartDateDate!.toLocal();
 
-    final dateDisplay = showFullDate
-        ? DateFormat('d MMM yyyy').format(date)
-        : DateFormat('d').format(date);
+  final dateDisplay = showFullDate
+      ? DateFormat('d MMM yyyy').format(date)
+      : DateFormat('d').format(date);
 
-    final dayName = date.weekdayString;
+  final dayName = date.weekdayString;
 
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
+  return Column(
+    children: [
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Fixed width container for date column
+            Container(
+              width: 20.w, // fixed width, adjust as needed
+              child: Column(
                 mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start, // align left
                 children: [
-                showFullDate ? SizedBox(): Text(
-                  dayName,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[600],
+                  if (!showFullDate)
+                    Text(
+                      dayName,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  SizedBox(height: 4),
+                  Text(
+                    dateDisplay,
+                    style: TextStyle(
+                      fontSize: showFullDate ? 12 : 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
                   ),
-                ),
-                SizedBox(height: 4),
-                Text(
-                  dateDisplay,
-                  style: TextStyle(
-                    fontSize: showFullDate? 12 : 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
-                  ),
-                ),
                 ],
               ),
-              SizedBox(width: 6.w),
-              Expanded(
-                child: Text(
-                  event.eventName ?? '',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14,
-                  ),
+            ),
+            SizedBox(width: 6.w), // smaller gap now, adjust as you want
+
+            // Title takes remaining space
+            Expanded(
+              child: Text(
+                event.eventName ?? '',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-        SizedBox(height: 1.h),
-        Divider(
-          color: Colors.grey.shade300,
-          thickness: 1,
-          height: 1,
-        ),
-      ],
-    );
-  }
+      ),
+      SizedBox(height: 1.h),
+      Divider(
+        color: Colors.grey.shade300,
+        thickness: 1,
+        height: 1,
+      ),
+    ],
+  );
+}
+
 }

@@ -29,12 +29,12 @@ class ExecutiveCard extends StatelessWidget {
             child: CachedNetworkImage(
               imageUrl: executive.portalImage ?? '',
               width: 30.w,
-              height: 35.w,
+              height: 30.w,
               fit: BoxFit.cover,
               placeholder:
                   (context, url) => Container(
                     width: 30.w,
-                    height: 35.w,
+                    height: 30.w,
                     color: Colors.grey[300],
                   ),
               errorWidget:
@@ -46,7 +46,7 @@ class ExecutiveCard extends StatelessWidget {
           // Info Section
           Expanded(
             child: SizedBox(
-              height: 35.w, // Match image height
+              height: 30.w, // Match image height
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,

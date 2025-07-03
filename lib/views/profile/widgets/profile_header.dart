@@ -27,7 +27,7 @@ class ProfileHeader extends StatelessWidget {
       child: Stack(
         children: [
           Positioned(
-            right: 0,
+            right: -4.h,
             top: 8.h,
             bottom: 0,
             child: Opacity(
@@ -70,83 +70,86 @@ class ProfileHeader extends StatelessWidget {
               ],
             ),
           ),
+          
           Positioned(
-            bottom: 25,
-            left: 30,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Column(
-                  children: [
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundImage: CachedNetworkImageProvider(
-                        user.photo?.isNotEmpty == true
-                            ? user.photo!
-                            : 'https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName ?? ''}&background=random&color=fff',
-                      ),
-                    ),
-
-                    GestureDetector(
-                      onTap: () {
-                        Get.to(() => EditProfileScreen());
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.all(6.sp),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.4),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 4.w,
-                              vertical: 0.4.h,
-                            ),
-                            child: Center(
-                              child: Text(
-                                "Edit",
-                                style: TextStyle(
-                                  fontSize: 12.sp,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+  bottom: 25,
+  left: 30,
+  child: Row(
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      // Avatar + Edit button
+      Column(
+        children: [
+          SizedBox(height: 3.h,),
+          CircleAvatar(
+            radius: 30,
+            backgroundImage: CachedNetworkImageProvider(
+              user.photo?.isNotEmpty == true
+                  ? user.photo!
+                  : 'https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName ?? ''}&background=random&color=fff',
+            ),
+          ),
+          const SizedBox(height: 8),
+          GestureDetector(
+            onTap: () {
+              Get.to(() => EditProfileScreen());
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.grey.withOpacity(0.7),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 2.w,
+                  vertical: 0.4.h,
                 ),
-                const SizedBox(width: 15),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${user.firstName}${user.lastName != null && user.lastName!.isNotEmpty ? ' ${user.lastName}' : ''}',
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
+                child: Center(
+                  child: Text(
+                    "Edit",
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: Colors.white,
                     ),
-
-                    const SizedBox(height: 4),
-                    Text(
-                      authController.isGuest ? "KOTA Guest" : "KOTA Member",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w300,
-                        color: Colors.white70,
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ],
+              ),
             ),
           ),
         ],
       ),
+
+      const SizedBox(width: 15),
+
+      // Name and Role (centered to avatar, not column)
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            '${user.firstName}${user.lastName != null && user.lastName!.isNotEmpty ? ' ${user.lastName}' : ''}',
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+            ),
+          ),
+          Text(
+            authController.isGuest ? "KOTA Guest" : "KOTA Member",
+            style: TextStyle(
+              fontSize: 14,
+              fontStyle: FontStyle.italic,
+              fontWeight: FontWeight.w300,
+              color: Colors.white70,
+            ),
+          ),
+        ],
+      ),
+    ],
+  ),
+),
+      ],
+      ), 
     );
   }
 }

@@ -5,7 +5,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ContactUsScreen extends StatelessWidget {
-  final contactPhone = '9746302444';
+  final contactPhone = '+91 9746302444';
   final contactEmail = 'keralaot@gmail.com';
   final address =
       '43/1508 A, Pipeline Road, Kesaveeyam, Palarivattom, Kochi, Kerala 682025';
@@ -193,8 +193,9 @@ class ContactUsScreen extends StatelessWidget {
                                   contact['role']!.toUpperCase(),
                                   style: TextStyle(
                                     fontSize: 12.sp,
-                                    color: AppColors.primaryText,
-                                    fontWeight: FontWeight.w600,
+                                    fontStyle: FontStyle.italic,
+                                    color: Colors.grey.shade800,
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
                                 SizedBox(height: 0.5.h),
@@ -233,7 +234,13 @@ class ContactUsScreen extends StatelessWidget {
       children: [
         InkWell(
           onTap: () => Get.back(),
-          child: Icon(Icons.arrow_back_ios, size: 3.h),
+          child:  Image.asset(
+                      'assets/icons/backbutton.png',
+                      // color: Colors.black,
+                      width: 6.w,
+                      height: 2.5.h,
+                      fit: BoxFit.contain,
+                    ),
         ),
         SizedBox(width: 4.w),
         Text(

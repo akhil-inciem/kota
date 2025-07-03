@@ -138,9 +138,9 @@ class _EventsListState extends State<EventsList> {
                                 _cleanText(item.eventDescription ?? ''),
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
+                                style:  TextStyle(
                                   fontSize: 12,
-                                  color: Colors.black54,
+                                  color: Colors.grey.shade800,
                                 ),
                               ),
                             ],

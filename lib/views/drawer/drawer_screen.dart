@@ -31,54 +31,54 @@ class DrawerPage extends StatelessWidget {
         body: Column(
           children: [
             DrawerHeaderWidget(),
-            const SizedBox(height: 20),
+             SizedBox(height: 2.h),
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 children: [
                   ViewProfileItem(),
                   DrawerItem(
-                    icon: Icons.track_changes_outlined,
+                    icon: 'assets/icons/vision&mission.png',
                     title: 'Vision & Mission',
                     onPressed: () {
                       Get.to(() => MissionPage());
                     },
                   ),
                   DrawerItem(
-                    icon: Icons.group_outlined,
+                    icon: 'assets/icons/executives.png',
                     title: 'KOTA Executives',
                     onPressed: () {
                       Get.to(() => ExecutivePage());
                     },
                   ),
                   DrawerItem(
-                    icon: Icons.school,
+                    icon: 'assets/icons/executives.png',
                     title: 'OT Colleges',
                     onPressed: () {
                       Get.to(() => CollegesScreen());
                     },
                   ),
                   DrawerItem(
-                    icon: Icons.contact_mail_outlined,
+                    icon: 'assets/icons/contct_us.png',
                     title: 'Contact Us',
                     onPressed: () {
                       Get.to(() => ContactUsScreen());
                     },
                   ),
                   DrawerItem(
-                    icon: Icons.help_outline,
+                    icon: 'assets/icons/faq.png',
                     title: 'FAQ',
                     onPressed: () {
                       Get.to(() => FaqScreen());
                     },
                   ),
                   DrawerItem(
-                    icon: Icons.send_outlined,
+                    icon: 'assets/icons/find.png',
                     title: 'Find',
                     onPressed: () => Get.to(() => FindScreen()),
                   ),
                   DrawerItem(
-                    icon: Icons.logout,
+                    icon: 'assets/icons/logout.png',
                     title: 'Logout',
                     onPressed: () {
                       Get.dialog(
@@ -108,7 +108,7 @@ class DrawerHeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 30.h,
+      height: 25.h,
       width: double.infinity,
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -121,7 +121,7 @@ class DrawerHeaderWidget extends StatelessWidget {
         children: [
           // Background image
           Positioned(
-            right: 0,
+            right: -2.h,
             top: 25,
             bottom: 0,
             child: Opacity(
@@ -146,7 +146,7 @@ class DrawerHeaderWidget extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(6.0),
                 child: InkWell(
-                  child: const Icon(Icons.close, size: 35, color: Colors.white),
+                  child:  Icon(Icons.close, size: 23.sp, color: Colors.white),
                   onTap: () => Get.back(),
                 ),
               ),
@@ -204,6 +204,7 @@ class DrawerHeaderWidget extends StatelessWidget {
                         authController.isGuest ? "KOTA Guest" : "KOTA Member",
                         style: const TextStyle(
                           fontSize: 14,
+                          fontStyle: FontStyle.italic,
                           fontWeight: FontWeight.w300,
                           color: Colors.white70,
                         ),
@@ -221,7 +222,7 @@ class DrawerHeaderWidget extends StatelessWidget {
 }
 
 class DrawerItem extends StatelessWidget {
-  final IconData icon;
+  final String icon;
   final String title;
   final Function()? onPressed;
 
@@ -234,22 +235,24 @@ class DrawerItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 1.w),
-      child: Container(
-        decoration: const BoxDecoration(color: AppColors.primaryBackground),
-        child: ListTile(
-          leading: Icon(icon, color: Colors.black),
-          title: Text(
-            title,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
-          ),
-          onTap: onPressed,
-        ),
+    return ListTile(
+      contentPadding: EdgeInsets.symmetric(horizontal: 5.w), // tighter horizontal padding
+      dense: true, // reduces overall height
+      horizontalTitleGap: 10, // spacing between icon and text
+      leading: Image.asset(
+        icon,
+        height: 2.4.h,
+        width: 2.4.h,
       ),
+      title: Text(
+        title,
+        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+      ),
+      onTap: onPressed,
     );
   }
 }
+
 
 class ViewProfileItem extends StatelessWidget {
   const ViewProfileItem({super.key});
@@ -265,7 +268,11 @@ class ViewProfileItem extends StatelessWidget {
         ),
         child: ListTile(
           contentPadding: EdgeInsets.symmetric(horizontal: 2.w),
-          leading: const Icon(Icons.person_outline, color: Colors.black),
+          horizontalTitleGap: 10,
+          leading:Image.asset( 'assets/icons/profile.png',
+                  height: 2.5.h,
+                  width: 2.5.h,
+                ),
           title: const Text(
             'View Profile',
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),

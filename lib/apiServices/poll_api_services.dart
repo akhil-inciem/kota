@@ -40,25 +40,21 @@ class PollApiService {
 }
 
 
-  Future<List<ReactionData>> fetchPollReactions(String id) async {
-    try {
-      final response = await _dio.get(
-        '${ApiEndpoints.pollReaction}/$id',
-      );
+  Future<PollReactionModel> fetchPollReactions(String id) async {
+  try {
+    final response = await _dio.get('${ApiEndpoints.pollReaction}/$id');
 
-      if (response.statusCode == 200 ) {
-        final List<dynamic> dataJson = response.data['data'];
-        final List<ReactionData> reactionDataList =
-            dataJson.map((e) => ReactionData.fromJson(e)).toList();
-        return reactionDataList;
-      } else {
-        throw Exception("Failed to fetch reactions");
-      }
-    } catch (e) {
-      print("Error in fetchreactions: $e");
-      rethrow;
+    if (response.statusCode == 200) {
+      return PollReactionModel.fromJson(response.data);
+    } else {
+      throw Exception("Failed to fetch reactions");
     }
+  } catch (e) {
+    print("Error in fetchPollReactions: $e");
+    rethrow;
   }
+}
+
 
   static Future<void> createPoll({
   required String title,

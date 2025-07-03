@@ -8,6 +8,7 @@ import 'package:kota/views/widgets/top_bar.dart';
 import 'package:kota/views/updates/widgets/notification_list.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UpdatesScreen extends StatefulWidget {
   UpdatesScreen({Key? key}) : super(key: key);
@@ -92,6 +93,7 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
                                   "Notifications",
                                   style: TextStyle(
                                     fontSize: 18,
+                                    color: Color(0xFF0A2C49),
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -100,7 +102,7 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
                                   width: 8.w,
                                   height: 2.5.h,
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
+                                    borderRadius: BorderRadius.circular(5),
                                     color: const Color(0xFF0A57C9),
                                   ),
                                   child: Center(
@@ -134,7 +136,11 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          if (!isGuest && isExpired)
+                                          if (!isGuest &&
+                                              (updateController
+                                                      .isMembershipExpired ||
+                                                  updateController
+                                                      .isMembershipExpiringSoon))
                                             Padding(
                                               padding: EdgeInsets.symmetric(
                                                 horizontal: 6.w,
@@ -144,27 +150,44 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-                                                  const Text(
-                                                    "Membership Expired!",
+                                                  Text(
+                                                    updateController
+                                                            .isMembershipExpired
+                                                        ? "Membership Expired!"
+                                                        : "Membership Expiring Soon",
                                                     style: TextStyle(
                                                       fontSize: 16,
                                                       fontWeight:
                                                           FontWeight.w600,
-                                                      color: Color(0xFFE43434),
+                                                      color:
+                                                          updateController
+                                                                  .isMembershipExpired
+                                                              ? const Color(
+                                                                0xFFE43434,
+                                                              ) // red
+                                                              : const Color(
+                                                                0xFFFFA726,
+                                                              ), // orange
                                                     ),
                                                   ),
                                                   SizedBox(height: 0.5.h),
-                                                  const Text(
-                                                    "Your access has ended. Renew now to keep enjoying your benefits.",
-                                                    style: TextStyle(
+                                                  Text(
+                                                    updateController
+                                                            .isMembershipExpired
+                                                        ? "Your access has ended. Renew now to keep enjoying your benefits."
+                                                        : "Your membership is ending soon. Renew now to avoid interruption.",
+                                                    style: const TextStyle(
                                                       fontSize: 14,
                                                       color: Color(0xFF69767E),
                                                     ),
                                                   ),
                                                   SizedBox(height: 0.5.h),
                                                   Text(
-                                                    "Expired on ${DateFormat('dd MMM yyyy').format(item!.membershipExpiryDate!)}",
-                                                    style: TextStyle(
+                                                    updateController
+                                                            .isMembershipExpired
+                                                        ? "Expired on ${updateController.expiryDateFormatted}"
+                                                        : "Expires in ${updateController.daysRemaining} days",
+                                                    style: const TextStyle(
                                                       fontSize: 12,
                                                       color: Color(0xFF69767E),
                                                     ),
@@ -177,11 +200,18 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
                                                       TextButton(
                                                         style: TextButton.styleFrom(
                                                           backgroundColor:
-                                                              Color(0xFFDD3D3D),
+                                                              updateController
+                                                                      .isMembershipExpired
+                                                                  ? const Color(
+                                                                    0xFFDD3D3D,
+                                                                  )
+                                                                  : const Color(
+                                                                    0xFFFF9800,
+                                                                  ), // darker orange
                                                           padding:
                                                               EdgeInsets.symmetric(
-                                                                horizontal: 16,
-                                                                vertical: 10,
+                                                                horizontal: 2.h,
+                                                                vertical: 0.3.h,
                                                               ),
                                                           shape: RoundedRectangleBorder(
                                                             borderRadius:
@@ -190,7 +220,19 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
                                                                 ),
                                                           ),
                                                         ),
-                                                        onPressed: () {},
+                                                        onPressed: () async {
+                                                          const url =
+                                                              'https://kbaiota.org/member';
+                                                          if (await canLaunchUrl(
+                                                            Uri.parse(url),
+                                                          )) {
+                                                            await launchUrl(
+                                                              Uri.parse(url),
+                                                            );
+                                                          } else {
+                                                            throw 'Could not launch $url';
+                                                         }
+                                                        },
                                                         child: const Text(
                                                           "Renew Membership",
                                                           style: TextStyle(

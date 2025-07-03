@@ -60,7 +60,7 @@ class ForumController extends GetxController {
   final pollsList = <PollData>[].obs;
   final filteredPolls = <PollData>[].obs;
   final selectedPollAnswers = <String, Set<int>>{}.obs; // key = poll.id
-
+  RxInt totalVotes = 0.obs;
   final Rx<DateTime?> pollExpiryDate = Rx<DateTime?>(null);
   final pollSearchQuery = ''.obs;
   final Map<String, Set<int>> userSelectedOptionsCache = {};
@@ -205,11 +205,16 @@ class ForumController extends GetxController {
   }
 
   void startReply({required String id, required String name}) {
-    replyingToId.value = id;
-    replyingToName.value = name; // Save for UI
-    isReplying.value = true;
-    commentFocusNode.requestFocus();
-  }
+  replyingToId.value = id;
+  replyingToName.value = name;
+  isReplying.value = true;
+  commentController.text = '@$name ';
+  commentController.selection = TextSelection.fromPosition(
+    TextPosition(offset: commentController.text.length),
+  );
+  commentFocusNode.requestFocus();
+}
+
 
   void cancelReply() {
     isReplying.value = false;
@@ -219,25 +224,39 @@ class ForumController extends GetxController {
   }
 
   Future<void> postCommentOrReply() async {
-    final text = commentController.text.trim();
-    if (text.isEmpty) return;
+  String text = commentController.text.trim();
+  if (text.isEmpty) return;
 
-    if (isReplying.value && replyingToId.isNotEmpty) {
-      await replyToComment(replyingToId.value, text);
-    } else {
-      // Call comment API
-      await postComment();
-    }
-    cancelReply();
-    await loadSingleThread(selectedThreadId.value, forceRefresh: true); // Reload thread
-    _syncThreadIntoList(singleThread.value!);
+  final authorFirstName = singleThread.value?.firstName ?? '';
+  final authorLastName = singleThread.value?.lastName ?? '';
+  final authorName = '$authorFirstName $authorLastName'.trim();
+  final mention = '@$authorName';
+
+  // Insert ^ immediately after the mention (if needed)
+  if (text.startsWith(mention) && !text.startsWith('$mention^')) {
+    final rest = text.substring(mention.length).trimLeft();
+    text = '$mention^ $rest';
   }
 
-  Future<void> postComment() async {
+  if (isReplying.value && replyingToId.isNotEmpty) {
+    await replyToComment(replyingToId.value, text);
+  } else {
+    await postComment(text);
+  }
+
+  cancelReply();
+  await loadSingleThread(selectedThreadId.value, forceRefresh: true);
+  _syncThreadIntoList(singleThread.value!);
+}
+
+
+
+
+  Future<void> postComment(String text) async {
     try {
       await ForumApiService.postComment(
         threadId: selectedThreadId.value,
-        comment: commentController.text,
+        comment: text,
       );
       await loadSingleThread(selectedThreadId.value, forceRefresh: true);
       _syncThreadIntoList(singleThread.value!);
@@ -493,13 +512,23 @@ class ForumController extends GetxController {
   }
 
   Future<void> loadPollReactions(String id) async {
-    try {
-      final fetchedReactions = await _pollApiService.fetchPollReactions(id);
-      pollReactionList.assignAll(fetchedReactions);
-    } catch (e) {
-      print('Error loading poll reactions: $e');
-    } finally {}
+  try {
+    final pollReactionModel = await _pollApiService.fetchPollReactions(id);
+    
+    if (pollReactionModel.data != null) {
+      pollReactionList.assignAll(pollReactionModel.data!);
+    } else {
+      pollReactionList.clear();
+    }
+    
+    // Optionally, if you have a totalVotes variable in your controller:
+    totalVotes.value = pollReactionModel.totalVotes ?? 0;
+
+  } catch (e) {
+    print('Error loading poll reactions: $e');
   }
+}
+
 
   Future<void> submitPoll() async {
     if (pollTitleController.text.trim().isEmpty || pollFields.isEmpty) {
@@ -545,7 +574,7 @@ class ForumController extends GetxController {
         allowMultiple: allowMultiple.value,
       );
 
-      Get.snackbar('Success', 'Poll created successfully');
+      CustomSnackbars.success('Poll updated successfully','Success');
       // Optionally clear the form after success
       pollTitleController.clear();
       pollDescriptionController.clear();

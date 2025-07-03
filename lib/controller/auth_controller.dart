@@ -72,6 +72,58 @@ class AuthController extends GetxController {
     }
   }
 
+  Future<bool> registerAsGuest({
+  required String fullName,
+  required String mailId,
+  required String password,
+  required String confirmPassword,
+  required String phoneNumber,
+}) async {
+  try {
+    final result = await _authService.register(
+      fullName: fullName,
+      mailId: mailId,
+      password: password,
+      confirmPassword: confirmPassword,
+      phoneNumber: phoneNumber,
+    );
+
+    if (result.status == true) {
+      guestModel.value = result;
+
+      userModel.value = LoginResponseModel(
+        status: true,
+        message: "Guest login",
+        role: 'Guest Member',
+        data: UserData(
+          id: guestModel.value!.data!.id!.toString(),
+          isGuest: 1,
+        ),
+      );
+
+      // ✅ Store login status
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('is_logged_in', true);
+      await prefs.setBool('is_guest', true);
+      await prefs.setString('user_id', guestModel.value!.data!.id.toString());
+      await prefs.setString('role', 'Guest Member');
+
+      CustomSnackbars.success("Registration Successful", "Welcome to KOTA");
+      return true;
+    } else {
+      CustomSnackbars.warning(
+        "Registration Failed",
+        result.message ?? 'Failed',
+      );
+      return false;
+    }
+  } catch (e) {
+    CustomSnackbars.oops(e.toString(), "Oops");
+    return false;
+  }
+}
+
+
   Future<bool> resetPasswordUser(String email) async {
     try {
       isLoading.value = true;
@@ -174,48 +226,4 @@ Future<bool> resetGuestPassword(String password) async {
     }
   }
 
-  Future<bool> registerAsGuest({
-    required String fullName,
-    required String mailId,
-    required String password,
-    required String confirmPassword,
-    required String phoneNumber,
-  }) async {
-    try {
-      final result = await _authService.register(
-        fullName: fullName,
-        mailId: mailId,
-        password: password,
-        confirmPassword: confirmPassword,
-        phoneNumber: phoneNumber,
-      );
-
-      if (result.status == true) {
-        guestModel.value = result;
-
-        // ✅ Set userModel to indicate it's a guest
-        userModel.value = LoginResponseModel(
-          status: true,
-          message: "Guest login",
-          role: 'Guest Member',
-          data: UserData(
-            id: guestModel.value!.data!.id!.toString(),
-            isGuest: 1,
-          ),
-        );
-
-        CustomSnackbars.success("Registration Successful", "Welcome to KOTA");
-        return true;
-      } else {
-        CustomSnackbars.warning(
-          "Registration Failed",
-          result.message ?? 'Failed',
-        );
-        return false;
-      }
-    } catch (e) {
-      CustomSnackbars.oops(e.toString(), "Oops");
-      return false;
-    }
-  }
 }

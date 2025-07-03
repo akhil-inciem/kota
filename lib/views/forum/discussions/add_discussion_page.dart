@@ -66,12 +66,12 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
           child: Column(
             children: [
               TopBar(
-                title: "Discussion",
-                leadingIconWidget: Icon(
-                  Icons.close,
-                  color: AppColors.primaryColor,
-                  size: 22.sp,
-                ),
+                title: "New Discussion",
+                // leadingIconWidget: Icon(
+                //   Icons.close,
+                //   color: AppColors.primaryColor,
+                //   size: 22.sp,
+                // ),
                 onTap: () => Get.back(),
               ),
               SizedBox(height: 2.h),
@@ -137,13 +137,13 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
                             SizedBox(height: 1.h),
                             _buildTextField(
                               controller: _forumController.titleController,
-                              hint: "Enter title",
+                              hint: "Enter Title",
                               maxLines: 2,
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor: AppColors.primaryBackground,
-                                hintText: "Enter title",
-                                hintStyle: TextStyle(fontSize: 16),
+                                hintText: "Enter Title",
+                                hintStyle: TextStyle(fontSize: 16.sp,fontWeight: FontWeight.w100),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide: BorderSide.none,
@@ -155,10 +155,11 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
                               ),
                             ),
 
-                            SizedBox(height: 5.h),
+                            SizedBox(height: 2.h),
 
                             /// Description
                             _buildFieldLabel("Description *"),
+                            SizedBox(height: 1.h),
                             _buildTextField(
                               controller:
                                   _forumController.descriptionController,
@@ -166,7 +167,7 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
                               maxLines: 8,
                               decoration: InputDecoration(
                                 hintText: "Type your question/queries here...",
-                                hintStyle: TextStyle(fontSize: 16),
+                                hintStyle: TextStyle(fontSize: 16.sp,fontWeight: FontWeight.w100),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide: BorderSide.none,
@@ -182,8 +183,8 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
 
                             /// ✅ AddImageSection and Create Button moved here
                              Divider(color: Colors.grey.shade300, thickness: 1, height: 1),
+                            SizedBox(height: 2.h),
                             AddImageSection(),
-                            SizedBox(height: 1.h),
                             Obx(() {
                               return Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 6.w),
@@ -225,9 +226,9 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
         text: TextSpan(
           text: text.split(" *")[0],
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 14.sp,
             fontWeight: FontWeight.w500,
-            color: Colors.black,
+            color: AppColors.labelText,
           ),
           children: [
             if (text.contains("*"))

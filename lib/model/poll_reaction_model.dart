@@ -1,31 +1,35 @@
 class PollReactionModel {
   bool? status;
   String? message;
+  int? totalVotes;  // new field
   List<ReactionData>? data;
 
-  PollReactionModel({this.status, this.message, this.data});
+  PollReactionModel({this.status, this.message, this.totalVotes, this.data});
 
   PollReactionModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
+    totalVotes = json['total_votes'];  // parse total_votes here
     if (json['data'] != null) {
       data = <ReactionData>[];
       json['data'].forEach((v) {
-        data!.add(new ReactionData.fromJson(v));
+        data!.add(ReactionData.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
-    if (this.data != null) {
-      data['data'] = this.data!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> json = {};
+    json['status'] = status;
+    json['message'] = message;
+    json['total_votes'] = totalVotes;
+    if (data != null) {
+      json['data'] = data!.map((v) => v.toJson()).toList();
     }
-    return data;
+    return json;
   }
 }
+
 
 class ReactionData {
   String? reaction;

@@ -53,17 +53,17 @@ class ClinicResultsScreen extends StatelessWidget {
           },
           child: Image.asset(
             'assets/icons/backbutton.png',
-            color: Colors.black,
             width: 6.w,
             height: 2.5.h,
           ),
         ),
         SizedBox(width: 4.w),
         Text(
-          "Search Results",
+          "Find Government Clinic",
           style: TextStyle(
             fontSize: 17.sp,
             fontWeight: FontWeight.w600,
+            color: Color(0xFF0A2C49)
           ),
         ),
       ],

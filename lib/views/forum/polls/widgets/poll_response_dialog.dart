@@ -7,8 +7,9 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 
 class PollResponsesDialog extends StatelessWidget {
   final List<ReactionData> reactions;
+  final int totalVotes;
 
-  const PollResponsesDialog({super.key, required this.reactions});
+  const PollResponsesDialog({super.key, required this.reactions,required this.totalVotes});
 
   @override
   Widget build(BuildContext context) {
@@ -55,19 +56,20 @@ class PollResponsesDialog extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10.sp),
                     ),
                     child: Text(
-                      '${reactions.length} Votes',
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
+  '$totalVotes ${totalVotes == 1 ? "Vote" : "Votes"}',
+  style: TextStyle(
+    fontSize: 12.sp,
+    fontWeight: FontWeight.w600,
+    color: Colors.white,
+  ),
+),
+
                   ),
                   Spacer(),
                   GestureDetector(
                     onTap: () => Navigator.pop(context),
                     child: Container(
-                      padding: EdgeInsets.all(2.w),
+                      padding: EdgeInsets.all(1.5.w),
                       decoration: BoxDecoration(
                         color: AppColors.primaryBackground,
                         borderRadius: BorderRadius.circular(10.sp),
@@ -86,100 +88,112 @@ class PollResponsesDialog extends StatelessWidget {
             // Divider
             Divider(color: Colors.grey.shade400),
             // List of reactions
-           reactions.isEmpty ? Padding(
-             padding:  EdgeInsets.all(18.sp),
-             child: Text("No votes yet"),
-           ): Flexible(
-              child: ListView.separated(
-                shrinkWrap: true,
-                separatorBuilder:
-                    (context, index) => Divider(color: Colors.grey.shade400),
-                padding: EdgeInsets.symmetric(vertical: 1.h),
-                itemCount: reactions.length,
-                itemBuilder: (context, index) {
-                  final reaction = reactions[index];
-                  return Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 6.w,
-                      vertical: 1.h,
+            reactions.isEmpty
+                ? Padding(
+                  padding: EdgeInsets.all(18.sp),
+                  child: Text("No votes yet"),
+                )
+                : Flexible(
+  child: ListView.separated(
+    shrinkWrap: true,
+    separatorBuilder: (context, index) =>
+        Divider(color: Colors.grey.shade400),
+    padding: EdgeInsets.symmetric(vertical: 1.h),
+    itemCount: reactions.length,
+    itemBuilder: (context, index) {
+      final reaction = reactions[index];
+      return Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: 6.w,
+          vertical: 1.h,
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start, // updated
+          children: [
+            // Profile Picture
+            Container(
+              width: 12.w,
+              height: 12.w,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: reaction.userPhoto != null &&
+                        reaction.userPhoto!.isNotEmpty
+                    ? DecorationImage(
+                        image: NetworkImage(reaction.userPhoto!),
+                        fit: BoxFit.cover,
+                      )
+                    : null,
+                color: reaction.userPhoto == null ||
+                        reaction.userPhoto!.isEmpty
+                    ? Color(0xFFE5E7EB)
+                    : null,
+              ),
+              child: reaction.userPhoto == null ||
+                      reaction.userPhoto!.isEmpty
+                  ? Icon(
+                      Icons.person,
+                      color: Color(0xFF9CA3AF),
+                      size: 6.w,
+                    )
+                  : null,
+            ),
+            SizedBox(width: 4.w),
+
+            // Name and description
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    reaction.userName ?? "Unknown User",
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF0A2C49),
                     ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        // Profile Picture
-                        Container(
-                          width: 12.w,
-                          height: 12.w,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image:
-                                reaction.userPhoto != null &&
-                                        reaction.userPhoto!.isNotEmpty
-                                    ? DecorationImage(
-                                      image: NetworkImage(reaction.userPhoto!),
-                                      fit: BoxFit.cover,
-                                    )
-                                    : null,
-                            color:
-                                reaction.userPhoto == null ||
-                                        reaction.userPhoto!.isEmpty
-                                    ? Color(0xFFE5E7EB)
-                                    : null,
-                          ),
-                          child:
-                              reaction.userPhoto == null ||
-                                      reaction.userPhoto!.isEmpty
-                                  ? Icon(
-                                    Icons.person,
-                                    color: Color(0xFF9CA3AF),
-                                    size: 6.w,
-                                  )
-                                  : null,
-                        ),
+                  ),
+                  SizedBox(height: 0.5.h),
+                  ..._parseReaction(reaction.reaction).map(
+  (r) => Padding(
+    padding: EdgeInsets.only(bottom: 0.3.h),
+    child: Text(
+      "• $r",
+      style: TextStyle(
+        fontStyle: FontStyle.italic,
+        fontSize: 14.sp,
+        fontWeight: FontWeight.w400,
+        color: const Color(0xFF6B7280),
+      ),
+    ),
+  ),
+),
 
-                        SizedBox(width: 4.w),
-
-                        // Inside your build method:
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                reaction.userName ?? "Unknown User",
-                                style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: Color(0xFF1F2937),
-                                ),
-                              ),
-                              SizedBox(height: 0.5.h),
-                              Text(
-                                _formatReaction(reaction.reaction),
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: Color(0xFF6B7280),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        // Time
-                        Text(
-                          _formatTime(reaction.createdAt),
-                          style: TextStyle(
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.w400,
-                            color: Color(0xFF9CA3AF),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+                ],
               ),
             ),
+
+            // Time aligned with description
+            Column(
+              children: [
+                SizedBox(height: 22.sp), // aligns with description
+                Text(
+                  _formatTime(reaction.createdAt),
+                  style: TextStyle(
+                    fontStyle: FontStyle.italic,
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xFF6B7280),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    },
+  ),
+),
+
 
             SizedBox(height: 2.h),
           ],
@@ -188,68 +202,78 @@ class PollResponsesDialog extends StatelessWidget {
     );
   }
 
-  String _formatReaction(String? rawReaction) {
-    if (rawReaction == null || rawReaction.isEmpty) {
-      return "No reaction";
-    }
-
-    // Check if it's in JSON array format
-    if (rawReaction.trim().startsWith('[') &&
-        rawReaction.trim().endsWith(']')) {
-      try {
-        final parsed = jsonDecode(rawReaction);
-        if (parsed is List) {
-          return parsed.join(', ');
-        }
-      } catch (e) {
-        // Fallback if parsing fails
-      }
-    }
-
-    // If it's just a plain text
-    return rawReaction;
+  List<String> _parseReaction(String? rawReaction) {
+  if (rawReaction == null || rawReaction.isEmpty) {
+    return ["No reaction"];
   }
+
+  if (rawReaction.trim().startsWith('[') &&
+      rawReaction.trim().endsWith(']')) {
+    try {
+      final parsed = jsonDecode(rawReaction);
+      if (parsed is List) {
+        return parsed.map((e) => e.toString()).toList();
+      }
+    } catch (e) {
+      // Fall through to single item fallback
+    }
+  }
+
+  // Fallback: treat whole input as one item
+  return [rawReaction];
+}
 
   String _formatTime(String? createdAt) {
-  if (createdAt == null || createdAt.isEmpty) {
-    return "N/A";
-  }
-
-  try {
-    final dateTime = DateTime.parse(createdAt);
-    final now = DateTime.now();
-
-    final isToday = dateTime.year == now.year &&
-        dateTime.month == now.month &&
-        dateTime.day == now.day;
-
-    int hour = dateTime.hour;
-    int minute = dateTime.minute;
-    String amPm = hour >= 12 ? 'PM' : 'AM';
-    hour = hour % 12 == 0 ? 12 : hour % 12;
-
-    String timeStr =
-        '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')} $amPm';
-
-    if (isToday) {
-      return timeStr;
-    } else {
-      String day = dateTime.day.toString().padLeft(2, '0');
-      String monthName = _monthName(dateTime.month);
-      String year = dateTime.year.toString();
-      return '$day $monthName $year $timeStr';
+    if (createdAt == null || createdAt.isEmpty) {
+      return "N/A";
     }
-  } catch (e) {
-    return "N/A";
+
+    try {
+      final dateTime = DateTime.parse(createdAt);
+      final now = DateTime.now();
+
+      final isToday =
+          dateTime.year == now.year &&
+          dateTime.month == now.month &&
+          dateTime.day == now.day;
+
+      int hour = dateTime.hour;
+      int minute = dateTime.minute;
+      String amPm = hour >= 12 ? 'PM' : 'AM';
+      hour = hour % 12 == 0 ? 12 : hour % 12;
+
+      String timeStr =
+          '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')} $amPm';
+
+      if (isToday) {
+        return timeStr;
+      } else {
+        String day = dateTime.day.toString().padLeft(2, '0');
+        String monthName = _monthName(dateTime.month);
+        String year = dateTime.year.toString();
+        return '$day $monthName $year $timeStr';
+      }
+    } catch (e) {
+      return "N/A";
+    }
   }
-}
 
-String _monthName(int month) {
-  const months = [
-    '', 'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-  ];
-  return months[month];
-}
-
+  String _monthName(int month) {
+    const months = [
+      '',
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    return months[month];
+  }
 }

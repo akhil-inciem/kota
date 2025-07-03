@@ -87,7 +87,7 @@ class PollCard extends StatelessWidget {
     final isExpired = poll.expired == true; // 👈 Check expiry
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding:  EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
       decoration: const BoxDecoration(color: Colors.white),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -149,9 +149,8 @@ class PollCard extends StatelessWidget {
 
   List<String> _parseVotes(List<String> options) {
   return options.map((opt) {
-    final raw = poll.reactionCounts[opt]; // directly access the map
-    print("Option: $opt => Votes: $raw");
-    return raw?.toString() ?? '0'; // fallback to '0' if null
+    final raw = poll.reactionCounts[opt]; 
+    return raw?.toString() ?? '0';
   }).toList();
 }
 
@@ -171,7 +170,7 @@ class PollCard extends StatelessWidget {
       children: [
         Text(
           displayTime,
-          style: const TextStyle(color: Colors.grey, fontSize: 12),
+          style: const TextStyle(fontStyle: FontStyle.italic,color: Colors.grey, fontSize: 12),
         ),
         authController.userModel.value?.data.id == poll.createdBy &&
 poll.editable! &&
@@ -220,42 +219,58 @@ selectedOptions.isEmpty
             ),
             const SizedBox(width: 8),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    optionText,
-                    style: TextStyle(
-                      color: isExpired ? Colors.grey : Colors.black, // dim text
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Stack(
-                    children: [
-                      Container(
-                        height: 8,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      FractionallySizedBox(
-                        widthFactor: percent,
-                        child: Container(
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: AppColors.primaryText,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Text(
+              optionText,
+              style: TextStyle(
+                color: isExpired ? Colors.grey : Colors.black,
               ),
             ),
-            const SizedBox(width: 8),
-            Text(adjustedOptionVotes.toString()),
+          ),
+          Text(
+             adjustedOptionVotes.toString(),
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: Colors.black,
+            ),
+          ),
+        ],
+      ),
+      const SizedBox(height: 4),
+      Stack(
+        children: [
+          Container(
+            height: 8,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade200,
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          FractionallySizedBox(
+            widthFactor: percent,
+            child: Container(
+              height: 8,
+              decoration: BoxDecoration(
+                color: AppColors.primaryText,
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ],
+  ),
+),
+
+
           ],
         ),
       ),
@@ -280,6 +295,7 @@ selectedOptions.isEmpty
                 builder: (context) {
                   return PollResponsesDialog(
                     reactions: forumController.pollReactionList,
+                    totalVotes: forumController.totalVotes.value,
                   );
                 },
               );
@@ -326,7 +342,7 @@ selectedOptions.isEmpty
       } else if (diff.inHours < 24) {
         return '${diff.inHours} hours ago';
       } else {
-        return DateFormat('dd MMMM yyyy hh:mma').format(createdDate);
+        return DateFormat('dd MMMM yyyy | hh:mm a').format(createdDate);
       }
     } catch (e) {
       return '';

@@ -81,7 +81,7 @@ class _AddImageSectionState extends State<AddImageSection> {
             "Add Image",
             style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w600),
           ),
-          SizedBox(height: 2.h),
+          SizedBox(height: 3.h),
           Row(
             children: [
               GestureDetector(
@@ -112,7 +112,7 @@ class _AddImageSectionState extends State<AddImageSection> {
                     children: List.generate(_selectedImages.length, (index) {
                       final image = _selectedImages[index];
                       return Padding(
-                        padding: EdgeInsets.only(right: 2.w, top: 1.h),
+                        padding: EdgeInsets.only(right: 2.w,),
                         child: Stack(
                           clipBehavior: Clip.none,
                           children: [

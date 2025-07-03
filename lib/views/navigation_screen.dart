@@ -125,12 +125,18 @@ class _InitialNavigationScreenState extends State<InitialNavigationScreen> {
 
     final prefs = await SharedPreferences.getInstance();
     final isLoggedIn = prefs.getBool('is_logged_in') ?? false;
+final isGuest = prefs.getBool('is_guest') ?? false;
 
-    if (isLoggedIn) {
-      Get.offAll(() => BaseScreen());
-    } else {
-      Get.offAll(() => const LoginScreen());
-    }
+if (isLoggedIn) {
+  if (isGuest) {
+    Get.offAll(() => BaseScreen()); // or GuestHomeScreen()
+  } else {
+    Get.offAll(() => BaseScreen());
+  }
+} else {
+  Get.offAll(() => const LoginScreen());
+}
+
   }
 
   @override

@@ -23,32 +23,35 @@ class FindClinicTab extends StatelessWidget {
         return const Center(child: CircularProgressIndicator());
       }
 
-      return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 2.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Select Clinic Type",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-            SizedBox(height: 2.h),
-            ClinicTypeTile(
-              title: "Find Government Clinic",
-              svg: 'assets/icons/gov_clinic_icon.svg',
-              onTap: () {
-                controller.searchClinic(isGov: true);
-                Get.to(() => ClinicResultsScreen(controller: controller));
-              },
-            ),
-            SizedBox(height: 2.h),
-            ClinicTypeTile(
-              title: "Find Private Clinic",
-             svg: 'assets/icons/private_clinic_logo.svg',
-              onTap: () {
-                controller.searchClinic(isGov: false);
-                Get.to(() => ClinicResultsScreen(controller: controller));
-              },
-            ),
-          ],
+      return Container(
+        color: Colors.white,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Select Clinic Type",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600,color: Color(0xFF0A2C49))),
+              SizedBox(height: 2.h),
+              ClinicTypeTile(
+                title: "Find Government Clinic",
+                svg: 'assets/icons/gov_clinic_icon.svg',
+                onTap: () {
+                  controller.searchClinic(isGov: true);
+                  Get.to(() => ClinicResultsScreen(controller: controller));
+                },
+              ),
+              SizedBox(height: 2.h),
+              ClinicTypeTile(
+                title: "Find Private Clinic",
+               svg: 'assets/icons/private_clinic_logo.svg',
+                onTap: () {
+                  controller.searchClinic(isGov: false);
+                  Get.to(() => ClinicResultsScreen(controller: controller));
+                },
+              ),
+            ],
+          ),
         ),
       );
     });
@@ -70,21 +73,35 @@ class ClinicTypeTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: ListTile(
-        leading: SvgPicture.asset(
-      svg,
-      color: AppColors.primaryColor, // Apply tint if needed
-      width: 5.w,
-      height: 5.w,
-      fit: BoxFit.contain,
-    ),
-        title: Text(title),
-        trailing: Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: onTap,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.primaryBackground, // light grey background
+          borderRadius: BorderRadius.circular(10),
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+        child: Row(
+          children: [
+            SvgPicture.asset(
+              svg,
+              color: AppColors.primaryColor,
+              width: 5.w,
+              height: 5.w,
+              fit: BoxFit.contain,
+            ),
+            SizedBox(width: 4.w),
+            Expanded(
+              child: Text(
+                title,
+                style: const TextStyle(fontSize: 16),
+              ),
+            ),
+            Icon(Icons.arrow_forward_ios, size: 16.sp,color: AppColors.primaryColor,),
+          ],
+        ),
       ),
     );
   }
 }
+

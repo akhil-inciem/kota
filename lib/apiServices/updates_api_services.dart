@@ -21,6 +21,7 @@ class UpdateApiService {
       if (response.statusCode == 200) {
         final responseString = response.data.toString().trim();
       final jsonString = jsonDecode(responseString);
+      print(jsonString);
         return MemberShipModel.fromJson(jsonString);
       }
     } catch (e) {
@@ -30,15 +31,27 @@ class UpdateApiService {
   }
   
   Future<UpdatesModel?> fetchUpdates() async {
-    try {
-      final response = await _dio.get(ApiEndpoints.getUpdates);
-      if (response.statusCode == 200) {
-        final decoded = jsonDecode(response.data);
-        return UpdatesModel.fromJson(decoded);
-      }
-    } catch (e) {
-      print('Error fetching updates: $e');
+  final authController = Get.find<AuthController>();
+  final userId = authController.userModel.value!.data.id;
+
+  try {
+    final response = await _dio.get(
+      ApiEndpoints.getUpdates,
+      queryParameters: {
+        'user_id': userId,
+        'is_guest':authController.isGuest ? '1' : '0'
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final decoded = jsonDecode(response.data);
+      return UpdatesModel.fromJson(decoded);
     }
-    return null;
+  } catch (e) {
+    print('Error fetching updates: $e');
   }
+
+  return null;
+}
+
 }

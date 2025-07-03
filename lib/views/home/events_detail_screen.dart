@@ -360,7 +360,7 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
     style: {
       "*": Style(
         fontSize: FontSize(15.sp),
-        color: Colors.black54,
+        color: Colors.grey.shade800,
       ),
       "a": Style(
       color: AppColors.primaryColor, // Set link color

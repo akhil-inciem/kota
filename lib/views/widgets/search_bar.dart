@@ -14,7 +14,7 @@ class CustomSearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 6.w),
+      padding: EdgeInsets.symmetric(horizontal: 4.w),
       child: Row(
         children: [
           // Expanded TextField
@@ -24,7 +24,15 @@ class CustomSearchBar extends StatelessWidget {
               controller: controller,
               decoration: InputDecoration(
                 hintText: 'Search here',
-                prefixIcon: const Icon(Icons.search),
+                prefixIcon:Padding(
+  padding:  EdgeInsets.all(1.5.h), // Adjust for better alignment
+  child: SizedBox(
+    height: 1.h,
+    width: 1.h,
+    child: Image.asset('assets/icons/search.png'),
+  ),
+),
+
                 filled: true,
                 fillColor: Colors.white,
                 border: OutlineInputBorder(

@@ -104,7 +104,7 @@ class _NewsListState extends State<NewsList> {
                                     child: Row(
                                       children: [
                                         const Icon(
-                                          Icons.calendar_today,
+                                          Icons.calendar_today_outlined,
                                           color: Color(0xFF2640C8),
                                           size: 12,
                                         ),
@@ -139,9 +139,9 @@ class _NewsListState extends State<NewsList> {
                                 _cleanText(item.newsDescription ?? ''),
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
+                                style:  TextStyle(
                                   fontSize: 12,
-                                  color: Colors.black54,
+                                  color: Colors.grey.shade800,
                                 ),
                               ),
                             ],

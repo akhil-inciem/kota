@@ -133,7 +133,9 @@ class _ForumListState extends State<ForumList> {
                                                     height: 20,
                                                     child:
                                                         CircularProgressIndicator(
-                                                          color: AppColors.primaryColor,
+                                                          color:
+                                                              AppColors
+                                                                  .primaryColor,
                                                           strokeWidth: 2,
                                                         ),
                                                   ),
@@ -165,8 +167,9 @@ class _ForumListState extends State<ForumList> {
                                     SizedBox(height: 0.5.h),
                                     Text(
                                       timeAgo(item.createdAt!),
-                                      style: const TextStyle(
-                                        fontSize: 10,
+                                      style: TextStyle(
+                                        fontSize: 14.sp,
+                                        fontStyle: FontStyle.italic,
                                         color: Colors.grey,
                                       ),
                                     ),
@@ -210,21 +213,21 @@ class _ForumListState extends State<ForumList> {
                                                 : Colors.black,
                                       ),
                                     ),
-                                    const SizedBox(width: 4),
+                                     SizedBox(width: 1.5.w),
                                     Text(
                                       '${item.likeCount ?? 0}',
-                                      style: TextStyle(fontSize: 15.sp),
+                                      style: TextStyle(fontSize: 14.sp),
                                     ),
-                                    const SizedBox(width: 12),
-                                    Icon(
-                                      Icons.comment,
-                                      size: 18.sp,
-                                      color: Colors.grey,
+                                     SizedBox(width: 6.w),
+                                    Image.asset(
+                                      'assets/icons/comments.png',
+                                      height: 1.5.h,
+                  width: 1.5.h,
                                     ),
-                                    const SizedBox(width: 4),
+                                     SizedBox(width: 1.5.w),
                                     Text(
                                       '${item.commentCount ?? 0} Comments',
-                                      style: TextStyle(fontSize: 15.sp),
+                                      style: TextStyle(fontSize: 14.sp),
                                     ),
                                   ],
                                 ),
@@ -246,55 +249,3 @@ class _ForumListState extends State<ForumList> {
     });
   }
 }
-
-                              // Right side: Stacked avatars
-                              // Stack(
-                              //   clipBehavior: Clip.none,
-                              //   children: [
-                              //     CircleAvatar(
-                              //       radius: 15,
-                              //       backgroundImage: NetworkImage(
-                              //         'https://i.pravatar.cc/300',
-                              //       ),
-                              //     ),
-                              //     Positioned(
-                              //       left: 14,
-                              //       child: CircleAvatar(
-                              //         radius: 15,
-                              //         backgroundImage: NetworkImage(
-                              //           'https://i.pravatar.cc/300',
-                              //         ),
-                              //       ),
-                              //     ),
-                              //     Positioned(
-                              //       left: 26,
-                              //       child: CircleAvatar(
-                              //         radius: 15,
-                              //         backgroundImage: NetworkImage(
-                              //           'https://i.pravatar.cc/300',
-                              //         ),
-                              //       ),
-                              //     ),
-                              //     Positioned(
-                              //       left: 38,
-                              //       child: Container(
-                              //         width: 30,
-                              //         height: 30,
-                              //         decoration: BoxDecoration(
-                              //           color: Colors.black,
-                              //           shape: BoxShape.circle,
-                              //         ),
-                              //         child: Center(
-                              //           child: Text(
-                              //             '10+',
-                              //             style: TextStyle(
-                              //               color: Colors.white,
-                              //               fontSize: 8,
-                              //               fontWeight: FontWeight.w600,
-                              //             ),
-                              //           ),
-                              //         ),
-                              //       ),
-                              //     ),
-                              //   ],
-                              // ),

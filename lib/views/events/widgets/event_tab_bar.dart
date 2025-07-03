@@ -34,7 +34,7 @@ class EventTabBar extends StatelessWidget {
             },
           ),
         ),
-        const Divider(color: Colors.grey, thickness: 1, height: 0),
+        const Divider(color: Colors.grey, height: 0),
       ],
     );
   }

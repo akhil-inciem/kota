@@ -46,7 +46,7 @@ class MissionPage extends StatelessWidget {
                     onTap: () => Get.back(),
                     child: Image.asset(
                       'assets/icons/backbutton.png',
-                      color: Colors.black,
+                      // color: Colors.black,
                       width: 6.w,
                       height: 2.5.h,
                       fit: BoxFit.contain,
@@ -57,7 +57,7 @@ class MissionPage extends StatelessWidget {
                     "Vision & Mission",
                     style: TextStyle(
                       fontSize: 18.sp,
-                      color: Colors.black,
+                      color: Color(0xFF0A2C49),
                       fontWeight: FontWeight.w600,
                     ),
                   ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/drawer_controller.dart';
 import 'package:kota/model/colleges_model.dart';
 import 'package:kota/views/drawer/widgets/college_tab_bar.dart';
@@ -36,7 +37,7 @@ class _CollegesScreenState extends State<CollegesScreen> {
               padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
               child: _buildAppBar(),
             ),
-            CustomSearchBar(
+            CollegeSearchBar(
               controller: controller.searchController,
               onChanged: (query) {
                 controller.filterColleges(selectedIndex == 0);
@@ -69,7 +70,6 @@ class _CollegesScreenState extends State<CollegesScreen> {
           onTap: () => Get.back(),
           child: Image.asset(
             'assets/icons/backbutton.png',
-            color: Colors.black,
             width: 6.w,
             height: 2.5.h,
           ),
@@ -77,7 +77,7 @@ class _CollegesScreenState extends State<CollegesScreen> {
         SizedBox(width: 4.w),
         Text(
           "OT Colleges",
-          style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.w600),
+          style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.w600,color: Color(0xFF0A2C49)),
         ),
       ],
     );
@@ -201,3 +201,62 @@ ${_buildAccreditationText(college)}
     return "Courses: ${courses.isEmpty ? 'N/A' : courses.join(', ')}";
   }
 }
+class CollegeSearchBar extends StatelessWidget {
+  final bool filter;
+  final TextEditingController? controller;
+  final Function(String)? onChanged;
+
+  const CollegeSearchBar({Key? key, this.filter = false,this.controller,this.onChanged}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 4.w),
+      child: Row(
+        children: [
+          // Expanded TextField
+          Expanded(
+            child: TextField(
+              autofocus: false,
+              controller: controller,
+              decoration: InputDecoration(
+                hintText: 'Search here',
+                prefixIcon:Padding(
+  padding:  EdgeInsets.all(1.5.h), // Adjust for better alignment
+  child: SizedBox(
+    height: 1.h,
+    width: 1.h,
+    child: Image.asset('assets/icons/search.png'),
+  ),
+),
+
+                filled: true,
+                fillColor: AppColors.primaryBackground,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: BorderSide.none,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding: const EdgeInsets.symmetric(vertical: 5),
+              ),
+              onChanged: onChanged,
+            ),
+          ),
+
+          // If filter is true, show a container
+          if (filter) ...[
+            
+          ],
+        ],
+      ),
+    );
+  }
+}
+

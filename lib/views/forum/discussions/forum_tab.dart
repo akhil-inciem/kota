@@ -68,7 +68,7 @@ class ForumDiscussionTab extends StatelessWidget {
                     : const SizedBox.shrink(), // Nothing on left if not guest
 
                 CustomButton(
-                  width: 25.w,
+                  width: 22.w,
                   height: 4.h,
                   text: 'New',
                   icon: const Icon(Icons.add, color: Colors.white),

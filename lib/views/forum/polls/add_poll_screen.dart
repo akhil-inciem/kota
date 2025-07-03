@@ -92,12 +92,12 @@ class _NewPollPageState extends State<NewPollPage> {
           children: [
             // Custom Top Bar to match screenshot
             TopBar(
-              title: widget.pollToEdit == null ? "New Poll" : "Edit Poll",
-              leadingIconWidget: Icon(
-                Icons.close,
-                color: AppColors.primaryColor,
-                size: 22.sp,
-              ),
+              title: widget.pollToEdit == null ? "Create Poll" : "Edit Poll",
+              // leadingIconWidget: Icon(
+              //   Icons.close,
+              //   color: AppColors.primaryColor,
+              //   size: 22.sp,
+              // ),
               onTap: () => Get.back(),
             ),
             Expanded(
@@ -114,9 +114,9 @@ class _NewPollPageState extends State<NewPollPage> {
                       Text(
                         "Question",
                         style: TextStyle(
-                          fontSize: 15.sp,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.primaryText,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.labelText,
                         ),
                       ),
                       SizedBox(height: 1.h),
@@ -124,7 +124,7 @@ class _NewPollPageState extends State<NewPollPage> {
                         width: double.infinity,
                         padding: EdgeInsets.all(4.w),
                         decoration: BoxDecoration(
-                          color: Color(0xFFF5F5F7),
+                          color: AppColors.primaryBackground,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: TextFormField(
@@ -152,9 +152,9 @@ class _NewPollPageState extends State<NewPollPage> {
                       Text(
                         "Options",
                         style: TextStyle(
-                          fontSize: 15.sp,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.primaryText,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.labelText,
                         ),
                       ),
                       SizedBox(height: 1.h),
@@ -163,7 +163,7 @@ class _NewPollPageState extends State<NewPollPage> {
                         width: double.infinity,
                         padding: EdgeInsets.all(2.w),
                         decoration: BoxDecoration(
-                          color: Color(0xFFF5F5F7),
+                          color: AppColors.primaryBackground,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Column(
@@ -184,7 +184,7 @@ class _NewPollPageState extends State<NewPollPage> {
                                   return Column(
                                     children: [
                                       Container(
-                                        margin: EdgeInsets.only(top: 2.h),
+                                        margin: EdgeInsets.only(top: 0.5.h),
                                         child: Row(
                                           children: [
                                             Expanded(
@@ -224,7 +224,6 @@ class _NewPollPageState extends State<NewPollPage> {
                                 }),
                               );
                             }),
-                            SizedBox(height: 1.h,),
                             // Add new option field
                             Row(
                               children: [
@@ -375,7 +374,7 @@ class _NewPollPageState extends State<NewPollPage> {
                   text:
                       _forumController.isLoading.value
                           ? "Posting..."
-                          : "Create Poll",
+                          :widget.pollToEdit == null ? "Create Poll" : "Update Poll",
                   backgroundColor: AppColors.primaryColor,
                   textColor: Colors.white,
                   onPressed: () async {

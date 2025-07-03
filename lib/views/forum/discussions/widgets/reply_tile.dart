@@ -65,23 +65,21 @@ class ReplyTile extends StatelessWidget {
                     ),
                   ),
                   Text(
-  formatDateTime(reply.createdAt),
-  style: const TextStyle(
-    fontSize: 12,
-    color: Colors.grey,
-  ),
-),
-
+                    formatDateTime(reply.createdAt),
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
                 ],
               ),
             ],
           ),
           const SizedBox(height: 12),
           // Comment text
-          Text(
-            reply.content ?? "",
-            style: const TextStyle(fontSize: 13, color: Colors.black54),
-          ),
+          buildRichTextWithMentions(reply.content),
+
           const SizedBox(height: 8),
           // Actions Row
           Row(
@@ -98,7 +96,7 @@ class ReplyTile extends StatelessWidget {
               ),
               SizedBox(width: 1.w),
               if ((int.tryParse(reply.likeCount ?? '0') ?? 0) > 0)
-  Text(reply.likeCount!),
+                Text(reply.likeCount!),
 
               SizedBox(width: 20),
               GestureDetector(
@@ -110,9 +108,13 @@ class ReplyTile extends StatelessWidget {
                 },
                 child: Row(
                   children: [
-                    Icon(Icons.reply_sharp, size: 20, color: Colors.grey),
-                    SizedBox(width: 4),
-                    Text('Reply', style: TextStyle(fontSize: 14)),
+                    Image.asset(
+                      'assets/icons/reply.png',
+                      height: 1.5.h,
+                      width: 1.5.h,
+                    ),
+                    SizedBox(width: 1.5.w),
+                    Text('Reply', style: TextStyle(fontSize: 14.sp)),
                   ],
                 ),
               ),
@@ -181,24 +183,21 @@ class CommentTile extends StatelessWidget {
                       color: Colors.black,
                     ),
                   ),
-Text(
-  formatDateTime(comment.createdAt),
-  style: const TextStyle(
-    fontSize: 12,
-    color: Colors.grey,
-  ),
-),
-
+                  Text(
+                    formatDateTime(comment.createdAt),
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
                 ],
               ),
             ],
           ),
           const SizedBox(height: 12),
           // Comment text
-          Text(
-            comment.content ?? '',
-            style: const TextStyle(fontSize: 13, color: Colors.black54),
-          ),
+          buildRichTextWithMentions(comment.content),
           const SizedBox(height: 8),
           // Actions Row
           Row(
@@ -215,7 +214,7 @@ Text(
               ),
               SizedBox(width: 1.w),
               if ((int.tryParse(comment.likeCount ?? '0') ?? 0) > 0)
-  Text(comment.likeCount!),
+                Text(comment.likeCount!),
               SizedBox(width: 20),
 
               GestureDetector(
@@ -227,8 +226,12 @@ Text(
                 },
                 child: Row(
                   children: [
-                    Icon(Icons.reply_sharp, size: 20, color: Colors.grey),
-                    SizedBox(width: 4),
+                    Image.asset(
+                      'assets/icons/reply.png',
+                      height: 1.5.h,
+                      width: 1.5.h,
+                    ),
+                    SizedBox(width: 1.5.w),
                     Text('Reply', style: TextStyle(fontSize: 14)),
                   ],
                 ),
@@ -242,11 +245,64 @@ Text(
     );
   }
 }
+
+RichText buildRichTextWithMentions(String? content) {
+  if (content == null || content.isEmpty) {
+    return RichText(
+      text: TextSpan(
+        text: '',
+        style: TextStyle(fontSize: 13, color: Colors.black54),
+      ),
+    );
+  }
+
+  final marker = '^';
+  final spans = <TextSpan>[];
+
+  int markerIndex = content.indexOf(marker);
+  if (markerIndex != -1) {
+    // Mention exists with marker
+    final mentionText = content.substring(0, markerIndex).trim();
+    spans.add(
+      TextSpan(
+        text: '$mentionText ',
+        style: const TextStyle(
+          fontSize: 13,
+          color: Color(0xFF0A58C9),
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+
+    final remaining = content.substring(markerIndex + 1).trimLeft();
+    if (remaining.isNotEmpty) {
+      spans.add(
+        TextSpan(
+          text: remaining,
+          style: const TextStyle(fontSize: 13, color: Colors.black54),
+        ),
+      );
+    }
+  } else {
+    // No marker found, treat whole text as normal
+    spans.add(
+      TextSpan(
+        text: content,
+        style: const TextStyle(fontSize: 13, color: Colors.black54),
+      ),
+    );
+  }
+
+  return RichText(text: TextSpan(children: spans));
+}
+
+
+
 String formatDateTime(String? dateTimeStr) {
   if (dateTimeStr == null) return '';
   final dateTime = DateTime.tryParse(dateTimeStr);
   if (dateTime == null) return '';
   final date = DateFormat("d MMM yyyy").format(dateTime); // e.g., 27 Apr 2025
-  final time = DateFormat("hh:mm a").format(dateTime);    // e.g., 04:09 PM
+  final time = DateFormat("hh:mm a").format(dateTime); // e.g., 04:09 PM
   return '$date  |  $time';
 }

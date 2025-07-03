@@ -195,9 +195,6 @@ class _LoginScreenState extends State<LoginScreen>
                     if (value == null || value.isEmpty) {
                       return 'Password is required';
                     }
-                    if (value.length < 6) {
-                      return 'Password must be at least 6 characters';
-                    }
                     return null;
                   },
                 ),
@@ -243,15 +240,15 @@ class _LoginScreenState extends State<LoginScreen>
                     TextSpan(
                       text: "Don't have an account? ",
                       style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.w600,
+                        color: AppColors.primaryText,
+                        fontWeight: FontWeight.w500,
                         fontSize: 12,
                       ),
                       children: [
                         TextSpan(
                           text: 'Register Here',
                           style: TextStyle(
-                            color: Colors.blue,
+                            color:  AppColors.primaryText,
                             fontWeight: FontWeight.w600,
                             fontSize: 12,
                             decoration: TextDecoration.underline,

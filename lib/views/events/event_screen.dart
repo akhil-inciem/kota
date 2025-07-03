@@ -24,7 +24,7 @@ class EventScreen extends StatelessWidget {
       body: Column(
   children: [
     TopBar(isEvent: true),
-    SizedBox(height: 1.h),
+    SizedBox(height: 0.5.h),
 
     // Show search bar only for All Events tab
     Obx(() {

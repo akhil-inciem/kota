@@ -38,7 +38,7 @@ class _ForumPollTabState extends State<ForumPollTab> {
                   children: [
                     const SizedBox.shrink(),
                     CustomButton(
-                      width: 25.w,
+                      width: 22.w,
                       height: 4.h,
                       text: 'New',
                       icon: const Icon(Icons.add, color: Colors.white),
