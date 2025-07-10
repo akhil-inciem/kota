@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -9,7 +10,7 @@ import 'package:kota/model/updates_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart' as DateUtils;
 
-class UpdateController extends GetxController {
+class UpdateController extends GetxController with WidgetsBindingObserver {
   final UpdateApiService _apiService = UpdateApiService();
 
   Rx<UpdatesModel?> updatesModel = Rx<UpdatesModel?>(null);
@@ -25,15 +26,43 @@ class UpdateController extends GetxController {
   RxList<Map<String, dynamic>> filteredList = <Map<String, dynamic>>[].obs;
   final TextEditingController searchController = TextEditingController();
 
+  Timer? _globalTimer;
+
   @override
   void onInit() {
     super.onInit();
+    WidgetsBinding.instance.addObserver(this);
+
     getUpdates();
+
     debounce(
       searchQuery,
       (_) => _applySearch(),
-      time: Duration(milliseconds: 300),
+      time: const Duration(milliseconds: 300),
     );
+
+    _startGlobalTimer();
+  }
+
+  void _startGlobalTimer() {
+    _globalTimer?.cancel();
+    _globalTimer = Timer.periodic(const Duration(minutes: 2), (_) {
+      getUpdates();
+    });
+  }
+
+  @override
+  void onClose() {
+    _globalTimer?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+    super.onClose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      getUpdates(); // Refresh updates when app resumes
+    }
   }
 
   Future<void> getUpdates({bool shouldClear = false}) async {

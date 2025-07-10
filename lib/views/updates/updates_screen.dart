@@ -23,46 +23,34 @@ class _UpdatesScreenState extends State<UpdatesScreen> with WidgetsBindingObserv
   final AuthController authController = Get.find();
   final UpdateController updateController = Get.find();
   late final bool isGuest;
-  Timer? _refreshTimer;
-
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    isGuest = authController.isGuest;
+void initState() {
+  super.initState();
+  WidgetsBinding.instance.addObserver(this);
+  isGuest = authController.isGuest;
 
-    // Initial load
-    updateController.getUpdates(shouldClear: true);
+  // Initial load
+  updateController.getUpdates(shouldClear: true);
 
-    // Clear flags after first frame
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      updateController.clearNewUpdatesFlag();
-    });
+  // Clear flags after first frame
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    updateController.clearNewUpdatesFlag();
+  });
+}
 
-    // Start periodic refresh
-    _startPeriodicUpdates();
+@override
+void dispose() {
+  WidgetsBinding.instance.removeObserver(this);
+  super.dispose();
+}
+
+@override
+void didChangeAppLifecycleState(AppLifecycleState state) {
+  if (state == AppLifecycleState.resumed) {
+    updateController.getUpdates();
   }
+}
 
-  void _startPeriodicUpdates() {
-    _refreshTimer = Timer.periodic(const Duration(minutes: 2), (_) {
-      updateController.getUpdates();
-    });
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    _refreshTimer?.cancel(); // Prevent memory leaks
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    // Optionally refresh when resumed
-    if (state == AppLifecycleState.resumed) {
-      updateController.getUpdates();
-    }
-  }
   @override
   Widget build(BuildContext context) {
     final item = updateController.memberModel.value?.data;
