@@ -36,177 +36,182 @@ class UpdateController extends GetxController {
     );
   }
 
- Future<void> getUpdates({bool shouldClear = false}) async {
-  final prefs = await SharedPreferences.getInstance();
-  final cachedJson = prefs.getString('cached_updates');
+  Future<void> getUpdates({bool shouldClear = false}) async {
+    final prefs = await SharedPreferences.getInstance();
+    final cachedJson = prefs.getString('cached_updates');
 
-  UpdatesModel? cachedModel;
-  if (cachedJson != null) {
-    final parsed = json.decode(cachedJson);
-    cachedModel = UpdatesModel.fromJson(parsed);
-  }
+    UpdatesModel? cachedModel;
+    if (cachedJson != null) {
+      final parsed = json.decode(cachedJson);
+      cachedModel = UpdatesModel.fromJson(parsed);
+    }
 
-  // Always fetch fresh data
-  try {
-    final result = await _apiService.fetchUpdates();
-    final memberShip = await _apiService.fetchMembership();
+    // Always fetch fresh data
+    try {
+      final result = await _apiService.fetchUpdates();
+      final memberShip = await _apiService.fetchMembership();
 
-    final resultJson = json.encode(result?.toJson());
+      final resultJson = json.encode(result?.toJson());
 
-    // 🔄 Compare current with cached
-    if (resultJson == cachedJson) {
-      debugPrint('[Updates] Data same as cache. Skipping shimmer.');
+      // 🔄 Compare current with cached
+      if (resultJson == cachedJson) {
+        debugPrint('[Updates] Data same as cache. Skipping shimmer.');
+        updatesModel.value = result;
+        memberModel.value = memberShip;
+        _processUpdates(result);
+
+        // Still update new updates flags
+        await _handleNewUpdateFlags(prefs, shouldClear);
+        return;
+      }
+
+      // 🌀 New data: show shimmer
+      isLoadingUpdates.value = true;
+
+      // Save new cache
+      await prefs.setString('cached_updates', resultJson);
+
       updatesModel.value = result;
       memberModel.value = memberShip;
       _processUpdates(result);
 
-      // Still update new updates flags
       await _handleNewUpdateFlags(prefs, shouldClear);
-      return;
+    } catch (e) {
+      print('Controller error fetching updates: $e');
+    } finally {
+      isLoadingUpdates.value = false;
     }
-
-    // 🌀 New data: show shimmer
-    isLoadingUpdates.value = true;
-
-    // Save new cache
-    await prefs.setString('cached_updates', resultJson);
-
-    updatesModel.value = result;
-    memberModel.value = memberShip;
-    _processUpdates(result);
-
-    await _handleNewUpdateFlags(prefs, shouldClear);
-  } catch (e) {
-    print('Controller error fetching updates: $e');
-  } finally {
-    isLoadingUpdates.value = false;
   }
-}
 
-Future<void> _handleNewUpdateFlags(
-    SharedPreferences prefs, bool shouldClear) async {
-  final lastSeenDateStr = prefs.getString('last_seen_update_date');
-  DateTime? lastSeenDate =
-      lastSeenDateStr != null ? DateTime.tryParse(lastSeenDateStr) : null;
+  Future<void> _handleNewUpdateFlags(
+    SharedPreferences prefs,
+    bool shouldClear,
+  ) async {
+    final lastSeenDateStr = prefs.getString('last_seen_update_date');
+    DateTime? lastSeenDate =
+        lastSeenDateStr != null ? DateTime.tryParse(lastSeenDateStr) : null;
 
-  bool isNewData = false;
-  int newCount = 0;
+    bool isNewData = false;
+    int newCount = 0;
 
-  if (combinedList.isNotEmpty) {
-    for (final item in combinedList) {
-      final itemDate = item['date'] as DateTime;
-      if (lastSeenDate == null || itemDate.isAfter(lastSeenDate)) {
-        newCount++;
+    if (combinedList.isNotEmpty) {
+      for (final item in combinedList) {
+        final itemDate = item['date'] as DateTime;
+        if (lastSeenDate == null || itemDate.isAfter(lastSeenDate)) {
+          newCount++;
+        }
+      }
+
+      final latestDate = combinedList.first['date'] as DateTime;
+      if (lastSeenDate == null || latestDate.isAfter(lastSeenDate)) {
+        isNewData = true;
       }
     }
 
-    final latestDate = combinedList.first['date'] as DateTime;
-    if (lastSeenDate == null || latestDate.isAfter(lastSeenDate)) {
-      isNewData = true;
-    }
+    hasNewUpdates.value = isNewData;
+    newItemsCount.value = newCount;
+
+    if (shouldClear) clearNewUpdatesFlag();
   }
 
-  hasNewUpdates.value = isNewData;
-  newItemsCount.value = newCount;
+  void _processUpdates(UpdatesModel? model) {
+    final newsList = model?.data?.news ?? [];
+    final eventsList = model?.data?.events ?? [];
 
-  if (shouldClear) clearNewUpdatesFlag();
-}
+    final List<Map<String, dynamic>> tempCombined = [];
 
-
-
-void _processUpdates(UpdatesModel? model) {
-  final newsList = model?.data?.news ?? [];
-  final eventsList = model?.data?.events ?? [];
-
-  final List<Map<String, dynamic>> tempCombined = [];
-
-  // Normalize News
-  for (final item in newsList) {
-    final dateStr = item['added_on'] ?? '';
-    final parsedDate = DateTime.tryParse(dateStr) ?? DateTime.now();
-    tempCombined.add({
-      'type': 'news',
-      'title': item['news_title'] ?? 'No Title',
-      'description': item['news_sub_title'] ?? 'No Description',
-      'date': parsedDate,
-      'news_id': item['news_id'], // ✅ Include news_id
-    });
-  }
-
-  // Normalize Events
-  for (final item in eventsList) {
-    String? dateStr;
-    String? title;
-    String? description;
-    String? eventId;
-
-    if (item is Map<String, dynamic>) {
-      dateStr = item['added_on'] ?? '';
-      title = item['event_name'] ?? 'Event';
-      description = item['event_short_description'] ?? item.toString();
-      eventId = item['event_id']; // ✅ Include event_id
-    } else {
-      dateStr = '';
-      title = 'Event';
-      description = item.toString();
-      eventId = null;
+    // Normalize News
+    for (final item in newsList) {
+      final dateStr = item['added_on'] ?? '';
+      final parsedDate = DateTime.tryParse(dateStr) ?? DateTime.now();
+      tempCombined.add({
+        'type': 'news',
+        'title': item['news_title'] ?? 'No Title',
+        'description': item['news_sub_title'] ?? 'No Description',
+        'date': parsedDate,
+        'news_id': item['news_id'], // ✅ Include news_id
+      });
     }
 
-    final parsedDate = DateTime.tryParse(dateStr ?? '') ?? DateTime.now();
-    tempCombined.add({
-      'type': 'event',
-      'title': title,
-      'description': description,
-      'date': parsedDate,
-      'event_id': eventId, // ✅ Include event_id
-    });
+    // Normalize Events
+    for (final item in eventsList) {
+      String? dateStr;
+      String? title;
+      String? description;
+      String? eventId;
+
+      if (item is Map<String, dynamic>) {
+        dateStr = item['added_on'] ?? '';
+        title = item['event_name'] ?? 'Event';
+        description = item['event_short_description'] ?? item.toString();
+        eventId = item['event_id']; // ✅ Include event_id
+      } else {
+        dateStr = '';
+        title = 'Event';
+        description = item.toString();
+        eventId = null;
+      }
+
+      final parsedDate = DateTime.tryParse(dateStr ?? '') ?? DateTime.now();
+      tempCombined.add({
+        'type': 'event',
+        'title': title,
+        'description': description,
+        'date': parsedDate,
+        'event_id': eventId, // ✅ Include event_id
+      });
+    }
+
+    tempCombined.sort(
+      (a, b) => (b['date'] as DateTime).compareTo(a['date'] as DateTime),
+    );
+
+    combinedList.value = tempCombined;
+
+    todayList.value =
+        tempCombined.where((item) {
+          final date = item['date'] as DateTime;
+          return DateUtils.isSameDay(date, DateTime.now());
+        }).toList();
+
+    olderList.value =
+        tempCombined.where((item) {
+          final date = item['date'] as DateTime;
+          return !DateUtils.isSameDay(date, DateTime.now());
+        }).toList();
+
+    filteredList.value = tempCombined;
   }
 
-  tempCombined.sort(
-    (a, b) => (b['date'] as DateTime).compareTo(a['date'] as DateTime),
-  );
+  bool get isMembershipExpired => memberModel.value?.data?.status == 'expired';
 
-  combinedList.value = tempCombined;
+  bool get isMembershipExpiringSoon =>
+      memberModel.value?.data?.status == 'expiring_soon';
 
-  todayList.value = tempCombined.where((item) {
-    final date = item['date'] as DateTime;
-    return DateUtils.isSameDay(date, DateTime.now());
-  }).toList();
-
-  olderList.value = tempCombined.where((item) {
-    final date = item['date'] as DateTime;
-    return !DateUtils.isSameDay(date, DateTime.now());
-  }).toList();
-
-  filteredList.value = tempCombined;
-}
-
-bool get isMembershipExpired =>
-    memberModel.value?.data?.status == 'expired';
-
-bool get isMembershipExpiringSoon =>
-    memberModel.value?.data?.status == 'expiring_soon';
-
-String get expiryDateFormatted {
-  final date = memberModel.value?.data?.membershipExpiryDate;
-  return date != null ? DateFormat('dd MMM yyyy').format(date) : '';
-}
-
-num get daysRemaining => memberModel.value?.data?.daysRemaining ?? 0;
-num get daysExpired => memberModel.value?.data?.daysExpired ?? 0;
-
-
-void clearNewUpdatesFlag() {
-  hasNewUpdates.value = false;
-
-  // Save latest date to prefs
-  if (combinedList.isNotEmpty) {
-    final latestDate = combinedList.first['date'] as DateTime;
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.setString('last_seen_update_date', latestDate.toIso8601String());
-    });
+  String get expiryDateFormatted {
+    final date = memberModel.value?.data?.membershipExpiryDate;
+    return date != null ? DateFormat('dd MMM yyyy').format(date) : '';
   }
-}
+
+  String get paymentDateFormatted {
+    final date = memberModel.value?.data?.paymentDate;
+    return date != null ? DateFormat('dd MMM yyyy').format(date) : '';
+  }
+
+  num get daysRemaining => memberModel.value?.data?.daysRemaining ?? 0;
+  num get daysExpired => memberModel.value?.data?.daysExpired ?? 0;
+
+  void clearNewUpdatesFlag() {
+    hasNewUpdates.value = false;
+
+    // Save latest date to prefs
+    if (combinedList.isNotEmpty) {
+      final latestDate = combinedList.first['date'] as DateTime;
+      SharedPreferences.getInstance().then((prefs) {
+        prefs.setString('last_seen_update_date', latestDate.toIso8601String());
+      });
+    }
+  }
 
   void _applySearch() {
     final query = searchQuery.value.toLowerCase();

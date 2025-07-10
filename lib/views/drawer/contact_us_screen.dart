@@ -49,7 +49,7 @@ class ContactUsScreen extends StatelessWidget {
               // Intro Text
               Text(
                 'Need assistance? Reach out to our experts',
-                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600),
+                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600,color: Color(0xFF0A2C49)),
               ),
               SizedBox(height: 3.h),
               // Main Contact Info
@@ -130,7 +130,7 @@ class ContactUsScreen extends StatelessWidget {
                     Text(
                       address,
                       style: TextStyle(
-                        fontSize: 14.sp,
+                        fontSize: 15.sp,
                         color: Colors.grey[700],
                       ),
                     ),
@@ -186,6 +186,7 @@ class ContactUsScreen extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.w600,
+                                    color: Color(0xFF0A2C49)
                                   ),
                                 ),
                                 SizedBox(height: 0.5.h),
@@ -201,7 +202,7 @@ class ContactUsScreen extends StatelessWidget {
                                 SizedBox(height: 0.5.h),
                                 Text(
                                   contact['phone']!,
-                                  style: TextStyle(fontSize: 14.sp),
+                                  style: TextStyle(fontSize: 15.sp),
                                 ),
                               ],
                             ),
@@ -245,7 +246,7 @@ class ContactUsScreen extends StatelessWidget {
         SizedBox(width: 4.w),
         Text(
           "Contact Us",
-          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600),
+          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600,color: Color(0xFF0A2C49)),
         ),
       ],
     );

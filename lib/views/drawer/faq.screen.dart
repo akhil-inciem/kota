@@ -39,6 +39,7 @@ class FaqScreen extends StatelessWidget {
                         maxLines: 2,
                         style: TextStyle(
                           fontSize: 20.sp,
+color: Color(0xFF0A2C49),
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -88,6 +89,7 @@ class FaqScreen extends StatelessWidget {
                                           style: const TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontSize: 15,
+                                            color: Color(0xFF0A2C49)
                                           ),
                                         ),
                                         childrenPadding:
@@ -159,7 +161,7 @@ class FaqScreen extends StatelessWidget {
         SizedBox(width: 4.w),
         Text(
           "FAQ",
-          style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.w600),
+          style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.w600,color: Color(0xFF0A2C49)),
         ),
       ],
     );

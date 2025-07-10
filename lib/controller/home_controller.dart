@@ -186,8 +186,7 @@ if (existingItem != null) {
       filteredNewsItems.assignAll(
         masterNewsItems.where(
           (item) =>
-              item.newsTitle?.toLowerCase().contains(lowerQuery) == true ||
-              item.newsDescription?.toLowerCase().contains(lowerQuery) == true,
+              item.newsTitle?.toLowerCase().contains(lowerQuery) == true 
         ),
       );
     }

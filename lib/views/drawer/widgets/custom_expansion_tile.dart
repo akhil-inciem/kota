@@ -36,7 +36,7 @@ class CustomExpansionTile extends StatelessWidget {
                   Expanded(
                     child: Text(
                       title,
-                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15,color: Color(0xFF0A2C49)),
                     ),
                   ),
                   Icon(isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down),
@@ -53,6 +53,7 @@ class CustomExpansionTile extends StatelessWidget {
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 14,
+                              color: Color(0xFF0A2C49)
                             ),
                           ),
                           SizedBox(height: 4),

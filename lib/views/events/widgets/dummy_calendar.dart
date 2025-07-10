@@ -181,22 +181,22 @@
 //                                         zoomList[index].isAttended == 'attended' ?  Text('Attended',
 //                                           style: TextStyle(
 //                                             fontFamily: 'Poppins',
-//                                             fontSize: 14.sp, color: Colors.grey,),)
+//                                             fontSize: 15.sp, color: Colors.grey,),)
 //                                             : DateTime.parse(zoomList[index].dateTime).isBefore(DateTime.now().subtract(const Duration(hours: 24))) ?
 //                                         Text("Not attended",
 //                                           style: TextStyle(
 //                                             fontFamily: 'Poppins',
-//                                             fontSize: 14.sp, color: Colors.grey,),) :
+//                                             fontSize: 15.sp, color: Colors.grey,),) :
 //                                         Row(
 //                                           children: [
 //                                             Text("Join meeting on: ",
 //                                               style: TextStyle(
 //                                                 fontFamily: 'Poppins',
-//                                                 fontSize: 14.sp, color: Colors.grey,),),
+//                                                 fontSize: 15.sp, color: Colors.grey,),),
 //                                             Text(DateFormat('hh:mm a').format(DateTime.parse('${zoomList[index].dateTime}')),
 //                                               style: TextStyle(
 //                                                 fontFamily: 'Poppins',
-//                                                 fontSize: 14.sp, color: StaticColors.staticLabelWhite,),),
+//                                                 fontSize: 15.sp, color: StaticColors.staticLabelWhite,),),
 //                                           ],
 //                                         ),
 //                                       ],

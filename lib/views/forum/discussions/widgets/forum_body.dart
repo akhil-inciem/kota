@@ -83,10 +83,10 @@ class _ForumPostBodyState extends State<ForumPostBody> {
       children: [
         Text(
           widget.title,
-          style: const TextStyle(
+          style:  TextStyle(
             fontWeight: FontWeight.w600,
-            fontSize: 14,
-            color: Colors.black87,
+            fontSize: 16.sp,
+            color: Color(0xFF0A2C49)
           ),
         ),
         const SizedBox(height: 12),
@@ -94,7 +94,7 @@ class _ForumPostBodyState extends State<ForumPostBody> {
           widget.description,
           style: TextStyle(
             color: Colors.grey.shade800,
-            fontSize: 13,
+            fontSize: 15.sp,
             height: 1.5,
           ),
         ),
@@ -102,36 +102,34 @@ class _ForumPostBodyState extends State<ForumPostBody> {
 
         // Horizontal Image Scroll with Page Indicator
         if (hasImages) ...[
-          SizedBox(
-            height: 50.h,
-            child: PageView.builder(
-              controller: _pageController,
-              itemCount: widget.imageUrls.length,
-              onPageChanged: (index) {
-                setState(() {
-                  _currentIndex = index;
-                });
-              },
-              itemBuilder: (_, index) {
-                return ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: CachedNetworkImage(
-                    imageUrl: widget.imageUrls[index],
-                    width: double.infinity,
-                    fit: BoxFit.fitWidth,
-                    placeholder:
-                        (context, url) => Container(
-                          height: 200, // adjust if needed
-                          color: Colors.grey[300],
-                        ),
-                    errorWidget:
-                        (context, url, error) =>
-                            const Icon(Icons.error, color: Colors.red),
-                  ),
-                );
-              },
-            ),
+          AspectRatio(
+  aspectRatio: 4 / 3, // or any suitable ratio for your images
+  child: PageView.builder(
+    controller: _pageController,
+    itemCount: widget.imageUrls.length,
+    onPageChanged: (index) {
+      setState(() {
+        _currentIndex = index;
+      });
+    },
+    itemBuilder: (_, index) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: CachedNetworkImage(
+          imageUrl: widget.imageUrls[index],
+          width: double.infinity,
+          fit: BoxFit.contain,
+          placeholder: (context, url) => Container(
+            color: Colors.grey[300],
           ),
+          errorWidget: (context, url, error) =>
+              const Icon(Icons.error, color: Colors.red),
+        ),
+      );
+    },
+  ),
+),
+
           const SizedBox(height: 10),
           Center(
             child: SmoothPageIndicator(
@@ -164,7 +162,7 @@ class _ForumPostBodyState extends State<ForumPostBody> {
             Obx(
               () => Text(
                 widget.likes.value,
-                style:  TextStyle(fontSize: 14.sp),
+                style:  TextStyle(fontSize: 15.sp),
               ),
             ),
             SizedBox(width: 6.w),
@@ -172,14 +170,14 @@ class _ForumPostBodyState extends State<ForumPostBody> {
               children: [
                 Image.asset(
                   'assets/icons/comments.png',
-                  height: 1.5.h,
-                  width: 1.5.h,
+                  height: 2.h,
+                  width: 2.h,
                 ),
                 SizedBox(width: 1.5.w),
                 Obx(
                   () => Text(
                     '${widget.comments} Comments',
-                    style:  TextStyle(fontSize: 14.sp),
+                    style:  TextStyle(fontSize: 15.sp),
                   ),
                 ),
               ],
@@ -194,11 +192,11 @@ class _ForumPostBodyState extends State<ForumPostBody> {
                 children: [
                   Image.asset(
                   'assets/icons/share.png',
-                  height: 1.5.h,
-                  width: 1.5.h,
+                  height: 2.h,
+                  width: 2.h,
                 ),
                   SizedBox(width: 1.5.w),
-                  Text('Share', style: TextStyle(fontSize: 14.sp)),
+                  Text('Share', style: TextStyle(fontSize: 15.sp)),
                 ],
               ),
             ),

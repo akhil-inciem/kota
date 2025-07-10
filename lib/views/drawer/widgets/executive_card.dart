@@ -64,6 +64,7 @@ class ExecutiveCard extends StatelessWidget {
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 15.sp,
+                                color: Color(0xFF0A2C49)
                               ),
                             ),
                             Text(
@@ -88,14 +89,14 @@ class ExecutiveCard extends StatelessWidget {
                       Text(
                         executive.officialMobile ?? '',
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: 15.sp,
                           color: Colors.black87,
                         ),
                       ),
                       Text(
                         executive.officialEmail ?? '',
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: 15.sp,
                           color: Colors.grey[600],
                         ),
                         maxLines: 1,

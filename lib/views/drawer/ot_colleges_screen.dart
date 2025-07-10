@@ -77,7 +77,11 @@ class _CollegesScreenState extends State<CollegesScreen> {
         SizedBox(width: 4.w),
         Text(
           "OT Colleges",
-          style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.w600,color: Color(0xFF0A2C49)),
+          style: TextStyle(
+            fontSize: 17.sp,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF0A2C49),
+          ),
         ),
       ],
     );
@@ -113,6 +117,7 @@ class _CollegesScreenState extends State<CollegesScreen> {
                         "${index + 1}. ${college.collegeName}",
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
+                          color: Color(0xFF0A2C49),
                           fontSize: 16.sp,
                         ),
                       ),
@@ -183,7 +188,7 @@ ${_buildAccreditationText(college)}
       children: [
         Icon(icon, size: 17.sp, color: iconColor),
         SizedBox(width: 2.w),
-        Expanded(child: Text(text, style: TextStyle(fontSize: 15.sp))),
+        Expanded(child: Text(text, style: TextStyle(fontSize: 15.sp,color: Color(0xFF0A2C49),),)),
       ],
     );
   }
@@ -201,12 +206,18 @@ ${_buildAccreditationText(college)}
     return "Courses: ${courses.isEmpty ? 'N/A' : courses.join(', ')}";
   }
 }
+
 class CollegeSearchBar extends StatelessWidget {
   final bool filter;
   final TextEditingController? controller;
   final Function(String)? onChanged;
 
-  const CollegeSearchBar({Key? key, this.filter = false,this.controller,this.onChanged}) : super(key: key);
+  const CollegeSearchBar({
+    Key? key,
+    this.filter = false,
+    this.controller,
+    this.onChanged,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -221,14 +232,14 @@ class CollegeSearchBar extends StatelessWidget {
               controller: controller,
               decoration: InputDecoration(
                 hintText: 'Search here',
-                prefixIcon:Padding(
-  padding:  EdgeInsets.all(1.5.h), // Adjust for better alignment
-  child: SizedBox(
-    height: 1.h,
-    width: 1.h,
-    child: Image.asset('assets/icons/search.png'),
-  ),
-),
+                prefixIcon: Padding(
+                  padding: EdgeInsets.all(1.5.h), // Adjust for better alignment
+                  child: SizedBox(
+                    height: 1.h,
+                    width: 1.h,
+                    child: Image.asset('assets/icons/search.png'),
+                  ),
+                ),
 
                 filled: true,
                 fillColor: AppColors.primaryBackground,
@@ -251,12 +262,9 @@ class CollegeSearchBar extends StatelessWidget {
           ),
 
           // If filter is true, show a container
-          if (filter) ...[
-            
-          ],
+          if (filter) ...[],
         ],
       ),
     );
   }
 }
-

@@ -15,32 +15,36 @@ class SideMenuController extends GetxController {
   RxBool isLoading = false.obs;
   RxList<AbMemberFaq> faqList = <AbMemberFaq>[].obs;
   List<OtCollegesKerala> allKeralaColleges = [];
-List<OtCollegesKerala> allNonKeralaColleges = [];
+  List<OtCollegesKerala> allNonKeralaColleges = [];
   RxList<OtCollegesKerala> keralaColleges = <OtCollegesKerala>[].obs;
-  RxList<OtCollegesKerala> nonKeralaColleges = <OtCollegesKerala>[].obs; 
+  RxList<OtCollegesKerala> nonKeralaColleges = <OtCollegesKerala>[].obs;
   final DrawerApiServices _drawerApiServices = DrawerApiServices();
   RxInt expandedIndex = (-1).obs;
   final TextEditingController searchController = TextEditingController();
-  
+
   @override
   void onInit() {
     super.onInit();
     loadFaqs();
-  fetchVisionAndMission();
-  fetchExecutives();
-  loadColleges();
+    fetchVisionAndMission();
+    fetchExecutives();
+    loadColleges();
   }
 
   void filterColleges(bool isKerala) {
     final query = searchController.text.toLowerCase();
+
+    bool matchesQuery(OtCollegesKerala c) {
+      return c.collegeName.toLowerCase().contains(query) ||
+          c.pgCourses.toLowerCase().contains(query) ||
+          c.ugCourses.toLowerCase().contains(query) ||
+          c.state.toLowerCase().contains(query);
+    }
+
     if (isKerala) {
-      keralaColleges.assignAll(
-        allKeralaColleges.where((c) => c.collegeName.toLowerCase().contains(query)),
-      );
+      keralaColleges.assignAll(allKeralaColleges.where(matchesQuery));
     } else {
-      nonKeralaColleges.assignAll(
-        allNonKeralaColleges.where((c) => c.collegeName.toLowerCase().contains(query)),
-      );
+      nonKeralaColleges.assignAll(allNonKeralaColleges.where(matchesQuery));
     }
   }
 
@@ -68,25 +72,24 @@ List<OtCollegesKerala> allNonKeralaColleges = [];
   }
 
   Future<void> loadColleges() async {
-  try {
-    isLoading.value = true;
-    final data = await _drawerApiServices.fetchColleges();
+    try {
+      isLoading.value = true;
+      final data = await _drawerApiServices.fetchColleges();
 
-    // Store the master data
-    allKeralaColleges = data['kerala'] ?? [];
-    allNonKeralaColleges = data['nonKerala'] ?? [];
+      // Store the master data
+      allKeralaColleges = data['kerala'] ?? [];
+      allNonKeralaColleges = data['nonKerala'] ?? [];
 
-    // Set default lists
-    keralaColleges.assignAll(allKeralaColleges);
-    nonKeralaColleges.assignAll(allNonKeralaColleges);
-  } catch (e) {
-    print("Controller error: $e");
-    Get.snackbar("Error", e.toString());
-  } finally {
-    isLoading.value = false;
+      // Set default lists
+      keralaColleges.assignAll(allKeralaColleges);
+      nonKeralaColleges.assignAll(allNonKeralaColleges);
+    } catch (e) {
+      print("Controller error: $e");
+      Get.snackbar("Error", e.toString());
+    } finally {
+      isLoading.value = false;
+    }
   }
-}
-
 
   void toggleExpansion(int index) {
     expandedIndex.value = index;

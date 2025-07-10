@@ -45,7 +45,7 @@ class ForumController extends GetxController {
   var isLiked = false.obs;
   var likeCount = '0'.obs;
   var commentCount = '0'.obs;
-
+  var hasInsertedMention = false.obs;
   final FocusNode commentFocusNode = FocusNode();
   RxString replyingToName = ''.obs; // Optional: To show UI hint
 
@@ -54,6 +54,7 @@ class ForumController extends GetxController {
   final pollDescriptionController = TextEditingController();
   final pollFields = <TextEditingController>[].obs;
   final isCreatePollEnabled = false.obs;
+  final isPollReactionsLoading = false.obs;
   final allowMultiple = false.obs;
   final pollReactionList = <ReactionData>[];
   final allowMultipleSwitchController = ValueNotifier<bool>(false);
@@ -96,6 +97,13 @@ class ForumController extends GetxController {
     isButtonEnabled.value = title.isNotEmpty && desc.isNotEmpty;
   }
 
+  void resetCommentInput() {
+  commentController.clear();
+  hasInsertedMention.value = false;
+  isReplying.value = false;
+}
+
+
   void _syncThreadIntoList(ForumData updatedThread) {
   final index = threadsList.indexWhere((t) => t.id == updatedThread.id);
   if (index != -1) {
@@ -131,17 +139,43 @@ class ForumController extends GetxController {
   }
 
   Future<void> loadThreads() async {
-    try {
+  try {
+    final fetchedThreads = await _forumApiService.fetchThreads();
+
+    // Check if data changed compared to current threadsList
+    bool dataChanged = _hasThreadsDataChanged(fetchedThreads);
+
+    if (dataChanged) {
       isLoading.value = true;
-      final fetchedThreads = await _forumApiService.fetchThreads();
+
+      // Optional delay for shimmer visibility
+      await Future.delayed(const Duration(milliseconds: 300));
+
       originalThreadsList.assignAll(fetchedThreads);
       threadsList.assignAll(fetchedThreads);
-    } catch (e) {
-      print('Error loading threads: $e');
-    } finally {
+
       isLoading.value = false;
     }
+    // else data same, no shimmer or UI update needed
+  } catch (e) {
+    print('Error loading threads: $e');
+    isLoading.value = false;
   }
+}
+
+bool _hasThreadsDataChanged(List<ForumData> newData) {
+  if (threadsList.length != newData.length) return true;
+
+  for (int i = 0; i < newData.length; i++) {
+    if (jsonEncode(threadsList[i].toJson()) != jsonEncode(newData[i].toJson())) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+
 
   void resetFields() {
     searchController.clear();
@@ -212,15 +246,16 @@ class ForumController extends GetxController {
   commentController.selection = TextSelection.fromPosition(
     TextPosition(offset: commentController.text.length),
   );
+  hasInsertedMention.value = true;
   commentFocusNode.requestFocus();
 }
-
 
   void cancelReply() {
     isReplying.value = false;
     replyingToId.value = '';
     replyingToName.value = '';
     commentController.clear();
+    hasInsertedMention.value = false;
   }
 
   Future<void> postCommentOrReply() async {
@@ -248,9 +283,6 @@ class ForumController extends GetxController {
   await loadSingleThread(selectedThreadId.value, forceRefresh: true);
   _syncThreadIntoList(singleThread.value!);
 }
-
-
-
 
   Future<void> postComment(String text) async {
     try {
@@ -513,19 +545,21 @@ class ForumController extends GetxController {
 
   Future<void> loadPollReactions(String id) async {
   try {
+    isPollReactionsLoading.value = true;
+
     final pollReactionModel = await _pollApiService.fetchPollReactions(id);
-    
+
     if (pollReactionModel.data != null) {
       pollReactionList.assignAll(pollReactionModel.data!);
     } else {
       pollReactionList.clear();
     }
-    
-    // Optionally, if you have a totalVotes variable in your controller:
-    totalVotes.value = pollReactionModel.totalVotes ?? 0;
 
+    totalVotes.value = pollReactionModel.totalVotes ?? 0;
   } catch (e) {
     print('Error loading poll reactions: $e');
+  } finally {
+    isPollReactionsLoading.value = false;
   }
 }
 

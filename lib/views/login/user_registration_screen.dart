@@ -126,7 +126,7 @@ class _RegistrationScreenState extends State<RegistrationScreen>
                 "IMPORTANT INFORMATION: This option is only for undergraduate students.",
                 style: TextStyle(
                   color: Colors.red,
-                  fontSize: 14.sp,
+                  fontSize: 15.sp,
                 ),
               ),
             ),

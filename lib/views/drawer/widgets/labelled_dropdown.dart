@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
+import 'package:dropdown_button2/dropdown_button2.dart';
+
 class LabelledDropdown<T> extends StatelessWidget {
   final String label;
   final List<T> items;
@@ -22,57 +24,51 @@ class LabelledDropdown<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveValue =
-        (selectedValue != null && items.contains(selectedValue))
-            ? selectedValue
-            : null;
+    final effectiveValue = selectedValue ?? (items.isNotEmpty ? items.first : null);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label,
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500,color: AppColors.labelText)),
-        SizedBox(height: 8),
+            style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w500,
+                color: AppColors.labelText)),
+        const SizedBox(height: 8),
         Container(
-  decoration: BoxDecoration(
-    color: AppColors.primaryBackground, // Background color
-    borderRadius: BorderRadius.circular(10), // 🎯 Rounded corners here
-  ),
-  child: DropdownButtonFormField<T>(
-    value: effectiveValue,
-    items: items.map((val) {
-      final label = itemAsString(val);
-      return DropdownMenuItem<T>(
-        value: val,
-        child: Tooltip(
-          message: label,
-          child: SizedBox(
-            width: double.infinity,
-            child: Text(
-              label,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-              softWrap: false,
-            ),
+          decoration: BoxDecoration(
+            color: AppColors.primaryBackground,
+            borderRadius: BorderRadius.circular(10),
           ),
-        ),
-      );
-    }).toList(),
-    onChanged: onChanged,
-    isExpanded: true,
-    decoration: const InputDecoration(
-      hintText: "Select",
-      border: InputBorder.none,
-      enabledBorder: InputBorder.none,
-      focusedBorder: InputBorder.none,
-      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      filled: true,
-      fillColor: Colors.transparent, // So it doesn’t override container color
+          child: DropdownButtonFormField2<T>(
+  value: effectiveValue,
+  items: items.map((val) {
+    final label = itemAsString(val);
+    return DropdownMenuItem<T>(
+      value: val,
+      child: Text(
+        label,
+        overflow: TextOverflow.ellipsis,
+      ),
+    );
+  }).toList(),
+  onChanged: onChanged,
+  isExpanded: true,
+  decoration: const InputDecoration(
+    contentPadding: EdgeInsets.symmetric(horizontal: 16), // 👈 match this
+    border: InputBorder.none,
+    hintText: 'Select',
+  ),
+  dropdownStyleData: DropdownStyleData(
+    padding: const EdgeInsets.symmetric(horizontal: 0), // Sheet padding
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(10),
+      color: Colors.white,
     ),
   ),
 )
 
-
+        ),
       ],
     );
   }

@@ -102,7 +102,7 @@ class _ForumListState extends State<ForumList> {
                     padding: EdgeInsets.symmetric(horizontal: 3.w),
                     child: Container(
                       color: Colors.white,
-                      padding: EdgeInsets.all(14.sp),
+                      padding: EdgeInsets.all(15.sp),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -168,7 +168,7 @@ class _ForumListState extends State<ForumList> {
                                     Text(
                                       timeAgo(item.createdAt!),
                                       style: TextStyle(
-                                        fontSize: 14.sp,
+                                        fontSize: 15.sp,
                                         fontStyle: FontStyle.italic,
                                         color: Colors.grey,
                                       ),
@@ -216,18 +216,18 @@ class _ForumListState extends State<ForumList> {
                                      SizedBox(width: 1.5.w),
                                     Text(
                                       '${item.likeCount ?? 0}',
-                                      style: TextStyle(fontSize: 14.sp),
+                                      style: TextStyle(fontSize: 15.sp),
                                     ),
                                      SizedBox(width: 6.w),
                                     Image.asset(
                                       'assets/icons/comments.png',
-                                      height: 1.5.h,
-                  width: 1.5.h,
+                                      height: 2.h,
+                  width: 2.h,
                                     ),
                                      SizedBox(width: 1.5.w),
                                     Text(
                                       '${item.commentCount ?? 0} Comments',
-                                      style: TextStyle(fontSize: 14.sp),
+                                      style: TextStyle(fontSize: 15.sp),
                                     ),
                                   ],
                                 ),

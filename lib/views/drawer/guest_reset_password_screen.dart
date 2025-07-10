@@ -166,7 +166,6 @@ class _GuestResetPasswordScreenState extends State<GuestResetPasswordScreen> {
           onTap: () => Get.back(),
           child: Image.asset(
             'assets/icons/backbutton.png',
-            color: Colors.black,
             width: 6.w,
             height: 2.5.h,
           ),
@@ -174,7 +173,7 @@ class _GuestResetPasswordScreenState extends State<GuestResetPasswordScreen> {
         SizedBox(width: 4.w),
         Text(
           "Reset Password",
-          style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.w600),
+          style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.w600,color: Color(0xFF0A2C49)),
         ),
       ],
     );

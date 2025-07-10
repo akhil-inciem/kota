@@ -18,10 +18,10 @@ class MemberShipModel {
   }
 
   Map<String, dynamic> toJson() => {
-    "status": status,
-    "messege": messege,
-    "data": data?.toJson(),
-  };
+        "status": status,
+        "messege": messege,
+        "data": data?.toJson(),
+      };
 }
 
 class Data {
@@ -29,6 +29,7 @@ class Data {
     required this.member,
     required this.membershipExpiryDate,
     required this.status,
+    required this.paymentDate,
     required this.daysRemaining,
     required this.daysExpired,
   });
@@ -36,27 +37,27 @@ class Data {
   final String? member;
   final DateTime? membershipExpiryDate;
   final String? status;
+  final DateTime? paymentDate;
   final num? daysRemaining;
   final num? daysExpired;
 
   factory Data.fromJson(Map<String, dynamic> json) {
     return Data(
       member: json["member"],
-      membershipExpiryDate: DateTime.tryParse(
-        json["membership_expiry_date"] ?? "",
-      ),
+      membershipExpiryDate: DateTime.tryParse(json["membership_expiry_date"] ?? ""),
       status: json["status"],
+      paymentDate: DateTime.tryParse(json["payment_date"] ?? ""),
       daysRemaining: json["days_remaining"],
       daysExpired: json["days_expired"],
     );
   }
 
   Map<String, dynamic> toJson() => {
-    "member": member,
-    "membership_expiry_date":
-        "${membershipExpiryDate!.year.toString().padLeft(4, '0')}-${membershipExpiryDate!.month.toString().padLeft(2, '0')}-${membershipExpiryDate!.day.toString().padLeft(2, '0')}",
-    "status": status,
-    "days_remaining": daysRemaining,
-    "days_expired": daysExpired,
-  };
+        "member": member,
+        "membership_expiry_date": membershipExpiryDate?.toIso8601String().split('T').first,
+        "status": status,
+        "payment_date": paymentDate?.toIso8601String().split('T').first,
+        "days_remaining": daysRemaining,
+        "days_expired": daysExpired,
+      };
 }

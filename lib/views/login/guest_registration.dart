@@ -66,203 +66,222 @@ class _GuestRegistrationScreenState extends State<GuestRegistrationScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          // Background Gradient
-          Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xFF015FC9), Color(0xFF7001C5)],
+    return SafeArea(
+      child: Scaffold(
+        body: Stack(
+          children: [
+            // Background Gradient
+            Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0xFF015FC9), Color(0xFF7001C5)],
+                ),
               ),
             ),
-          ),
-
-          SlideTransition(
-            position: _animation,
-            child: Stack(
-              children: [
-                // Top Centered Logo and Text
-                Center(
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: 60.h),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SvgPicture.asset(
-                          'assets/images/splash_screen.svg',
-                          width: 50.w,
-                        ),
-                        SizedBox(height: 1.h),
-                        Text(
-                          'Kerala Occupational\nTherapists Association',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 16.sp,
-                            color: Colors.white,
+      
+            SlideTransition(
+              position: _animation,
+              child: Stack(
+                children: [
+                  // Top Centered Logo and Text
+                  Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 60.h),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SvgPicture.asset(
+                            'assets/images/splash_screen.svg',
+                            width: 50.w,
                           ),
-                        ),
-                      ],
+                          SizedBox(height: 1.h),
+                          Text(
+                            'Kerala Occupational\nTherapists Association',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    height: 73.h,
-                    width: double.infinity,
-                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-                    ),
-                    child: Form(
-                      key: _formKey,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            LabelledTextField(
-                              controller: fullNameController,
-                              label: 'Full Name',
-                              hintText: 'Enter your full name',
-                              icon: Icons.person,
-                              isPassword: false,
-                              validator: (value) {
-                                if (value == null || value.trim().isEmpty) {
-                                  return 'Full name is required';
-                                }
-                                return null;
-                              },
-                            ),
-                            SizedBox(height: 2.h),
-                            LabelledTextField(
-                              controller: emailController,
-                              label: 'Email',
-                              hintText: 'Enter your email',
-                              isPassword: false,
-                              validator: (value) {
-                                if (value == null || value.trim().isEmpty) {
-                                  return 'Email is required';
-                                } else if (!GetUtils.isEmail(value.trim())) {
-                                  return 'Enter a valid email';
-                                }
-                                return null;
-                              },
-                            ),
-                            SizedBox(height: 2.h),
-                            LabelledTextField(
-                              controller: phoneController,
-                              label: 'Phone Number',
-                              hintText: 'Enter your phone number',
-                              isPassword: false,
-                              validator: (value) {
-                                if (value == null || value.trim().isEmpty) {
-                                  return 'Phone number is required';
-                                } else if (!GetUtils.isPhoneNumber(value.trim())) {
-                                  return 'Enter a valid phone number';
-                                }
-                                return null;
-                              },
-                            ),
-                            SizedBox(height: 2.h),
-                            LabelledTextField(
-                              controller: passwordController,
-                              label: 'Password',
-                              hintText: 'Enter your password',
-                              isPassword: true,
-                              validator: (value) {
-                                if (value == null || value.trim().isEmpty) {
-                                  return 'Password is required';
-                                } else if (value.trim().length < 6) {
-                                  return 'Minimum 6 characters required';
-                                }
-                                return null;
-                              },
-                            ),
-                            SizedBox(height: 2.h),
-                            LabelledTextField(
-                              controller: confirmPasswordController,
-                              label: 'Re-Enter Password',
-                              hintText: 'Re-Enter your password',
-                              isPassword: true,
-                              validator: (value) {
-                                if (value == null || value.trim().isEmpty) {
-                                  return 'Please confirm your password';
-                                } else if (value != passwordController.text.trim()) {
-                                  return 'Passwords do not match';
-                                }
-                                return null;
-                              },
-                            ),
-                            SizedBox(height: 4.h),
-                            CustomButton(
-                              text: 'Sign In as a Guest',
-                              backgroundColor: AppColors.primaryColor,
-                              textColor: Colors.white,
-                              isGuestButton: false,
-                              onPressed: () async {
-                                if (_formKey.currentState!.validate()) {
-                                  final success = await authController.registerAsGuest(
-                                    fullName: fullNameController.text.trim(),
-                                    mailId: emailController.text.trim(),
-                                    password: passwordController.text.trim(),
-                                    confirmPassword: confirmPasswordController.text.trim(),
-                                    phoneNumber: phoneController.text.trim(),
-                                  );
-                                  if (success) {
-                                    Get.offAll(BaseScreen());
+      
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      height: 68.h,
+                      width: double.infinity,
+                      padding: EdgeInsets.only(
+                        left: 8.w,
+                        right: 8.w,
+                        top: 4.h,
+                      ),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(30),
+                        ),
+                      ),
+                      child: Form(
+                        key: _formKey,
+                        // autovalidateMode: AutovalidateMode.onUserInteraction,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              LabelledTextField(
+                                controller: fullNameController,
+                                label: 'Full Name',
+                                hintText: 'Enter your full name',
+                                icon: Icons.person,
+                                isPassword: false,
+                                validator: (value) {
+                                  if (value == null || value.trim().isEmpty) {
+                                    return 'Full name is required';
                                   }
-                                }
-                              },
-                            ),
-                            SizedBox(height: 2.h),
-                            Align(
-                              alignment: Alignment.center,
-                              child: Text.rich(
-                                TextSpan(
-                                  text: "Already have an account? ",
-                                  style: const TextStyle(
-                                    color: AppColors.primaryText,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 12,
-                                  ),
-                                  children: [
-                                    TextSpan(
-                                      text: 'Sign In',
-                                      style: const TextStyle(
-                                        color: AppColors.primaryText,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 12,
-                                        decoration: TextDecoration.underline,
-                                      ),
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = () {
-                                          Get.offAll(LoginScreen());
-                                        },
+                                  return null;
+                                },
+                              ),
+                              SizedBox(height: 2.h),
+                              LabelledTextField(
+                                controller: emailController,
+                                label: 'Email',
+                                hintText: 'Enter your email',
+                                isPassword: false,
+                                validator: (value) {
+                                  if (value == null || value.trim().isEmpty) {
+                                    return 'Email is required';
+                                  } else if (!GetUtils.isEmail(value.trim())) {
+                                    return 'Enter a valid email';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(height: 2.h),
+                              LabelledTextField(
+                                controller: phoneController,
+                                label: 'Phone Number',
+                                hintText: 'Enter your phone number',
+                                isPassword: false,
+                                validator: (value) {
+                                  final trimmed = value?.trim() ?? '';
+                                  if (trimmed.isEmpty) {
+                                    return 'Phone number is required';
+                                  } else if (!RegExp(
+                                    r'^\d{10}$',
+                                  ).hasMatch(trimmed)) {
+                                    return 'Enter a valid 10-digit phone number';
+                                  }
+                                  return null;
+                                },
+                              ),
+      
+                              SizedBox(height: 2.h),
+                              LabelledTextField(
+                                controller: passwordController,
+                                label: 'Password',
+                                hintText: 'Enter your password',
+                                isPassword: true,
+                                validator: (value) {
+                                  if (value == null || value.trim().isEmpty) {
+                                    return 'Password is required';
+                                  } else if (value.trim().length < 6) {
+                                    return 'Minimum 6 characters required';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(height: 2.h),
+                              LabelledTextField(
+                                controller: confirmPasswordController,
+                                label: 'Re-Enter Password',
+                                hintText: 'Re-Enter your password',
+                                isPassword: true,
+                                validator: (value) {
+                                  if (value == null || value.trim().isEmpty) {
+                                    return 'Please confirm your password';
+                                  } else if (value !=
+                                      passwordController.text.trim()) {
+                                    return 'Passwords do not match';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(height: 4.h),
+                              CustomButton(
+                                text: 'Sign In as a Guest',
+                                backgroundColor: AppColors.primaryColor,
+                                textColor: Colors.white,
+                                isGuestButton: false,
+                                onPressed: () async {
+                                  if (_formKey.currentState!.validate()) {
+                                    final success = await authController
+                                        .registerAsGuest(
+                                          fullName:
+                                              fullNameController.text.trim(),
+                                          mailId: emailController.text.trim(),
+                                          password:
+                                              passwordController.text.trim(),
+                                          confirmPassword:
+                                              confirmPasswordController.text
+                                                  .trim(),
+                                          phoneNumber:
+                                              phoneController.text.trim(),
+                                        );
+                                    if (success) {
+                                      Get.offAll(BaseScreen());
+                                    }
+                                  }
+                                },
+                              ),
+                              SizedBox(height: 2.h),
+                              Align(
+                                alignment: Alignment.center,
+                                child: Text.rich(
+                                  TextSpan(
+                                    text: "Already have an account? ",
+                                    style: const TextStyle(
+                                      color: AppColors.primaryText,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 12,
                                     ),
-                                  ],
+                                    children: [
+                                      TextSpan(
+                                        text: 'Sign In',
+                                        style: const TextStyle(
+                                          color: AppColors.primaryText,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 12,
+                                          decoration: TextDecoration.underline,
+                                        ),
+                                        recognizer:
+                                            TapGestureRecognizer()
+                                              ..onTap = () {
+                                                Get.offAll(LoginScreen());
+                                              },
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
-

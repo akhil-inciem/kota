@@ -65,14 +65,17 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
         body: SafeArea(
           child: Column(
             children: [
-              TopBar(
-                title: "New Discussion",
-                // leadingIconWidget: Icon(
-                //   Icons.close,
-                //   color: AppColors.primaryColor,
-                //   size: 22.sp,
-                // ),
-                onTap: () => Get.back(),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 2.w),
+                child: TopBar(
+                  title: "New Discussion",
+                  // leadingIconWidget: Icon(
+                  //   Icons.close,
+                  //   color: AppColors.primaryColor,
+                  //   size: 22.sp,
+                  // ),
+                  onTap: () => Get.back(),
+                ),
               ),
               SizedBox(height: 2.h),
               Expanded(
@@ -83,6 +86,7 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
                     return const Center(child: Text('No user data found'));
                   } else {
                     final user = userController.user.value!;
+                    final userName = '${user.firstName ?? ''} ${user.lastName ?? ''}';
                     return SingleChildScrollView(
                       child: Form(
                         key: _formKey,
@@ -101,7 +105,7 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
                                         imageUrl:
                                             user.photo?.isNotEmpty == true
                                                 ? user.photo!
-                                                : 'https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=random&color=fff',
+                                                : 'https://ui-avatars.com/api/?name=$userName&background=random&color=fff',
                                         fit: BoxFit.cover,
                                         width: 60,
                                         height: 60,
@@ -226,7 +230,7 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
         text: TextSpan(
           text: text.split(" *")[0],
           style: TextStyle(
-            fontSize: 14.sp,
+            fontSize: 15.sp,
             fontWeight: FontWeight.w500,
             color: AppColors.labelText,
           ),

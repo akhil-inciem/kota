@@ -110,11 +110,11 @@ class ReplyTile extends StatelessWidget {
                   children: [
                     Image.asset(
                       'assets/icons/reply.png',
-                      height: 1.5.h,
-                      width: 1.5.h,
+                      height: 2.h,
+                      width: 2.h,
                     ),
                     SizedBox(width: 1.5.w),
-                    Text('Reply', style: TextStyle(fontSize: 14.sp)),
+                    Text('Reply', style: TextStyle(fontSize: 15.sp)),
                   ],
                 ),
               ),
@@ -228,8 +228,8 @@ class CommentTile extends StatelessWidget {
                   children: [
                     Image.asset(
                       'assets/icons/reply.png',
-                      height: 1.5.h,
-                      width: 1.5.h,
+                      height: 2.h,
+                      width: 2.h,
                     ),
                     SizedBox(width: 1.5.w),
                     Text('Reply', style: TextStyle(fontSize: 14)),
@@ -251,7 +251,7 @@ RichText buildRichTextWithMentions(String? content) {
     return RichText(
       text: TextSpan(
         text: '',
-        style: TextStyle(fontSize: 13, color: Colors.black54),
+        style: TextStyle(fontSize: 16.sp, color: Colors.black54),
       ),
     );
   }
@@ -266,8 +266,8 @@ RichText buildRichTextWithMentions(String? content) {
     spans.add(
       TextSpan(
         text: '$mentionText ',
-        style: const TextStyle(
-          fontSize: 13,
+        style:  TextStyle(
+          fontSize: 16.sp,
           color: Color(0xFF0A58C9),
           fontWeight: FontWeight.w600,
         ),
@@ -279,7 +279,7 @@ RichText buildRichTextWithMentions(String? content) {
       spans.add(
         TextSpan(
           text: remaining,
-          style: const TextStyle(fontSize: 13, color: Colors.black54),
+          style:  TextStyle(fontSize: 16.sp, color: Colors.grey.shade800),
         ),
       );
     }
@@ -288,7 +288,7 @@ RichText buildRichTextWithMentions(String? content) {
     spans.add(
       TextSpan(
         text: content,
-        style: const TextStyle(fontSize: 13, color: Colors.black54),
+        style:  TextStyle(fontSize: 16.sp, color: Colors.grey.shade800),
       ),
     );
   }

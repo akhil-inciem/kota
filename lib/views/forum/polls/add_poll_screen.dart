@@ -114,7 +114,7 @@ class _NewPollPageState extends State<NewPollPage> {
                       Text(
                         "Question",
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: 15.sp,
                           fontWeight: FontWeight.w500,
                           color: AppColors.labelText,
                         ),
@@ -152,7 +152,7 @@ class _NewPollPageState extends State<NewPollPage> {
                       Text(
                         "Options",
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: 15.sp,
                           fontWeight: FontWeight.w500,
                           color: AppColors.labelText,
                         ),
@@ -290,7 +290,7 @@ class _NewPollPageState extends State<NewPollPage> {
                                       ).format(selectedDate)
                                       : 'Select Date',
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 15.sp,
                                     color: AppColors.primaryColor,
                                   ),
                                 ),

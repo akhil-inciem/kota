@@ -236,7 +236,7 @@ class ClinicTile extends StatelessWidget {
                   Text(
                     _formatAddress(),
                     style: TextStyle(
-                      fontSize: 14.sp,
+                      fontSize: 15.sp,
                       fontStyle: FontStyle.italic,
                       color: Colors.grey[800],
                       height: 1.3,
@@ -249,7 +249,7 @@ class ClinicTile extends StatelessWidget {
                     Text(
                       _getPhoneNumbers(),
                       style: TextStyle(
-                        fontSize: 14.sp,
+                        fontSize: 15.sp,
                         fontStyle: FontStyle.italic,
                         color: Colors.grey[800],
                         height: 1.3,

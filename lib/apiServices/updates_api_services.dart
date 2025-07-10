@@ -22,7 +22,7 @@ class UpdateApiService {
         final responseString = response.data.toString().trim();
       final jsonString = jsonDecode(responseString);
       print(jsonString);
-        return MemberShipModel.fromJson(jsonString);
+        return MemberShipModel. fromJson(jsonString);
       }
     } catch (e) {
       print('Error fetching membership: $e');

@@ -98,6 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     style: TextStyle(
                                       fontSize: 18.sp,
                                       fontWeight: FontWeight.w600,
+                                      color: Color(0xFF0A2C49)
                                     ),
                                   ),
                                   SizedBox(width: 2.w),
@@ -105,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     width: 8.w,
                                     height: 2.5.h,
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
+                                      borderRadius: BorderRadius.circular(5),
                                       color: Color(0xFF0A57C9),
                                     ),
                                     child: Center(

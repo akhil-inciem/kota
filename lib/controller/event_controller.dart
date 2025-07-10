@@ -243,11 +243,7 @@ Future<void> fetchSingleEventItem(String eventId) async {
         allEvents.where(
           (item) =>
               item.eventName?.toLowerCase().contains(query.toLowerCase()) ==
-                  true ||
-              item.eventDescription?.toLowerCase().contains(
-                    query.toLowerCase(),
-                  ) ==
-                  true,
+                  true 
         ),
       );
     }

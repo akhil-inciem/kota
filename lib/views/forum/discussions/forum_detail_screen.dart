@@ -31,6 +31,9 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
     controller.singleThread.value = null;
     userController.loadUserProfile();
     controller.loadSingleThread(widget.threadId);
+    controller.cancelReply(); // resets isReplying to false
+  controller.commentController.clear(); // clear any old comment
+  controller.hasInsertedMention.value = false; // allow mention insertion
   }
 
   @override
@@ -109,6 +112,7 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
+                                    color: Color(0xFF0A2C49)
                                   ),
                                 ),
                                 Text(
@@ -143,13 +147,13 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                         final comments = controller.comments;
                         return Column(
                           children:
-                              comments.map((comment) {
+                              comments.reversed.map((comment) {
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     CommentTile(comment: comment),
                                     if (comment.replies != null)
-                                      ...comment.replies!.map(
+                                      ...comment.replies!.reversed.map(
                                         (reply) => Padding(
                                           padding: EdgeInsets.only(left: 10.w),
                                           child: ReplyTile(reply: reply),
@@ -175,173 +179,158 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
   }
 
   Widget _buildCommentInput() {
-    return Obx(() {
-      final user = userController.user.value;
-      final isReply = controller.isReplying.value;
-      final isSending = controller.isPosting.value;
-      final canSend = controller.commentText.isNotEmpty && !isSending;
+  // Add listener once
+  controller.commentController.removeListener(_onCommentTextChanged);
+  controller.commentController.addListener(_onCommentTextChanged);
 
-      final authorFirstName = controller.singleThread.value?.firstName ?? '';
-      final authorLastName = controller.singleThread.value?.lastName ?? '';
-      final authorName = '$authorFirstName $authorLastName'.trim();
+  return Obx(() {
+    final user = userController.user.value;
+    final isReply = controller.isReplying.value;
+    final isSending = controller.isPosting.value;
+    final canSend = controller.commentText.isNotEmpty && !isSending;
 
-      if (!isReply &&
-          controller.commentController.text.isEmpty &&
-          authorName.isNotEmpty) {
-        controller.commentController.text = '@$authorName ';
-        controller.commentController.selection = TextSelection.fromPosition(
-          TextPosition(offset: controller.commentController.text.length),
-        );
-      }
+    final authorFirstName = controller.singleThread.value?.firstName ?? '';
+    final authorLastName = controller.singleThread.value?.lastName ?? '';
+    final authorName = '$authorFirstName $authorLastName'.trim();
 
-      return Container(
-        padding: EdgeInsets.symmetric(horizontal: 1.w),
-        decoration: BoxDecoration(
-          color: Colors.grey.shade100,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(25),
-            topRight: Radius.circular(25),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              offset: const Offset(0, -2),
-              blurRadius: 6,
-              spreadRadius: 1,
-            ),
-          ],
+    // Mention only once
+    if (!isReply &&
+    controller.commentController.text.isEmpty &&
+    authorName.isNotEmpty &&
+    !controller.hasInsertedMention.value) {
+  controller.commentController.text = '@$authorName ';
+  controller.commentController.selection = TextSelection.fromPosition(
+    TextPosition(offset: controller.commentController.text.length),
+  );
+  controller.hasInsertedMention.value = true;
+}
+
+
+
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 1.w),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade100,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(25),
+          topRight: Radius.circular(25),
         ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (isReply)
-                Row(
-                  children: [
-                    Text(
-                      'Replying to ${controller.replyingToName}',
-                      style: TextStyle(
-                        color: AppColors.primaryText,
-                        fontWeight: FontWeight.w500,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            offset: const Offset(0, -2),
+            blurRadius: 6,
+            spreadRadius: 1,
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+        child: Row(
+          children: [
+            // Avatar
+            CircleAvatar(
+              radius: 20,
+              backgroundColor: Colors.grey.shade300,
+              child: user == null
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Colors.grey,
+                        ),
                       ),
-                    ),
-                    Spacer(),
-                    IconButton(
-                      icon: Icon(Icons.close, color: Colors.grey),
-                      onPressed: () {
-                        controller.cancelReply();
-                      },
-                    ),
-                  ],
-                ),
-              Row(
-                children: [
-                  // Avatar
-                  CircleAvatar(
-                    radius: 20,
-                    backgroundColor: Colors.grey.shade300,
-                    child:
-                        user == null
-                            ? const SizedBox(
+                    )
+                  : user.photo == null
+                      ? Icon(Icons.person, color: Colors.grey.shade700)
+                      : ClipOval(
+                          child: CachedNetworkImage(
+                            imageUrl: user.photo!,
+                            width: 40,
+                            height: 40,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => const SizedBox(
                               width: 20,
                               height: 20,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  Colors.grey,
-                                ),
-                              ),
-                            )
-                            : user.photo == null
-                            ? Icon(Icons.person, color: Colors.grey.shade700)
-                            : ClipOval(
-                              child: CachedNetworkImage(
-                                imageUrl: user.photo!,
-                                width: 40, // 2 * radius
-                                height: 40,
-                                fit: BoxFit.cover,
-                                placeholder:
-                                    (context, url) => const SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                      ),
-                                    ),
-                                errorWidget:
-                                    (context, url, error) => Icon(
-                                      Icons.error,
-                                      color: Colors.red.shade400,
-                                    ),
                               ),
                             ),
-                  ),
+                            errorWidget: (context, url, error) => Icon(
+                              Icons.error,
+                              color: Colors.red.shade400,
+                            ),
+                          ),
+                        ),
+            ),
 
-                  SizedBox(width: 3.w),
-                  // Input Field
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller: controller.commentController,
-                              focusNode: controller.commentFocusNode,
-                              decoration: InputDecoration(
-                                hintText:
-                                    isReply
-                                        ? 'Post your reply here'
-                                        : 'Post your comment here',
-                                border: InputBorder.none,
-                                hintStyle: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ),
+            SizedBox(width: 3.w),
+            // Input Field
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: controller.commentController,
+                        focusNode: controller.commentFocusNode,
+                        decoration: InputDecoration(
+                          hintText: isReply
+                              ? 'Post your reply here'
+                              : 'Post your comment here',
+                          border: InputBorder.none,
+                          hintStyle: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
                           ),
-                          IconButton(
-                            onPressed:
-                                canSend
-                                    ? () async {
-                                      controller.isPosting.value = true;
-                                      await controller.postCommentOrReply();
-                                      controller.isPosting.value = false;
-                                    }
-                                    : null,
-                            icon:
-                                isSending
-                                    ? const SizedBox(
-                                      width: 18,
-                                      height: 18,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                      ),
-                                    )
-                                    : Icon(
-                                      Icons.send,
-                                      color:
-                                          canSend
-                                              ? AppColors.primaryText
-                                              : Colors.grey.shade400,
-                                    ),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                    IconButton(
+                      onPressed: canSend
+                          ? () async {
+                              controller.isPosting.value = true;
+                              await controller.postCommentOrReply();
+                              controller.isPosting.value = false;
+                            }
+                          : null,
+                      icon: isSending
+                          ? const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : Icon(
+                              Icons.send,
+                              color: canSend
+                                  ? AppColors.primaryText
+                                  : Colors.grey.shade400,
+                            ),
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      );
-    });
+      ),
+    );
+  });
+}
+void _onCommentTextChanged() {
+  if (controller.isReplying.value &&
+      controller.commentController.text.trim().isEmpty) {
+    controller.cancelReply();
   }
+}
+
 }

@@ -103,25 +103,6 @@ class FilterBottomSheetWidget extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryColor,
-                    padding:  EdgeInsets.symmetric(
-                      vertical: 1.h,
-                      horizontal: 10.w,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                    favController.selectedDate.value = tempSelectedDate.value;
-                    favController.selectedCategory.value = tempSelectedCategory.value;
-                    favController.applyFilters();
-                  },
-                  child: const Text("Apply"),
-                ),
                 if (favController.selectedDate.value != null ||
                     favController.selectedCategory.value != null)
                   Padding(
@@ -144,6 +125,26 @@ class FilterBottomSheetWidget extends StatelessWidget {
                       ),
                     ),
                   ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryColor,
+                    padding:  EdgeInsets.symmetric(
+                      vertical: 1.h,
+                      horizontal: 10.w,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    favController.selectedDate.value = tempSelectedDate.value;
+                    favController.selectedCategory.value = tempSelectedCategory.value;
+                    favController.applyFilters();
+                  },
+                  child: const Text("Apply"),
+                ),
+                
               ],
             ),
             const SizedBox(height: 20),

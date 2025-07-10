@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -17,21 +19,50 @@ class UpdatesScreen extends StatefulWidget {
   State<UpdatesScreen> createState() => _UpdatesScreenState();
 }
 
-class _UpdatesScreenState extends State<UpdatesScreen> {
+class _UpdatesScreenState extends State<UpdatesScreen> with WidgetsBindingObserver {
   final AuthController authController = Get.find();
   final UpdateController updateController = Get.find();
   late final bool isGuest;
+  Timer? _refreshTimer;
 
   @override
   void initState() {
     super.initState();
-    updateController.getUpdates(shouldClear: true);
+    WidgetsBinding.instance.addObserver(this);
     isGuest = authController.isGuest;
+
+    // Initial load
+    updateController.getUpdates(shouldClear: true);
+
+    // Clear flags after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       updateController.clearNewUpdatesFlag();
     });
+
+    // Start periodic refresh
+    _startPeriodicUpdates();
   }
 
+  void _startPeriodicUpdates() {
+    _refreshTimer = Timer.periodic(const Duration(minutes: 2), (_) {
+      updateController.getUpdates();
+    });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _refreshTimer?.cancel(); // Prevent memory leaks
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Optionally refresh when resumed
+    if (state == AppLifecycleState.resumed) {
+      updateController.getUpdates();
+    }
+  }
   @override
   Widget build(BuildContext context) {
     final item = updateController.memberModel.value?.data;
@@ -107,7 +138,7 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
                                   ),
                                   child: Center(
                                     child: Text(
-                                      "${filteredList.length}",
+                                      "${filteredList.length + (!isGuest && (updateController.isMembershipExpired || updateController.isMembershipExpiringSoon) ? 1 : 0)}",
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 12,
@@ -123,7 +154,6 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
                             thickness: 1,
                             height: 1,
                           ),
-
                           // Notification List
                           Expanded(
                             child:
@@ -185,7 +215,7 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
                                                   Text(
                                                     updateController
                                                             .isMembershipExpired
-                                                        ? "Expired on ${updateController.expiryDateFormatted}"
+                                                        ? "Expired - ${updateController.paymentDateFormatted} to ${updateController.expiryDateFormatted}"
                                                         : "Expires in ${updateController.daysRemaining} days",
                                                     style: const TextStyle(
                                                       fontSize: 12,
@@ -231,7 +261,7 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
                                                             );
                                                           } else {
                                                             throw 'Could not launch $url';
-                                                         }
+                                                          }
                                                         },
                                                         child: const Text(
                                                           "Renew Membership",
@@ -249,8 +279,9 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
 
                                           // Now check for notifications
                                           if (filteredTodayList.isEmpty &&
-                                              filteredOlderList.isEmpty &&
-                                              (!isExpired || isGuest))
+    filteredOlderList.isEmpty &&
+    !(!isGuest && (updateController.isMembershipExpired || updateController.isMembershipExpiringSoon)))
+
                                             Center(
                                               child: Padding(
                                                 padding: EdgeInsets.only(

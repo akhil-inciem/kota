@@ -84,6 +84,7 @@ class _AdvertisementListState extends State<AdvertisementList> {
                         const ClampingScrollPhysics(), // disables iOS bouncing
                   ),
                   child: PageView.builder(
+                    key: PageStorageKey('advertisement_page_view'),
                     controller: _pageController,
                     itemCount: advertisements.length,
                     onPageChanged: (index) {

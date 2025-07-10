@@ -32,35 +32,71 @@ class _PollListState extends State<PollList> {
 
       final items = controller.filteredPolls.value; // ✅ access .value
 
-      return ListView.separated(
-        itemCount: items.length,
-        separatorBuilder: (_, __) => Divider(color: Colors.grey.shade300),
-        itemBuilder: (context, index) {
-          final poll = items[index];
-          // final fullIndex = controller.pollsList.indexWhere((e) => e.id == poll.id);
-          // final selected = controller.selectedPollAnswers[fullIndex] ?? {};
-          return Obx(() {
+     if (items.isEmpty) {
+        return RefreshIndicator(
+          onRefresh: () async {
+            await controller
+                .loadPolls(); // Replace with your actual method
+          },
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: [
+              SizedBox(height: 20.h), // add space to allow pull
+              Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset(
+                      'assets/icons/forum_unselected.png',
+                      height: 8.h,
+                      width: 8.h,
+                    ),
+                    const SizedBox(height: 12),
+                    const Text(
+                      "No Polls Available",
+                      style: TextStyle(fontSize: 18, color: Colors.black),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+
+      return RefreshIndicator(
+        onRefresh: () async {
+            await controller
+                .loadPolls(); // Replace with your actual method
+          },
+        child: ListView.separated(
+          itemCount: items.length,
+          separatorBuilder: (_, __) => Divider(color: Colors.grey.shade300),
+          itemBuilder: (context, index) {
+            final poll = items[index];
+            // final fullIndex = controller.pollsList.indexWhere((e) => e.id == poll.id);
+            // final selected = controller.selectedPollAnswers[fullIndex] ?? {};
+            return Obx(() {
               return PollCard(
                 poll: poll,
                 pollIndex: index, // Optional now
                 selectedOptions: controller.selectedPollAnswers[poll.id] ?? {},
                 onToggle: controller.togglePollOption,
               );
-            }
-          );
-
-        },
+            });
+          },
+        ),
       );
     });
   }
 }
 
-
 class PollCard extends StatelessWidget {
   final PollData poll;
   final int pollIndex;
   final Set<int> selectedOptions;
-  final void Function(String pollIndex, int optionIndex, bool isMultiple) onToggle;
+  final void Function(String pollIndex, int optionIndex, bool isMultiple)
+  onToggle;
 
   PollCard({
     super.key,
@@ -87,7 +123,7 @@ class PollCard extends StatelessWidget {
     final isExpired = poll.expired == true; // 👈 Check expiry
 
     return Container(
-      padding:  EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
       decoration: const BoxDecoration(color: Colors.white),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,12 +184,11 @@ class PollCard extends StatelessWidget {
   }
 
   List<String> _parseVotes(List<String> options) {
-  return options.map((opt) {
-    final raw = poll.reactionCounts[opt]; 
-    return raw?.toString() ?? '0';
-  }).toList();
-}
-
+    return options.map((opt) {
+      final raw = poll.reactionCounts[opt];
+      return raw?.toString() ?? '0';
+    }).toList();
+  }
 
   List<int> _getAdjustedVotes(List<String> votes) {
     return List.generate(votes.length, (i) {
@@ -170,12 +205,15 @@ class PollCard extends StatelessWidget {
       children: [
         Text(
           displayTime,
-          style: const TextStyle(fontStyle: FontStyle.italic,color: Colors.grey, fontSize: 12),
+          style: const TextStyle(
+            fontStyle: FontStyle.italic,
+            color: Colors.grey,
+            fontSize: 12,
+          ),
         ),
         authController.userModel.value?.data.id == poll.createdBy &&
-poll.editable! &&
-selectedOptions.isEmpty
-
+                poll.editable! &&
+                selectedOptions.isEmpty
             ? GestureDetector(
               onTap: () {
                 Get.to(() => NewPollPage(pollToEdit: poll));
@@ -207,7 +245,11 @@ selectedOptions.isEmpty
       onTap:
           isExpired
               ? null
-              : () => onToggle(poll.id!, index, isMultiple), // 👈 disable if expired
+              : () => onToggle(
+                poll.id!,
+                index,
+                isMultiple,
+              ), // 👈 disable if expired
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Row(
@@ -219,58 +261,56 @@ selectedOptions.isEmpty
             ),
             const SizedBox(width: 8),
             Expanded(
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Text(
-              optionText,
-              style: TextStyle(
-                color: isExpired ? Colors.grey : Colors.black,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          optionText,
+                          style: TextStyle(
+                            color: isExpired ? Colors.grey : Colors.black,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        adjustedOptionVotes.toString(),
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Stack(
+                    children: [
+                      Container(
+                        height: 8,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      FractionallySizedBox(
+                        widthFactor: percent,
+                        child: Container(
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryText,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-          ),
-          Text(
-             adjustedOptionVotes.toString(),
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-              color: Colors.black,
-            ),
-          ),
-        ],
-      ),
-      const SizedBox(height: 4),
-      Stack(
-        children: [
-          Container(
-            height: 8,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-          FractionallySizedBox(
-            widthFactor: percent,
-            child: Container(
-              height: 8,
-              decoration: BoxDecoration(
-                color: AppColors.primaryText,
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          ),
-        ],
-      ),
-    ],
-  ),
-),
-
-
           ],
         ),
       ),
@@ -326,7 +366,6 @@ selectedOptions.isEmpty
     );
   }
 
-
   String _formatTime(String? createdAt) {
     if (createdAt == null || createdAt.isEmpty) return '';
 
@@ -349,6 +388,7 @@ selectedOptions.isEmpty
     }
   }
 }
+
 class PollShimmer extends StatelessWidget {
   final int itemCount;
 
@@ -368,11 +408,7 @@ class PollShimmer extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 50.w,
-                  height: 14,
-                  color: Colors.white,
-                ),
+                Container(width: 50.w, height: 14, color: Colors.white),
                 SizedBox(height: 2.h),
                 Container(
                   width: double.infinity,
@@ -380,18 +416,18 @@ class PollShimmer extends StatelessWidget {
                   color: Colors.white,
                 ),
                 SizedBox(height: 2.h),
-                Container(
-                  width: 80.w,
-                  height: 1.5.h,
-                  color: Colors.white,
+                Container(width: 80.w, height: 1.5.h, color: Colors.white),
+                SizedBox(height: 2.h),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Container(
+                    height: 3.h,
+                    width: 20.w,
+                    color: Colors.white,
+                  ),
                 ),
-                SizedBox(height: 2.h,),
-                Align(alignment: Alignment.centerRight,child: Container(height: 3.h,width: 20.w,color: Colors.white,)),
                 SizedBox(height: 1.h),
-                Divider(
-                  color: Colors.grey.shade300,
-                  thickness: 1,
-                )
+                Divider(color: Colors.grey.shade300, thickness: 1),
               ],
             ),
           ),

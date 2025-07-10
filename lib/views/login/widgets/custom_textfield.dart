@@ -34,7 +34,7 @@ class CustomTextField extends StatelessWidget {
         autovalidateMode: AutovalidateMode.onUserInteraction,
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: TextStyle(fontSize: 14.sp, color: const Color(0xFF839099)),
+          hintStyle: TextStyle(fontSize: 15.sp, color: const Color(0xFF839099)),
           filled: true,
           fillColor: fillColor ?? AppColors.primaryBackground,
           isDense: true,

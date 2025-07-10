@@ -1,8 +1,11 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:image_cropping/image_cropping.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/auth_controller.dart';
@@ -11,6 +14,8 @@ import 'package:kota/views/login/widgets/custom_button.dart';
 import 'package:kota/views/login/widgets/labelled_textfield.dart';
 import 'package:kota/views/profile/widgets/shimmer/edit_profile_button_shimmer.dart';
 import 'package:kota/views/profile/widgets/shimmer/edit_profile_shimmer.dart';
+import 'package:kota/views/widgets/custom_snackbar.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -25,12 +30,51 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final authController = Get.find<AuthController>();
 
   void pickImage(ImageSource source) async {
+  try {
     final ImagePicker picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: source);
+
+    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+
+    final pickedFile = await picker.pickImage(
+      source: source,
+      imageQuality: 90, // compress before crop
+    );
+
     if (pickedFile != null) {
-      userController.setProfileImage(File(pickedFile.path));
-    } else {}
+      final bytes = await pickedFile.readAsBytes();
+
+      ImageCropping.cropImage(
+        context: Get.context!,
+        imageBytes: bytes,
+        onImageDoneListener: (croppedBytes) async {
+          if (croppedBytes == null) return;
+
+          final file = await _saveBytesToFile(croppedBytes);
+          final fileSizeInMB = await file.length() / (1024 * 1024);
+
+          if (fileSizeInMB > 5) {
+            CustomSnackbars.oops(
+              'Please select images smaller than 5 MB',
+              'Image too large',
+            );
+            return;
+          }
+
+          userController.setProfileImage(file);
+        },
+      );
+    }
+  } catch (e, st) {
+    print("Error picking/cropping profile image: $e");
+    print("Stacktrace: $st");
   }
+}
+Future<File> _saveBytesToFile(Uint8List bytes) async {
+  final tempDir = await getTemporaryDirectory();
+  final path = '${tempDir.path}/${DateTime.now().millisecondsSinceEpoch}_profile.jpg';
+  return await File(path).writeAsBytes(bytes);
+}
+
 
   @override
   void initState() {
@@ -186,6 +230,43 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
+   Widget _buildFormSection(UserController userController) {
+    final isGuest = authController.isGuest;
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 2.w),
+      child: Column(
+        children: [
+          LabelledTextField(
+            label: isGuest ? "Full Name" : "First Name",
+            hintText:
+                isGuest ? "Enter your full name" : "Enter your first name",
+            controller: userController.firstNameController,
+          ),
+          if (!isGuest) ...[
+            SizedBox(height: 3.h),
+            LabelledTextField(
+              label: "Last Name",
+              hintText: "Enter your last name",
+              controller: userController.lastNameController,
+            ),
+          ],
+          SizedBox(height: 3.h),
+          LabelledTextField(
+            label: "Phone Number",
+            hintText: "Enter your phone number",
+            controller: userController.phoneController,
+          ),
+          SizedBox(height: 3.h),
+          LabelledTextField(
+            label: "Email",
+            hintText: "Enter your email address",
+            controller: userController.emailController,
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildProfilePictureSection(user) {
     return Obx(() {
       final selectedImage = userController.selectedImage.value;
@@ -254,42 +335,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
   }
 
-  Widget _buildFormSection(UserController userController) {
-    final isGuest = authController.isGuest;
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 2.w),
-      child: Column(
-        children: [
-          LabelledTextField(
-            label: isGuest ? "Full Name" : "First Name",
-            hintText:
-                isGuest ? "Enter your full name" : "Enter your first name",
-            controller: userController.firstNameController,
-          ),
-          if (!isGuest) ...[
-            SizedBox(height: 3.h),
-            LabelledTextField(
-              label: "Last Name",
-              hintText: "Enter your last name",
-              controller: userController.lastNameController,
-            ),
-          ],
-          SizedBox(height: 3.h),
-          LabelledTextField(
-            label: "Phone Number",
-            hintText: "Enter your phone number",
-            controller: userController.phoneController,
-          ),
-          SizedBox(height: 3.h),
-          LabelledTextField(
-            label: "Email",
-            hintText: "Enter your email address",
-            controller: userController.emailController,
-          ),
-        ],
-      ),
-    );
-  }
+ 
 
   void _showImagePickerDialog() {
     Get.bottomSheet(
@@ -368,7 +414,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             SizedBox(height: 1.h),
             Text(
               label,
-              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500),
+              style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500),
             ),
           ],
         ),

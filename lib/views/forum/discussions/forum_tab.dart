@@ -8,14 +8,26 @@ import 'package:kota/views/forum/discussions/widgets/forumlist.dart';
 import 'package:kota/views/login/widgets/custom_button.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class ForumDiscussionTab extends StatelessWidget {
+class ForumDiscussionTab extends StatefulWidget {
   const ForumDiscussionTab({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final forumController = Get.find<ForumController>();
+  State<ForumDiscussionTab> createState() => _ForumDiscussionTabState();
+}
+
+class _ForumDiscussionTabState extends State<ForumDiscussionTab> {
+  final forumController = Get.find<ForumController>();
     final AuthController authController = Get.find<AuthController>();
 
+  @override
+  void initState() {
+    super.initState();
+     forumController.loadThreads();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,

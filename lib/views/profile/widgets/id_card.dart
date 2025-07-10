@@ -101,7 +101,7 @@ class _IdCardWidgetState extends State<IdCardWidget> {
                     _buildLabelValue(
                       label: 'EMAIL ID',
                       value: widget.user.email ?? 'athiathi125@gmail.com',
-                      valueFontSize: 14.sp,
+                      valueFontSize: 15.sp,
                     ),
                   ],
                 ),
@@ -156,7 +156,7 @@ class _IdCardWidgetState extends State<IdCardWidget> {
                             value:
                                 widget.user.address ??
                                 'Bethel House, Asramam, Kollam, Kerala 691002 /n ',
-                            valueFontSize: 14.sp,
+                            valueFontSize: 15.sp,
                             maxLines: 2,
                           ),
                           Align(

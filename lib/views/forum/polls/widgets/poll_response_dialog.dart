@@ -9,7 +9,11 @@ class PollResponsesDialog extends StatelessWidget {
   final List<ReactionData> reactions;
   final int totalVotes;
 
-  const PollResponsesDialog({super.key, required this.reactions,required this.totalVotes});
+  const PollResponsesDialog({
+    super.key,
+    required this.reactions,
+    required this.totalVotes,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -56,14 +60,13 @@ class PollResponsesDialog extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10.sp),
                     ),
                     child: Text(
-  '$totalVotes ${totalVotes == 1 ? "Vote" : "Votes"}',
-  style: TextStyle(
-    fontSize: 12.sp,
-    fontWeight: FontWeight.w600,
-    color: Colors.white,
-  ),
-),
-
+                      '$totalVotes ${totalVotes == 1 ? "Vote" : "Votes"}',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                   Spacer(),
                   GestureDetector(
@@ -94,106 +97,127 @@ class PollResponsesDialog extends StatelessWidget {
                   child: Text("No votes yet"),
                 )
                 : Flexible(
-  child: ListView.separated(
-    shrinkWrap: true,
-    separatorBuilder: (context, index) =>
-        Divider(color: Colors.grey.shade400),
-    padding: EdgeInsets.symmetric(vertical: 1.h),
-    itemCount: reactions.length,
-    itemBuilder: (context, index) {
-      final reaction = reactions[index];
-      return Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: 6.w,
-          vertical: 1.h,
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start, // updated
-          children: [
-            // Profile Picture
-            Container(
-              width: 12.w,
-              height: 12.w,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: reaction.userPhoto != null &&
-                        reaction.userPhoto!.isNotEmpty
-                    ? DecorationImage(
-                        image: NetworkImage(reaction.userPhoto!),
-                        fit: BoxFit.cover,
-                      )
-                    : null,
-                color: reaction.userPhoto == null ||
-                        reaction.userPhoto!.isEmpty
-                    ? Color(0xFFE5E7EB)
-                    : null,
-              ),
-              child: reaction.userPhoto == null ||
-                      reaction.userPhoto!.isEmpty
-                  ? Icon(
-                      Icons.person,
-                      color: Color(0xFF9CA3AF),
-                      size: 6.w,
-                    )
-                  : null,
-            ),
-            SizedBox(width: 4.w),
-
-            // Name and description
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    reaction.userName ?? "Unknown User",
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF0A2C49),
-                    ),
-                  ),
-                  SizedBox(height: 0.5.h),
-                  ..._parseReaction(reaction.reaction).map(
-  (r) => Padding(
-    padding: EdgeInsets.only(bottom: 0.3.h),
-    child: Text(
-      "• $r",
-      style: TextStyle(
-        fontStyle: FontStyle.italic,
-        fontSize: 14.sp,
-        fontWeight: FontWeight.w400,
-        color: const Color(0xFF6B7280),
-      ),
-    ),
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    separatorBuilder:
+                        (context, index) =>
+                            Divider(color: Colors.grey.shade400),
+                    padding: EdgeInsets.symmetric(vertical: 1.h),
+                    itemCount: reactions.length,
+                    itemBuilder: (context, index) {
+                      final reaction = reactions[index];
+                      return Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 6.w,
+                          vertical: 1.h,
+                        ),
+                        child: Row(
+                          crossAxisAlignment:
+                              CrossAxisAlignment.start, // updated
+                          children: [
+                            // Profile Picture
+                            Container(
+  width: 12.w,
+  height: 12.w,
+  decoration: BoxDecoration(
+    shape: BoxShape.circle,
+    color: (reaction.userPhoto == null || reaction.userPhoto!.isEmpty)
+        ? const Color(0xFFE5E7EB)
+        : null,
   ),
-),
-
-                ],
-              ),
-            ),
-
-            // Time aligned with description
-            Column(
-              children: [
-                SizedBox(height: 22.sp), // aligns with description
-                Text(
-                  _formatTime(reaction.createdAt),
-                  style: TextStyle(
-                    fontStyle: FontStyle.italic,
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w400,
-                    color: Color(0xFF6B7280),
+  child: ClipOval(
+    child: reaction.userPhoto != null && reaction.userPhoto!.isNotEmpty
+        ? Image.network(
+            reaction.userPhoto!,
+            fit: BoxFit.cover,
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Center(
+                child: SizedBox(
+                  width: 24, // or any size suitable
+                  height: 24,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
                   ),
                 ),
-              ],
+              );
+            },
+            errorBuilder: (context, error, stackTrace) {
+              return Icon(
+                Icons.person,
+                color: const Color(0xFF9CA3AF),
+                size: 6.w,
+              );
+            },
+          )
+        : Center(
+            child: Icon(
+              Icons.person,
+              color: const Color(0xFF9CA3AF),
+              size: 6.w,
             ),
-          ],
-        ),
-      );
-    },
+          ),
   ),
 ),
 
+                            SizedBox(width: 4.w),
+
+                            // Name and description
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    reaction.userName ?? "Unknown User",
+                                    style: TextStyle(
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: Color(0xFF0A2C49),
+                                    ),
+                                  ),
+                                  SizedBox(height: 0.5.h),
+                                  ..._parseReaction(reaction.reaction).map(
+                                    (r) => Padding(
+                                      padding: EdgeInsets.only(bottom: 0.3.h),
+                                      child: Text(
+                                        "• $r",
+                                        style: TextStyle(
+                                          fontStyle: FontStyle.italic,
+                                          fontSize: 15.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: const Color(0xFF6B7280),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            // Time aligned with description
+                            Column(
+                              children: [
+                                SizedBox(
+                                  height: 22.sp,
+                                ), // aligns with description
+                                Text(
+                                  _formatTime(reaction.createdAt),
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic,
+                                    fontSize: 13.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: Color(0xFF6B7280),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
 
             SizedBox(height: 2.h),
           ],
@@ -203,25 +227,25 @@ class PollResponsesDialog extends StatelessWidget {
   }
 
   List<String> _parseReaction(String? rawReaction) {
-  if (rawReaction == null || rawReaction.isEmpty) {
-    return ["No reaction"];
-  }
-
-  if (rawReaction.trim().startsWith('[') &&
-      rawReaction.trim().endsWith(']')) {
-    try {
-      final parsed = jsonDecode(rawReaction);
-      if (parsed is List) {
-        return parsed.map((e) => e.toString()).toList();
-      }
-    } catch (e) {
-      // Fall through to single item fallback
+    if (rawReaction == null || rawReaction.isEmpty) {
+      return ["No reaction"];
     }
-  }
 
-  // Fallback: treat whole input as one item
-  return [rawReaction];
-}
+    if (rawReaction.trim().startsWith('[') &&
+        rawReaction.trim().endsWith(']')) {
+      try {
+        final parsed = jsonDecode(rawReaction);
+        if (parsed is List) {
+          return parsed.map((e) => e.toString()).toList();
+        }
+      } catch (e) {
+        // Fall through to single item fallback
+      }
+    }
+
+    // Fallback: treat whole input as one item
+    return [rawReaction];
+  }
 
   String _formatTime(String? createdAt) {
     if (createdAt == null || createdAt.isEmpty) {
