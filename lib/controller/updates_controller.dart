@@ -20,7 +20,6 @@ class UpdateController extends GetxController with WidgetsBindingObserver {
   RxList<Map<String, dynamic>> todayList = <Map<String, dynamic>>[].obs;
   RxList<Map<String, dynamic>> olderList = <Map<String, dynamic>>[].obs;
   RxBool hasNewUpdates = false.obs;
-  DateTime? _latestFetchedDate;
   RxInt newItemsCount = 0.obs;
   RxString searchQuery = ''.obs;
   RxList<Map<String, dynamic>> filteredList = <Map<String, dynamic>>[].obs;
@@ -46,7 +45,7 @@ class UpdateController extends GetxController with WidgetsBindingObserver {
 
   void _startGlobalTimer() {
     _globalTimer?.cancel();
-    _globalTimer = Timer.periodic(const Duration(minutes: 2), (_) {
+    _globalTimer = Timer.periodic(const Duration(minutes: 1), (_) {
       getUpdates();
     });
   }
@@ -70,9 +69,11 @@ class UpdateController extends GetxController with WidgetsBindingObserver {
     final cachedJson = prefs.getString('cached_updates');
 
     UpdatesModel? cachedModel;
-    if (cachedJson != null) {
+    if (cachedJson != null && cachedJson != "null") {
       final parsed = json.decode(cachedJson);
-      cachedModel = UpdatesModel.fromJson(parsed);
+      if (parsed != null && parsed is Map<String, dynamic>) {
+        cachedModel = UpdatesModel.fromJson(parsed);
+      }
     }
 
     // Always fetch fresh data
@@ -98,7 +99,9 @@ class UpdateController extends GetxController with WidgetsBindingObserver {
       isLoadingUpdates.value = true;
 
       // Save new cache
-      await prefs.setString('cached_updates', resultJson);
+      if (result != null) {
+        await prefs.setString('cached_updates', resultJson);
+      }
 
       updatesModel.value = result;
       memberModel.value = memberShip;
@@ -110,6 +113,174 @@ class UpdateController extends GetxController with WidgetsBindingObserver {
     } finally {
       isLoadingUpdates.value = false;
     }
+  }
+
+  void _processUpdates(UpdatesModel? model) {
+    final data = model?.data;
+    if (data == null) return;
+
+    final List<Map<String, dynamic>> tempCombined = [];
+
+    // Normalize News
+    for (final item in data.news) {
+      final parsedDate =
+          DateTime.tryParse(item['added_on'] ?? '') ?? DateTime.now();
+      tempCombined.add({
+        'type': 'news',
+        'title': item['news_title'] ?? 'No Title',
+        'description': item['news_sub_title'] ?? 'No Description',
+        'date': parsedDate,
+        'news_id': item['news_id'],
+      });
+    }
+
+    // Normalize Events
+    for (final item in data.events) {
+      final parsedDate =
+          DateTime.tryParse(item['added_on'] ?? '') ?? DateTime.now();
+      tempCombined.add({
+        'type': 'event',
+        'title': item['event_name'] ?? 'Event',
+        'description': item['event_short_description'] ?? '',
+        'date': parsedDate,
+        'event_id': item['event_id'],
+      });
+    }
+
+    // Normalize Threads
+    for (final item in data.threads) {
+      final parsedDate =
+          DateTime.tryParse(item['created_at'] ?? '') ?? DateTime.now();
+      tempCombined.add({
+        'type': 'thread',
+        'title': "New Discussion created",
+        'description': item['title'] ?? 'Untitled',
+        'date': parsedDate,
+        'thread_id': item['id'],
+      });
+    }
+
+    // Normalize Likes on Thread
+    for (final item in data.likedMembers) {
+      final name = _getFullName(item);
+      final rawMessage = item['message'] ?? '$name liked your thread';
+      final parsedDate =
+          DateTime.tryParse(item['created_at'] ?? '') ?? DateTime.now();
+      tempCombined.add({
+        'type': 'like_post',
+        'title': _removeMentionsFromMessage(rawMessage),
+        'photo': item['photo'],
+        'date': parsedDate,
+        'thread_id': item['thread_id'],
+      });
+    }
+
+    // Normalize Comments on Thread
+    for (final item in data.commentedMembers) {
+      final name = _getFullName(item);
+      final rawMessage = item['message'] ?? '$name commented on your thread';
+      final parsedDate =
+          DateTime.tryParse(item['created_at'] ?? '') ?? DateTime.now();
+      tempCombined.add({
+        'type': 'comment_post',
+        'title': _removeMentionsFromMessage(rawMessage),
+        'photo': item['photo'],
+        'content': item['content'],
+        'date': parsedDate,
+        'thread_id': item['thread_id'],
+      });
+    }
+
+    // Normalize Replies on Comment
+    for (final item in data.repliedMembers) {
+      final name = _getFullName(item);
+      final rawMessage = item['message'] ?? '$name replied to your comment';
+      final parsedDate =
+          DateTime.tryParse(item['created_at'] ?? '') ?? DateTime.now();
+      tempCombined.add({
+        'type': 'reply_comment',
+        'title': _removeMentionsFromMessage(rawMessage),
+        'content': item['content'],
+        'photo': item['photo'],
+        'date': parsedDate,
+        'comment_id': item['comment_id'],
+        'thread_id': item['thread_id'],
+      });
+    }
+
+    //Normalize Like on Comment
+    for (final item in data.likedComments) {
+      final name = _getFullName(item);
+      final rawMessage = item['message'] ?? '$name liked your comment';
+      final parsedDate =
+          DateTime.tryParse(item['created_at'] ?? '') ?? DateTime.now();
+      tempCombined.add({
+        'type': 'like_comment',
+        'title': _removeMentionsFromMessage(rawMessage),
+        'content': item['content'],
+        'photo': item['photo'],
+        'date': parsedDate,
+        'comment_id': item['comment_id'],
+        'thread_id': item['thread_id'],
+      });
+    }
+
+    // Normalize Poll Created
+    for (final item in data.pollCreated) {
+      final parsedDate =
+          DateTime.tryParse(item['created_at'] ?? '') ?? DateTime.now();
+      tempCombined.add({
+        'type': 'poll_created',
+        'title': "New Poll created",
+        'description': item['title'] ?? '',
+        'date': parsedDate,
+        'poll_id': item['id'],
+      });
+    }
+
+    // Sort by date (latest first)
+    tempCombined.sort(
+      (a, b) => (b['date'] as DateTime).compareTo(a['date'] as DateTime),
+    );
+
+    // Categorize
+    combinedList.value = tempCombined;
+    todayList.value =
+        tempCombined.where((item) {
+          return DateUtils.isSameDay(item['date'] as DateTime, DateTime.now());
+        }).toList();
+
+    olderList.value =
+        tempCombined.where((item) {
+          return !DateUtils.isSameDay(item['date'] as DateTime, DateTime.now());
+        }).toList();
+
+    filteredList.value = tempCombined;
+  }
+
+  String _removeMentionsFromMessage(String text) {
+    final parts = text.split(':');
+    if (parts.length < 2) return text;
+
+    final prefix = parts[0]; // e.g., "NAIR commented on your thread"
+    final content = parts
+        .sublist(1)
+        .join(':'); // join in case multiple ':' exist
+
+    final mentionPattern = RegExp(r'@[^@^]+?\^');
+    final cleanedContent = content.replaceAll(mentionPattern, '').trim();
+
+    return '$prefix: $cleanedContent';
+  }
+
+  String _getFullName(Map<String, dynamic> item) {
+    final firstName = item['first_name']?.toString().trim();
+    final lastName = item['last_name']?.toString().trim();
+
+    if (firstName != null && firstName.isNotEmpty) {
+      return '$firstName ${lastName ?? ''}'.trim();
+    }
+    return lastName ?? 'Someone';
   }
 
   Future<void> _handleNewUpdateFlags(
@@ -141,75 +312,6 @@ class UpdateController extends GetxController with WidgetsBindingObserver {
     newItemsCount.value = newCount;
 
     if (shouldClear) clearNewUpdatesFlag();
-  }
-
-  void _processUpdates(UpdatesModel? model) {
-    final newsList = model?.data?.news ?? [];
-    final eventsList = model?.data?.events ?? [];
-
-    final List<Map<String, dynamic>> tempCombined = [];
-
-    // Normalize News
-    for (final item in newsList) {
-      final dateStr = item['added_on'] ?? '';
-      final parsedDate = DateTime.tryParse(dateStr) ?? DateTime.now();
-      tempCombined.add({
-        'type': 'news',
-        'title': item['news_title'] ?? 'No Title',
-        'description': item['news_sub_title'] ?? 'No Description',
-        'date': parsedDate,
-        'news_id': item['news_id'], // ✅ Include news_id
-      });
-    }
-
-    // Normalize Events
-    for (final item in eventsList) {
-      String? dateStr;
-      String? title;
-      String? description;
-      String? eventId;
-
-      if (item is Map<String, dynamic>) {
-        dateStr = item['added_on'] ?? '';
-        title = item['event_name'] ?? 'Event';
-        description = item['event_short_description'] ?? item.toString();
-        eventId = item['event_id']; // ✅ Include event_id
-      } else {
-        dateStr = '';
-        title = 'Event';
-        description = item.toString();
-        eventId = null;
-      }
-
-      final parsedDate = DateTime.tryParse(dateStr ?? '') ?? DateTime.now();
-      tempCombined.add({
-        'type': 'event',
-        'title': title,
-        'description': description,
-        'date': parsedDate,
-        'event_id': eventId, // ✅ Include event_id
-      });
-    }
-
-    tempCombined.sort(
-      (a, b) => (b['date'] as DateTime).compareTo(a['date'] as DateTime),
-    );
-
-    combinedList.value = tempCombined;
-
-    todayList.value =
-        tempCombined.where((item) {
-          final date = item['date'] as DateTime;
-          return DateUtils.isSameDay(date, DateTime.now());
-        }).toList();
-
-    olderList.value =
-        tempCombined.where((item) {
-          final date = item['date'] as DateTime;
-          return !DateUtils.isSameDay(date, DateTime.now());
-        }).toList();
-
-    filteredList.value = tempCombined;
   }
 
   bool get isMembershipExpired => memberModel.value?.data?.status == 'expired';

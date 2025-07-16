@@ -111,8 +111,11 @@ class _AddImageSectionState extends State<AddImageSection> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: List.generate(_selectedImages.length, (index) {
                       final image = _selectedImages[index];
-                      return Padding(
-                        padding: EdgeInsets.only(right: 2.w,),
+                      return Container(
+                        margin: EdgeInsets.only(
+                          right: 3.w,
+                          top: 1.h,
+                        ), // Add space for overflow
                         child: Stack(
                           clipBehavior: Clip.none,
                           children: [
@@ -129,15 +132,16 @@ class _AddImageSectionState extends State<AddImageSection> {
                               ),
                             ),
                             Positioned(
-                              top: -1.h,
+                              top: -1.h, // push it slightly above the container
                               right: -1.w,
                               child: GestureDetector(
                                 onTap: () {
                                   setState(() {
                                     _selectedImages.removeAt(index);
                                   });
-                                  // Optional: remove from controller
-                                  Get.find<ForumController>().removeImage(index);
+                                  Get.find<ForumController>().removeImage(
+                                    index,
+                                  );
                                 },
                                 child: Container(
                                   height: 2.5.h,

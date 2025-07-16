@@ -35,42 +35,52 @@ class AuthController extends GetxController {
         status: true,
         message: "Restored Session",
         role: role,
-        data: UserData(id: userId, isGuest: isGuest ? 1 : 0),
+        data: UserData(id: userId, isGuest: isGuest),
       );
     }
   }
 
-  Future<bool> loginAsUser(String username, String password) async {
-    try {
-      isLoading.value = true;
-      final response = await _authService.login(username, password);
-      if (response.status) {
-        userModel.value = response;
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setBool('is_logged_in', true);
-        await prefs.setBool('is_guest', userModel.value!.data.isGuest == 1);
-        await prefs.setString('user_id', userModel.value!.data.id.toString());
-        await prefs.setString('role', userModel.value!.role ?? '');
+ Future<bool> loginAsUser(String username, String password) async {
+  try {
+    isLoading.value = true;
+    final response = await _authService.login(username, password);
 
-        CustomSnackbars.success("Login Successful", "Welcome to KOTA");
-        return true;
+    if (response.status) {
+      userModel.value = response;
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('is_logged_in', true);
+      await prefs.setBool('is_guest', userModel.value!.data.isGuest == 1);
+      await prefs.setString('user_id', userModel.value!.data.id.toString());
+      await prefs.setString('role', userModel.value!.role ?? '');
+      CustomSnackbars.success("Login Successful", "Welcome to KOTA");
+      return true;
+    } else {
+      // ✅ Check if the message indicates expiration
+      final errorMsg = response.message?.toLowerCase() ?? '';
+      if (errorMsg.contains("expired") || errorMsg.contains("renew the membership")) {
+        CustomSnackbars.failure(
+          "Your membership has expired. Please renew it to regain access.",
+          "Access Restricted",
+        );
       } else {
         CustomSnackbars.warning(
           "We couldn’t log you in. Please check your username and password and try again.",
           "Login Failed",
         );
-        return false;
       }
-    } catch (e) {
-      CustomSnackbars.failure(
-        "Something went wrong while trying to log in. Please try again later.",
-        "Unexpected Error",
-      );
       return false;
-    } finally {
-      isLoading.value = false;
     }
+  } catch (e) {
+    CustomSnackbars.failure(
+      "Something went wrong while trying to log in. Please try again later.",
+      "Unexpected Error",
+    );
+    return false;
+  } finally {
+    isLoading.value = false;
   }
+}
+
 
   Future<bool> registerAsGuest({
   required String fullName,
@@ -97,7 +107,7 @@ class AuthController extends GetxController {
         role: 'Guest Member',
         data: UserData(
           id: guestModel.value!.data!.id!.toString(),
-          isGuest: 1,
+          isGuest: true,
         ),
       );
 

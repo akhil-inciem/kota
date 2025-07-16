@@ -19,37 +19,38 @@ class UpdatesScreen extends StatefulWidget {
   State<UpdatesScreen> createState() => _UpdatesScreenState();
 }
 
-class _UpdatesScreenState extends State<UpdatesScreen> with WidgetsBindingObserver {
+class _UpdatesScreenState extends State<UpdatesScreen>
+    with WidgetsBindingObserver {
   final AuthController authController = Get.find();
   final UpdateController updateController = Get.find();
   late final bool isGuest;
   @override
-void initState() {
-  super.initState();
-  WidgetsBinding.instance.addObserver(this);
-  isGuest = authController.isGuest;
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    isGuest = authController.isGuest;
 
-  // Initial load
-  updateController.getUpdates(shouldClear: true);
+    // Initial load
+    updateController.getUpdates(shouldClear: true);
 
-  // Clear flags after first frame
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    updateController.clearNewUpdatesFlag();
-  });
-}
-
-@override
-void dispose() {
-  WidgetsBinding.instance.removeObserver(this);
-  super.dispose();
-}
-
-@override
-void didChangeAppLifecycleState(AppLifecycleState state) {
-  if (state == AppLifecycleState.resumed) {
-    updateController.getUpdates();
+    // Clear flags after first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      updateController.clearNewUpdatesFlag();
+    });
   }
-}
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      updateController.getUpdates();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -267,9 +268,12 @@ void didChangeAppLifecycleState(AppLifecycleState state) {
 
                                           // Now check for notifications
                                           if (filteredTodayList.isEmpty &&
-    filteredOlderList.isEmpty &&
-    !(!isGuest && (updateController.isMembershipExpired || updateController.isMembershipExpiringSoon)))
-
+                                              filteredOlderList.isEmpty &&
+                                              !(!isGuest &&
+                                                  (updateController
+                                                          .isMembershipExpired ||
+                                                      updateController
+                                                          .isMembershipExpiringSoon)))
                                             Center(
                                               child: Padding(
                                                 padding: EdgeInsets.only(
@@ -308,13 +312,13 @@ void didChangeAppLifecycleState(AppLifecycleState state) {
                                                     'title': item['title'],
                                                     'description':
                                                         item['description'],
+                                                        'photo':item['photo'],
                                                     'date': item['date'],
-                                                    'type':
-                                                        item['type'], // 👈 Add type
-                                                    'news_id':
-                                                        item['news_id'], // 👈 Add news_id
+                                                    'type': item['type'],
+                                                    "thread_id":item['thread_id'],
+                                                    'news_id': item['news_id'],
                                                     'event_id':
-                                                        item['event_id'], // 👈 Add event_id
+                                                        item['event_id'],
                                                   },
                                                 ),
                                               ),
@@ -328,13 +332,13 @@ void didChangeAppLifecycleState(AppLifecycleState state) {
                                                     'title': item['title'],
                                                     'description':
                                                         item['description'],
+                                                        'photo':item['photo'],
                                                     'date': item['date'],
-                                                    'type':
-                                                        item['type'], // 👈 Add type
-                                                    'news_id':
-                                                        item['news_id'], // 👈 Add news_id
+                                                    'type': item['type'],
+                                                    "thread_id":item['thread_id'],
+                                                    'news_id': item['news_id'],
                                                     'event_id':
-                                                        item['event_id'], // 👈 Add event_id
+                                                        item['event_id'],
                                                   },
                                                 ),
                                               ),

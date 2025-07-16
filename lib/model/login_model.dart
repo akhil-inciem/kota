@@ -22,7 +22,7 @@ class LoginResponseModel {
 }
 class UserData {
   final String id;
-  final int isGuest;
+  final bool isGuest;
 
   UserData({
     required this.id,
@@ -32,7 +32,8 @@ class UserData {
   factory UserData.fromJson(Map<String, dynamic> json) {
     return UserData(
       id: json['id'].toString(),
-      isGuest: json['isguest'] ?? 0,
+      isGuest: json['isguest'] ?? false,
     );
   }
 }
+

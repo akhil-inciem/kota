@@ -30,11 +30,13 @@ class AuthApiService {
       );
 
       if (response.statusCode == 200) {
+        print(response.data);
         return LoginResponseModel.fromJson(response.data);
       } else {
         throw Exception('Login failed: ${response.statusMessage}');
       }
     } catch (e) {
+      print(e);
       throw Exception('Login failed: $e');
       
     }

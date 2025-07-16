@@ -262,12 +262,14 @@ bool _hasThreadsDataChanged(List<ForumData> newData) {
   String text = commentController.text.trim();
   if (text.isEmpty) return;
 
-  final authorFirstName = singleThread.value?.firstName ?? '';
-  final authorLastName = singleThread.value?.lastName ?? '';
-  final authorName = '$authorFirstName $authorLastName'.trim();
-  final mention = '@$authorName';
+  // Decide whom to mention: thread author or reply target
+  final mentionName = isReplying.value && replyingToName.value.isNotEmpty
+      ? replyingToName.value.trim()
+      : '${singleThread.value?.firstName ?? ''} ${singleThread.value?.lastName ?? ''}'.trim();
 
-  // Insert ^ immediately after the mention (if needed)
+  final mention = '@$mentionName';
+
+  // Add caret if the text starts with mention but doesn't have caret
   if (text.startsWith(mention) && !text.startsWith('$mention^')) {
     final rest = text.substring(mention.length).trimLeft();
     text = '$mention^ $rest';
@@ -278,10 +280,6 @@ bool _hasThreadsDataChanged(List<ForumData> newData) {
   } else {
     await postComment(text);
   }
-
-  cancelReply();
-  await loadSingleThread(selectedThreadId.value, forceRefresh: true);
-  _syncThreadIntoList(singleThread.value!);
 }
 
   Future<void> postComment(String text) async {
