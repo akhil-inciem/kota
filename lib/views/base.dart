@@ -10,10 +10,12 @@ import 'package:kota/controller/favorite_controller.dart';
 import 'package:kota/controller/forum_controller.dart';
 import 'package:kota/controller/home_controller.dart';
 import 'package:kota/controller/updates_controller.dart';
+import 'package:kota/controller/user_controller.dart';
 import 'package:kota/views/events/event_screen.dart';
 import 'package:kota/views/favourites/favourite_screen.dart';
 import 'package:kota/views/forum/discussions/forum_screen.dart';
 import 'package:kota/views/home/home_screen.dart';
+import 'package:kota/views/login/login_screen.dart';
 import 'package:kota/views/login/widgets/custom_button.dart';
 import 'package:kota/views/widgets/custom_bottom_nav_bar.dart';
 import 'package:kota/views/updates/updates_screen.dart';
@@ -57,6 +59,13 @@ class _BaseScreenState extends State<BaseScreen> {
 
     ever(homeController.index, (index) {
       _pageController.jumpToPage(index);
+    });
+
+    ever(updateController.memberModel, (_) async {
+      if (updateController.isMembershipExpired) {
+        await Get.delete<UserController>();
+        Get.offAll(() => const LoginScreen());
+      }
     });
   }
 
@@ -154,18 +163,17 @@ class _BaseScreenState extends State<BaseScreen> {
               return _pages[index];
             }),
           ),
-
           bottomNavigationBar: Obx(
-  () => CustomBottomNavBar(
-    currentIndex: homeController.index.value,
-    onTap: (index) {
-      homeController.index.value = index;
-      _pageController.jumpToPage(index);
-    },
-    newUpdatesCount: updateController.newItemsCount.value,  // 👈 pass the reactive value
-  ),
-)
-,
+            () => CustomBottomNavBar(
+              currentIndex: homeController.index.value,
+              onTap: (index) {
+                homeController.index.value = index;
+                _pageController.jumpToPage(index);
+              },
+              newUpdatesCount: updateController
+                  .newItemsCount.value, // 👈 pass the reactive value
+            ),
+          ),
         ),
       ),
     );

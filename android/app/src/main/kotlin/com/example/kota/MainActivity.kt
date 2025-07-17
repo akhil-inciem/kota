@@ -1,4 +1,4 @@
-package com.example.kota
+package com.inciem.kota
 
 import io.flutter.embedding.android.FlutterActivity
 

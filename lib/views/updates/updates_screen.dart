@@ -55,8 +55,7 @@ class _UpdatesScreenState extends State<UpdatesScreen>
   @override
   Widget build(BuildContext context) {
     final item = updateController.memberModel.value?.data;
-    final bool isExpired =
-        item != null &&
+    final bool isExpired = item != null &&
         (item.membershipExpiryDate!.isBefore(DateTime.now()) ||
             item.membershipExpiryDate!.isAtSameMomentAs(DateTime.now()));
 
@@ -64,17 +63,15 @@ class _UpdatesScreenState extends State<UpdatesScreen>
       final filteredList = updateController.filteredList;
 
       // Separate filtered list into 'Today' and 'Older'
-      final filteredTodayList =
-          filteredList.where((item) {
-            final date = item['date'] as DateTime;
-            return DateUtils.isSameDay(date, DateTime.now());
-          }).toList();
+      final filteredTodayList = filteredList.where((item) {
+        final date = item['date'] as DateTime;
+        return DateUtils.isSameDay(date, DateTime.now());
+      }).toList();
 
-      final filteredOlderList =
-          filteredList.where((item) {
-            final date = item['date'] as DateTime;
-            return !DateUtils.isSameDay(date, DateTime.now());
-          }).toList();
+      final filteredOlderList = filteredList.where((item) {
+        final date = item['date'] as DateTime;
+        return !DateUtils.isSameDay(date, DateTime.now());
+      }).toList();
 
       return Column(
         children: [
@@ -84,7 +81,6 @@ class _UpdatesScreenState extends State<UpdatesScreen>
             controller: updateController.searchController,
             onChanged: (value) => updateController.updateSearch(value),
           ),
-
           SizedBox(height: 2.h),
           Expanded(
             child: Container(
@@ -95,261 +91,226 @@ class _UpdatesScreenState extends State<UpdatesScreen>
                   topRight: Radius.circular(20),
                 ),
               ),
-              child:
-                  updateController.isLoadingUpdates.value
-                      ? const NotificationShimmer()
-                      : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Header
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 6.w,
-                              vertical: 2.h,
-                            ),
-                            child: Row(
-                              children: [
-                                const Text(
-                                  "Notifications",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: Color(0xFF0A2C49),
-                                    fontWeight: FontWeight.w600,
-                                  ),
+              child: updateController.isLoadingUpdates.value
+                  ? const NotificationShimmer()
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Header
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 6.w,
+                            vertical: 2.h,
+                          ),
+                          child: Row(
+                            children: [
+                              const Text(
+                                "Notifications",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Color(0xFF0A2C49),
+                                  fontWeight: FontWeight.w600,
                                 ),
-                                SizedBox(width: 2.w),
-                                Container(
-                                  width: 8.w,
-                                  height: 2.5.h,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: const Color(0xFF0A57C9),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      "${filteredList.length + (!isGuest && (updateController.isMembershipExpired || updateController.isMembershipExpiringSoon) ? 1 : 0)}",
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                      ),
+                              ),
+                              SizedBox(width: 2.w),
+                              Container(
+                                width: 8.w,
+                                height: 2.5.h,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: const Color(0xFF0A57C9),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "${filteredList.length + (!isGuest && (updateController.isMembershipExpired || updateController.isMembershipExpiringSoon) ? 1 : 0)}",
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
                                     ),
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                          Divider(
-                            color: Colors.grey.shade300,
-                            thickness: 1,
-                            height: 1,
-                          ),
-                          // Notification List
-                          Expanded(
-                            child:
-                                updateController.isLoadingUpdates.value
-                                    ? const Center(
-                                      child: CircularProgressIndicator(),
-                                    )
-                                    : SingleChildScrollView(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          if (!isGuest &&
-                                              (updateController
-                                                      .isMembershipExpired ||
-                                                  updateController
-                                                      .isMembershipExpiringSoon))
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 6.w,
-                                                vertical: 1.h,
+                        ),
+                        Divider(
+                          color: Colors.grey.shade300,
+                          thickness: 1,
+                          height: 1,
+                        ),
+                        // Notification List
+                        Expanded(
+                          child: updateController.isLoadingUpdates.value
+                              ? const Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : SingleChildScrollView(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      if (!isGuest &&
+                                          updateController
+                                              .isMembershipExpiringSoon)
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 6.w,
+                                            vertical: 1.h,
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const Text(
+                                                "Membership Expiring Soon",
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Color(
+                                                      0xFFFFA726), // orange
+                                                ),
                                               ),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                              SizedBox(height: 0.5.h),
+                                              const Text(
+                                                "Your membership is ending soon. Renew now to avoid interruption.",
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Color(0xFF69767E),
+                                                ),
+                                              ),
+                                              SizedBox(height: 0.5.h),
+                                              Text(
+                                                "Expires in ${updateController.daysRemaining} days",
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  color: Color(0xFF69767E),
+                                                ),
+                                              ),
+                                              SizedBox(height: 1.h),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
                                                 children: [
-                                                  Text(
-                                                    updateController
-                                                            .isMembershipExpired
-                                                        ? "Membership Expired!"
-                                                        : "Membership Expiring Soon",
-                                                    style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color:
-                                                          updateController
-                                                                  .isMembershipExpired
-                                                              ? const Color(
-                                                                0xFFE43434,
-                                                              ) // red
-                                                              : const Color(
-                                                                0xFFFFA726,
-                                                              ), // orange
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 0.5.h),
-                                                  Text(
-                                                    updateController
-                                                            .isMembershipExpired
-                                                        ? "Your access has ended. Renew now to keep enjoying your benefits."
-                                                        : "Your membership is ending soon. Renew now to avoid interruption.",
-                                                    style: const TextStyle(
-                                                      fontSize: 14,
-                                                      color: Color(0xFF69767E),
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 0.5.h),
-                                                  Text(
-                                                    updateController
-                                                            .isMembershipExpired
-                                                        ? "Expired - ${updateController.paymentDateFormatted} to ${updateController.expiryDateFormatted}"
-                                                        : "Expires in ${updateController.daysRemaining} days",
-                                                    style: const TextStyle(
-                                                      fontSize: 12,
-                                                      color: Color(0xFF69767E),
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 1.h),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.end,
-                                                    children: [
-                                                      TextButton(
-                                                        style: TextButton.styleFrom(
-                                                          backgroundColor:
-                                                              updateController
-                                                                      .isMembershipExpired
-                                                                  ? const Color(
-                                                                    0xFFDD3D3D,
-                                                                  )
-                                                                  : const Color(
-                                                                    0xFFFF9800,
-                                                                  ), // darker orange
-                                                          padding:
-                                                              EdgeInsets.symmetric(
-                                                                horizontal: 2.h,
-                                                                vertical: 0.3.h,
-                                                              ),
-                                                          shape: RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                  6,
-                                                                ),
-                                                          ),
-                                                        ),
-                                                        onPressed: () async {
-                                                          const url =
-                                                              'https://kbaiota.org/member';
-                                                          if (await canLaunchUrl(
-                                                            Uri.parse(url),
-                                                          )) {
-                                                            await launchUrl(
-                                                              Uri.parse(url),
-                                                            );
-                                                          } else {
-                                                            throw 'Could not launch $url';
-                                                          }
-                                                        },
-                                                        child: const Text(
-                                                          "Renew Membership",
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 13,
-                                                          ),
-                                                        ),
+                                                  TextButton(
+                                                    style: TextButton.styleFrom(
+                                                      backgroundColor: const Color(
+                                                          0xFFFF9800), // darker orange
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                        horizontal: 2.h,
+                                                        vertical: 0.3.h,
                                                       ),
-                                                    ],
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(6),
+                                                      ),
+                                                    ),
+                                                    onPressed: () async {
+                                                      const url =
+                                                          'https://kbaiota.org/member';
+                                                      if (await canLaunchUrl(
+                                                          Uri.parse(url))) {
+                                                        await launchUrl(
+                                                            Uri.parse(url));
+                                                      } else {
+                                                        throw 'Could not launch $url';
+                                                      }
+                                                    },
+                                                    child: const Text(
+                                                      "Renew Membership",
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 13,
+                                                      ),
+                                                    ),
                                                   ),
                                                 ],
                                               ),
-                                            ),
+                                            ],
+                                          ),
+                                        ),
 
-                                          // Now check for notifications
-                                          if (filteredTodayList.isEmpty &&
-                                              filteredOlderList.isEmpty &&
-                                              !(!isGuest &&
-                                                  (updateController
-                                                          .isMembershipExpired ||
-                                                      updateController
-                                                          .isMembershipExpiringSoon)))
-                                            Center(
-                                              child: Padding(
-                                                padding: EdgeInsets.only(
-                                                  top: 25.h,
+                                      // Now check for notifications
+                                      if (filteredTodayList.isEmpty &&
+                                          filteredOlderList.isEmpty &&
+                                          !(!isGuest &&
+                                              (updateController
+                                                      .isMembershipExpired ||
+                                                  updateController
+                                                      .isMembershipExpiringSoon)))
+                                        Center(
+                                          child: Padding(
+                                            padding: EdgeInsets.only(
+                                              top: 25.h,
+                                            ),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Icon(
+                                                  Icons
+                                                      .notifications_off_outlined,
+                                                  size: 30
+                                                      .sp, // You can adjust size as needed
+                                                  color: Colors.grey,
                                                 ),
-                                                child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    Icon(
-                                                      Icons
-                                                          .notifications_off_outlined,
-                                                      size:
-                                                          30.sp, // You can adjust size as needed
-                                                      color: Colors.grey,
-                                                    ),
-                                                    SizedBox(height: 2.h),
-                                                    Text(
-                                                      "No notifications available",
-                                                      style: TextStyle(
-                                                        fontSize: 18,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                  ],
+                                                SizedBox(height: 2.h),
+                                                Text(
+                                                  "No notifications available",
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                    color: Colors.black,
+                                                  ),
                                                 ),
-                                              ),
-                                            )
-                                          else ...[
-                                            if (filteredTodayList
-                                                .isNotEmpty) ...[
-                                              sectionHeader("Today"),
-                                              ...filteredTodayList.map(
-                                                (item) => NotificationTile(
-                                                  item: {
-                                                    'title': item['title'],
-                                                    'description':
-                                                        item['description'],
-                                                        'photo':item['photo'],
-                                                    'date': item['date'],
-                                                    'type': item['type'],
-                                                    "thread_id":item['thread_id'],
-                                                    'news_id': item['news_id'],
-                                                    'event_id':
-                                                        item['event_id'],
-                                                  },
-                                                ),
-                                              ),
-                                            ],
-                                            if (filteredOlderList
-                                                .isNotEmpty) ...[
-                                              sectionHeader("Older"),
-                                              ...filteredOlderList.map(
-                                                (item) => NotificationTile(
-                                                  item: {
-                                                    'title': item['title'],
-                                                    'description':
-                                                        item['description'],
-                                                        'photo':item['photo'],
-                                                    'date': item['date'],
-                                                    'type': item['type'],
-                                                    "thread_id":item['thread_id'],
-                                                    'news_id': item['news_id'],
-                                                    'event_id':
-                                                        item['event_id'],
-                                                  },
-                                                ),
-                                              ),
-                                            ],
-                                          ],
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                      else ...[
+                                        if (filteredTodayList.isNotEmpty) ...[
+                                          sectionHeader("Today"),
+                                          ...filteredTodayList.map(
+                                            (item) => NotificationTile(
+                                              item: {
+                                                'title': item['title'],
+                                                'description':
+                                                    item['description'],
+                                                'photo': item['photo'],
+                                                'date': item['date'],
+                                                'type': item['type'],
+                                                "thread_id": item['thread_id'],
+                                                'news_id': item['news_id'],
+                                                'event_id': item['event_id'],
+                                              },
+                                            ),
+                                          ),
                                         ],
-                                      ),
-                                    ),
-                          ),
-                        ],
-                      ),
+                                        if (filteredOlderList.isNotEmpty) ...[
+                                          sectionHeader("Older"),
+                                          ...filteredOlderList.map(
+                                            (item) => NotificationTile(
+                                              item: {
+                                                'title': item['title'],
+                                                'description':
+                                                    item['description'],
+                                                'photo': item['photo'],
+                                                'date': item['date'],
+                                                'type': item['type'],
+                                                "thread_id": item['thread_id'],
+                                                'news_id': item['news_id'],
+                                                'event_id': item['event_id'],
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ],
+                                    ],
+                                  ),
+                                ),
+                        ),
+                      ],
+                    ),
             ),
           ),
         ],
