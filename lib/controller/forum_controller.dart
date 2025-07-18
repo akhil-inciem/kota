@@ -280,6 +280,7 @@ bool _hasThreadsDataChanged(List<ForumData> newData) {
   } else {
     await postComment(text);
   }
+  cancelReply();
 }
 
   Future<void> postComment(String text) async {

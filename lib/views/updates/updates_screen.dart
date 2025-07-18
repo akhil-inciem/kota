@@ -226,7 +226,7 @@ class _UpdatesScreenState extends State<UpdatesScreen>
                                                       ),
                                                     ),
                                                   ),
-                                                ],
+                                                ],  
                                               ),
                                             ],
                                           ),

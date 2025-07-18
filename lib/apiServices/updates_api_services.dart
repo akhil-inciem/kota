@@ -16,11 +16,11 @@ class UpdateApiService {
     try {
       final response = await _dio.get(ApiEndpoints.getMemberExpiry,queryParameters: {
         'member': userId,
+        'is_guest':authController.isGuest ? '1' : '0'
       },);
       if (response.statusCode == 200) {
         final responseString = response.data.toString().trim();
       final jsonString = jsonDecode(responseString);
-      print(jsonString);
         return MemberShipModel. fromJson(jsonString);
       }
     } catch (e) {
@@ -44,6 +44,7 @@ class UpdateApiService {
 
     if (response.statusCode == 200) {
       final decoded = jsonDecode(response.data);
+      print("$decoded ........");
       return UpdatesModel.fromJson(decoded);
     }
   } catch (e) {

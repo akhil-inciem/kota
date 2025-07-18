@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/auth_controller.dart';
 import 'package:kota/controller/user_controller.dart';
-import 'package:kota/controller_initializer.dart';
 import 'package:kota/views/login/login_screen.dart';
 import 'package:kota/views/login/widgets/custom_button.dart';
 import 'package:kota/views/widgets/custom_snackbar.dart';

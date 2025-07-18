@@ -1,13 +1,8 @@
-import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 // import 'package:kota/apiServices/notification_services.dart';
 import 'package:kota/views/profile/pdf_view_screen.dart';
-import 'package:kota/views/widgets/custom_snackbar.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
@@ -25,50 +20,50 @@ class MyCertificationsWidget extends StatelessWidget {
     Get.to(() => PDFViewerScreen(pdfUrl: imagePath));
   }
 
-Future<void> downloadPdf(
-  String url,
-  String fileName,
-  BuildContext context,
-) async {
-  try {
-    final status = await Permission.storage.request();
-    if (!status.isGranted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Storage permission denied')),
-      );
-      return;
-    }
+// Future<void> downloadPdf(
+//   String url,
+//   String fileName,
+//   BuildContext context,
+// ) async {
+//   try {
+//     final status = await Permission.storage.request();
+//     if (!status.isGranted) {
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         const SnackBar(content: Text('Storage permission denied')),
+//       );
+//       return;
+//     }
 
-    Directory? downloadsDir;
-    if (Platform.isAndroid) {
-      downloadsDir = Directory('/storage/emulated/0/Download');
-    } else {
-      downloadsDir = await getApplicationDocumentsDirectory();
-    }
+//     Directory? downloadsDir;
+//     if (Platform.isAndroid) {
+//       downloadsDir = Directory('/storage/emulated/0/Download');
+//     } else {
+//       downloadsDir = await getApplicationDocumentsDirectory();
+//     }
 
-    final savePath = '${downloadsDir.path}/$fileName';
+//     final savePath = '${downloadsDir.path}/$fileName';
 
-    final dio = Dio();
+//     final dio = Dio();
 
-    final response = await dio.download(
-      url,
-      savePath,
-      onReceiveProgress: (received, total) {
-        if (total != -1) {
-          debugPrint("Download progress: ${(received / total * 100).toStringAsFixed(0)}%");
-        }
-      },
-    );
+//     final response = await dio.download(
+//       url,
+//       savePath,
+//       onReceiveProgress: (received, total) {
+//         if (total != -1) {
+//           debugPrint("Download progress: ${(received / total * 100).toStringAsFixed(0)}%");
+//         }
+//       },
+//     );
 
-    if (response.statusCode == 200) {
-      CustomSnackbars.success("Saved to Downloads", "Download Successful");
-    } else {
-      throw Exception('Download failed');
-    }
-  } catch (e) {
-    CustomSnackbars.oops(e.toString(), "Download Failed");
-  }
-}
+//     if (response.statusCode == 200) {
+//       CustomSnackbars.success("Saved to Downloads", "Download Successful");
+//     } else {
+//       throw Exception('Download failed');
+//     }
+//   } catch (e) {
+//     CustomSnackbars.oops(e.toString(), "Download Failed");
+//   }
+// }
 
 
   @override

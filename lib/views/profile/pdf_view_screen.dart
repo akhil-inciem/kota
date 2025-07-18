@@ -27,6 +27,34 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
   bool isDownloading = false;
   final SideMenuController sideMenuController = Get.find<SideMenuController>();
 
+  Future<void> downloadPdf(String url) async {
+    try {
+      setState(() => isDownloading = true);
+
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final directory = Directory('/storage/emulated/0/Download');
+        final fileName =
+            'downloaded_pdf_${DateTime.now().millisecondsSinceEpoch}.pdf';
+        final filePath = '${directory!.path}/$fileName';
+
+        final file = File(filePath);
+        await file.writeAsBytes(response.bodyBytes);
+
+        CustomSnackbars.success(
+          'PDF downloaded successfully!',
+          'Saved to: $filePath',
+        );
+      } else {
+        CustomSnackbars.failure('Failed to download PDF.', 'Error');
+      }
+    } catch (e) {
+      CustomSnackbars.failure('An error occurred.', 'Download failed');
+    } finally {
+      setState(() => isDownloading = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -62,68 +90,21 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
                     ),
                   ),
                   IconButton(
-                    onPressed:
-                        isDownloading
-                            ? null
-                            : () async {
-                              setState(
-                                () => isDownloading = true,
-                              ); // Show loader
-
-                              try {
-                                final downloader = MediaDownload();
-
-                                // Get app's download directory
-                                final directory =
-                                    await getApplicationDocumentsDirectory();
-                                final fileName =
-                                    'downloaded_file_${DateTime.now().millisecondsSinceEpoch}.pdf';
-                                final filePath = '${directory.path}/$fileName';
-
-                                // Perform download
-                                await downloader.downloadMedia(
-                                  context,
-                                  widget.pdfUrl,
-                                );
-
-                                final downloadedFile = File(filePath);
-                                if (await downloadedFile.exists()) {
-                                  CustomSnackbars.success(
-                                    'Saved to ${downloadedFile.path}',
-                                    'Download successful!',
-                                  );
-                                } else {
-                                  CustomSnackbars.success(
-                                    'Download requested. Please check your downloads folder.',
-                                    'Success',
-                                  );
-                                }
-                              } catch (e) {
-                                CustomSnackbars.failure(
-                                  'Download failed',
-                                  'Error',
-                                );
-                              } finally {
-                                setState(
-                                  () => isDownloading = false,
-                                ); // Reset loader
-                              }
-                            },
-                    icon:
-                        isDownloading
-                            ? SizedBox(
-                              width: 6.w,
-                              height: 6.w,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.black,
-                              ),
-                            )
-                            : Icon(
-                              Icons.download_rounded,
+                    onPressed: isDownloading ? null : () => downloadPdf(widget.pdfUrl),
+                    icon: isDownloading
+                        ? SizedBox(
+                            width: 6.w,
+                            height: 6.w,
+                            child: const CircularProgressIndicator(
+                              strokeWidth: 2,
                               color: Colors.black,
-                              size: 6.w,
                             ),
+                          )
+                        : Icon(
+                            Icons.download_rounded,
+                            color: Colors.black,
+                            size: 6.w,
+                          ),
                   ),
                 ],
               ),

@@ -61,7 +61,6 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
               TopBar(title: 'Back', onTap: () => Get.back()),
               SizedBox(height: 2.h),
 
-              /// 🔽 Scrollable content
               Expanded(
                 child: SingleChildScrollView(
                   // padding: EdgeInsets.only(bottom: 1.h),
@@ -332,5 +331,4 @@ void _onCommentTextChanged() {
     controller.cancelReply();
   }
 }
-
 }

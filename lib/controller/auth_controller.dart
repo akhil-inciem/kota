@@ -9,8 +9,7 @@ class AuthController extends GetxController {
   Rxn<LoginResponseModel> userModel = Rxn<LoginResponseModel>();
   Rxn<GuestModel> guestModel = Rxn<GuestModel>();
   final AuthApiService _authService = AuthApiService();
-  bool get isGuest => userModel.value?.data.isGuest == 1;
-  bool get isUser => userModel.value?.data.isGuest == 0;
+  bool get isGuest => userModel.value?.data.isGuest == true;
   RxString guestId = ''.obs;
 
   final isExpanded = false.obs;

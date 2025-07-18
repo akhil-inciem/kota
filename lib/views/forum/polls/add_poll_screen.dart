@@ -62,17 +62,20 @@ class _NewPollPageState extends State<NewPollPage> {
   }
 
   Future<void> _pickExpiryDate() async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(Duration(days: 365)), // e.g., next 1 year
-    );
-    if (picked != null) {
-      _forumController.pollExpiryDate.value = picked;
-      _forumController.validateCreatePoll();
-    }
+  final DateTime initialDate = _forumController.pollExpiryDate.value ?? DateTime.now();
+
+  final DateTime? picked = await showDatePicker(
+    context: context,
+    initialDate: initialDate,
+    firstDate: DateTime.now(),
+    lastDate: DateTime.now().add(const Duration(days: 365)), // next 1 year
+  );
+  
+  if (picked != null) {
+    _forumController.pollExpiryDate.value = picked;
+    _forumController.validateCreatePoll();
   }
+}
 
   @override
   void dispose() {
