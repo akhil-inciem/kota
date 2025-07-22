@@ -117,49 +117,66 @@ class PollResponsesDialog extends StatelessWidget {
                           children: [
                             // Profile Picture
                             Container(
-  width: 12.w,
-  height: 12.w,
-  decoration: BoxDecoration(
-    shape: BoxShape.circle,
-    color: (reaction.userPhoto == null || reaction.userPhoto!.isEmpty)
-        ? const Color(0xFFE5E7EB)
-        : null,
-  ),
-  child: ClipOval(
-    child: reaction.userPhoto != null && reaction.userPhoto!.isNotEmpty
-        ? Image.network(
-            reaction.userPhoto!,
-            fit: BoxFit.cover,
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) return child;
-              return Center(
-                child: SizedBox(
-                  width: 24, // or any size suitable
-                  height: 24,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
-                  ),
-                ),
-              );
-            },
-            errorBuilder: (context, error, stackTrace) {
-              return Icon(
-                Icons.person,
-                color: const Color(0xFF9CA3AF),
-                size: 6.w,
-              );
-            },
-          )
-        : Center(
-            child: Icon(
-              Icons.person,
-              color: const Color(0xFF9CA3AF),
-              size: 6.w,
-            ),
-          ),
-  ),
-),
+                              width: 12.w,
+                              height: 12.w,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color:
+                                    (reaction.userPhoto == null ||
+                                            reaction.userPhoto!.isEmpty)
+                                        ? const Color(0xFFE5E7EB)
+                                        : null,
+                              ),
+                              child: ClipOval(
+                                child:
+                                    reaction.userPhoto != null &&
+                                            reaction.userPhoto!.isNotEmpty
+                                        ? Image.network(
+                                          reaction.userPhoto!,
+                                          fit: BoxFit.cover,
+                                          loadingBuilder: (
+                                            context,
+                                            child,
+                                            loadingProgress,
+                                          ) {
+                                            if (loadingProgress == null)
+                                              return child;
+                                            return Center(
+                                              child: SizedBox(
+                                                width:
+                                                    24, // or any size suitable
+                                                height: 24,
+                                                child: CircularProgressIndicator(
+                                                  strokeWidth: 2,
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                        Color
+                                                      >(Colors.grey),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          errorBuilder: (
+                                            context,
+                                            error,
+                                            stackTrace,
+                                          ) {
+                                            return Icon(
+                                              Icons.person,
+                                              color: const Color(0xFF9CA3AF),
+                                              size: 6.w,
+                                            );
+                                          },
+                                        )
+                                        : Center(
+                                          child: Icon(
+                                            Icons.person,
+                                            color: const Color(0xFF9CA3AF),
+                                            size: 6.w,
+                                          ),
+                                        ),
+                              ),
+                            ),
 
                             SizedBox(width: 4.w),
 

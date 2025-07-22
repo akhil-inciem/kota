@@ -230,6 +230,16 @@ class _FavoritesDetailScreenState extends State<FavoritesDetailScreen> {
               ),
             ),
             SizedBox(width: 3.w),
+            // GestureDetector(
+            //     onTap: () => homeController.toggleBookmark(widget.item[""]),
+            //     child: Image.asset(
+            //      isBookmarked
+            //           ? 'assets/icons/saved.png'
+            //           : 'assets/icons/favorites_unselected.png',
+            //       height: 2.5.h,
+            //       width: 2.5.h,
+            //     ),
+            //   )
           ],
         ),
       ],

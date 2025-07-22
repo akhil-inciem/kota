@@ -8,10 +8,7 @@ import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:kota/controller/auth_controller.dart';
 import 'package:kota/model/profile_model.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class IdCardWidget extends StatefulWidget {

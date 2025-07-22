@@ -153,7 +153,7 @@ class _ForumPostBodyState extends State<ForumPostBody> {
               child: Obx(
                 () => Icon(
                   widget.isLiked.value ? Icons.favorite : Icons.favorite_border,
-                  size: 16.sp,
+                  size: 18.sp,
                   color: widget.isLiked.value ? Colors.red : Colors.black,
                 ),
               ),

@@ -86,7 +86,7 @@ class ProfileHeader extends StatelessWidget {
             backgroundImage: CachedNetworkImageProvider(
               user.photo?.isNotEmpty == true
                   ? user.photo!
-                  : 'https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName ?? ''}&background=random&color=fff',
+                  : 'https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName ?? ''}&background=FFFFFF&color=000000',
             ),
           ),
           const SizedBox(height: 8),

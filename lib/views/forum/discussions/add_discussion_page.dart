@@ -105,7 +105,7 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
                                         imageUrl:
                                             user.photo?.isNotEmpty == true
                                                 ? user.photo!
-                                                : 'https://ui-avatars.com/api/?name=$userName&background=random&color=fff',
+                                                : 'https://ui-avatars.com/api/?name=$userName&background=0A58C9&color=ffffff',
                                         fit: BoxFit.cover,
                                         width: 60,
                                         height: 60,
