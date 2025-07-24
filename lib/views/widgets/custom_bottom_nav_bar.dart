@@ -18,12 +18,12 @@ class CustomBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 6.w),
-      decoration: const BoxDecoration(
+      padding: EdgeInsets.symmetric(horizontal: 3.5.w),
+      decoration:  BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
+          topLeft: Radius.circular(18.sp),
+          topRight: Radius.circular(18.sp),
         ),
         boxShadow: [
           BoxShadow(color: Colors.black12, blurRadius: 10, spreadRadius: 2),
@@ -31,14 +31,14 @@ class CustomBottomNavBar extends StatelessWidget {
       ),
       child: ClipRRect(
         child: SizedBox(
-          height: 85,
+          height: 9.h,
           child: BottomNavigationBar(
             backgroundColor: Colors.white,
             type: BottomNavigationBarType.fixed,
             selectedItemColor: AppColors.primaryColor,
             unselectedItemColor: Colors.grey,
-            selectedFontSize: 12,
-            unselectedFontSize: 11,
+            selectedFontSize: 12.sp,
+            unselectedFontSize: 11.sp,
             selectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal),
             currentIndex: currentIndex,
             onTap: onTap,
@@ -99,29 +99,29 @@ class CustomBottomNavBar extends StatelessWidget {
       children: [
         Image.asset(
           currentIndex == index ? selectedIcon : unselectedIcon,
-          width: 22,
-          height: 22,
+          width: 19.sp,
+          height: 19.sp,
         ),
         if (showDot)
           Positioned(
-            top: -4,
-            right: -6,
+            top: -8.sp,
+            right: -10.sp,
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+              padding: EdgeInsets.symmetric(horizontal:8.sp, vertical: 2.sp),
               decoration: BoxDecoration(
                 color: Colors.red,
                 borderRadius: BorderRadius.circular(10),
               ),
-              constraints: const BoxConstraints(
-                minWidth: 16,
-                minHeight: 16,
+              constraints:  BoxConstraints(
+                minWidth: 14.sp,
+                minHeight: 14.sp,
               ),
               child: Center(
                 child: Text(
                   dotCount > 99 ? '99+' : '$dotCount',
-                  style: const TextStyle(
+                  style:  TextStyle(
                     color: Colors.white,
-                    fontSize: 10,
+                    fontSize: 12.sp,
                     fontWeight: FontWeight.w600,
                   ),
                 ),

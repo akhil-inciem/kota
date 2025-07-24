@@ -43,6 +43,7 @@ class _CollegesScreenState extends State<CollegesScreen> {
                 controller.filterColleges(selectedIndex == 0);
               },
             ),
+            SizedBox(height: 1.h,),
             CollegeTabBar(
               selectedIndex: selectedIndex,
               onTabSelected: onTabSelected,
@@ -109,7 +110,7 @@ class _CollegesScreenState extends State<CollegesScreen> {
             child: Stack(
               children: [
                 Padding(
-                  padding: EdgeInsets.only(right: 36), // Leave space for icon
+                  padding: EdgeInsets.only(right: 3.5.h), // Leave space for icon
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -234,13 +235,9 @@ class CollegeSearchBar extends StatelessWidget {
                 hintText: 'Search here',
                 prefixIcon: Padding(
                   padding: EdgeInsets.all(1.5.h), // Adjust for better alignment
-                  child: SizedBox(
-                    height: 1.h,
-                    width: 1.h,
-                    child: Image.asset('assets/icons/search.png'),
-                  ),
+                  child: Image.asset('assets/icons/search.png',height: 2.h,width: 2.h,),
                 ),
-
+                hintStyle: TextStyle(fontSize: 15.sp),
                 filled: true,
                 fillColor: AppColors.primaryBackground,
                 border: OutlineInputBorder(

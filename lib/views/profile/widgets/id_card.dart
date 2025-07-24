@@ -36,42 +36,50 @@ class _IdCardWidgetState extends State<IdCardWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
-      child: Column(
-        children: [
-          RepaintBoundary(
-            key: _cardKey,
-            child: Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
+Widget build(BuildContext context) {
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
+    child: Column(
+      children: [
+        RepaintBoundary(
+          key: _cardKey,
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(2.w),
+            ),
+            child: _buildCardContent(),
+          ),
+        ),
+        SizedBox(height: 2.h),
+        Align(
+          alignment: Alignment.centerRight,
+          child: ElevatedButton.icon(
+            onPressed: _downloadCard,
+            icon: Icon(Icons.download, color: Colors.black, size: 2.2.h),
+            label: Text(
+              "Download ID Card",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w500,
               ),
-              child: _buildCardContent(),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              elevation: 2,
+              padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.2.h),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(1.w),
+              ),
             ),
           ),
-          SizedBox(height: 1.h),
-          Align(
-            alignment: Alignment.centerRight,
-            child: ElevatedButton.icon(
-              onPressed: _downloadCard,
-              icon: Icon(Icons.download, color: Colors.black),
-              label: Text(
-                "Download ID Card",
-                style: TextStyle(color: Colors.black),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                elevation: 1,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
 
   Widget _buildCardContent() {
     return Column(
@@ -98,7 +106,7 @@ class _IdCardWidgetState extends State<IdCardWidget> {
                     _buildLabelValue(
                       label: 'EMAIL ID',
                       value: widget.user.email ?? 'athiathi125@gmail.com',
-                      valueFontSize: 15.sp,
+                      // valueFontSize: 15.sp,
                     ),
                   ],
                 ),
@@ -113,7 +121,7 @@ class _IdCardWidgetState extends State<IdCardWidget> {
                         borderRadius: BorderRadius.circular(16),
                         child: Container(
                           width: 30.w, // define width explicitly
-                          height: 15.h, // define height explicitly
+                          height: 18.h, // define height explicitly
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(16),
                             color: Colors.grey.shade300,
@@ -203,6 +211,42 @@ class _IdCardWidgetState extends State<IdCardWidget> {
     );
   }
 
+
+  Widget _buildLabelValue({
+    required String label,
+    required String value,
+    bool isBoldValue = false,
+    double labelFontSize = 11,
+    double valueFontSize = 14,
+    int maxLines = 1,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label.toUpperCase(),
+          style: TextStyle(
+            fontSize: labelFontSize.sp,
+            color: Colors.grey.shade700,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 1.2,
+          ),
+        ),
+        SizedBox(height: 2),
+        Text(
+          value,
+          maxLines: maxLines,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontSize: valueFontSize,
+            fontWeight: isBoldValue ? FontWeight.w700 : FontWeight.w500,
+            color: Colors.black87,
+            height: 1.3,
+          ),
+        ),
+      ],
+    );
+  }
   Future<void> _downloadCard() async {
     try {
       RenderRepaintBoundary boundary =
@@ -238,42 +282,6 @@ class _IdCardWidgetState extends State<IdCardWidget> {
         gravity: ToastGravity.BOTTOM,
       );
     }
-  }
-
-  Widget _buildLabelValue({
-    required String label,
-    required String value,
-    bool isBoldValue = false,
-    double labelFontSize = 11,
-    double valueFontSize = 14,
-    int maxLines = 1,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label.toUpperCase(),
-          style: TextStyle(
-            fontSize: labelFontSize.sp,
-            color: Colors.grey.shade700,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 1.2,
-          ),
-        ),
-        SizedBox(height: 2),
-        Text(
-          value,
-          maxLines: maxLines,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            fontSize: valueFontSize.sp,
-            fontWeight: isBoldValue ? FontWeight.w700 : FontWeight.w500,
-            color: Colors.black87,
-            height: 1.3,
-          ),
-        ),
-      ],
-    );
   }
 }
 

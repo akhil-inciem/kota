@@ -19,9 +19,9 @@ class FilterBottomSheetWidget extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
-        left: 20,
-        right: 20,
-        top: 20,
+        left: 2.h,
+        right: 2.h,
+        top: 2.h,
       ),
       child: SingleChildScrollView(
         child: Column(
@@ -42,9 +42,9 @@ class FilterBottomSheetWidget extends StatelessWidget {
               },
               child: Obx(
                 () => Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 12,
-                    horizontal: 16,
+                  padding:  EdgeInsets.symmetric(
+                    vertical: 1.h,
+                    horizontal: 1.5.h,
                   ),
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey),
@@ -52,19 +52,20 @@ class FilterBottomSheetWidget extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.calendar_today, size: 20),
-                      const SizedBox(width: 10),
+                       Icon(Icons.calendar_today, size: 18.sp),
+                       SizedBox(width: 1.h),
                       Text(
                         tempSelectedDate.value != null
                             ? "${tempSelectedDate.value!.day}/${tempSelectedDate.value!.month}/${tempSelectedDate.value!.year}"
                             : "Select Date",
+                            style: TextStyle(fontSize: 15.sp),
                       ),
                     ],
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+             SizedBox(height: 2.h),
 
             // Category Dropdown
             Obx(
@@ -75,11 +76,19 @@ class FilterBottomSheetWidget extends StatelessWidget {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
+                  contentPadding: EdgeInsets.symmetric(
+                    vertical:
+                        2.5.h, // 👈 Increase this for more vertical space inside field
+                    horizontal: 4.w, // Optional: control side padding
+                  ),
                 ),
+                
                 items: [
-                  const DropdownMenuItem<String>(
+                   DropdownMenuItem<String>(
                     value: null,
-                    child: Text("None"),
+                    child: Text("None",
+                    style: TextStyle(fontSize: 13.5.sp),
+                    ),
                   ),
                   ...DummyData.recommendedItems
                       .map((item) => item['badge'])
@@ -87,7 +96,9 @@ class FilterBottomSheetWidget extends StatelessWidget {
                       .map((badge) {
                         return DropdownMenuItem<String>(
                           value: badge,
-                          child: Text(badge ?? ''),
+                          child: Text(badge ?? '',
+                          style: TextStyle(fontSize: 13.5.sp),
+                          ),
                         );
                       })
                       .toList(),
@@ -97,7 +108,7 @@ class FilterBottomSheetWidget extends StatelessWidget {
                 },
               ),
             ),
-            const SizedBox(height: 30),
+             SizedBox(height: 3.h),
 
             // Apply and Clear buttons
             Row(
@@ -147,7 +158,7 @@ class FilterBottomSheetWidget extends StatelessWidget {
                 
               ],
             ),
-            const SizedBox(height: 20),
+             SizedBox(height: 2.h),
           ],
         ),
       ),

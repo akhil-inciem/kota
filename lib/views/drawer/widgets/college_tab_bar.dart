@@ -29,7 +29,7 @@ class CollegeTabBar extends StatelessWidget {
               return GestureDetector(
                 onTap: () => onTabSelected(index),
                 child: Container(
-                  margin: const EdgeInsets.only(right: 24),
+                  margin:  EdgeInsets.only(right: 2.5.h),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -38,18 +38,18 @@ class CollegeTabBar extends StatelessWidget {
                         style: TextStyle(
                           color: isSelected ? AppColors.primaryColor : Colors.grey.shade800,
                           fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                          fontSize: 16,
+                          fontSize: 16.sp,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                       SizedBox(height: 0.5.h),
                       Container(
-                        height: 4,
+                        height: 0.5.h,
                         width: 40.w,
                         decoration: BoxDecoration(
                           color: isSelected ? AppColors.primaryColor : Colors.transparent,
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            topRight: Radius.circular(10),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10.sp),
+                            topRight: Radius.circular(10.sp),
                           ),
                         ),
                       ),

@@ -26,7 +26,7 @@ class _FavoriteListState extends State<FavoriteList> {
   }
 
   @override
-  initState() {
+  void initState() {
     super.initState();
     favController.fetchFilteredItems();
   }
@@ -35,17 +35,14 @@ class _FavoriteListState extends State<FavoriteList> {
   Widget build(BuildContext context) {
     return Obx(() {
       if (favController.isLoading.value) {
-        return const ListShimmer(); // Show shimmer while loading
+        return const ListShimmer();
       } else if (favController.filteredList.isEmpty) {
         return RefreshIndicator(
-          onRefresh: () async {
-          await favController
-              .fetchFilteredItems(); // Replace with your actual method
-        },
+          onRefresh: () async => await favController.fetchFilteredItems(),
           child: ListView(
             physics: const AlwaysScrollableScrollPhysics(),
             children: [
-              SizedBox(height: 20.h), // add space to allow pull
+              SizedBox(height: 20.h),
               Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -55,10 +52,10 @@ class _FavoriteListState extends State<FavoriteList> {
                       height: 8.h,
                       width: 8.h,
                     ),
-                    const SizedBox(height: 12),
-                    const Text(
+                    SizedBox(height: 1.5.h),
+                    Text(
                       "No Favourites Available",
-                      style: TextStyle(fontSize: 18, color: Colors.black),
+                      style: TextStyle(fontSize: 18.sp, color: Colors.black),
                     ),
                   ],
                 ),
@@ -67,12 +64,11 @@ class _FavoriteListState extends State<FavoriteList> {
           ),
         );
       }
+
       final items = favController.filteredList;
+
       return RefreshIndicator(
-        onRefresh: () async {
-          await favController
-              .fetchFilteredItems(); // Replace with your actual method
-        },
+        onRefresh: () async => await favController.fetchFilteredItems(),
         child: ListView.builder(
           padding: EdgeInsets.zero,
           itemCount: items.length,
@@ -91,10 +87,10 @@ class _FavoriteListState extends State<FavoriteList> {
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    padding: EdgeInsets.symmetric(horizontal: 4.w),
                     child: Container(
                       color: Colors.white,
-                      padding: const EdgeInsets.all(12),
+                      padding: EdgeInsets.all(2.w),
                       child: Row(
                         children: [
                           Expanded(
@@ -104,53 +100,50 @@ class _FavoriteListState extends State<FavoriteList> {
                                 Row(
                                   children: [
                                     Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 4,
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 2.w,
+                                        vertical: 0.5.h,
                                       ),
                                       decoration: BoxDecoration(
                                         color: getBadgeContainerColor(
                                           item['badge'],
                                         ),
-                                        borderRadius: BorderRadius.circular(8),
+                                        borderRadius: BorderRadius.circular(2.w),
                                       ),
                                       child: Text(
                                         item['badge'] ?? 'Badge',
                                         style: TextStyle(
-                                          fontSize: 10,
-                                          color: getBadgeTextColor(
-                                            item['badge'],
-                                          ),
+                                          fontSize: 12.sp,
+                                          color: getBadgeTextColor(item['badge']),
                                         ),
                                       ),
                                     ),
-                                    SizedBox(width: 2.w),
+                                    SizedBox(width: 1.w),
                                     Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 4,
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 2.w,
+                                        vertical: 0.5.h,
                                       ),
                                       decoration: BoxDecoration(
                                         color: const Color(0xFFD3D8FF),
-                                        borderRadius: BorderRadius.circular(8),
+                                        borderRadius: BorderRadius.circular(2.w),
                                       ),
                                       child: Row(
                                         children: [
-                                          const Icon(
+                                          Icon(
                                             Icons.calendar_today,
-                                            color: Color(0xFF2640C8),
-                                            size: 12,
+                                            color: const Color(0xFF2640C8),
+                                            size: 12.sp,
                                           ),
-                                          const SizedBox(width: 4),
+                                          SizedBox(width: 1.w),
                                           Text(
                                             item['date'] != null
-                                                ? DateFormat(
-                                                  'dd MMM yyyy',
-                                                ).format(item['date'])
+                                                ? DateFormat('dd MMM yyyy')
+                                                    .format(item['date'])
                                                 : '',
-                                            style: const TextStyle(
-                                              fontSize: 10,
-                                              color: Color(0xFF2640C8),
+                                            style: TextStyle(
+                                              fontSize: 12.sp,
+                                              color: const Color(0xFF2640C8),
                                             ),
                                           ),
                                         ],
@@ -162,8 +155,8 @@ class _FavoriteListState extends State<FavoriteList> {
                                 Text(
                                   item['title'] ?? '',
                                   maxLines: 2,
-                                  style: const TextStyle(
-                                    fontSize: 14,
+                                  style: TextStyle(
+                                    fontSize: 15.sp,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -172,50 +165,48 @@ class _FavoriteListState extends State<FavoriteList> {
                                   _htmlToPlainText(item['description'] ?? ''),
                                   maxLines: 3,
                                   overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    fontSize: 12,
+                                  style: TextStyle(
+                                    fontSize: 13.sp,
                                     color: Colors.black54,
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          SizedBox(width: 2.w),
                           Container(
                             width: 24.w,
                             height: 15.h,
                             decoration: BoxDecoration(
                               color: Colors.grey.shade300,
-                              borderRadius: BorderRadius.circular(15),
+                              borderRadius: BorderRadius.circular(3.w),
                             ),
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(15),
-                              child:
-                                  item['image'] == ''
-                                      ? Image.asset(
-                                        'assets/images/recommend_tile.jpg',
-                                        fit:
-                                            BoxFit
-                                                .cover, // Ensure the image fits inside the box
-                                      )
-                                      : CachedNetworkImage(
-                                        imageUrl: item['image'],
-                                        fit: BoxFit.cover,
-                                        placeholder:
-                                            (context, url) => Center(
-                                              child: SizedBox.fromSize(),
-                                            ),
-                                        errorWidget:
-                                            (context, url, error) =>
-                                                const Icon(Icons.error),
-                                      ),
+                              borderRadius: BorderRadius.circular(3.w),
+                              child: item['image'] == ''
+                                  ? Image.asset(
+                                      'assets/images/recommend_tile.jpg',
+                                      fit: BoxFit.cover,
+                                    )
+                                  : CachedNetworkImage(
+                                      imageUrl: item['image'],
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) =>
+                                          const SizedBox(),
+                                      errorWidget: (context, url, error) =>
+                                          const Icon(Icons.error),
+                                    ),
                             ),
                           ),
                         ],
                       ),
                     ),
                   ),
-                  Divider(color: Colors.grey.shade200, thickness: 1, height: 0),
+                  Divider(
+                    color: Colors.grey.shade200,
+                    thickness: 0.2.h,
+                    height: 0,
+                  ),
                 ],
               ),
             );

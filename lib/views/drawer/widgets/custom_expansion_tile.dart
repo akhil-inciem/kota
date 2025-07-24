@@ -36,7 +36,7 @@ class CustomExpansionTile extends StatelessWidget {
                   Expanded(
                     child: Text(
                       title,
-                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15,color: Color(0xFF0A2C49)),
+                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15.sp,color: Color(0xFF0A2C49)),
                     ),
                   ),
                   Icon(isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down),
@@ -44,7 +44,7 @@ class CustomExpansionTile extends StatelessWidget {
               ),
               if (isExpanded)
                 ...options.map((option) => Padding(
-                      padding: const EdgeInsets.only(top: 12.0),
+                      padding:  EdgeInsets.only(top: 1.h),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -52,14 +52,14 @@ class CustomExpansionTile extends StatelessWidget {
                             option.heading,
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
-                              fontSize: 14,
+                              fontSize: 14.sp,
                               color: Color(0xFF0A2C49)
                             ),
                           ),
-                          SizedBox(height: 4),
+                          SizedBox(height: 0.5.h),
                           Text(
                             option.description,
-                            style: TextStyle(fontSize: 13),
+                            style: TextStyle(fontSize: 13.sp),
                           ),
                         ],
                       ),

@@ -60,7 +60,7 @@ class _TopBarState extends State<TopBar> {
       int currentIndex = homeController.index.value;
 
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding:  EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
         child: Stack(
           children: [
             Row(
@@ -70,14 +70,11 @@ class _TopBarState extends State<TopBar> {
                   Expanded(
                     child:
                         (currentIndex == 0 && widget.title == null)
-                            ? Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 2.w),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: SvgPicture.asset(
-                                  'assets/images/KOTA_Logo.svg',
-                                  width: 100,
-                                ),
+                            ? Align(
+                              alignment: Alignment.centerLeft,
+                              child: SvgPicture.asset(
+                                'assets/images/KOTA_Logo.svg',
+                                width: 20.w,
                               ),
                             )
                             : Row(
@@ -91,8 +88,8 @@ class _TopBarState extends State<TopBar> {
                                       Image.asset(
                                         widget.leadingIcon ??
                                             'assets/icons/backbutton.png',
-                                        width: 20,
-                                        height: 24,
+                                        width: 6.w,
+                                        height: 2.5.h,
                                         color:
                                             widget.iconColor ??
                                             AppColors.primaryColor,
@@ -117,7 +114,7 @@ class _TopBarState extends State<TopBar> {
                 if (currentIndex == 0 && authController.isGuest)
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      padding:  EdgeInsets.symmetric(horizontal: 2.w),
                       child: CustomButton(
                         text: "Register",
                         backgroundColor: AppColors.primaryColor,
@@ -151,15 +148,15 @@ class _TopBarState extends State<TopBar> {
         Get.to(() => DrawerPage());
       },
       child: Container(
-        padding: EdgeInsets.all(8),
+        padding: EdgeInsets.all(10.sp),
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey.shade300),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Image.asset(
           'assets/icons/drawer_icon.png',
-          width: 24,
-          height: 24,
+          width: 2.5.h,
+          height: 2.5.h,
           color: widget.iconColor,
         ),
       ),

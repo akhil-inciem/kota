@@ -7,7 +7,6 @@ import 'package:kota/views/home/widgets/list_shimmer.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class FaqScreen extends StatelessWidget {
-
   FaqScreen({super.key});
 
   final SideMenuController controller = Get.find<SideMenuController>();
@@ -18,7 +17,7 @@ class FaqScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: AppColors.primaryBackground,
         body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 10),
+          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -39,16 +38,15 @@ class FaqScreen extends StatelessWidget {
                         maxLines: 2,
                         style: TextStyle(
                           fontSize: 20.sp,
-color: Color(0xFF0A2C49),
+                          color: Color(0xFF0A2C49),
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: 2.h),
                       Expanded(
                         child: ListView.separated(
                           itemCount: controller.faqList.length,
-                          separatorBuilder:
-                              (_, __) => const SizedBox(height: 12),
+                          separatorBuilder: (_, __) => SizedBox(height: 1.h),
                           itemBuilder: (context, index) {
                             final faq = controller.faqList[index];
 
@@ -86,17 +84,16 @@ color: Color(0xFF0A2C49),
                                         ),
                                         title: Text(
                                           faq.question ?? '',
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontWeight: FontWeight.w600,
-                                            fontSize: 15,
-                                            color: Color(0xFF0A2C49)
+                                            fontSize: 15.sp,
+                                            color: Color(0xFF0A2C49),
                                           ),
                                         ),
-                                        childrenPadding:
-                                            const EdgeInsets.symmetric(
-                                              horizontal: 16.0,
-                                              vertical: 8.0,
-                                            ),
+                                        childrenPadding: EdgeInsets.symmetric(
+                                          horizontal: 1.5.h,
+                                          vertical: 1.h,
+                                        ),
                                         trailing: Icon(
                                           index ==
                                                   controller.expandedIndex.value
@@ -116,11 +113,11 @@ color: Color(0xFF0A2C49),
                                             data: faq.answer ?? '',
                                             style: {
                                               "h4": Style(
-                                                fontSize: FontSize(15.0),
+                                                fontSize: FontSize(15.sp),
                                                 fontWeight: FontWeight.normal,
                                               ),
                                               "*": Style(
-                                                fontSize: FontSize(15.0),
+                                                fontSize: FontSize(15.sp),
                                                 fontFamily: 'Poppins',
                                                 color: Colors.black,
                                               ),
@@ -161,7 +158,11 @@ color: Color(0xFF0A2C49),
         SizedBox(width: 4.w),
         Text(
           "FAQ",
-          style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.w600,color: Color(0xFF0A2C49)),
+          style: TextStyle(
+            fontSize: 17.sp,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF0A2C49),
+          ),
         ),
       ],
     );

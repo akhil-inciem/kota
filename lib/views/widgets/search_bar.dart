@@ -9,7 +9,12 @@ class CustomSearchBar extends StatelessWidget {
   final TextEditingController? controller;
   final Function(String)? onChanged;
 
-  const CustomSearchBar({Key? key, this.filter = false,this.controller,this.onChanged}) : super(key: key);
+  const CustomSearchBar({
+    Key? key,
+    this.filter = false,
+    this.controller,
+    this.onChanged,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,15 +29,11 @@ class CustomSearchBar extends StatelessWidget {
               controller: controller,
               decoration: InputDecoration(
                 hintText: 'Search here',
-                prefixIcon:Padding(
-  padding:  EdgeInsets.all(1.5.h), // Adjust for better alignment
-  child: SizedBox(
-    height: 1.h,
-    width: 1.h,
-    child: Image.asset('assets/icons/search.png'),
-  ),
-),
-
+                hintStyle: TextStyle(fontSize: 16.sp),
+                prefixIcon: Padding(
+                  padding: EdgeInsets.all(1.5.h), // Adjust for better alignment
+                  child: Image.asset('assets/icons/search.png',height: 2.5.h,),
+                ),
                 filled: true,
                 fillColor: Colors.white,
                 border: OutlineInputBorder(
@@ -54,12 +55,9 @@ class CustomSearchBar extends StatelessWidget {
           ),
 
           // If filter is true, show a container
-          if (filter) ...[
-            
-          ],
+          if (filter) ...[],
         ],
       ),
     );
   }
 }
-

@@ -38,7 +38,7 @@ Widget build(BuildContext context) {
   return Column(
     children: [
       TopBar(),
-      SizedBox(height: 0.5.h),
+      SizedBox(height: 1.h),
       Row(
         children: [
           Expanded(
@@ -85,10 +85,10 @@ Widget build(BuildContext context) {
                 padding: EdgeInsets.only(left: 6.w, top: 3.h),
                 child: Row(
                   children: [
-                    const Text(
+                     Text(
                       "Favourites",
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 15.sp,
                         color: Color(0xFF0A2C49),
                         fontWeight: FontWeight.w600,
                       ),
@@ -105,9 +105,9 @@ Widget build(BuildContext context) {
                         child: Obx(() {
                           return Text(
                             "${favController.filteredList.length}",
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.white,
-                              fontSize: 12,
+                              fontSize: 13.sp,
                             ),
                           );
                         }),

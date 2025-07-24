@@ -48,11 +48,11 @@ class _EventsListState extends State<EventsList> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.newspaper, size: 48, color: Colors.grey),
-              SizedBox(height: 12),
+              Icon(Icons.newspaper, size: 25.sp, color: Colors.grey),
+              SizedBox(height: 1.h),
               Text(
                 'No Events available',
-                style: TextStyle(fontSize: 18, color: Colors.black),
+                style: TextStyle(fontSize: 15.sp, color: Colors.black),
               ),
             ],
           ),
@@ -79,10 +79,10 @@ class _EventsListState extends State<EventsList> {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 2.w),
                   child: Container(
                     color: Colors.white,
-                    padding: const EdgeInsets.all(12),
+                    padding: EdgeInsets.all(12.sp),
                     child: Row(
                       children: [
                         Expanded(
@@ -92,30 +92,27 @@ class _EventsListState extends State<EventsList> {
                               Row(
                                 children: [
                                   Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 4,
-                                    ),
+                                    padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.5.h),
                                     decoration: BoxDecoration(
                                       color: const Color(0xFFD3D8FF),
-                                      borderRadius: BorderRadius.circular(8),
+                                      borderRadius: BorderRadius.circular(1.w),
                                     ),
                                     child: Row(
                                       children: [
-                                        const Icon(
+                                         Icon(
                                           Icons.calendar_today,
                                           color: Color(0xFF2640C8),
-                                          size: 12,
+                                          size: 13.sp,
                                         ),
-                                        const SizedBox(width: 4),
+                                         SizedBox(width: 1.w),
                                         Text(
                                           item.eventstartDateDate != null
                                               ? DateFormat(
                                                 'dd MMM yyyy',
                                               ).format(item.eventstartDateDate!)
                                               : '',
-                                          style: const TextStyle(
-                                            fontSize: 10,
+                                          style:  TextStyle(
+                                            fontSize: 11.sp,
                                             color: Color(0xFF2640C8),
                                           ),
                                         ),
@@ -128,8 +125,8 @@ class _EventsListState extends State<EventsList> {
                               Text(
                                 item.eventName ?? '',
                                 maxLines: 2,
-                                style: const TextStyle(
-                                  fontSize: 14,
+                                style: TextStyle(
+                                  fontSize: 15.sp,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -139,7 +136,7 @@ class _EventsListState extends State<EventsList> {
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
                                 style:  TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 13.sp,
                                   color: Colors.grey.shade800,
                                 ),
                               ),

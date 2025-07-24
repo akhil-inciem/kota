@@ -57,10 +57,10 @@ class ProfileHeader extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 4.w),
-                    const Text(
+                     Text(
                       "Profile",
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 18.sp,
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
                       ),
@@ -72,8 +72,8 @@ class ProfileHeader extends StatelessWidget {
           ),
           
           Positioned(
-  bottom: 25,
-  left: 30,
+  bottom: 2.5.h,
+  left: 3.h,
   child: Row(
     crossAxisAlignment: CrossAxisAlignment.center,
     children: [
@@ -81,15 +81,22 @@ class ProfileHeader extends StatelessWidget {
       Column(
         children: [
           SizedBox(height: 3.h,),
-          CircleAvatar(
-            radius: 30,
-            backgroundImage: CachedNetworkImageProvider(
-              user.photo?.isNotEmpty == true
-                  ? user.photo!
-                  : 'https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName ?? ''}&background=FFFFFF&color=000000',
-            ),
-          ),
-          const SizedBox(height: 8),
+          user.photo?.isNotEmpty == true
+    ? CircleAvatar(
+        radius: 3.h,
+        backgroundImage: CachedNetworkImageProvider(user.photo!),
+      )
+    :  CircleAvatar(
+        radius: 3.h,
+        backgroundColor: Colors.grey.shade200,
+        child: Icon(
+          Icons.person,
+          size: 24.sp,
+          color: Colors.grey,
+        ),
+      )
+,
+           SizedBox(height: 1.h),
           GestureDetector(
             onTap: () {
               Get.to(() => EditProfileScreen());
@@ -128,8 +135,8 @@ class ProfileHeader extends StatelessWidget {
         children: [
           Text(
             '${user.firstName}${user.lastName != null && user.lastName!.isNotEmpty ? ' ${user.lastName}' : ''}',
-            style: const TextStyle(
-              fontSize: 18,
+            style:  TextStyle(
+              fontSize: 16.sp,
               fontWeight: FontWeight.w600,
               color: Colors.white,
             ),
@@ -137,7 +144,7 @@ class ProfileHeader extends StatelessWidget {
           Text(
             authController.isGuest ? "KOTA Guest" : "KOTA Member",
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 14.sp,
               fontStyle: FontStyle.italic,
               fontWeight: FontWeight.w300,
               color: Colors.white70,

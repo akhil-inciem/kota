@@ -29,6 +29,7 @@ class CustomTextField extends StatelessWidget {
     return Obx(
       () => TextFormField(
         controller: controller,
+        style: TextStyle(fontSize: 15.sp),
         obscureText: _obscureText.value,
         validator: validator,
         autovalidateMode: AutovalidateMode.onUserInteraction,

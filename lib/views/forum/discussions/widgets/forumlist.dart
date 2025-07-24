@@ -18,25 +18,25 @@ class _ForumListState extends State<ForumList> {
   final ForumController forumController = Get.find<ForumController>();
 
   String timeAgo(String createdAt) {
-  final createdTime = DateTime.parse(createdAt);
-  final now = DateTime.now();
-  final difference = now.difference(createdTime);
+    final createdTime = DateTime.parse(createdAt);
+    final now = DateTime.now();
+    final difference = now.difference(createdTime);
 
-  if (difference.inMinutes < 1) {
-    return 'Just now';
-  } else if (difference.inMinutes < 60) {
-    return '${difference.inMinutes} minute${difference.inMinutes == 1 ? '' : 's'} ago';
-  } else if (difference.inHours < 24) {
-    return '${difference.inHours} hour${difference.inHours == 1 ? '' : 's'} ago';
-  } else if (difference.inDays < 7) {
-    return '${difference.inDays} day${difference.inDays == 1 ? '' : 's'} ago';
-  } else if (difference.inDays < 30) {
-    final weeks = (difference.inDays / 7).floor();
-    return '$weeks week${weeks == 1 ? '' : 's'} ago';
-  } else {
-    return '${difference.inDays} day${difference.inDays == 1 ? '' : 's'} ago';
+    if (difference.inMinutes < 1) {
+      return 'Just now';
+    } else if (difference.inMinutes < 60) {
+      return '${difference.inMinutes} minute${difference.inMinutes == 1 ? '' : 's'} ago';
+    } else if (difference.inHours < 24) {
+      return '${difference.inHours} hour${difference.inHours == 1 ? '' : 's'} ago';
+    } else if (difference.inDays < 7) {
+      return '${difference.inDays} day${difference.inDays == 1 ? '' : 's'} ago';
+    } else if (difference.inDays < 30) {
+      final weeks = (difference.inDays / 7).floor();
+      return '$weeks week${weeks == 1 ? '' : 's'} ago';
+    } else {
+      return '${difference.inDays} day${difference.inDays == 1 ? '' : 's'} ago';
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -66,9 +66,9 @@ class _ForumListState extends State<ForumList> {
                       width: 8.h,
                     ),
                     const SizedBox(height: 12),
-                    const Text(
+                     Text(
                       "No Discussions Available",
-                      style: TextStyle(fontSize: 18, color: Colors.black),
+                      style: TextStyle(fontSize: 18.sp, color: Colors.black),
                     ),
                   ],
                 ),
@@ -112,21 +112,20 @@ class _ForumListState extends State<ForumList> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               CircleAvatar(
-                                radius: 20.sp,
+                                radius: 2.5.h,
                                 backgroundColor: Colors.grey[200],
-                                child: ClipOval(
+                                child: item.photo?.isNotEmpty == true
+                                    ? ClipOval(
                                         child: CachedNetworkImage(
-                                          imageUrl: item.photo?.isNotEmpty == true
-                                          ? item.photo!
-                                          : 'https://ui-avatars.com/api/?name=${(item.firstName ?? '')} ${(item.lastName ?? '')}&background=0A58C9&color=ffffff',
-                                          width: 50,
-                                          height: 50,
+                                          imageUrl: item.photo!,
+                                          width: 5.h,
+                                          height: 5.h,
                                           fit: BoxFit.cover,
                                           placeholder: (context, url) =>
-                                              const Center(
+                                               Center(
                                             child: SizedBox(
-                                              width: 20,
-                                              height: 20,
+                                              width: 2.5.h,
+                                              height: 2.5.h,
                                               child: CircularProgressIndicator(
                                                 color: AppColors.primaryColor,
                                                 strokeWidth: 2,
@@ -134,15 +133,20 @@ class _ForumListState extends State<ForumList> {
                                             ),
                                           ),
                                           errorWidget: (context, url, error) =>
-                                              const Icon(
-                                            Icons.error,
-                                            size: 30,
-                                            color: Colors.red,
+                                              Icon(
+                                            Icons.person,
+                                            size: 20.sp,
+                                            color: Colors.grey,
                                           ),
                                         ),
+                                      )
+                                    : Icon(
+                                        Icons.person,
+                                        size: 20.sp,
+                                        color: Colors.grey,
                                       ),
                               ),
-                              SizedBox(width: 8),
+                              SizedBox(width: 1.h),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -150,12 +154,11 @@ class _ForumListState extends State<ForumList> {
                                     Text(
                                       '${item.firstName} ${item.lastName ?? ''}' ??
                                           '',
-                                      style: const TextStyle(
-                                        fontSize: 16,
+                                      style:  TextStyle(
+                                        fontSize: 16.sp,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
-                                    SizedBox(height: 0.5.h),
                                     Text(
                                       timeAgo(item.createdAt!),
                                       style: TextStyle(
@@ -169,7 +172,7 @@ class _ForumListState extends State<ForumList> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 1.h),
+                          SizedBox(height: 1.5.h),
                           Text(
                             item.title ?? '',
                             maxLines: 3,

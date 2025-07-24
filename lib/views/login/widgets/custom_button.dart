@@ -46,7 +46,7 @@ class CustomButton extends StatelessWidget {
         height: height ?? 6.h,
         decoration: BoxDecoration(
           color: effectiveBackgroundColor,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(14.sp),
           border: isGuestButton
               ? Border.all(color: effectiveTextColor, width: 1)
               : Border.all(color: Colors.transparent),
@@ -60,7 +60,7 @@ class CustomButton extends StatelessWidget {
               children: [
                 if (icon != null) ...[
                   icon!,
-                  SizedBox(width: 6),
+                  SizedBox(width: 0.5.h),
                 ],
                 Text(
                   text,

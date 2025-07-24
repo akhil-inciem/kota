@@ -27,39 +27,39 @@ class ReplyTile extends StatelessWidget {
             children: [
               reply.photo != null
                   ? CircleAvatar(
-                    radius: 20,
+                    radius: 2.h,
                     backgroundColor: Colors.grey.shade300,
                     child: ClipOval(
                       child: CachedNetworkImage(
                         imageUrl: reply.photo!,
-                        width: 40, // 2 * radius
-                        height: 40,
+                        width: 4.h, // 2 * radius
+                        height: 4.h,
                         fit: BoxFit.cover,
                         placeholder:
-                            (context, url) => const SizedBox(
-                              width: 20,
-                              height: 20,
+                            (context, url) =>  SizedBox(
+                              width: 2.h,
+                              height: 2.h,
                               child: CircularProgressIndicator(strokeWidth: 2),
                             ),
                         errorWidget:
                             (context, url, error) =>
-                                const Icon(Icons.error, color: Colors.red),
+                                 Icon(Icons.person, color: Colors.grey),
                       ),
                     ),
                   )
-                  : const CircleAvatar(
-                    radius: 20,
+                  :  CircleAvatar(
+                    radius: 2.h,
                     child: Icon(Icons.person, color: Colors.white),
                     backgroundColor: Colors.grey,
                   ),
-              SizedBox(width: 10),
+              SizedBox(width: 1.h),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     '${reply.firstName} ${reply.lastName ?? ''}',
-                    style: const TextStyle(
-                      fontSize: 15,
+                    style: TextStyle(
+                      fontSize: 15.sp,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
                     ),
@@ -67,7 +67,7 @@ class ReplyTile extends StatelessWidget {
                   Text(
                     formatDateTime(reply.createdAt),
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontStyle: FontStyle.italic,
                       color: Colors.grey.shade600,
                     ),
@@ -76,11 +76,11 @@ class ReplyTile extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+           SizedBox(height: 1.h),
           // Comment text
           buildRichTextWithMentions(reply.content),
 
-          const SizedBox(height: 8),
+           SizedBox(height: 1.h),
           // Actions Row
           Row(
             children: [
@@ -90,7 +90,7 @@ class ReplyTile extends StatelessWidget {
                 },
                 child: Icon(
                   reply.isLiked! ? Icons.favorite : Icons.favorite_border,
-                  size: 20,
+                  size: 18.sp,
                   color: reply.isLiked! ? Colors.red : Colors.black,
                 ),
               ),
@@ -98,7 +98,7 @@ class ReplyTile extends StatelessWidget {
               if ((int.tryParse(reply.likeCount ?? '0') ?? 0) > 0)
                 Text(reply.likeCount!),
 
-              SizedBox(width: 20),
+              SizedBox(width: 2.h),
               GestureDetector(
                 onTap: () {
                   _forumController.startReply(
@@ -146,18 +146,18 @@ class CommentTile extends StatelessWidget {
             children: [
               comment.photo != null
                   ? CircleAvatar(
-                    radius: 20,
+                    radius: 2.h,
                     backgroundColor: Colors.grey.shade300,
                     child: ClipOval(
                       child: CachedNetworkImage(
                         imageUrl: comment.photo!,
-                        width: 40, // 2 * radius
-                        height: 40,
+                        width: 4.h, // 2 * radius
+                        height: 4.h,
                         fit: BoxFit.cover,
                         placeholder:
-                            (context, url) => const SizedBox(
-                              width: 20,
-                              height: 20,
+                            (context, url) =>  SizedBox(
+                              width: 2.h,
+                              height: 2.h,
                               child: CircularProgressIndicator(strokeWidth: 2),
                             ),
                         errorWidget:
@@ -166,19 +166,19 @@ class CommentTile extends StatelessWidget {
                       ),
                     ),
                   )
-                  : const CircleAvatar(
-                    radius: 20,
+                  : CircleAvatar(
+                    radius: 2.h,
                     child: Icon(Icons.person, color: Colors.white),
                     backgroundColor: Colors.grey,
                   ),
-              SizedBox(width: 10),
+              SizedBox(width: 1.h),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     '${comment.firstName} ${comment.lastName ?? ''}',
-                    style: const TextStyle(
-                      fontSize: 15,
+                    style:  TextStyle(
+                      fontSize: 15.sp,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
                     ),
@@ -186,7 +186,7 @@ class CommentTile extends StatelessWidget {
                   Text(
                     formatDateTime(comment.createdAt),
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontStyle: FontStyle.italic,
                       color: Colors.grey.shade600,
                     ),
@@ -195,10 +195,10 @@ class CommentTile extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+           SizedBox(height: 1.h),
           // Comment text
           buildRichTextWithMentions(comment.content),
-          const SizedBox(height: 8),
+           SizedBox(height: 1.h),
           // Actions Row
           Row(
             children: [
@@ -208,14 +208,14 @@ class CommentTile extends StatelessWidget {
                 },
                 child: Icon(
                   comment.isLiked! ? Icons.favorite : Icons.favorite_border,
-                  size: 20,
+                  size: 18.sp,
                   color: comment.isLiked! ? Colors.red : Colors.black,
                 ),
               ),
               SizedBox(width: 1.w),
               if ((int.tryParse(comment.likeCount ?? '0') ?? 0) > 0)
-                Text(comment.likeCount!),
-              SizedBox(width: 20),
+                Text(comment.likeCount!,style: TextStyle(fontSize: 15.sp),),
+              SizedBox(width: 2.h),
 
               GestureDetector(
                 onTap: () {
@@ -232,7 +232,7 @@ class CommentTile extends StatelessWidget {
                       width: 2.h,
                     ),
                     SizedBox(width: 1.5.w),
-                    Text('Reply', style: TextStyle(fontSize: 14)),
+                    Text('Reply', style: TextStyle(fontSize: 14.sp)),
                   ],
                 ),
               ),
@@ -302,7 +302,7 @@ String formatDateTime(String? dateTimeStr) {
   if (dateTimeStr == null) return '';
   final dateTime = DateTime.tryParse(dateTimeStr);
   if (dateTime == null) return '';
-  final date = DateFormat("d MMM yyyy").format(dateTime); // e.g., 27 Apr 2025
+  final date = DateFormat("d MMM yyyy").format(dateTime); // e.g., 27 Apr 2.h25
   final time = DateFormat("hh:mm a").format(dateTime); // e.g., 04:09 PM
   return '$date  |  $time';
 }

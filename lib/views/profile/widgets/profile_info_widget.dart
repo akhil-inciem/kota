@@ -66,7 +66,7 @@ Widget build(BuildContext context) {
       padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 3.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.sp),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,8 +84,8 @@ Widget build(BuildContext context) {
               Expanded(
                 child: Text(
                   widget.email,
-                  style: const TextStyle(
-                    fontSize: 15,
+                  style:  TextStyle(
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.w400,
                     color: Colors.black87,
                   ),
@@ -93,7 +93,7 @@ Widget build(BuildContext context) {
               ),
               InkWell(
                 onTap: () => _copyToClipboard(widget.email, "Email"),
-                child: const Icon(Icons.copy, size: 18, color: Colors.black54),
+                child:  Icon(Icons.copy, size: 19.sp, color: Colors.black54),
               ),
             ],
           ),
@@ -111,8 +111,8 @@ Widget build(BuildContext context) {
               Expanded(
                 child: Text(
                   widget.phoneNumber,
-                  style: const TextStyle(
-                    fontSize: 15,
+                  style:  TextStyle(
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.w400,
                     color: Colors.black87,
                   ),
@@ -120,7 +120,7 @@ Widget build(BuildContext context) {
               ),
               InkWell(
                 onTap: () => _copyToClipboard(widget.phoneNumber, "Phone number"),
-                child: const Icon(Icons.copy, size: 18, color: Colors.black54),
+                child: Icon(Icons.copy, size: 19.sp, color: Colors.black54),
               ),
             ],
           ),
@@ -133,8 +133,8 @@ Widget build(BuildContext context) {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Image.asset('assets/icons/executives.png',
-                  height: 2.h,
-                  width: 2.h,
+                  height: 2.5.h,
+                  width: 2.5.h,
                 ),
                 SizedBox(width: 5.w),
                 Expanded(
@@ -143,8 +143,8 @@ Widget build(BuildContext context) {
                     children: [
                       Text(
                         widget.role,
-                        style: const TextStyle(
-                          fontSize: 15,
+                        style:  TextStyle(
+                          fontSize: 16.sp,
                           fontWeight: FontWeight.w400,
                           color: Colors.black87,
                         ),
@@ -156,7 +156,7 @@ Widget build(BuildContext context) {
                             : 'Membership valid until ${DateFormat('dd MMM yyyy').format(expiryDate)}',
                         style: TextStyle(
                           color: expired ? Colors.red : Colors.green,
-                          fontSize: 12,
+                          fontSize: 13.sp,
                         ),
                       ),
                     ],
@@ -180,9 +180,9 @@ Widget build(BuildContext context) {
                     horizontal: 3.w,
                     vertical: 0.5.h,
                   ),
-                  child: const Text(
+                  child:  Text(
                     "Renew Membership",
-                    style: TextStyle(color: Colors.white, fontSize: 12),
+                    style: TextStyle(color: Colors.white, fontSize: 13.sp),
                   ),
                 ),
               ),

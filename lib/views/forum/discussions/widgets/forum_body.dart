@@ -83,11 +83,10 @@ class _ForumPostBodyState extends State<ForumPostBody> {
       children: [
         Text(
           widget.title,
-          style:  TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 16.sp,
-            color: Color(0xFF0A2C49)
-          ),
+          style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 16.sp,
+              color: Color(0xFF0A2C49)),
         ),
         const SizedBox(height: 12),
         Text(
@@ -103,33 +102,35 @@ class _ForumPostBodyState extends State<ForumPostBody> {
         // Horizontal Image Scroll with Page Indicator
         if (hasImages) ...[
           AspectRatio(
-  aspectRatio: 4 / 3, // or any suitable ratio for your images
-  child: PageView.builder(
-    controller: _pageController,
-    itemCount: widget.imageUrls.length,
-    onPageChanged: (index) {
-      setState(() {
-        _currentIndex = index;
-      });
-    },
-    itemBuilder: (_, index) {
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(12),
-        child: CachedNetworkImage(
-          imageUrl: widget.imageUrls[index],
-          width: double.infinity,
-          fit: BoxFit.contain,
-          placeholder: (context, url) => Container(
-            color: Colors.grey[300],
+            aspectRatio: 4 / 3, // or any suitable ratio for your images
+            child: PageView.builder(
+              controller: _pageController,
+              itemCount: widget.imageUrls.length,
+              onPageChanged: (index) {
+                setState(() {
+                  _currentIndex = index;
+                });
+              },
+              itemBuilder: (_, index) {
+                return ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: CachedNetworkImage(
+                    imageUrl: widget.imageUrls[index],
+                    width: double.infinity,
+                    fit: BoxFit.contain,
+                    placeholder: (context, url) => Container(
+                      color: Colors.grey[300],
+                    ),
+                    errorWidget: (context, url, error) => Icon(
+                      Icons.person,
+                      size: 24.sp,
+                      color: Colors.grey,
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
-          errorWidget: (context, url, error) =>
-              const Icon(Icons.error, color: Colors.red),
-        ),
-      );
-    },
-  ),
-),
-
           const SizedBox(height: 10),
           Center(
             child: SmoothPageIndicator(
@@ -162,7 +163,7 @@ class _ForumPostBodyState extends State<ForumPostBody> {
             Obx(
               () => Text(
                 widget.likes.value,
-                style:  TextStyle(fontSize: 15.sp),
+                style: TextStyle(fontSize: 15.sp),
               ),
             ),
             SizedBox(width: 6.w),
@@ -177,7 +178,7 @@ class _ForumPostBodyState extends State<ForumPostBody> {
                 Obx(
                   () => Text(
                     '${widget.comments} Comments',
-                    style:  TextStyle(fontSize: 15.sp),
+                    style: TextStyle(fontSize: 15.sp),
                   ),
                 ),
               ],
@@ -185,16 +186,15 @@ class _ForumPostBodyState extends State<ForumPostBody> {
             const SizedBox(width: 20),
             GestureDetector(
               onTap: _handleShare,
-              behavior:
-                  HitTestBehavior
-                      .opaque, // Ensures tap works on padding areas too
+              behavior: HitTestBehavior
+                  .opaque, // Ensures tap works on padding areas too
               child: Row(
                 children: [
                   Image.asset(
-                  'assets/icons/share.png',
-                  height: 2.h,
-                  width: 2.h,
-                ),
+                    'assets/icons/share.png',
+                    height: 2.h,
+                    width: 2.h,
+                  ),
                   SizedBox(width: 1.5.w),
                   Text('Share', style: TextStyle(fontSize: 15.sp)),
                 ],

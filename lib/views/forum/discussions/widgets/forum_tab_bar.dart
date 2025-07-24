@@ -57,16 +57,16 @@ class TabItem extends StatelessWidget {
             style: TextStyle(
               color: isSelected ? AppColors.primaryText : Colors.grey.shade800,
               fontWeight:isSelected ? FontWeight.w600 : FontWeight.normal,
-              fontSize: 16,
+              fontSize: 16.sp,
             ),
           ),
-          const SizedBox(height: 4),
+           SizedBox(height: 0.5.h),
           Container(
-            height: 4,
+            height: 0.5.h,
             width: 24.w,
             decoration: BoxDecoration(
               color: isSelected ? AppColors.primaryText : Colors.transparent,
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10))
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(10.sp),topRight: Radius.circular(10.sp))
             ),
             
           ),

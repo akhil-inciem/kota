@@ -57,7 +57,6 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -86,7 +85,8 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
                     return const Center(child: Text('No user data found'));
                   } else {
                     final user = userController.user.value!;
-                    final userName = '${user.firstName ?? ''} ${user.lastName ?? ''}';
+                    final userName =
+                        '${user.firstName ?? ''} ${user.lastName ?? ''}';
                     return SingleChildScrollView(
                       child: Form(
                         key: _formKey,
@@ -99,28 +99,32 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
                                 children: [
                                   CircleAvatar(
                                     radius: 30,
-                                    backgroundColor: Colors.grey[300],
-                                    child: ClipOval(
-                                      child: CachedNetworkImage(
-                                        imageUrl:
-                                            user.photo?.isNotEmpty == true
-                                                ? user.photo!
-                                                : 'https://ui-avatars.com/api/?name=$userName&background=0A58C9&color=ffffff',
-                                        fit: BoxFit.cover,
-                                        width: 60,
-                                        height: 60,
-                                        placeholder:
-                                            (context, url) =>
-                                                const CircularProgressIndicator(
-                                                  strokeWidth: 2,
-                                                ),
-                                        errorWidget:
-                                            (context, url, error) => const Icon(
-                                              Icons.error,
-                                              color: Colors.red,
+                                    backgroundColor: Colors.grey[200],
+                                    child: user.photo?.isNotEmpty == true
+                                        ? ClipOval(
+                                            child: CachedNetworkImage(
+                                              imageUrl: user.photo!,
+                                              fit: BoxFit.cover,
+                                              width: 60,
+                                              height: 60,
+                                              placeholder: (context, url) =>
+                                                  const CircularProgressIndicator(
+                                                strokeWidth: 2,
+                                              ),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Icon(
+                                            Icons.person,
+                                            size: 25.sp,
+                                            color: Colors.grey,
+                                          ),
                                             ),
-                                      ),
-                                    ),
+                                          )
+                                        :  Icon(
+                                            Icons.person,
+                                            size: 25.sp,
+                                            color: Colors.grey,
+                                          ),
                                   ),
                                   const SizedBox(width: 15),
                                   Text(
@@ -147,7 +151,9 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
                                 filled: true,
                                 fillColor: AppColors.primaryBackground,
                                 hintText: "Enter Title",
-                                hintStyle: TextStyle(fontSize: 16.sp,fontWeight: FontWeight.w100),
+                                hintStyle: TextStyle(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w100),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide: BorderSide.none,
@@ -171,7 +177,9 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
                               maxLines: 8,
                               decoration: InputDecoration(
                                 hintText: "Type your question/queries here...",
-                                hintStyle: TextStyle(fontSize: 16.sp,fontWeight: FontWeight.w100),
+                                hintStyle: TextStyle(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w100),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide: BorderSide.none,
@@ -186,7 +194,10 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
                             SizedBox(height: 2.h),
 
                             /// ✅ AddImageSection and Create Button moved here
-                             Divider(color: Colors.grey.shade300, thickness: 1, height: 1),
+                            Divider(
+                                color: Colors.grey.shade300,
+                                thickness: 1,
+                                height: 1),
                             SizedBox(height: 2.h),
                             AddImageSection(),
                             Obx(() {
@@ -194,10 +205,9 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
                                 padding: EdgeInsets.symmetric(horizontal: 6.w),
                                 child: CustomButton(
                                   isEnabled: !_forumController.isLoading.value,
-                                  text:
-                                      _forumController.isLoading.value
-                                          ? "Posting..."
-                                          : "Create Discussion",
+                                  text: _forumController.isLoading.value
+                                      ? "Posting..."
+                                      : "Create Discussion",
                                   backgroundColor: AppColors.primaryColor,
                                   textColor: Colors.white,
                                   onPressed: () {
@@ -208,7 +218,9 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
                                 ),
                               );
                             }),
-                            SizedBox(height: 1.h,)
+                            SizedBox(
+                              height: 1.h,
+                            )
                           ],
                         ),
                       ),
@@ -261,18 +273,15 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
         controller: controller,
         inputFormatters: [CapitalizeFirstLetterFormatter()],
         maxLines: maxLines,
-        decoration:
-            decoration ??
+        decoration: decoration ??
             InputDecoration(
               hintText: hint,
               hintStyle: TextStyle(fontSize: 16),
               border: InputBorder.none,
             ),
-        validator:
-            (value) =>
-                (value == null || value.trim().isEmpty)
-                    ? 'This field is required'
-                    : null,
+        validator: (value) => (value == null || value.trim().isEmpty)
+            ? 'This field is required'
+            : null,
       ),
     );
   }

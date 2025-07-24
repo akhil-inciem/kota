@@ -90,13 +90,13 @@ class MyCertificationsWidget extends StatelessWidget {
                   width: 2.5.h,
                 ),
                     SizedBox(width: 2.w),
-                    Text('My Certifications ($certificationCount)'),
+                    Text('My Certifications ($certificationCount)',style: TextStyle(fontSize: 15.sp),),
                   ],
                 ),
                 Row(
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.remove_red_eye),
+                      icon:  Icon(Icons.remove_red_eye,size: 20.sp,),
                       onPressed: () => _openPdfViewer(context),
                     ),
                   ],

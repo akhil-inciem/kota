@@ -31,66 +31,58 @@ class DrawerPage extends StatelessWidget {
         body: Column(
           children: [
             DrawerHeaderWidget(),
-             SizedBox(height: 2.h),
+            SizedBox(height: 2.h),
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                children: [
-                  ViewProfileItem(),
-                  DrawerItem(
-                    icon: 'assets/icons/vision&mission.png',
-                    title: 'Vision & Mission',
-                    onPressed: () {
-                      Get.to(() => MissionPage());
-                    },
-                  ),
-                  DrawerItem(
-                    icon: 'assets/icons/executives.png',
-                    title: 'KOTA Executives',
-                    onPressed: () {
-                      Get.to(() => ExecutivePage());
-                    },
-                  ),
-                  DrawerItem(
-                    icon: 'assets/icons/executives.png',
-                    title: 'OT Colleges',
-                    onPressed: () {
-                      Get.to(() => CollegesScreen());
-                    },
-                  ),
-                  DrawerItem(
-                    icon: 'assets/icons/contct_us.png',
-                    title: 'Contact Us',
-                    onPressed: () {
-                      Get.to(() => ContactUsScreen());
-                    },
-                  ),
-                  DrawerItem(
-                    icon: 'assets/icons/faq.png',
-                    title: 'FAQ',
-                    onPressed: () {
-                      Get.to(() => FaqScreen());
-                    },
-                  ),
-                  DrawerItem(
-                    icon: 'assets/icons/find.png',
-                    title: 'Find',
-                    onPressed: () => Get.to(() => FindScreen()),
-                  ),
-                  DrawerItem(
-                    icon: 'assets/icons/logout.png',
-                    title: 'Logout',
-                    onPressed: () {
-                      Get.dialog(
-                        LogoutConfirmationDialog(
-                          authController: authController,
-                        ),
-                        barrierDismissible: false,
-                      );
-                    },
-                  ),
-                ],
-              ),
+  padding: EdgeInsets.symmetric(horizontal: 2.h, vertical: 2.h),
+  children: [
+    ViewProfileItem(),
+    SizedBox(height: 1.h),
+    ...[
+      DrawerItem(
+        icon: 'assets/icons/vision&mission.png',
+        title: 'Vision & Mission',
+        onPressed: () => Get.to(() => MissionPage()),
+      ),
+      DrawerItem(
+        icon: 'assets/icons/executives.png',
+        title: 'KOTA Executives',
+        onPressed: () => Get.to(() => ExecutivePage()),
+      ),
+      DrawerItem(
+        icon: 'assets/icons/executives.png',
+        title: 'OT Colleges',
+        onPressed: () => Get.to(() => CollegesScreen()),
+      ),
+      DrawerItem(
+        icon: 'assets/icons/contct_us.png',
+        title: 'Contact Us',
+        onPressed: () => Get.to(() => ContactUsScreen()),
+      ),
+      DrawerItem(
+        icon: 'assets/icons/faq.png',
+        title: 'FAQ',
+        onPressed: () => Get.to(() => FaqScreen()),
+      ),
+      DrawerItem(
+        icon: 'assets/icons/find.png',
+        title: 'Find',
+        onPressed: () => Get.to(() => FindScreen()),
+      ),
+      DrawerItem(
+        icon: 'assets/icons/logout.png',
+        title: 'Logout',
+        onPressed: () {
+          Get.dialog(
+            LogoutConfirmationDialog(authController: authController),
+            barrierDismissible: false,
+          );
+        },
+      ),
+    ].expand((item) => [item, SizedBox(height: 1.h)]).toList(), // 👈 spacing between each
+  ],
+),
+
             ),
           ],
         ),
@@ -122,7 +114,7 @@ class DrawerHeaderWidget extends StatelessWidget {
           // Background image
           Positioned(
             right: -2.h,
-            top: 25,
+            top: 2.5.h,
             bottom: 0,
             child: Opacity(
               opacity: 0.8,
@@ -146,7 +138,7 @@ class DrawerHeaderWidget extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(6.0),
                 child: InkWell(
-                  child:  Icon(Icons.close, size: 23.sp, color: Colors.white),
+                  child: Icon(Icons.close, size: 23.sp, color: Colors.white),
                   onTap: () => Get.back(),
                 ),
               ),
@@ -155,37 +147,47 @@ class DrawerHeaderWidget extends StatelessWidget {
 
           // Avatar and user info
           Positioned(
-            bottom: 25,
-            left: 30,
+            bottom: 2.5.h,
+            left: 3.h,
             child: Obx(() {
               final user = userController.user.value;
 
               if (user == null) {
-                return const SizedBox(height: 60, width: 60);
+                return  SizedBox(height: 7.h, width: 7.h);
               }
-
-              final imageUrl = user.photo?.isNotEmpty == true
-                  ? user.photo!
-                  : 'https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName ?? ''}&background=FFFFFF&color=000000';
 
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
-                    height: 60,
-                    width: 60,
-                    child: ClipOval(
-                      child: CachedNetworkImage(
-                        imageUrl: imageUrl,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => Shimmer.fromColors(
-                          baseColor: Colors.grey.shade300,
-                          highlightColor: Colors.grey.shade100,
-                          child: Container(color: Colors.grey),
-                        ),
-                        errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.red),
-                      ),
-                    ),
+                    height: 7.h,
+                    width:7.h,
+                    child: user.photo?.isNotEmpty == true
+                        ? ClipOval(
+                            child: CachedNetworkImage(
+                              imageUrl: user.photo!,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => Shimmer.fromColors(
+                                baseColor: Colors.grey.shade300,
+                                highlightColor: Colors.grey.shade100,
+                                child: Container(color: Colors.grey),
+                              ),
+                              errorWidget: (context, url, error) =>  Icon(
+                                Icons.person,
+                              size: 24.sp,
+                              color: Colors.grey,
+                              ),
+                            ),
+                          )
+                        :  CircleAvatar(
+                            radius: 3.h,
+                            backgroundColor: Colors.grey[200],
+                            child: Icon(
+                              Icons.person,
+                              size: 24.sp,
+                              color: Colors.grey,
+                            ),
+                          ),
                   ),
                   const SizedBox(width: 15),
                   Column(
@@ -193,8 +195,8 @@ class DrawerHeaderWidget extends StatelessWidget {
                     children: [
                       Text(
                         '${user.firstName}${user.lastName != null && user.lastName!.isNotEmpty ? ' ${user.lastName}' : ''}',
-                        style: const TextStyle(
-                          fontSize: 18,
+                        style:  TextStyle(
+                          fontSize: 15.sp,
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
                         ),
@@ -202,8 +204,8 @@ class DrawerHeaderWidget extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         authController.isGuest ? "KOTA Guest" : "KOTA Member",
-                        style: const TextStyle(
-                          fontSize: 14,
+                        style:  TextStyle(
+                          fontSize: 14.sp,
                           fontStyle: FontStyle.italic,
                           fontWeight: FontWeight.w300,
                           color: Colors.white70,
@@ -236,52 +238,60 @@ class DrawerItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      contentPadding: EdgeInsets.symmetric(horizontal: 5.w), // tighter horizontal padding
+      contentPadding:
+          EdgeInsets.symmetric(horizontal: 5.w), // tighter horizontal padding
       dense: true, // reduces overall height
-      horizontalTitleGap: 10, // spacing between icon and text
+      horizontalTitleGap: 1.h, // spacing between icon and text
+      
       leading: Image.asset(
         icon,
-        height: 2.4.h,
-        width: 2.4.h,
+        height: 2.5.h,
+        width: 2.5.h,
       ),
       title: Text(
         title,
-        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+        style:  TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w400),
       ),
       onTap: onPressed,
     );
   }
 }
 
-
 class ViewProfileItem extends StatelessWidget {
   const ViewProfileItem({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 2.5.w),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white, // Retain white background
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: ListTile(
-          contentPadding: EdgeInsets.symmetric(horizontal: 2.w),
-          horizontalTitleGap: 10,
-          leading:Image.asset( 'assets/icons/profile.png',
-                  height: 2.5.h,
-                  width: 2.5.h,
-                ),
-          title: const Text(
-            'View Profile',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12.sp),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 4,
+            offset: Offset(0, 2),
           ),
-          onTap: () => Get.to(() => ProfilePage()),
+        ],
+      ),
+      child: ListTile(
+        contentPadding: EdgeInsets.symmetric(horizontal: 5.w,),
+        horizontalTitleGap: 3.w,
+        leading: Image.asset(
+          'assets/icons/profile.png',
+          height: 2.5.h,
+          width: 2.5.h,
+          fit: BoxFit.contain,
         ),
+        title: Text(
+          'View Profile',
+          style: TextStyle(
+            fontSize: 15.sp,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        onTap: () => Get.to(() => ProfilePage()),
       ),
     );
   }
 }
-
-

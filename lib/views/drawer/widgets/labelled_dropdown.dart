@@ -31,10 +31,10 @@ class LabelledDropdown<T> extends StatelessWidget {
       children: [
         Text(label,
             style: TextStyle(
-                fontSize: 16.sp,
+                fontSize: 15.sp,
                 fontWeight: FontWeight.w500,
                 color: AppColors.labelText)),
-        const SizedBox(height: 8),
+         SizedBox(height: 1.h),
         Container(
           decoration: BoxDecoration(
             color: AppColors.primaryBackground,
@@ -54,13 +54,12 @@ class LabelledDropdown<T> extends StatelessWidget {
   }).toList(),
   onChanged: onChanged,
   isExpanded: true,
-  decoration: const InputDecoration(
-    contentPadding: EdgeInsets.symmetric(horizontal: 16), // 👈 match this
+  decoration:  InputDecoration(
+    contentPadding: EdgeInsets.symmetric(horizontal: 1.5.h,vertical: 1.5.h), // 👈 match this
     border: InputBorder.none,
     hintText: 'Select',
   ),
   dropdownStyleData: DropdownStyleData(
-    padding: const EdgeInsets.symmetric(horizontal: 0), // Sheet padding
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(10),
       color: Colors.white,

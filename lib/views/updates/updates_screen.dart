@@ -76,7 +76,7 @@ class _UpdatesScreenState extends State<UpdatesScreen>
       return Column(
         children: [
           TopBar(),
-          SizedBox(height: 0.5.h),
+          SizedBox(height: 1.h),
           CustomSearchBar(
             controller: updateController.searchController,
             onChanged: (value) => updateController.updateSearch(value),

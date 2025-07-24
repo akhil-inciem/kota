@@ -29,6 +29,7 @@ class WeekdayHeader extends StatelessWidget {
                     color: isSelectedWeekday
                         ? const Color(0xFFFF2E66)
                         : const Color(0xFF839099),
+                        fontSize: 15.sp
                   ),
                 ),
               ),

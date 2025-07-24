@@ -53,8 +53,8 @@ class _EventCalendarTabState extends State<EventCalendarTab> {
             ],
           ),
           DraggableScrollableSheet(
-  initialChildSize: 0.35,
-  minChildSize: 0.35,
+  initialChildSize: 0.45,
+  minChildSize: 0.45,
   maxChildSize: 1,
   builder: (context, scrollController) {
     return ValueListenableBuilder<double>(
@@ -86,10 +86,10 @@ class _EventCalendarTabState extends State<EventCalendarTab> {
                     children: [
                       Icon(Icons.newspaper, size: 35.sp, color: Colors.grey),
                       SizedBox(height: 1.h),
-                      const Text(
+                       Text(
                         "No upcoming Events",
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 15.sp,
                           fontWeight: FontWeight.w600,
                           color: Colors.black,
                         ),
@@ -150,10 +150,10 @@ class _EventCalendarTabState extends State<EventCalendarTab> {
                                 children: [
                                   Icon(Icons.newspaper, size: 35.sp, color: Colors.grey),
                                   SizedBox(height: 1.h),
-                                  const Text(
+                                   Text(
                                     "No upcoming Events",
                                     style: TextStyle(
-                                      fontSize: 14,
+                                      fontSize: 14.sp,
                                       fontWeight: FontWeight.w600,
                                       color: Colors.black,
                                     ),

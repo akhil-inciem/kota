@@ -28,7 +28,7 @@ class _ForumScreenState extends State<ForumScreen> {
     return Column(
       children: [
         TopBar(),
-        SizedBox(height: 0.5.h),
+        SizedBox(height: 1.h),
        CustomSearchBar(
   controller: forumController.searchController,
   onChanged: (value) {

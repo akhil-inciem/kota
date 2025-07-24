@@ -85,7 +85,7 @@ class _ChangePasswordWidgetState extends State<ChangePasswordWidget>
                   width: 2.5.h,
                 ),
                     SizedBox(width: 5.w),
-                    const Text('Change Password'),
+                     Text('Change Password',style: TextStyle(fontSize: 15.sp),),
                     const Spacer(),
                     authController.isGuest
                         ? SizedBox.shrink()
@@ -107,6 +107,7 @@ class _ChangePasswordWidgetState extends State<ChangePasswordWidget>
                           children: [
                             LabelledTextField(
                               controller: _emailController,
+                              
                               hintText: 'Enter your email',
                               isPassword: false,
                               validator: (value) {

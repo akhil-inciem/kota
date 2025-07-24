@@ -40,7 +40,7 @@ class LabelledTextField extends StatelessWidget {
             style: TextStyle(
               color: AppColors.labelText,
               fontWeight: FontWeight.w600,
-              fontSize: 12,
+              fontSize: 12.sp,
             ),
           ),
           GestureDetector(
@@ -50,7 +50,7 @@ class LabelledTextField extends StatelessWidget {
               style: TextStyle(
                 color: AppColors.primaryText,
                 fontWeight: FontWeight.w600,
-                fontSize: 12,
+                fontSize: 12.sp,
               ),
             ),
           ),
@@ -62,7 +62,7 @@ class LabelledTextField extends StatelessWidget {
         style: TextStyle(
           color: AppColors.labelText,
           fontWeight: FontWeight.w600,
-          fontSize: 12,
+          fontSize: 12.sp,
         ),
       );
     }

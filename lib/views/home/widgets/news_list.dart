@@ -50,11 +50,11 @@ class _NewsListState extends State<NewsList> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.newspaper, size: 48, color: Colors.grey),
-              SizedBox(height: 12),
+              Icon(Icons.newspaper, size: 25.sp, color: Colors.grey),
+              SizedBox(height: 1.h),
               Text(
                 'No News available',
-                style: TextStyle(fontSize: 18, color: Colors.black),
+                style: TextStyle(fontSize: 15.sp, color: Colors.black),
               ),
             ],
           ),
@@ -69,121 +69,116 @@ class _NewsListState extends State<NewsList> {
         itemBuilder: (context, index) {
           final item = items[index];
           return GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => NewsDetailScreen(newsId: item.newsId!),
-                ),
-              );
-            },
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Container(
-                    color: Colors.white,
-                    padding: const EdgeInsets.all(12),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 4,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFFD3D8FF),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.calendar_today_outlined,
-                                          color: Color(0xFF2640C8),
-                                          size: 12,
-                                        ),
-                                        const SizedBox(width: 4),
-                                        Text(
-                                          item.newsDate != null
-                                              ? DateFormat(
-                                                'dd MMM yyyy',
-                                              ).format(item.newsDate!)
-                                              : '',
-                                          style: const TextStyle(
-                                            fontSize: 10,
-                                            color: Color(0xFF2640C8),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 1.h),
-                              Text(
-                                item.newsTitle ?? '',
-                                maxLines: 2,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              SizedBox(height: 1.h),
-                              Text(
-                                _cleanText(item.newsDescription ?? ''),
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
-                                style:  TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey.shade800,
-                                ),
-                              ),
-                            ],
+  onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => NewsDetailScreen(newsId: item.newsId!),
+      ),
+    );
+  },
+  child: Column(
+    children: [
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 2.w),
+        child: Container(
+          color: Colors.white,
+          padding: EdgeInsets.all(12.sp),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.5.h),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFD3D8FF),
+                        borderRadius: BorderRadius.circular(1.w),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.calendar_today_outlined,
+                            color: const Color(0xFF2640C8),
+                            size: 13.sp,
                           ),
-                        ),
-                        const SizedBox(width: 12),
-                        Container(
-                          width: 24.w,
-                          height: 15.h,
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade300,
-                            borderRadius: BorderRadius.circular(15),
+                          SizedBox(width: 1.w),
+                          Text(
+                            item.newsDate != null
+                                ? DateFormat('dd MMM yyyy').format(item.newsDate!)
+                                : '',
+                            style: TextStyle(
+                              fontSize: 11.sp,
+                              color: const Color(0xFF2640C8),
+                            ),
                           ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child:
-                                item.newsImage == ''
-                                    ? Image.asset(
-                                      'assets/images/recommend_tile.jpg',
-                                      fit: BoxFit.cover,
-                                    )
-                                    : CachedNetworkImage(
-                                      imageUrl: item.newsImage!,
-                                      fit: BoxFit.cover,
-                                      placeholder:
-                                          (context, url) => Center(
-                                            child: SizedBox.fromSize()
-                                          ),
-                                      errorWidget:
-                                          (context, url, error) =>
-                                              const Icon(Icons.error),
-                                    ),
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
+                    SizedBox(height: 1.h),
+                    Text(
+                      item.newsTitle ?? '',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 15.sp,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                      ),
+                    ),
+                    SizedBox(height: 1.h),
+                    Text(
+                      _cleanText(item.newsDescription ?? ''),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        color: Colors.grey.shade800,
+                      ),
+                    ),
+                  ],
                 ),
-                Divider(color: Colors.grey.shade200, thickness: 1, height: 0),
-              ],
-            ),
-          );
+              ),
+              SizedBox(width: 3.w),
+              Container(
+                width: 24.w,
+                height: 15.h,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(3.w),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(3.w),
+                  child: item.newsImage == ''
+                      ? Image.asset(
+                          'assets/images/recommend_tile.jpg',
+                          fit: BoxFit.cover,
+                        )
+                      : CachedNetworkImage(
+                          imageUrl: item.newsImage!,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => Center(
+                            child: SizedBox(
+                              width: 10.w,
+                              height: 5.h,
+                              child: const CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                          ),
+                          errorWidget: (context, url, error) => const Icon(Icons.error),
+                        ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      Divider(color: Colors.grey.shade200, thickness: 0.3.h, height: 0),
+    ],
+  ),
+);
+
         },
       );
     });

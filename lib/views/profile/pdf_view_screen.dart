@@ -43,7 +43,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
 
         CustomSnackbars.success(
           'PDF downloaded successfully!',
-          'Saved to: $filePath',
+          'Saved to downloads',
         );
       } else {
         CustomSnackbars.failure('Failed to download PDF.', 'Error');

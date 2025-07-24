@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       children: [
         TopBar(),
-        SizedBox(height: 0.5.h),
+        SizedBox(height: 1.h),
         CustomSearchBar(
           controller: homeController.searchController,
           onChanged: (value) {
@@ -51,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 : eventController.filterEvents(value);
           },
         ),
-        SizedBox(height: 2.h),
+        SizedBox(height: 1.h),
         Obx(() {
           return HomeTabBar(
             selectedIndex: homeController.selectedTabIndex.value,

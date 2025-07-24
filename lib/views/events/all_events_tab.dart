@@ -142,7 +142,7 @@ Widget build(BuildContext context) {
                     Text(
                       dayName,
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: 14.sp,
                         color: Colors.grey[600],
                       ),
                     ),
@@ -150,7 +150,7 @@ Widget build(BuildContext context) {
                   Text(
                     dateDisplay,
                     style: TextStyle(
-                      fontSize: showFullDate ? 12 : 14,
+                      fontSize: showFullDate ? 14.sp : 16.sp,
                       fontWeight: FontWeight.w600,
                       color: Colors.black87,
                     ),
@@ -166,7 +166,7 @@ Widget build(BuildContext context) {
                 event.eventName ?? '',
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
-                  fontSize: 14,
+                  fontSize: 16.sp,
                 ),
               ),
             ),

@@ -39,7 +39,7 @@ class _MonthYearPickerState extends State<MonthYearPicker> {
   }
 
   void _scrollToSelectedMonth() {
-    final double itemWidth = 100;
+    final double itemWidth = 25.w;
     final double screenWidth = MediaQuery.of(context).size.width;
     final double targetOffset =
         (widget.currentMonth - 1) * itemWidth - (screenWidth - itemWidth) / 2;
@@ -74,7 +74,7 @@ class _MonthYearPickerState extends State<MonthYearPicker> {
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 1.h),
                 child: Container(
-                  width: 100,
+                  width: 25.w,
                   alignment: Alignment.center,
                   child: Text(
                     monthYear,
@@ -83,7 +83,7 @@ class _MonthYearPickerState extends State<MonthYearPicker> {
                           isSelected
                               ? AppColors.primaryText
                               : Color(0xFFA8B7C2),
-                      fontSize: 16,
+                      fontSize: 16.sp,
                       fontWeight:
                           isSelected ? FontWeight.w600 : FontWeight.normal,
                     ),

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart' as html_parser;
 import 'package:intl/intl.dart';
+import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/forum_controller.dart';
 import 'package:kota/controller/home_controller.dart';
 import 'package:kota/views/forum/discussions/forum_detail_screen.dart';
@@ -62,6 +63,8 @@ class NotificationTile extends StatelessWidget {
     'like_comment',
   ].contains(type) &&
       item['thread_id'] != null) {
+        final ForumController controller = Get.find<ForumController>();
+    controller.loadSingleThread(item['thread_id'],forceRefresh: true);
     Get.to(() => ForumDetailScreen(threadId: item['thread_id']));
   }
 }
@@ -69,38 +72,44 @@ class NotificationTile extends StatelessWidget {
 
 
 Widget _buildLeadingIcon() {
-  final type = item['type'];
-  final photo = item['photo'];
+final type = item['type'];
+final photo = item['photo'];
 
-  final rawName = item['name'] ?? 'User'; // Fallback if name is null
-
-  final fallbackAvatarUrl = 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(rawName)}&background=0A58C9&color=ffffff';
-
-  if ([
-    'like_post',
-    'comment_post',
-    'reply_comment',
-    'like_comment',
-  ].contains(type)) {
-    final imageUrl = (photo != null && photo.toString().isNotEmpty) ? photo : fallbackAvatarUrl;
-
+if ([
+  'like_post',
+  'comment_post',
+  'reply_comment',
+  'like_comment',
+].contains(type)) {
+  if (photo != null && photo.toString().isNotEmpty) {
     return CircleAvatar(
-      radius: 20,
+      radius: 2.h,
       backgroundColor: Colors.grey.shade200,
       child: ClipOval(
         child: CachedNetworkImage(
-          imageUrl: imageUrl,
+          imageUrl: photo,
           fit: BoxFit.cover,
-          width: 40,
-          height: 40,
+          width: 4.h,
+          height: 4.h,
           placeholder: (context, url) =>
-              const CircularProgressIndicator(strokeWidth: 1.5),
+               CircularProgressIndicator(strokeWidth: 1.5),
           errorWidget: (context, url, error) =>
-              const Icon(Icons.person, size: 20),
+               Icon(Icons.person, size: 20.sp),
         ),
       ),
     );
+  } else {
+    return CircleAvatar(
+      radius: 2.h,
+      backgroundColor: Colors.grey.shade200,
+      child: Icon(
+        Icons.person,
+        color: Colors.grey,
+        size: 20.sp,
+      ),
+    );
   }
+}
 
   IconData iconData;
   switch (type) {
@@ -121,9 +130,9 @@ Widget _buildLeadingIcon() {
   }
 
   return CircleAvatar(
-    radius: 20,
+    radius: 2.5.h,
     backgroundColor: Colors.grey.shade200,
-    child: Icon(iconData, color: Colors.black54),
+    child: Icon(iconData, color: Colors.black54,size: 18.sp,),
   );
 }
 
@@ -147,7 +156,7 @@ Widget _buildLeadingIcon() {
         padding: EdgeInsets.all(2.h),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.sp),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,8 +171,8 @@ Widget _buildLeadingIcon() {
                     item['title'] ?? '',
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 14,
+                    style:  TextStyle(
+                      fontSize: 15.sp,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -173,8 +182,8 @@ Widget _buildLeadingIcon() {
                       description,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 12,
+                      style:  TextStyle(
+                        fontSize: 13.sp,
                         color: Colors.black54,
                       ),
                     ),
@@ -185,18 +194,18 @@ Widget _buildLeadingIcon() {
                     children: [
                       if (date != null)
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
+                          padding:  EdgeInsets.symmetric(
+                            horizontal: 1.h,
+                            vertical: 0.5.h,
                           ),
                           decoration: BoxDecoration(
                             color: const Color(0xFFD3D8FF),
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(8.sp),
                           ),
                           child: Text(
                             timeAgo(date),
-                            style: const TextStyle(
-                              fontSize: 10,
+                            style :TextStyle(
+                              fontSize: 11.sp,
                               color: Color(0xFF2640C8),
                             ),
                           ),
@@ -209,13 +218,13 @@ Widget _buildLeadingIcon() {
                           ),
                           decoration: BoxDecoration(
                             color: const Color(0xFFDD3D3D),
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(10.sp),
                           ),
                           child: Text(
                             item['actionText'],
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.white,
-                              fontSize: 12,
+                              fontSize: 12.sp,
                             ),
                           ),
                         ),

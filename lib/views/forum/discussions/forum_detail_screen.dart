@@ -74,33 +74,37 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                             CircleAvatar(
                               radius: 30,
                               backgroundColor: Colors.grey[300],
-                              child: ClipOval(
-                                child: CachedNetworkImage(
-                                  imageUrl:
-                                      item.photo?.isNotEmpty == true
-                                          ? item.photo!
-                                          : 'https://ui-avatars.com/api/?name=${(item.firstName ?? '')} ${(item.lastName ?? '')}&background=0A58C9&color=ffffff',
-                                  fit: BoxFit.cover,
-                                  width: 60,
-                                  height: 60,
-                                  placeholder:
-                                      (context, url) => const Center(
-                                        child: SizedBox(
-                                          width: 20,
-                                          height: 20,
-                                          child: CircularProgressIndicator(
-                                            color: AppColors.primaryColor,
-                                            strokeWidth: 2,
+                              child: item.photo?.isNotEmpty == true
+                                  ? ClipOval(
+                                      child: CachedNetworkImage(
+                                        imageUrl: item.photo!,
+                                        fit: BoxFit.cover,
+                                        width: 60,
+                                        height: 60,
+                                        placeholder: (context, url) =>
+                                            const Center(
+                                          child: SizedBox(
+                                            width: 20,
+                                            height: 20,
+                                            child: CircularProgressIndicator(
+                                              color: AppColors.primaryColor,
+                                              strokeWidth: 2,
+                                            ),
                                           ),
                                         ),
+                                        errorWidget: (context, url, error) =>
+                                            Icon(
+                                          Icons.person,
+                                          size: 24.sp,
+                                          color: Colors.grey,
+                                        ),
                                       ),
-                                  errorWidget:
-                                      (context, url, error) => const Icon(
-                                        Icons.error,
-                                        color: Colors.red,
-                                      ),
-                                ),
-                              ),
+                                    )
+                                  : Icon(
+                                      Icons.person,
+                                      size: 24.sp,
+                                      color: Colors.grey,
+                                    ),
                             ),
                             SizedBox(width: 10),
                             Column(
@@ -145,22 +149,21 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                       Obx(() {
                         final comments = controller.comments;
                         return Column(
-                          children:
-                              comments.reversed.map((comment) {
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    CommentTile(comment: comment),
-                                    if (comment.replies != null)
-                                      ...comment.replies!.reversed.map(
-                                        (reply) => Padding(
-                                          padding: EdgeInsets.only(left: 10.w),
-                                          child: ReplyTile(reply: reply),
-                                        ),
-                                      ),
-                                  ],
-                                );
-                              }).toList(),
+                          children: comments.reversed.map((comment) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CommentTile(comment: comment),
+                                if (comment.replies != null)
+                                  ...comment.replies!.map(
+                                    (reply) => Padding(
+                                      padding: EdgeInsets.only(left: 10.w),
+                                      child: ReplyTile(reply: reply),
+                                    ),
+                                  ),
+                              ],
+                            );
+                          }).toList(),
                         );
                       }),
                     ],
@@ -229,41 +232,38 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
               CircleAvatar(
                 radius: 20,
                 backgroundColor: Colors.grey.shade300,
-                child:
-                    user == null
-                        ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.grey,
-                            ),
-                          ),
-                        )
-                        : user.photo == null
-                        ? Icon(Icons.person, color: Colors.grey.shade700)
-                        : ClipOval(
-                          child: CachedNetworkImage(
-                            imageUrl: user.photo!,
-                            width: 40,
-                            height: 40,
-                            fit: BoxFit.cover,
-                            placeholder:
-                                (context, url) => const SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                  ),
-                                ),
-                            errorWidget:
-                                (context, url, error) => Icon(
-                                  Icons.error,
-                                  color: Colors.red.shade400,
-                                ),
+                child: user == null
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.grey,
                           ),
                         ),
+                      )
+                    : user.photo == null
+                        ? Icon(Icons.person, color: Colors.grey.shade700)
+                        : ClipOval(
+                            child: CachedNetworkImage(
+                              imageUrl: user.photo!,
+                              width: 40,
+                              height: 40,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              ),
+                              errorWidget: (context, url, error) => Icon(
+                                Icons.error,
+                                color: Colors.red.shade400,
+                              ),
+                            ),
+                          ),
               ),
 
               SizedBox(width: 3.w),
@@ -282,10 +282,9 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                           controller: controller.commentController,
                           focusNode: controller.commentFocusNode,
                           decoration: InputDecoration(
-                            hintText:
-                                isReply
-                                    ? 'Post your reply here'
-                                    : 'Post your comment here',
+                            hintText: isReply
+                                ? 'Post your reply here'
+                                : 'Post your comment here',
                             border: InputBorder.none,
                             hintStyle: const TextStyle(
                               fontSize: 14,
@@ -295,30 +294,27 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                         ),
                       ),
                       IconButton(
-                        onPressed:
-                            canSend
-                                ? () async {
-                                  controller.isPosting.value = true;
-                                  await controller.postCommentOrReply();
-                                  controller.isPosting.value = false;
-                                }
-                                : null,
-                        icon:
-                            isSending
-                                ? const SizedBox(
-                                  width: 18,
-                                  height: 18,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                  ),
-                                )
-                                : Icon(
-                                  Icons.send,
-                                  color:
-                                      canSend
-                                          ? AppColors.primaryText
-                                          : Colors.grey.shade400,
+                        onPressed: canSend
+                            ? () async {
+                                controller.isPosting.value = true;
+                                await controller.postCommentOrReply();
+                                controller.isPosting.value = false;
+                              }
+                            : null,
+                        icon: isSending
+                            ? const SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
                                 ),
+                              )
+                            : Icon(
+                                Icons.send,
+                                color: canSend
+                                    ? AppColors.primaryText
+                                    : Colors.grey.shade400,
+                              ),
                       ),
                     ],
                   ),
