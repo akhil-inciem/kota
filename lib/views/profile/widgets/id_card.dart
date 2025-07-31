@@ -101,12 +101,13 @@ Widget build(BuildContext context) {
                   children: [
                     _buildLabelValue(
                       label: 'MEMBERSHIP NO',
-                      value: widget.user.aiotaMembershipNo ?? 'KOTA000266',
+                      value: widget.user.aiotaMembershipNo ?? '',
+                      valueFontSize: 13.sp,
                     ),
                     _buildLabelValue(
                       label: 'EMAIL ID',
-                      value: widget.user.email ?? 'athiathi125@gmail.com',
-                      // valueFontSize: 15.sp,
+                      value: widget.user.email ?? "",
+                      valueFontSize: 13.sp,
                     ),
                   ],
                 ),
@@ -232,7 +233,7 @@ Widget build(BuildContext context) {
             letterSpacing: 1.2,
           ),
         ),
-        SizedBox(height: 2),
+        SizedBox(height: 0.2.h),
         Text(
           value,
           maxLines: maxLines,

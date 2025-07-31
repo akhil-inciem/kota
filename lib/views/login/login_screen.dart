@@ -231,11 +231,11 @@ class _LoginScreenState extends State<LoginScreen>
                           final isAgree =
                               authController.userModel.value?.data.isAgree ??
                               false;
-                          if (isAgree) {
+                          // if (isAgree) {
                             Get.offAll(BaseScreen());
-                          } else {
-                            Get.offAll(EulaScreen());
-                          }
+                          // } else {
+                          //   Get.offAll(EulaScreen());
+                          // }
                         }
                       }
                     },

@@ -43,9 +43,9 @@ class _AddImageSectionState extends State<AddImageSection> {
             final file = await _saveBytesToFile(croppedBytes);
             final fileSizeInMB = await file.length() / (1024 * 1024);
 
-            if (fileSizeInMB > 5) {
+            if (fileSizeInMB > 3) {
               CustomSnackbars.oops(
-                'Please select images smaller than 5 MB',
+                'Please select images smaller than 3 MB',
                 'Image too large',
               );
               return;

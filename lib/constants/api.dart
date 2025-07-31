@@ -77,5 +77,5 @@ class ApiEndpoints {
 
   //Block & Report
   static const String blockUser = '$baseUrl/forums/blockUser';
-  static const String flagUser = '$baseUrl/flag';
+  static const String flagUser = '$baseUrl/forums/flagContent';
 }

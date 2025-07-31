@@ -28,14 +28,14 @@ class ForumModel {
 class ForumData {
   String? id;
   String? createdId;
-  String? title;
+  String? userType;
   String? guestUserId;
+  String? title;
   String? content;
   String? createdAt;
   String? firstName;
   String? lastName;
   String? photo;
-  String? userType;
   int? likeCount;
   int? commentCount;
   String? contentSnippet;
@@ -46,35 +46,35 @@ class ForumData {
 
   ForumData({
     this.id,
-      this.title,
-      this.createdId,
-      this.guestUserId,
-      this.content,
-      this.createdAt,
-      this.firstName,
-      this.lastName,
-      this.photo,
-      this.userType,
-      this.likeCount,
-      this.commentCount,
-      this.contentSnippet,
-      this.images,
-      this.recentLikes,
-      this.isLiked,
-      this.comments
+    this.title,
+    this.createdId,
+    this.guestUserId,
+    this.userType,
+    this.content,
+    this.createdAt,
+    this.firstName,
+    this.lastName,
+    this.photo,
+    this.likeCount,
+    this.commentCount,
+    this.contentSnippet,
+    this.images,
+    this.recentLikes,
+    this.isLiked,
+    this.comments,
   });
 
   ForumData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    createdId = json['created_id'];
+    createdId = json['creator_id'];
     guestUserId = json['guest_user_id'];
+    userType = json['user_type'];
     title = json['title'];
     content = json['content'];
     createdAt = json['created_at'];
     firstName = json['first_name'];
     lastName = json['last_name'];
     photo = json['photo'];
-    userType = json['user_type'];
     likeCount = json['like_count'];
     commentCount = json['comment_count'];
     contentSnippet = json['content_snippet'];
@@ -97,14 +97,14 @@ class ForumData {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['created_id'] = this.createdId;
-    data['guest_user_id'] =this.guestUserId;
+    data['creator_id'] = this.createdId;
+    data['guest_user_id'] = this.guestUserId;
+    data['user_type'] = this.userType;
     data['title'] = this.title;
     data['content'] = this.content;
     data['created_at'] = this.createdAt;
     data['first_name'] = this.firstName;
     data['last_name'] = this.lastName;
-    data['user_type'] = this.userType;
     data['photo'] = this.photo;
     data['like_count'] = this.likeCount;
     data['comment_count'] = this.commentCount;
@@ -119,82 +119,87 @@ class ForumData {
     }
     return data;
   }
+
   ForumData copyWith({
-  String? id,
-  String? createdId,
-  String? title,
-  String? guestUserId,
-  String? content,
-  String? createdAt,
-  String? firstName,
-  String? lastName,
-  String? photo,
-  String? userType,
-  int? likeCount,
-  int? commentCount,
-  String? contentSnippet,
-  List<String>? images,
-  List<RecentLike>? recentLikes,
-  bool? isLiked,
-  List<Comments>? comments,
-}) {
-  return ForumData(
-    id: id ?? this.id,
-    createdId: createdId ?? this.createdId,
-    guestUserId: guestUserId ?? this.guestUserId,
-    title: title ?? this.title,
-    content: content ?? this.content,
-    createdAt: createdAt ?? this.createdAt,
-    firstName: firstName ?? this.firstName,
-    lastName: lastName ?? this.lastName,
-    photo: photo ?? this.photo,
-    userType: userType ?? this.userType,
-    likeCount: likeCount ?? this.likeCount,
-    commentCount: commentCount ?? this.commentCount,
-    contentSnippet: contentSnippet ?? this.contentSnippet,
-    images: images ?? this.images,
-    recentLikes: recentLikes ?? this.recentLikes,
-    isLiked: isLiked ?? this.isLiked,
-    comments: comments ?? this.comments,
-  );
+    String? id,
+    String? title,
+    String? createdId,
+    String? guestUserId,
+    String? userType,
+    String? content,
+    String? createdAt,
+    String? firstName,
+    String? lastName,
+    String? photo,
+    int? likeCount,
+    int? commentCount,
+    String? contentSnippet,
+    List<String>? images,
+    List<RecentLike>? recentLikes,
+    bool? isLiked,
+    List<Comments>? comments,
+  }) {
+    return ForumData(
+      id: id ?? this.id,
+      createdId: createdId ?? this.createdId,
+      guestUserId: guestUserId ?? this.guestUserId,
+      userType: userType ?? this.userType,
+      title: title ?? this.title,
+      content: content ?? this.content,
+      createdAt: createdAt ?? this.createdAt,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      photo: photo ?? this.photo,
+      likeCount: likeCount ?? this.likeCount,
+      commentCount: commentCount ?? this.commentCount,
+      contentSnippet: contentSnippet ?? this.contentSnippet,
+      images: images ?? this.images,
+      recentLikes: recentLikes ?? this.recentLikes,
+      isLiked: isLiked ?? this.isLiked,
+      comments: comments ?? this.comments,
+    );
+  }
 }
 
-}
 class Comments {
   String? id;
-  String? userId;
+  String? createdId;
+  String? userType;
+  String? guestUserId;
   String? content;
   String? createdAt;
   String? firstName;
   String? lastName;
   String? photo;
-  String? userType;
   String? likeCount;
   bool? isLiked;
   List<Replies>? replies;
 
-  Comments(
-      {this.id,
-      this.userId,
-      this.content,
-      this.createdAt,
-      this.firstName,
-      this.lastName,
-      this.photo,
-      this.userType,
-      this.likeCount,
-      this.isLiked,
-      this.replies});
+  Comments({
+    this.id,
+    this.createdId,
+    this.guestUserId,
+    this.userType,
+    this.content,
+    this.createdAt,
+    this.firstName,
+    this.lastName,
+    this.photo,
+    this.likeCount,
+    this.isLiked,
+    this.replies,
+  });
 
   Comments.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    userId = json['user_id'];
+    createdId = json['creator_id'];
+    guestUserId = json['guest_user_id'];
+    userType = json['user_type'];
     content = json['content'];
     createdAt = json['created_at'];
     firstName = json['first_name'];
     lastName = json['last_name'];
     photo = json['photo'];
-    userType = json['user_type'];
     likeCount = json['like_count'];
     isLiked = json['is_liked'];
     if (json['replies'] != null) {
@@ -208,10 +213,11 @@ class Comments {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['user_id'] = this.userId;
+    data['creator_id'] = this.createdId;
+    data['guest_user_id'] = this.guestUserId;
+    data['user_type'] = this.userType;
     data['content'] = this.content;
     data['created_at'] = this.createdAt;
-    data['user_type'] = this.userType;
     data['first_name'] = this.firstName;
     data['last_name'] = this.lastName;
     data['photo'] = this.photo;
@@ -223,12 +229,14 @@ class Comments {
     return data;
   }
 }
+
 extension CommentsCopyWith on Comments {
   Comments copyWith({
     String? id,
-    String? userId,
-    String? content,
+    String? createdId,
+    String? guestUserId,
     String? userType,
+    String? content,
     String? createdAt,
     String? firstName,
     String? lastName,
@@ -239,9 +247,10 @@ extension CommentsCopyWith on Comments {
   }) {
     return Comments(
       id: id ?? this.id,
-      userId: userId ?? this.userId,
-      content: content ?? this.content,
+      createdId: createdId ?? this.createdId,
+      guestUserId: guestUserId ?? this.guestUserId,
       userType: userType ?? this.userType,
+      content: content ?? this.content,
       createdAt: createdAt ?? this.createdAt,
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
@@ -256,26 +265,28 @@ extension CommentsCopyWith on Comments {
 extension RepliesCopyWith on Replies {
   Replies copyWith({
     String? id,
-    String? userId,
+    String? createdId,
+    String? guestUserId,
+    String? userType,
     String? content,
     String? createdAt,
     String? firstName,
     String? lastName,
     String? photo,
-    String? userType,
     String? likeCount,
     bool? isLiked,
     String? commentId,
   }) {
     return Replies(
       id: id ?? this.id,
-      userId: userId ?? this.userId,
+      createdId: createdId ?? this.createdId,
+      guestUserId: guestUserId ?? this.guestUserId,
+      userType: userType ?? this.userType,
       content: content ?? this.content,
       createdAt: createdAt ?? this.createdAt,
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
       photo: photo ?? this.photo,
-      userType: userType ?? this.userType,
       likeCount: likeCount ?? this.likeCount,
       isLiked: isLiked ?? this.isLiked,
       commentId: commentId ?? this.commentId,
@@ -285,38 +296,42 @@ extension RepliesCopyWith on Replies {
 
 class Replies {
   String? id;
-  String? userId;
+  String? createdId;
+  String? userType;
+  String? guestUserId;
   String? content;
   String? createdAt;
   String? firstName;
   String? lastName;
-  String? userType;
   String? photo;
   String? likeCount;
   bool? isLiked;
   String? commentId;
 
-  Replies(
-      {this.id,
-      this.userId,
-      this.content,
-      this.createdAt,
-      this.firstName,
-      this.lastName,
-      this.userType,
-      this.photo,
-      this.likeCount,
-      this.isLiked,
-      this.commentId});
+  Replies({
+    this.id,
+    this.createdId,
+    this.guestUserId,
+    this.userType,
+    this.content,
+    this.createdAt,
+    this.firstName,
+    this.lastName,
+    this.photo,
+    this.likeCount,
+    this.isLiked,
+    this.commentId,
+  });
 
   Replies.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    userId = json['user_id'];
+    createdId = json['creator_id'];
+    guestUserId = json['guest_user_id'];
+    userType = json['user_type'];
     content = json['content'];
     createdAt = json['created_at'];
     firstName = json['first_name'];
     lastName = json['last_name'];
-    userType = json['user_type'];
     photo = json['photo'];
     likeCount = json['like_count'];
     isLiked = json['is_liked'];
@@ -326,10 +341,11 @@ class Replies {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['user_id'] = this.userId;
+    data['creator_id'] = this.createdId;
+    data['guest_user_id'] = this.guestUserId;
+    data['user_type'] = this.userType;
     data['content'] = this.content;
     data['created_at'] = this.createdAt;
-    data['user_type'] = this.userType;
     data['first_name'] = this.firstName;
     data['last_name'] = this.lastName;
     data['photo'] = this.photo;

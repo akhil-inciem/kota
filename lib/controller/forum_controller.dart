@@ -840,9 +840,8 @@ bool _hasThreadsDataChanged(List<ForumData> newData) {
         reason: reason,
         additionalDetails: additionalDetails,
       );
-      Get.snackbar("Reported", "User has been flagged for review");
     } catch (e) {
-      Get.snackbar("Error", "Failed to flag user: $e");
+      CustomSnackbars.failure( "Failed to flag user: $e","Error",);
     } finally {
       isReportSubmitting = false;
       update();

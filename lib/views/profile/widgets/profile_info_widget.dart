@@ -80,7 +80,7 @@ Widget build(BuildContext context) {
                   height: 2.h,
                   width: 2.h,
                 ),
-              SizedBox(width: 5.w),
+              SizedBox(width: 3.w),
               Expanded(
                 child: Text(
                   widget.email,
@@ -107,7 +107,7 @@ Widget build(BuildContext context) {
                   height: 2.h,
                   width: 2.h,
                 ),
-              SizedBox(width: 5.w),
+              SizedBox(width: 3.w),
               Expanded(
                 child: Text(
                   widget.phoneNumber,
@@ -136,7 +136,7 @@ Widget build(BuildContext context) {
                   height: 2.5.h,
                   width: 2.5.h,
                 ),
-                SizedBox(width: 5.w),
+                SizedBox(width: 3.w),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

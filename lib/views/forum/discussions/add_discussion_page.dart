@@ -82,6 +82,7 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
                 padding: EdgeInsets.symmetric(horizontal: 2.w),
                 child: TopBar(
                   title: "New Discussion",
+                  fontSize: 15.sp,
                   // leadingIconWidget: Icon(
                   //   Icons.close,
                   //   color: AppColors.primaryColor,

@@ -1,14 +1,9 @@
 import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
-import 'package:kota/controller/home_controller.dart';
 import 'package:kota/views/base.dart';
-import 'package:kota/views/drawer/executives_screen.dart';
-import 'package:kota/views/favourites/widgets/favourite_list.dart';
 import 'package:kota/views/forum/discussions/forum_detail_screen.dart';
-import 'package:kota/views/forum/discussions/forum_screen.dart';
 import 'package:kota/views/home/events_detail_screen.dart';
 import 'package:kota/views/home/news_detail_screen.dart';
-import 'package:kota/views/login/eula_screen.dart';
 import 'package:kota/views/login/login_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
@@ -56,69 +51,55 @@ class _InitialNavigationScreenState extends State<InitialNavigationScreen> {
 
   /// Actual navigation based on URI and login status
   Future<void> _handleUri(Uri uri) async {
-  _navigating = true;
+    _navigating = true;
 
-  final urlString = uri.toString();
+    final urlString = uri.toString();
 
-  if (urlString.contains('index/memberSignUp')) {
-    await launchUrl(uri, mode: LaunchMode.externalApplication);
-    _navigating = false;
-    return;
-  }
-
-  final prefs = await SharedPreferences.getInstance();
-  final isLoggedIn = prefs.getBool('is_logged_in') ?? false;
-
-  if (isLoggedIn) {
-    // If URL contains "?favourites", set homecontroller index = 3
-    if (urlString.contains('?favourites')) {
-      Get.offAll(() => BaseScreen());
-      await Future.delayed(const Duration(milliseconds: 100));
-      final homeController = Get.find<HomeController>();
-      homeController.index.value = 3;
+    if (urlString.contains('index/memberSignUp')) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
       _navigating = false;
       return;
     }
 
-    Get.offAll(() => BaseScreen());
-    await Future.delayed(const Duration(milliseconds: 100));
+    final prefs = await SharedPreferences.getInstance();
+    final isLoggedIn = prefs.getBool('is_logged_in') ?? false;
 
-    final path = uri.path.toLowerCase();
-    final queryParams = uri.queryParameters;
+    if (isLoggedIn) {
 
-    switch (path) {
-      case '/index/newsdetails':
-        final newsId = queryParams['newsId'];
-        if (newsId != null) {
-          Get.to(() => NewsDetailScreen(newsId: newsId));
-        }
-        break;
+      Get.offAll(() => BaseScreen());
+      await Future.delayed(const Duration(milliseconds: 100));
 
-      case '/index/eventdetails':
-        final eventId = queryParams['eventId'];
-        if (eventId != null) {
-          Get.to(() => EventsDetailScreen(eventId: eventId));
-        }
-        break;
-    }
+      final path = uri.path.toLowerCase();
+      final queryParams = uri.queryParameters;
 
-    final oldStylePath = uri.query; // gets `forum/123`
-    if (oldStylePath.isNotEmpty) {
-      final parts = oldStylePath.split('/');
-      if (parts.length == 2 && parts[0] == 'forum') {
-        final forumId = parts[1];
-      Get.to(() => ForumDetailScreen(threadId: forumId));
+      switch (path) {
+        case '/index/newsdetails':
+          final newsId = queryParams['newsId'];
+          if (newsId != null) {
+            Get.to(() => NewsDetailScreen(newsId: newsId));
+          }
+          break;
+
+        case '/index/eventdetails':
+          final eventId = queryParams['eventId'];
+          if (eventId != null) {
+            Get.to(() => EventsDetailScreen(eventId: eventId));
+          }
+          break;
+
+        case '/index/forumdetails':
+          final forumId = queryParams['forumId'];
+          if (forumId != null) {
+            Get.to(() => ForumDetailScreen(threadId: forumId));
+          }
+          break;
       }
+    } else {
+      Get.offAll(() => const LoginScreen());
     }
 
-  } else {
-    Get.offAll(() => const LoginScreen());
+    _navigating = false;
   }
-
-  _navigating = false;
-}
-
-
 
   /// If no initial deep link, navigate after delay
   Future<void> _navigateAfterDelay() async {
@@ -126,18 +107,17 @@ class _InitialNavigationScreenState extends State<InitialNavigationScreen> {
 
     final prefs = await SharedPreferences.getInstance();
     final isLoggedIn = prefs.getBool('is_logged_in') ?? false;
-final isGuest = prefs.getBool('is_guest') ?? false;
+    final isGuest = prefs.getBool('is_guest') ?? false;
 
-if (isLoggedIn) {
-  if (isGuest) {
-    Get.offAll(() => BaseScreen()); // or GuestHomeScreen()
-  } else {
-    Get.offAll(() => BaseScreen());
-  }
-} else {
-  Get.offAll(() =>  LoginScreen());
-}
-
+    if (isLoggedIn) {
+      if (isGuest) {
+        Get.offAll(() => BaseScreen()); // or GuestHomeScreen()
+      } else {
+        Get.offAll(() => BaseScreen());
+      }
+    } else {
+      Get.offAll(() => LoginScreen());
+    }
   }
 
   @override

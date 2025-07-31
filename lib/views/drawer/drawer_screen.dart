@@ -70,18 +70,18 @@ class DrawerPage extends StatelessWidget {
                           title: 'Find',
                           onPressed: () => Get.to(() => FindScreen()),
                         ),
-                        DrawerItem(
-                          icon: 'assets/icons/delete.png',
-                          title: 'Delete Account',
-                          onPressed: () {
-                            Get.dialog(
-                              DeleteAccountDialog(
-                                authController: authController,
-                              ),
-                              barrierDismissible: false,
-                            );
-                          },
-                        ),
+                        // DrawerItem(
+                        //   icon: 'assets/icons/delete.png',
+                        //   title: 'Delete Account',
+                        //   onPressed: () {
+                        //     Get.dialog(
+                        //       DeleteAccountDialog(
+                        //         authController: authController,
+                        //       ),
+                        //       barrierDismissible: false,
+                        //     );
+                        //   },
+                        // ),
                         DrawerItem(
                           icon: 'assets/icons/logout.png',
                           title: 'Logout',

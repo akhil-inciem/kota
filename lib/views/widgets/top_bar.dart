@@ -14,9 +14,10 @@ class TopBar extends StatefulWidget {
   final String? title;
   final Function()? onTap;
   final Color? iconColor;
-  final String? leadingIcon;
+final String? leadingIcon;
   final Widget? leadingIconWidget;
   final bool isEvent;
+  final double? fontSize;
 
   TopBar({
     this.title,
@@ -25,6 +26,7 @@ class TopBar extends StatefulWidget {
     this.leadingIcon,
     this.leadingIconWidget,
     this.isEvent = false,
+    this.fontSize, // <-- new parameter
   });
 
   @override
@@ -60,8 +62,7 @@ class _TopBarState extends State<TopBar> {
       int currentIndex = homeController.index.value;
 
       return Padding(
-        padding:  EdgeInsets.only(left: 3.w, top: 1.h,bottom: 1.h,right: 4.w 
-        ),
+        padding: EdgeInsets.only(left: 3.w, top: 1.h, bottom: 1.h, right: 4.w),
         child: Stack(
           children: [
             Row(
@@ -84,11 +85,11 @@ class _TopBarState extends State<TopBar> {
                                   onTap:
                                       widget.onTap ??
                                       () => homeController.index.value = 0,
-                                  child:
-                                      Container(
-                                        padding: EdgeInsets.all(10.sp),
-                                        // color: Colors.red,
-                                        child: widget.leadingIconWidget ??
+                                  child: Container(
+                                    padding: EdgeInsets.all(10.sp),
+                                    // color: Colors.red,
+                                    child:
+                                        widget.leadingIconWidget ??
                                         Image.asset(
                                           widget.leadingIcon ??
                                               'assets/icons/backbutton.png',
@@ -98,14 +99,16 @@ class _TopBarState extends State<TopBar> {
                                               widget.iconColor ??
                                               AppColors.primaryColor,
                                         ),
-                                      ),
+                                  ),
                                 ),
-                                SizedBox(width: 2.w),
+                                SizedBox(width: 1.w),
                                 Expanded(
                                   child: Text(
                                     widget.title ?? _getTitle(currentIndex),
                                     style: TextStyle(
-                                      fontSize: 16.sp,
+                                      fontSize:
+                                          widget.fontSize ??
+                                          16.sp, // <-- updated here
                                       color: Color(0xFF0A2C49),
                                       fontWeight: FontWeight.w600,
                                     ),
@@ -119,15 +122,14 @@ class _TopBarState extends State<TopBar> {
                 if (currentIndex == 0 && authController.isGuest)
                   Expanded(
                     child: Padding(
-                      padding:  EdgeInsets.symmetric(horizontal: 2.w),
+                      padding: EdgeInsets.symmetric(horizontal: 2.w),
                       child: CustomButton(
                         text: "Register",
                         backgroundColor: AppColors.primaryColor,
                         textColor: Colors.white,
                         height: 5.h,
                         onPressed: () async {
-                          const url =
-                              'https://kbaiota.org/index/memberSignUp';
+                          const url = 'https://kbaiota.org/index/memberSignUp';
                           if (await canLaunchUrl(Uri.parse(url))) {
                             await launchUrl(Uri.parse(url));
                             // await launch(url, forceWebView: true, enableJavaScript: true);

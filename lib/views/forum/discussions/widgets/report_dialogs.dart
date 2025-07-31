@@ -129,7 +129,7 @@ class BlockDialog extends StatelessWidget {
                     onPressed: () async {
                       await controller.blockUser(
                         blockedUserId: blockedUserId,
-                        blockedUserType: "guest",
+                        blockedUserType: blockedUsertype,
                         userId: authController.userModel.value!.data.id,
                         userType: authController.userModel.value!.data.isGuest ? "guest" : "member",
                       );
@@ -446,6 +446,7 @@ class ReportDialog extends StatelessWidget {
                             controller.detailsController.text.trim(),
                       );
                       Get.back();
+                      CustomSnackbars.success("User has been flagged for review","Reported");
                     },
             text: "Submit Report",
           ),

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' as getx;
 import 'package:get/get_core/src/get_main.dart';
@@ -165,10 +167,16 @@ Future<bool> forgotupdateGuestPassword({
       );
 
       if (response.statusCode == 200) {
-      } else {
-        throw Exception('Mail failed: ${response.statusMessage}');
-      }
+        final decoded = jsonDecode(response.data);
+    if (decoded['status'] == true) {
+      // Success block
+    } else {
+      throw Exception('Mail failed: ${decoded['message'] ?? 'Unknown error'}');
+    }
+}
+
     } catch (e) {
+      print("ssss$e");
       throw Exception('Mail failed: $e');
     }
   }

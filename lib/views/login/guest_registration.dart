@@ -238,11 +238,11 @@ class _GuestRegistrationScreenState extends State<GuestRegistrationScreen>
                                               .value
                                               ?.data
                                               ?.isAgree;
-                                      if (isAgree == true) {
+                                      // if (isAgree == true) {
                                         Get.offAll(BaseScreen());
-                                      } else {
-                                        Get.offAll(EulaScreen());
-                                      }
+                                      // } else {
+                                      //   Get.offAll(EulaScreen());
+                                      // }
                                     }
                                   }
                                 },

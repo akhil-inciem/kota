@@ -42,11 +42,11 @@ class _ForumPostBodyState extends State<ForumPostBody> {
   final PageController _pageController = PageController();
   final ForumController controller = Get.find<ForumController>();
 
-  String getForumShareUrl(String forumId) {
-    return Platform.isIOS
-        ? "https://dev.kbaiota.org/forum/$forumId"
-        : "https://dev.kbaiota.org/?forum/$forumId";
-  }
+  // String getForumShareUrl(String forumId) {
+  //   return Platform.isIOS
+  //       ? "https://dev.kbaiota.org/forum/$forumId"
+  //       : "https://dev.kbaiota.org/?forum/$forumId";
+  // }
 
   bool _isSharing = false;
 
@@ -58,7 +58,9 @@ class _ForumPostBodyState extends State<ForumPostBody> {
     final title = widget.title ?? 'Check this out!';
     final params = ShareParams(
       title: title,
-      uri: Uri.parse("https://dev.kbaiota.org/?forum/${widget.id}"),
+      uri: Uri.parse(
+        "https://dev.kbaiota.org/index/forumDetails?forumId=${widget.id}",
+      ),
     );
     SharePlus.instance.share(params);
 
@@ -84,9 +86,10 @@ class _ForumPostBodyState extends State<ForumPostBody> {
         Text(
           widget.title,
           style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 15.sp,
-              color: Color(0xFF0A2C49)),
+            fontWeight: FontWeight.w600,
+            fontSize: 15.sp,
+            color: Color(0xFF0A2C49),
+          ),
         ),
         const SizedBox(height: 12),
         Text(
@@ -97,7 +100,7 @@ class _ForumPostBodyState extends State<ForumPostBody> {
             height: 1.5,
           ),
         ),
-         SizedBox(height: 1.5.h),
+        SizedBox(height: 1.5.h),
 
         // Horizontal Image Scroll with Page Indicator
         if (hasImages) ...[
@@ -118,14 +121,11 @@ class _ForumPostBodyState extends State<ForumPostBody> {
                     imageUrl: widget.imageUrls[index],
                     width: double.infinity,
                     fit: BoxFit.contain,
-                    placeholder: (context, url) => Container(
-                      color: Colors.grey[300],
-                    ),
-                    errorWidget: (context, url, error) => Icon(
-                      Icons.person,
-                      size: 24.sp,
-                      color: Colors.grey,
-                    ),
+                    placeholder:
+                        (context, url) => Container(color: Colors.grey[300]),
+                    errorWidget:
+                        (context, url, error) =>
+                            Icon(Icons.person, size: 24.sp, color: Colors.grey),
                   ),
                 );
               },
@@ -161,10 +161,7 @@ class _ForumPostBodyState extends State<ForumPostBody> {
             ),
             SizedBox(width: 1.5.w),
             Obx(
-              () => Text(
-                widget.likes.value,
-                style: TextStyle(fontSize: 15.sp),
-              ),
+              () => Text(widget.likes.value, style: TextStyle(fontSize: 15.sp)),
             ),
             SizedBox(width: 6.w),
             Row(
@@ -186,8 +183,9 @@ class _ForumPostBodyState extends State<ForumPostBody> {
             const SizedBox(width: 20),
             GestureDetector(
               onTap: _handleShare,
-              behavior: HitTestBehavior
-                  .opaque, // Ensures tap works on padding areas too
+              behavior:
+                  HitTestBehavior
+                      .opaque, // Ensures tap works on padding areas too
               child: Row(
                 children: [
                   Image.asset(

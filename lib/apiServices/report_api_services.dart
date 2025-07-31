@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:kota/constants/api.dart';
 
-class ReportApiServices{
+class ReportApiServices {
   final Dio _dio = Dio();
 
   Future<bool> blockUser({
@@ -21,9 +21,7 @@ class ReportApiServices{
       final response = await _dio.post(
         ApiEndpoints.blockUser,
         data: formData,
-        options: Options(
-          contentType: Headers.multipartFormDataContentType,
-        ),
+        options: Options(contentType: Headers.multipartFormDataContentType),
       );
 
       if (response.statusCode == 200) {
@@ -40,61 +38,59 @@ class ReportApiServices{
   }
 
   Future<void> flagUser({
-  required String blockedUserId,
-  required String blockedUsertype,
-  required String userId,
-  required String userType,
-  String pollId = '',
-  String threadId = '',
-  String commentId = '',
-  String replyId = '',
-  required String reason,
-  String additionalDetails = '',
-}) async {
-  try {
-    final Map<String, dynamic> formMap = {
-      'flagged_id': blockedUserId,
-      'flagged_type': blockedUsertype,
-      'flagger_id': userId,
-      'flagger_type': userType,
-      'reason': reason,
-    };
+    required String blockedUserId,
+    required String blockedUsertype,
+    required String userId,
+    required String userType,
+    String pollId = '',
+    String threadId = '',
+    String commentId = '',
+    String replyId = '',
+    required String reason,
+    String additionalDetails = '',
+  }) async {
+    try {
+      final Map<String, dynamic> formMap = {
+        'flagged_id': blockedUserId,
+        'flagged_type': blockedUsertype,
+        'flagger_id': userId,
+        'flagger_type': userType,
+        'reason': reason,
+      };
 
-    if (threadId.isNotEmpty) {
-      formMap['content_type'] = 'thread';
-      formMap['content_id'] = threadId;
-    } else if (commentId.isNotEmpty) {
-      formMap['content_type'] = 'comment';
-      formMap['content_id'] = commentId;
-    } else if (replyId.isNotEmpty) {
-      formMap['content_type'] = 'reply';
-      formMap['content_id'] = replyId;
-    } else if (pollId.isNotEmpty) {
-      formMap['content_type'] = 'poll';
-      formMap['content_id'] = pollId;
+      if (threadId.isNotEmpty) {
+        formMap['content_type'] = 'thread';
+        formMap['content_id'] = threadId;
+      } else if (commentId.isNotEmpty) {
+        formMap['content_type'] = 'comment';
+        formMap['content_id'] = commentId;
+      } else if (replyId.isNotEmpty) {
+        formMap['content_type'] = 'reply';
+        formMap['content_id'] = replyId;
+      } else if (pollId.isNotEmpty) {
+        formMap['content_type'] = 'poll';
+        formMap['content_id'] = pollId;
+      }
+
+      if (additionalDetails.isNotEmpty) {
+        formMap['additional_details'] = additionalDetails;
+      }
+
+      final formData = FormData.fromMap(formMap);
+
+      final response = await _dio.post(
+  ApiEndpoints.flagUser,
+  data: formData, 
+);
+
+      if (response.statusCode == 200) {
+        print(response.data);
+        print('Flag submitted successfully');
+      } else {
+        print('Flag failed: ${response.statusMessage}');
+      }
+    } catch (e) {
+      print('Error flagging user: $e');
     }
-
-    if (additionalDetails.isNotEmpty) {
-      formMap['additional_details'] = additionalDetails;
-    }
-
-    final formData = FormData.fromMap(formMap);
-
-    final response = await _dio.post(
-      ApiEndpoints.flagUser,
-      data: formData,
-      options: Options(
-        contentType: Headers.formUrlEncodedContentType,
-      ),
-    );
-
-    if (response.statusCode == 200) {
-      print('Flag submitted successfully');
-    } else {
-      print('Flag failed: ${response.statusMessage}');
-    }
-  } catch (e) {
-    print('Error flagging user: $e');
   }
-}
 }

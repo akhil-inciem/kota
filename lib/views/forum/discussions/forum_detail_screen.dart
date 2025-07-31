@@ -68,9 +68,11 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
 
           final imageUrls = item!.images ?? [];
           final title = item.title;
-          final threadId = item.id;
           final description = item.content;
-          final userName = '${item.firstName ?? ''} ${item.lastName ?? ''}';
+          final rawName =
+              '${item.firstName ?? ''} ${item.lastName ?? ''}'.trim();
+          final userName =
+              rawName.toLowerCase() == 'guest' ? 'Deleted User' : rawName;
 
           return Column(
             children: [
@@ -150,7 +152,9 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                               ],
                             ),
                             // Spacer(),
-                            // item.createdId == userId ? SizedBox.shrink() : IconButton(
+                            // (authController.isGuest
+                            //           ? item.guestUserId == userId
+                            //           : item.createdId == userId) ? SizedBox.shrink() : IconButton(
                             //   icon: Icon(Icons.more_horiz_outlined),
                             //   onPressed: () {
                             //     showModalBottomSheet(
@@ -164,7 +168,9 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                             //           (_) => UserOptionsBottomSheet(
                             //             blockedUserName:
                             //                 "${item.firstName ?? ""} ${item.lastName ?? ""}",
-                            //             blockedUserId: item.createdId!,
+                            //             blockedUserId: item.userType == 'guest'
+                            //                           ? item.guestUserId
+                            //                           : item.createdId,
                             //             threadId: item.id,
                             //             blockedUserType: "",
                             //           ),
@@ -196,12 +202,12 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    CommentTile(comment: comment,threadId : threadId!),
+                                    CommentTile(comment: comment),
                                     if (comment.replies != null)
                                       ...comment.replies!.map(
                                         (reply) => Padding(
                                           padding: EdgeInsets.only(left: 10.w),
-                                          child: ReplyTile(reply: reply,threadId : threadId,commentId:comment.id!),
+                                          child: ReplyTile(reply: reply),
                                         ),
                                       ),
                                   ],

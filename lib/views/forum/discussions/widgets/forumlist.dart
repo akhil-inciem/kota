@@ -160,13 +160,15 @@ class _ForumListState extends State<ForumList> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '${item.firstName} ${item.lastName ?? ''}' ??
-                                          '',
-                                      style: TextStyle(
-                                        fontSize: 15.sp,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
+  (() {
+    final fullName = '${item.firstName} ${item.lastName ?? ''}'.trim();
+    return fullName.toLowerCase() == 'guest' ? 'Deleted User' : fullName;
+  })(),
+  style: TextStyle(
+    fontSize: 15.sp,
+    fontWeight: FontWeight.w600,
+  ),
+),
                                     Text(
                                       timeAgo(item.createdAt!),
                                       style: TextStyle(

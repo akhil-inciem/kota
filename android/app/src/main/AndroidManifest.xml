@@ -49,15 +49,26 @@
     <action android:name="android.intent.action.VIEW" />
     <category android:name="android.intent.category.DEFAULT" />
     <category android:name="android.intent.category.BROWSABLE" />
+
+    <!-- Match https://dev.kbaiota.org/index/newsDetails -->
     <data
         android:scheme="https"
         android:host="dev.kbaiota.org"
-        android:pathPrefix="/index" />
+        android:path="/index/newsDetails" />
+
+    <!-- Match https://dev.kbaiota.org/index/eventdetails -->
     <data
         android:scheme="https"
         android:host="dev.kbaiota.org"
-        android:pathPrefix="/" />
+        android:path="/index/eventdetails" />
+
+    <!-- Match https://dev.kbaiota.org/forum -->
+    <data
+        android:scheme="https"
+        android:host="dev.kbaiota.org"
+        android:path="/index/forumDetails" />
 </intent-filter>
+
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

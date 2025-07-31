@@ -44,7 +44,6 @@ class _ChangePasswordWidgetState extends State<ChangePasswordWidget>
         'Password reset link sent to your email',
         'Success',
       );
-      _emailController.clear();
       authController.collapse();
     } else {
       CustomSnackbars.failure(

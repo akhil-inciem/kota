@@ -4,17 +4,21 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kota/controller/auth_controller.dart';
 import 'package:kota/model/forum_model.dart';
-import 'package:kota/views/forum/discussions/widgets/userOptions_bottomSheet.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../../../controller/forum_controller.dart';
 
 class ReplyTile extends StatelessWidget {
   final Replies reply;
-  final String threadId;
-  final String commentId;
+  // final String threadId;
+  // final String commentId;
 
-  ReplyTile({Key? key, required this.reply,required this.threadId,required this.commentId}) : super(key: key);
+  ReplyTile({
+    Key? key,
+    required this.reply,
+    // required this.threadId,
+    // required this.commentId,
+  }) : super(key: key);
   final authController = Get.find<AuthController>();
 
   @override
@@ -61,13 +65,20 @@ class ReplyTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${reply.firstName} ${reply.lastName ?? ''}',
+                    ('${reply.firstName ?? ''} ${reply.lastName ?? ''}')
+                                .trim()
+                                .toLowerCase() ==
+                            'guest'
+                        ? 'Deleted User'
+                        : '${reply.firstName ?? ''} ${reply.lastName ?? ''}'
+                            .trim(),
                     style: TextStyle(
                       fontSize: 15.sp,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
                     ),
                   ),
+
                   Text(
                     formatDateTime(reply.createdAt),
                     style: TextStyle(
@@ -79,29 +90,34 @@ class ReplyTile extends StatelessWidget {
                 ],
               ),
               // Spacer(),
-              // reply.userId == userId ? SizedBox.shrink():  IconButton(
-              //   icon: Icon(Icons.more_horiz_outlined),
-              //   onPressed: () {
-              //     showModalBottomSheet(
-              //       context: context,
-              //       shape: RoundedRectangleBorder(
-              //         borderRadius: BorderRadius.vertical(
-              //           top: Radius.circular(20),
-              //         ),
-              //       ),
-              //       builder:
-              //           (_) => UserOptionsBottomSheet(
-              //             blockedUserName:
-              //                 "${reply.firstName ?? ""} ${reply.lastName ?? ""}",
-              //             blockedUserId: reply.userId!,
-              //             threadId: threadId,
-              //             commentId: commentId,
-              //             replyId: reply.id,
-              //             blockedUserType: '',
+              // (authController.isGuest
+              //         ? reply.guestUserId == userId
+              //         : reply.createdId == userId)
+              //     ? SizedBox.shrink()
+              //     : IconButton(
+              //       icon: Icon(Icons.more_horiz_outlined),
+              //       onPressed: () {
+              //         showModalBottomSheet(
+              //           context: context,
+              //           shape: RoundedRectangleBorder(
+              //             borderRadius: BorderRadius.vertical(
+              //               top: Radius.circular(20),
+              //             ),
               //           ),
-              //     );
-              //   },
-              // ),
+              //           builder:
+              //               (_) => UserOptionsBottomSheet(
+              //                 blockedUserName:
+              //                     "${reply.firstName ?? ""} ${reply.lastName ?? ""}",
+              //                 blockedUserId:
+              //                     reply.userType == 'guest'
+              //                         ? reply.guestUserId
+              //                         : reply.createdId,
+              //                 replyId: reply.id,
+              //                 blockedUserType: reply.userType,
+              //               ),
+              //         );
+              //       },
+              //     ),
             ],
           ),
           SizedBox(height: 1.h),
@@ -158,9 +174,13 @@ class ReplyTile extends StatelessWidget {
 
 class CommentTile extends StatelessWidget {
   final Comments comment;
-  final String threadId;
+  // final String threadId;
 
-  CommentTile({Key? key, required this.comment,required this.threadId}) : super(key: key);
+  CommentTile({
+    Key? key,
+    required this.comment,
+    // required this.threadId
+  }) : super(key: key);
   final authController = Get.find<AuthController>();
   @override
   Widget build(BuildContext context) {
@@ -200,19 +220,27 @@ class CommentTile extends StatelessWidget {
                     radius: 2.h,
                     child: Icon(Icons.person, color: Colors.white),
                     backgroundColor: Colors.grey,
-                  ),
+                ),
               SizedBox(width: 1.h),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${comment.firstName} ${comment.lastName ?? ''}',
+                    ('${comment.firstName ?? ''} ${comment.lastName ?? ''}')
+                                .trim()
+                                .toLowerCase
+                                () ==
+                            'guest'
+                        ? 'Deleted User'
+                        : '${comment.firstName ?? ''} ${comment.lastName ?? ''}'
+                            .trim(),
                     style: TextStyle(
                       fontSize: 15.sp,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
                     ),
                   ),
+
                   Text(
                     formatDateTime(comment.createdAt),
                     style: TextStyle(
@@ -224,28 +252,34 @@ class CommentTile extends StatelessWidget {
                 ],
               ),
               // Spacer(),
-              // comment.userId == userId ? SizedBox.shrink(): IconButton(
-              //  icon: Icon(Icons.more_horiz_outlined),
-              //   onPressed: () {
-              //     showModalBottomSheet(
-              //       context: context,
-              //       shape: RoundedRectangleBorder(
-              //         borderRadius: BorderRadius.vertical(
-              //           top: Radius.circular(20),
-              //         ),
-              //       ),
-              //       builder:
-              //           (_) => UserOptionsBottomSheet(
-              //             blockedUserName:
-              //                 "${comment.firstName ?? ""} ${comment.lastName ?? ""}",
-              //             blockedUserId: comment.userId!,
-              //             threadId: threadId,
-              //             commentId: comment.id,
-              //             blockedUserType: '',
+              // (authController.isGuest
+              //         ? comment.guestUserId == userId
+              //         : comment.createdId == userId)
+              //     ? SizedBox.shrink()
+              //     : IconButton(
+              //       icon: Icon(Icons.more_horiz_outlined),
+              //       onPressed: () {
+              //         showModalBottomSheet(
+              //           context: context,
+              //           shape: RoundedRectangleBorder(
+              //             borderRadius: BorderRadius.vertical(
+              //               top: Radius.circular(20),
+              //             ),
               //           ),
-              //     );
-              //   },
-              // ),
+              //           builder:
+              //               (_) => UserOptionsBottomSheet(
+              //                 blockedUserName:
+              //                     "${comment.firstName ?? ""} ${comment.lastName ?? ""}",
+              //                 blockedUserId:
+              //                     comment.userType == 'guest'
+              //                         ? comment.guestUserId
+              //                         : comment.createdId,
+              //                 commentId: comment.id,
+              //                 blockedUserType: comment.userType,
+              //               ),
+              //         );
+              //       },
+              //     ),
             ],
           ),
           SizedBox(height: 1.h),
