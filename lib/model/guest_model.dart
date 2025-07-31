@@ -23,23 +23,27 @@ class GuestModel {
 }
 
 class Data {
-  String? fullName;
   int? id;
-  String? mailId;
+  bool? isGuest;
+  bool? isAgree;
+  bool? isDeleted;
 
-  Data({this.fullName, this.mailId});
+  Data({this.id, this.isGuest, this.isAgree, this.isDeleted});
 
   Data.fromJson(Map<String, dynamic> json) {
-    fullName = json['full_name'];
-    id = json['id'];
-    mailId = json['mail_id'];
+    id = int.tryParse(json['id'].toString());
+    isGuest = json['isguest'];
+    isAgree = json['isAgree'];
+    isDeleted = json['isDeleted'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['full_name'] = this.fullName;
-    data['id'] = this.id;
-    data['mail_id'] = this.mailId;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['isguest'] = isGuest;
+    data['isAgree'] = isAgree;
+    data['isDeleted'] = isDeleted;
     return data;
   }
 }
+

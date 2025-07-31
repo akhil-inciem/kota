@@ -53,104 +53,114 @@ class _EventCalendarTabState extends State<EventCalendarTab> {
             ],
           ),
           DraggableScrollableSheet(
-  initialChildSize: 0.45,
-  minChildSize: 0.45,
-  maxChildSize: 1,
-  builder: (context, scrollController) {
-    return ValueListenableBuilder<double>(
-      valueListenable: radiusNotifier,
-      builder: (context, radius, _) {
-        return AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(radius),
-            ),
-          ),
-          child: Obx(() {
-            final today = controller.todayEvents;
-            final upcoming = controller.upcomingEvents;
-
-            // BOTH EMPTY
-            if (today.isEmpty && upcoming.isEmpty) {
-              return Center(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 6.w,
-                    vertical: 6.h,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.newspaper, size: 35.sp, color: Colors.grey),
-                      SizedBox(height: 1.h),
-                       Text(
-                        "No upcoming Events",
-                        style: TextStyle(
-                          fontSize: 15.sp,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }
-
-            // OTHERWISE BUILD THE LIST
-            return ListView(
-              controller: scrollController,
-              padding: EdgeInsets.zero,
-              children: [
-                // TODAY EVENTS
-                if (today.isNotEmpty) ...[
-                  ...today.map(
-                    (event) => Padding(
-                      padding: EdgeInsets.only(top: 1.h),
-                      child: TodayEventCard(event: event),
-                    ),
-                  ),
-                ],
-
-                // UPCOMING EVENTS
-                if (upcoming.isNotEmpty) ...[
-                  Container(
-                    width: double.infinity,
+            initialChildSize: 0.43,
+            minChildSize: 0.43,
+            maxChildSize: 1,
+            builder: (context, scrollController) {
+              return ValueListenableBuilder<double>(
+                valueListenable: radiusNotifier,
+                builder: (context, radius, _) {
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
                     decoration: BoxDecoration(
-                      color: AppColors.primaryBackground,
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.h),
-                    child: const Text(
-                      "Upcoming Events",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF839099),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(radius),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 2.h),
-                  ...upcoming.reversed.map(
-                    (event) => Padding(
-                      padding: EdgeInsets.only(bottom: 1.5.h),
-                      child: UpcomingEventCard(event: event),
-                    ),
-                  ),
-                ] else if (today.isNotEmpty) ...[
-                  // If there are today's events but no upcoming
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 6.w,
-                      vertical: 10.h,
-                    ),
-                    child: Column(
+                    child: Obx(() {
+                      final today = controller.todayEvents;
+                      final upcoming = controller.upcomingEvents;
+
+                      // BOTH EMPTY
+                      if (today.isEmpty && upcoming.isEmpty) {
+                        return SingleChildScrollView(
+                          controller: scrollController,
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minHeight: MediaQuery.of(context).size.height *
+                                  0.4, // ensures scrollable space
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 6.w,
+                                vertical: 6.h,
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.newspaper, size: 35.sp, color: Colors.grey),
+                                  Icon(Icons.newspaper,
+                                      size: 35.sp, color: Colors.grey),
                                   SizedBox(height: 1.h),
-                                   Text(
+                                  Text(
+                                    "No upcoming Events",
+                                    style: TextStyle(
+                                      fontSize: 15.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+
+                      // OTHERWISE BUILD THE LIST
+                      return ListView(
+                        controller: scrollController,
+                        padding: EdgeInsets.zero,
+                        children: [
+                          // TODAY EVENTS
+                          if (today.isNotEmpty) ...[
+                            ...today.map(
+                              (event) => Padding(
+                                padding: EdgeInsets.only(top: 1.h),
+                                child: TodayEventCard(event: event),
+                              ),
+                            ),
+                          ],
+
+                          // UPCOMING EVENTS
+                          if (upcoming.isNotEmpty) ...[
+                            Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryBackground,
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 6.w, vertical: 1.h),
+                              child: Text(
+                                "Upcoming Events",
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFF839099),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 2.h),
+                            ...upcoming.reversed.map(
+                              (event) => Padding(
+                                padding: EdgeInsets.only(bottom: 1.5.h),
+                                child: UpcomingEventCard(event: event),
+                              ),
+                            ),
+                          ] else if (today.isNotEmpty) ...[
+                            // If there are today's events but no upcoming
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 6.w,
+                                vertical: 10.h,
+                              ),
+                              child: Column(
+                                children: [
+                                  Icon(Icons.newspaper,
+                                      size: 35.sp, color: Colors.grey),
+                                  SizedBox(height: 1.h),
+                                  Text(
                                     "No upcoming Events",
                                     style: TextStyle(
                                       fontSize: 14.sp,
@@ -160,17 +170,16 @@ class _EventCalendarTabState extends State<EventCalendarTab> {
                                   ),
                                 ],
                               ),
-                  ),
-                ],
-              ],
-            );
-          }),
-        );
-      },
-    );
-  },
-)
-
+                            ),
+                          ],
+                        ],
+                      );
+                    }),
+                  );
+                },
+              );
+            },
+          )
         ],
       ),
     );

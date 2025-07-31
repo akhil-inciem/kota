@@ -7,6 +7,7 @@ import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/auth_controller.dart';
 import 'package:kota/views/base.dart';
 import 'package:kota/views/home/home_screen.dart';
+import 'package:kota/views/login/eula_screen.dart';
 import 'package:kota/views/login/login_screen.dart';
 import 'package:kota/views/login/widgets/custom_button.dart';
 import 'package:kota/views/login/widgets/custom_textfield.dart';
@@ -82,7 +83,7 @@ class _GuestRegistrationScreenState extends State<GuestRegistrationScreen>
                 ),
               ),
             ),
-      
+
             SlideTransition(
               position: _animation,
               child: Stack(
@@ -111,17 +112,13 @@ class _GuestRegistrationScreenState extends State<GuestRegistrationScreen>
                       ),
                     ),
                   ),
-      
+
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Container(
                       height: 68.h,
                       width: double.infinity,
-                      padding: EdgeInsets.only(
-                        left: 8.w,
-                        right: 8.w,
-                        top: 4.h,
-                      ),
+                      padding: EdgeInsets.only(left: 8.w, right: 8.w, top: 4.h),
                       decoration: const BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.vertical(
@@ -181,7 +178,7 @@ class _GuestRegistrationScreenState extends State<GuestRegistrationScreen>
                                   return null;
                                 },
                               ),
-      
+
                               SizedBox(height: 2.h),
                               LabelledTextField(
                                 controller: passwordController,
@@ -235,7 +232,17 @@ class _GuestRegistrationScreenState extends State<GuestRegistrationScreen>
                                               phoneController.text.trim(),
                                         );
                                     if (success) {
-                                      Get.offAll(BaseScreen());
+                                      final isAgree =
+                                          authController
+                                              .guestModel
+                                              .value
+                                              ?.data
+                                              ?.isAgree;
+                                      if (isAgree == true) {
+                                        Get.offAll(BaseScreen());
+                                      } else {
+                                        Get.offAll(EulaScreen());
+                                      }
                                     }
                                   }
                                 },
@@ -246,18 +253,18 @@ class _GuestRegistrationScreenState extends State<GuestRegistrationScreen>
                                 child: Text.rich(
                                   TextSpan(
                                     text: "Already have an account? ",
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       color: AppColors.primaryText,
                                       fontWeight: FontWeight.w500,
-                                      fontSize: 12,
+                                      fontSize: 14.sp,
                                     ),
                                     children: [
                                       TextSpan(
                                         text: 'Sign In',
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           color: AppColors.primaryText,
                                           fontWeight: FontWeight.w600,
-                                          fontSize: 12,
+                                          fontSize: 14.sp,
                                           decoration: TextDecoration.underline,
                                         ),
                                         recognizer:

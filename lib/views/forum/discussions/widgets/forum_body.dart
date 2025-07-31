@@ -85,7 +85,7 @@ class _ForumPostBodyState extends State<ForumPostBody> {
           widget.title,
           style: TextStyle(
               fontWeight: FontWeight.w600,
-              fontSize: 16.sp,
+              fontSize: 15.sp,
               color: Color(0xFF0A2C49)),
         ),
         const SizedBox(height: 12),
@@ -93,11 +93,11 @@ class _ForumPostBodyState extends State<ForumPostBody> {
           widget.description,
           style: TextStyle(
             color: Colors.grey.shade800,
-            fontSize: 15.sp,
+            fontSize: 14.sp,
             height: 1.5,
           ),
         ),
-        const SizedBox(height: 16),
+         SizedBox(height: 1.5.h),
 
         // Horizontal Image Scroll with Page Indicator
         if (hasImages) ...[

@@ -4,6 +4,7 @@ import 'package:kota/data/dummy.dart';
 import 'package:kota/model/clinic_model.dart';
 import 'package:kota/model/therapist_dropdwon_model.dart';
 import 'package:kota/model/therapist_model.dart';
+import 'package:kota/views/widgets/custom_snackbar.dart';
 
 class FindController extends GetxController {
   var isTherapistLoading = false.obs;
@@ -75,9 +76,9 @@ final filteredClinicList = <Clinic>[].obs;
     isTherapistSearched.value = false;
   }
 
-  Future<void> findTherapist() async {
+ Future<void> findTherapist() async {
+  isTherapistLoading.value = true;
   try {
-    isTherapistLoading.value = true;
     final results = await _findApiServices.fetchSearchResults(
       districtId: selectedDistrict.value?.districtId ?? "",
       genderId: selectedGender.value?.genderId ?? "",
@@ -85,10 +86,15 @@ final filteredClinicList = <Clinic>[].obs;
     );
     fetchedTherapistList.value = results;
     filteredTherapistList.value = results;
-    isTherapistLoading.value = false;
     isTherapistSearched.value = true;
   } catch (e) {
     print("Therapist fetch failed: $e");
+    CustomSnackbars.failure(
+      "Unable to fetch therapists at the moment. Please try again later.",
+      "Error",
+    );
+  } finally {
+    isTherapistLoading.value = false;
   }
 }
 
@@ -97,13 +103,21 @@ void searchClinic({required bool isGov}) async {
   isPrivateClinic.value = !isGov;
   isClinicLoading.value = true;
 
-  final results = await _findApiServices.fetchClinicResults(isGov);
-  fetchedClinicList.value = results;
-  filteredClinicList.value = results;
-
-  isClinicSearched.value = true;
-  isClinicLoading.value = false;
+  try {
+    final results = await _findApiServices.fetchClinicResults(isGov);
+    fetchedClinicList.value = results;
+    filteredClinicList.value = results;
+    isClinicSearched.value = true;
+  } catch (e) {
+    CustomSnackbars.failure(
+      "Failed to fetch clinic results. Please try again.",
+      "Error",
+    );
+  } finally {
+    isClinicLoading.value = false;
+  }
 }
+
 
 void filterTherapists(String query) {
   if (query.isEmpty) {

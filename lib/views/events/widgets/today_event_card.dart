@@ -29,7 +29,7 @@ class TodayEventCard extends StatelessWidget {
                           'd',
                         ).format(event.eventstartDateDate!.toLocal()),
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
                           // color: event.color,
                         ),
@@ -38,14 +38,13 @@ class TodayEventCard extends StatelessWidget {
                       Text(
                         event.eventstartDateDate!.toLocal().weekdayString,
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 13.sp,
                           // color: event.color,
                         ),
                       ),
                     ],
                   ),
                   SizedBox(width: 4.w),
-
                   // Right part: Title
                   Expanded(
                     child: Column(
@@ -55,7 +54,7 @@ class TodayEventCard extends StatelessWidget {
                           event.eventName!,
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
-                            fontSize: 14,
+                            fontSize: 16.sp,
                           ),
                         ),
                       ],

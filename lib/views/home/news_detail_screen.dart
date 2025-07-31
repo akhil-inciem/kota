@@ -434,7 +434,5 @@ Widget _description(NewsDatum item) {
       }
     },
   );
-}
-
-
+} 
 }

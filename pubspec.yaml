@@ -46,6 +46,7 @@ dependencies:
   crop_your_image: ^2.0.0
   image: ^4.5.4
   dropdown_button2: ^2.3.9
+  safe_text: ^1.0.8
 
 dev_dependencies:
   flutter_test:

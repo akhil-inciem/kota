@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' as getx;
+import 'package:get/get_core/src/get_main.dart';
 import 'package:kota/constants/api.dart';
 import 'package:kota/model/guest_model.dart';
 import 'package:kota/model/login_model.dart';
@@ -10,35 +11,51 @@ class AuthApiService {
   final Dio _dio = Dio();
 
   Future<LoginResponseModel> login(String email, String password) async {
+  try {
+    final formData = FormData.fromMap({
+      'mail_id': email,
+      'member_password': password,
+    });
+
+    final response = await _dio.post(
+      ApiEndpoints.login,
+      data: formData,
+    );
+
+    if (response.statusCode == 200) {
+      print(response.data);
+      return LoginResponseModel.fromJson(response.data);
+    } else {
+      throw Exception('Login failed: ${response.statusMessage}');
+    }
+  } catch (e, stackTrace) {
+    print('Login error: $e');
+    print('Stack trace: $stackTrace');
+    throw Exception('Login failed: $e');
+  }
+}
+
+
+  Future<void> eulaPost() async {
+    final authController = Get.find<AuthController>();
+      final userId = authController.userModel.value!.data.id;
     try {
-      
+      FormData formData = FormData.fromMap({
+      'user_id': userId,
+      'user_type': authController.isGuest ? 'guest' : 'member',
+    });
+
       final response = await _dio.post(
-        ApiEndpoints.login,
-        data: {
-          'email': 
-          email,
-          // 'athiathi125@gmail.com',
-          'member_password': 
-          password,
-          // 'Devu@2000'
-        },
-        options: Options(
-          contentType:
-              Headers
-                  .formUrlEncodedContentType, 
-        ),
+        ApiEndpoints.eula,
+        data: formData
       );
 
       if (response.statusCode == 200) {
-        print(response.data);
-        return LoginResponseModel.fromJson(response.data);
       } else {
-        throw Exception('Login failed: ${response.statusMessage}');
+        throw Exception('Agreement failed: ${response.statusMessage}');
       }
     } catch (e) {
-      print(e);
-      throw Exception('Login failed: $e');
-      
+      throw Exception('Agreement failed: $e');
     }
   }
 
@@ -185,6 +202,33 @@ Future<bool> forgotupdateGuestPassword({
     } catch (e) {
       throw Exception('Registration failed: $e');
     }
+  }
+  Future<void> deleteAccount() async {
+    final authController = getx.Get.find<AuthController>();
+      final userId = authController.userModel.value!.data.id;
+    try {
+
+  FormData formData = FormData.fromMap({
+    'user_id': userId,
+    'user_type': authController.isGuest ? "guest" : "member",
+  });
+
+  final response = await _dio.post(
+    ApiEndpoints.deleteUser,
+    data: formData,
+    options: Options(
+      sendTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 10),
+      validateStatus: (_) => true, 
+    ),
+  );
+  print(response);
+  print(response.data);
+} catch (e) {
+  if (e is DioException) {
+  } else {
+  }
+}
   }
   Future<void> logout() async {
     final authController = getx.Get.find<AuthController>();

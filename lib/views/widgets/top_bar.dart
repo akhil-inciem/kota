@@ -60,7 +60,8 @@ class _TopBarState extends State<TopBar> {
       int currentIndex = homeController.index.value;
 
       return Padding(
-        padding:  EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
+        padding:  EdgeInsets.only(left: 3.w, top: 1.h,bottom: 1.h,right: 4.w 
+        ),
         child: Stack(
           children: [
             Row(
@@ -84,15 +85,19 @@ class _TopBarState extends State<TopBar> {
                                       widget.onTap ??
                                       () => homeController.index.value = 0,
                                   child:
-                                      widget.leadingIconWidget ??
-                                      Image.asset(
-                                        widget.leadingIcon ??
-                                            'assets/icons/backbutton.png',
-                                        width: 6.w,
-                                        height: 2.5.h,
-                                        color:
-                                            widget.iconColor ??
-                                            AppColors.primaryColor,
+                                      Container(
+                                        padding: EdgeInsets.all(10.sp),
+                                        // color: Colors.red,
+                                        child: widget.leadingIconWidget ??
+                                        Image.asset(
+                                          widget.leadingIcon ??
+                                              'assets/icons/backbutton.png',
+                                          width: 6.w,
+                                          height: 2.5.h,
+                                          color:
+                                              widget.iconColor ??
+                                              AppColors.primaryColor,
+                                        ),
                                       ),
                                 ),
                                 SizedBox(width: 2.w),

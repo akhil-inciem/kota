@@ -33,7 +33,7 @@ class ClinicResultsScreen extends StatelessWidget {
                   onReset: () {
                     controller.resetClinicSearch();
                     Get.back(); // Go back to the previous screen
-                  },
+                  }, controller: controller,
                 );
               }),
             ),
@@ -59,6 +59,7 @@ class ClinicResultsScreen extends StatelessWidget {
         ),
         SizedBox(width: 4.w),
         Text(
+          controller.isPrivateClinic.value ? "Find Private Clinic":
           "Find Government Clinic",
           style: TextStyle(
             fontSize: 17.sp,

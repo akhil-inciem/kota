@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kota/apiServices/discussion_api_services.dart';
+import 'package:kota/apiServices/report_api_services.dart';
 import 'package:kota/model/forum_model.dart';
 import 'package:kota/model/poll_model.dart';
 import 'package:kota/model/poll_reaction_model.dart';
@@ -35,6 +36,7 @@ class ForumController extends GetxController {
   final RxInt selectedTabIndex = 0.obs;
   final ForumApiService _forumApiService = ForumApiService();
   final PollApiService _pollApiService = PollApiService();
+  final ReportApiServices _reportApiServices = ReportApiServices();
   final TextEditingController commentController = TextEditingController();
   final TextEditingController searchController = TextEditingController();
 
@@ -754,4 +756,114 @@ bool _hasThreadsDataChanged(List<ForumData> newData) {
     }
     return pollFeild.split(',').map((e) => e.trim()).toList();
   }
+
+  //report & block
+   String selectedReason = '';
+  bool isReportSubmitting = false;
+  final TextEditingController detailsController = TextEditingController();
+
+  final List<ReportReason> reasons = [
+    ReportReason(
+      title: "Spam or Scam",
+      subtitle: "Unwanted commercial content or fraudulent activity",
+      icon: Icons.local_offer_outlined,
+    ),
+    ReportReason(
+      title: "Harassment or Bullying",
+      subtitle: "Abusive behavior or targeted harassment",
+      icon: Icons.sentiment_very_dissatisfied_outlined,
+    ),
+    ReportReason(
+      title: "Inappropriate Content",
+      subtitle: "Offensive or inappropriate material",
+      icon: Icons.warning_amber_outlined,
+    ),
+    ReportReason(
+      title: "Fake Profile",
+      subtitle: "Impersonation or misleading identity",
+      icon: Icons.person_off_outlined,
+    ),
+    ReportReason(
+      title: "Other",
+      subtitle: "Something else that violates our guidelines",
+      icon: Icons.more_horiz,
+    ),
+  ];
+
+  void selectReason(String reason) {
+    selectedReason = reason;
+    update();
+  }
+
+  Future<void> blockUser({
+    required String userId,
+    required String userType,
+    required String blockedUserId,
+    required String blockedUserType,
+  }) async {
+    try {
+      await _reportApiServices.blockUser(
+        userId: userId, 
+        userType: userType,
+        blockedUserId: blockedUserId,
+        blockedUserType: blockedUserType,
+      );
+    } catch (e) {
+      CustomSnackbars.failure("Error", "Failed to block user: $e");
+    }
+  }
+
+  Future<void> flagUser({
+    required String blockedUserId,
+    required String blockedUsertype,
+    required String userId,
+    required String userType,
+    String pollId = '',
+    String threadId = '',
+    String commentId = '',
+    String replyId = '',
+    required String reason,
+    String additionalDetails = '',
+  }) async {
+    isReportSubmitting = true;
+    update();
+    try {
+      await _reportApiServices.flagUser(
+        blockedUserId: blockedUserId,
+        blockedUsertype: blockedUsertype,
+        userId: userId,
+        pollId: pollId,
+        userType: userType,
+        threadId: threadId,
+        commentId: commentId,
+        replyId: replyId,
+        reason: reason,
+        additionalDetails: additionalDetails,
+      );
+      Get.snackbar("Reported", "User has been flagged for review");
+    } catch (e) {
+      Get.snackbar("Error", "Failed to flag user: $e");
+    } finally {
+      isReportSubmitting = false;
+      update();
+    }
+  }
+
+  @override
+  void onClose() {
+    detailsController.dispose();
+    super.onClose();
+  }
+}
+
+class ReportReason {
+  final String title;
+  final String subtitle;
+  final IconData icon;
+
+  ReportReason({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+  });
 }

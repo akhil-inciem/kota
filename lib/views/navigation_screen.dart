@@ -8,6 +8,7 @@ import 'package:kota/views/forum/discussions/forum_detail_screen.dart';
 import 'package:kota/views/forum/discussions/forum_screen.dart';
 import 'package:kota/views/home/events_detail_screen.dart';
 import 'package:kota/views/home/news_detail_screen.dart';
+import 'package:kota/views/login/eula_screen.dart';
 import 'package:kota/views/login/login_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
@@ -106,7 +107,7 @@ class _InitialNavigationScreenState extends State<InitialNavigationScreen> {
       final parts = oldStylePath.split('/');
       if (parts.length == 2 && parts[0] == 'forum') {
         final forumId = parts[1];
-        Get.to(() => ForumDetailScreen(threadId: forumId));
+      Get.to(() => ForumDetailScreen(threadId: forumId));
       }
     }
 
@@ -134,7 +135,7 @@ if (isLoggedIn) {
     Get.offAll(() => BaseScreen());
   }
 } else {
-  Get.offAll(() => const LoginScreen());
+  Get.offAll(() =>  LoginScreen());
 }
 
   }

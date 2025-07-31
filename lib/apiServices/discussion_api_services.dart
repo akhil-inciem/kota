@@ -9,29 +9,30 @@ class ForumApiService {
   static final dio.Dio _dio = dio.Dio();
 
   Future<List<ForumData>> fetchThreads() async {
-     final authController = Get.find<AuthController>();
-    final String? userId = authController.userModel.value?.data.id;
-    try {
-      final response = await _dio.get(
-        ApiEndpoints.getAllThreads,
-        queryParameters: {
-          authController.isGuest ? 'guest_user_id' : 'user_id': userId,
-        },
-      );
+  final authController = Get.find<AuthController>();
+  final String? userId = authController.userModel.value?.data.id;
 
-      if (response.statusCode == 200 && response.data['status'] == true) {
-        final List<dynamic> dataJson = response.data['data'];
-        final List<ForumData> forumDataList =
-            dataJson.map((e) => ForumData.fromJson(e)).toList();
-        return forumDataList;
-      } else {
-        throw Exception("Failed to load forum threads");
-      }
-    } catch (e) {
-      print("Error in fetchThreads: $e");
-      rethrow;
+  try {
+    final response = await _dio.get(
+      ApiEndpoints.getAllThreads,
+      queryParameters: {
+        authController.isGuest ? 'guest_user_id' : 'user_id': userId,
+      },
+    );
+
+    if (response.statusCode == 200 && response.data['status'] == true) {
+      final List<dynamic> dataJson = response.data['data'];
+      final List<ForumData> forumDataList =
+          dataJson.map((e) => ForumData.fromJson(e)).toList();
+      return forumDataList;
+    } else {
+      throw Exception("Failed to load forum threads");
     }
+  } catch (e) {
+    print("Error in fetchThreads: $e");
+    rethrow;
   }
+}
 
   Future<ForumData> fetchSingleThread(String threadId) async {
      final authController = Get.find<AuthController>();

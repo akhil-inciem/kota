@@ -28,7 +28,7 @@ class UpcomingEventCard extends StatelessWidget {
                       Text(
                         DateFormat('d').format(event.eventstartDateDate!.toLocal()),
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
                           // color: event.color,
                         ),
@@ -37,7 +37,7 @@ class UpcomingEventCard extends StatelessWidget {
                       Text(
                         event.eventstartDateDate!.toLocal().weekdayString,
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 13.sp,
                           // color: event.color,
                         ),
                       ),
@@ -54,7 +54,7 @@ class UpcomingEventCard extends StatelessWidget {
                           event.eventName!,
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
-                            fontSize: 14,
+                            fontSize: 16.sp,
                           ),
                         ),
                       ],

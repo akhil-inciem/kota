@@ -145,8 +145,7 @@ class _CollegesScreenState extends State<CollegesScreen> {
                   ),
                 ),
                 Positioned(
-                  top: 4,
-                  right: 4,
+                  right: -1.5.h,
                   child: IconButton(
                     icon: Icon(Icons.copy, size: 20.sp),
                     onPressed: () {

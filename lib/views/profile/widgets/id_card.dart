@@ -153,7 +153,7 @@ Widget build(BuildContext context) {
                             label: 'NAME',
                             value: _getFullName(),
                             isBoldValue: true,
-                            valueFontSize: 15.sp,
+                            valueFontSize: 14.sp,
                           ),
                           SizedBox(height: 1.h),
                           _buildLabelValue(
@@ -161,8 +161,8 @@ Widget build(BuildContext context) {
                             value:
                                 widget.user.address ??
                                 'Bethel House, Asramam, Kollam, Kerala 691002 /n ',
-                            valueFontSize: 15.sp,
-                            maxLines: 2,
+                            valueFontSize: 13.sp,
+                            maxLines: 3,
                           ),
                           Align(
                             alignment: Alignment.center,

@@ -7,9 +7,11 @@ import 'package:kota/controller/forum_controller.dart';
 import 'package:kota/controller/user_controller.dart';
 import 'package:kota/views/forum/discussions/widgets/add_imageSection.dart';
 import 'package:kota/views/forum/discussions/widgets/new_discussion_shimmer.dart';
+import 'package:kota/views/widgets/custom_snackbar.dart';
 import 'package:kota/views/widgets/top_bar.dart';
 import 'package:kota/views/login/widgets/custom_button.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:safe_text/safe_text.dart';
 
 class NewDiscussionPage extends StatefulWidget {
   const NewDiscussionPage({super.key});
@@ -53,6 +55,18 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
   String capitalizeFirstLetter(String text) {
     if (text.isEmpty) return '';
     return text[0].toUpperCase() + text.substring(1);
+  }
+
+  Future<bool> checkTextForBadWords(String text) async {
+    bool containsBadWord = await SafeText.containsBadWord(
+      text: text,
+      useDefaultWords: true,
+    );
+    if (containsBadWord) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   @override
@@ -100,31 +114,33 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
                                   CircleAvatar(
                                     radius: 30,
                                     backgroundColor: Colors.grey[200],
-                                    child: user.photo?.isNotEmpty == true
-                                        ? ClipOval(
-                                            child: CachedNetworkImage(
-                                              imageUrl: user.photo!,
-                                              fit: BoxFit.cover,
-                                              width: 60,
-                                              height: 60,
-                                              placeholder: (context, url) =>
-                                                  const CircularProgressIndicator(
-                                                strokeWidth: 2,
+                                    child:
+                                        user.photo?.isNotEmpty == true
+                                            ? ClipOval(
+                                              child: CachedNetworkImage(
+                                                imageUrl: user.photo!,
+                                                fit: BoxFit.cover,
+                                                width: 60,
+                                                height: 60,
+                                                placeholder:
+                                                    (context, url) =>
+                                                        const CircularProgressIndicator(
+                                                          strokeWidth: 2,
+                                                        ),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(
+                                                          Icons.person,
+                                                          size: 25.sp,
+                                                          color: Colors.grey,
+                                                        ),
                                               ),
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      Icon(
-                                            Icons.person,
-                                            size: 25.sp,
-                                            color: Colors.grey,
-                                          ),
+                                            )
+                                            : Icon(
+                                              Icons.person,
+                                              size: 25.sp,
+                                              color: Colors.grey,
                                             ),
-                                          )
-                                        :  Icon(
-                                            Icons.person,
-                                            size: 25.sp,
-                                            color: Colors.grey,
-                                          ),
                                   ),
                                   const SizedBox(width: 15),
                                   Text(
@@ -152,8 +168,9 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
                                 fillColor: AppColors.primaryBackground,
                                 hintText: "Enter Title",
                                 hintStyle: TextStyle(
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.w100),
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w100,
+                                ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide: BorderSide.none,
@@ -178,8 +195,9 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
                               decoration: InputDecoration(
                                 hintText: "Type your question/queries here...",
                                 hintStyle: TextStyle(
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.w100),
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w100,
+                                ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide: BorderSide.none,
@@ -195,9 +213,10 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
 
                             /// ✅ AddImageSection and Create Button moved here
                             Divider(
-                                color: Colors.grey.shade300,
-                                thickness: 1,
-                                height: 1),
+                              color: Colors.grey.shade300,
+                              thickness: 1,
+                              height: 1,
+                            ),
                             SizedBox(height: 2.h),
                             AddImageSection(),
                             Obx(() {
@@ -205,22 +224,33 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
                                 padding: EdgeInsets.symmetric(horizontal: 6.w),
                                 child: CustomButton(
                                   isEnabled: !_forumController.isLoading.value,
-                                  text: _forumController.isLoading.value
-                                      ? "Posting..."
-                                      : "Create Discussion",
+                                  text:
+                                      _forumController.isLoading.value
+                                          ? "Posting..."
+                                          : "Create Discussion",
                                   backgroundColor: AppColors.primaryColor,
                                   textColor: Colors.white,
-                                  onPressed: () {
-                                    if (_formKey.currentState!.validate()) {
+                                  onPressed: () async {
+                                    String combinedText =
+                                        "${_forumController.titleController.text} ${_forumController.descriptionController.text}";
+
+                                    bool isClean = await checkTextForBadWords(
+                                      combinedText,
+                                    );
+                                    if (isClean &&
+                                        _formKey.currentState!.validate()) {
                                       _forumController.createDiscussion();
+                                    } else if (!isClean) {
+                                      CustomSnackbars.failure(
+                                        "The text contains inappropriate content.",
+                                        "Failed",
+                                      );
                                     }
                                   },
                                 ),
                               );
                             }),
-                            SizedBox(
-                              height: 1.h,
-                            )
+                            SizedBox(height: 1.h),
                           ],
                         ),
                       ),
@@ -273,15 +303,18 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
         controller: controller,
         inputFormatters: [CapitalizeFirstLetterFormatter()],
         maxLines: maxLines,
-        decoration: decoration ??
+        decoration:
+            decoration ??
             InputDecoration(
               hintText: hint,
               hintStyle: TextStyle(fontSize: 16),
               border: InputBorder.none,
             ),
-        validator: (value) => (value == null || value.trim().isEmpty)
-            ? 'This field is required'
-            : null,
+        validator:
+            (value) =>
+                (value == null || value.trim().isEmpty)
+                    ? 'This field is required'
+                    : null,
       ),
     );
   }

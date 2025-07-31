@@ -7,6 +7,7 @@ import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/auth_controller.dart';
 import 'package:kota/controller/forum_controller.dart';
 import 'package:kota/model/poll_model.dart';
+import 'package:kota/views/forum/discussions/widgets/userOptions_bottomSheet.dart';
 import 'package:kota/views/forum/polls/widgets/poll_response_dialog.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shimmer/shimmer.dart';
@@ -32,11 +33,10 @@ class _PollListState extends State<PollList> {
 
       final items = controller.filteredPolls.value; // ✅ access .value
 
-     if (items.isEmpty) {
+      if (items.isEmpty) {
         return RefreshIndicator(
           onRefresh: () async {
-            await controller
-                .loadPolls(); // Replace with your actual method
+            await controller.loadPolls(); // Replace with your actual method
           },
           child: ListView(
             physics: const AlwaysScrollableScrollPhysics(),
@@ -66,9 +66,8 @@ class _PollListState extends State<PollList> {
 
       return RefreshIndicator(
         onRefresh: () async {
-            await controller
-                .loadPolls(); // Replace with your actual method
-          },
+          await controller.loadPolls(); // Replace with your actual method
+        },
         child: ListView.separated(
           itemCount: items.length,
           separatorBuilder: (_, __) => Divider(color: Colors.grey.shade300),
@@ -95,7 +94,8 @@ class PollCard extends StatelessWidget {
   final PollData poll;
   final int pollIndex;
   final Set<int> selectedOptions;
-  final void Function(String pollIndex, int optionIndex, bool isMultiple) onToggle;
+  final void Function(String pollIndex, int optionIndex, bool isMultiple)
+  onToggle;
 
   PollCard({
     super.key,
@@ -112,11 +112,15 @@ class PollCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userId = authController.userModel.value!.data.id;
     final options = _parseOptions(poll.pollFeild ?? '');
     final votes = _parseVotes(options);
     final isMultiple = poll.allowmultiple?.toLowerCase() == '1';
     final adjustedVotesList = _getAdjustedVotes(votes);
-    final adjustedTotalVotes = adjustedVotesList.fold<int>(0, (sum, v) => sum + v);
+    final adjustedTotalVotes = adjustedVotesList.fold<int>(
+      0,
+      (sum, v) => sum + v,
+    );
     final isExpired = poll.expired == true;
 
     return Container(
@@ -130,20 +134,55 @@ class PollCard extends StatelessWidget {
           if (isExpired)
             Text(
               "This poll has expired",
-              style: TextStyle(color: Colors.red, fontWeight: FontWeight.w400, fontSize: 15.sp),
+              style: TextStyle(
+                color: Colors.red,
+                fontWeight: FontWeight.w400,
+                fontSize: 15.sp,
+              ),
             ),
           if (isExpired) SizedBox(height: 1.h),
-          Text(
-            poll.title ?? "",
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 16.sp,
-              color: Colors.black,
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  poll.title ?? "",
+                  maxLines: 2,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16.sp,
+                    color: Colors.black,
+                    
+                  ),
+                ),
+              ),
+              // poll.createdBy == userId ? SizedBox.shrink() : IconButton(
+              //   onPressed: () {
+              //     showModalBottomSheet(
+              //       context: context,
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.vertical(
+              //           top: Radius.circular(20),
+              //         ),
+              //       ),
+              //       builder:
+              //           (_) => UserOptionsBottomSheet(
+              //             blockedUserType: "member",
+              //             blockedUserId: poll.createdBy ?? "",
+              //             blockedUserName: poll.creatorName ?? "",
+              //             pollId: poll.id,
+              //           ),
+              //     );
+              //   },
+              //   icon: Icon(Icons.more_horiz_outlined),
+              // ),
+            ],
           ),
           SizedBox(height: 1.5.h),
           ...List.generate(options.length, (i) {
-            final percent = adjustedTotalVotes == 0 ? 0.0 : adjustedVotesList[i] / adjustedTotalVotes;
+            final percent =
+                adjustedTotalVotes == 0
+                    ? 0.0
+                    : adjustedVotesList[i] / adjustedTotalVotes;
             return _buildOptionRow(
               optionText: options[i],
               index: i,
@@ -172,7 +211,9 @@ class PollCard extends StatelessWidget {
   }
 
   List<String> _parseVotes(List<String> options) {
-    return options.map((opt) => poll.reactionCounts[opt]?.toString() ?? '0').toList();
+    return options
+        .map((opt) => poll.reactionCounts[opt]?.toString() ?? '0')
+        .toList();
   }
 
   List<int> _getAdjustedVotes(List<String> votes) {
@@ -181,7 +222,8 @@ class PollCard extends StatelessWidget {
 
   Widget _buildHeader() {
     final displayTime = _formatTime(poll.createdAt.toString());
-    final canEdit = authController.userModel.value?.data.id == poll.createdBy &&
+    final canEdit =
+        authController.userModel.value?.data.id == poll.createdBy &&
         poll.editable! &&
         selectedOptions.isEmpty;
 
@@ -190,20 +232,24 @@ class PollCard extends StatelessWidget {
       children: [
         Text(
           displayTime,
-          style: TextStyle(fontStyle: FontStyle.italic, color: Colors.grey, fontSize: 14.sp),
+          style: TextStyle(
+            fontStyle: FontStyle.italic,
+            color: Colors.grey,
+            fontSize: 14.sp,
+          ),
         ),
         canEdit
             ? GestureDetector(
-                onTap: () => Get.to(() => NewPollPage(pollToEdit: poll)),
-                child: Container(
-                  padding: EdgeInsets.all(8.sp),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12.sp),
-                    color: AppColors.primaryBackground,
-                  ),
-                  child: Icon(Icons.edit_outlined, size: 20.sp),
+              onTap: () => Get.to(() => NewPollPage(pollToEdit: poll)),
+              child: Container(
+                padding: EdgeInsets.all(8.sp),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.sp),
+                  color: AppColors.primaryBackground,
                 ),
-              )
+                child: Icon(Icons.edit_outlined, size: 20.sp),
+              ),
+            )
             : const SizedBox.shrink(),
       ],
     );
@@ -227,7 +273,7 @@ class PollCard extends StatelessWidget {
             Icon(
               isSelected ? Icons.check_circle : Icons.radio_button_off,
               size: 18.sp,
-              color: isExpired ? Colors.grey : Colors.blueAccent,
+              color: isExpired ? Colors.grey : AppColors.primaryColor,
             ),
             SizedBox(width: 2.w),
             Expanded(
@@ -299,10 +345,11 @@ class PollCard extends StatelessWidget {
             if (Get.context != null) {
               await showDialog(
                 context: Get.context!,
-                builder: (_) => PollResponsesDialog(
-                  reactions: forumController.pollReactionList,
-                  totalVotes: forumController.totalVotes.value,
-                ),
+                builder:
+                    (_) => PollResponsesDialog(
+                      reactions: forumController.pollReactionList,
+                      totalVotes: forumController.totalVotes.value,
+                    ),
               );
             }
           } catch (e) {

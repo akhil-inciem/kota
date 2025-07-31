@@ -28,6 +28,7 @@ class PollModel {
 class PollData {
     PollData({
         required this.id,
+        required this.userName,
         required this.title,
         required this.discription,
         required this.createdBy,
@@ -40,10 +41,12 @@ class PollData {
         required this.reactionCounts,
         required this.expired,
         required this.userVote,
+        required this.creatorName,
     });
 
     final String? id;
     final String? title;
+    final String? userName;
     final String? discription;
     final String? createdBy;
     final String? pollFeild;
@@ -55,11 +58,13 @@ class PollData {
     final bool? editable;
     final Map<String, num> reactionCounts;
     final bool? expired;
+    final String? creatorName;
 
     factory PollData.fromJson(Map<String, dynamic> json){ 
         return PollData(
             id: json["id"],
             title: json["title"],
+            userName: json['user_name'],
             discription: json["discription"],
             createdBy: json["created_by"],
             pollFeild: json["poll_feild"],
@@ -71,12 +76,14 @@ class PollData {
             editable: json["editable"],
             reactionCounts: Map.from(json["reaction_counts"]).map((k, v) => MapEntry<String, num>(k, v)),
             expired: json["expired"],
+            creatorName: json['creator_name']
         );
     }
 
     Map<String, dynamic> toJson() => {
         "id": id,
         "title": title,
+        'user_name': userName,
         "discription": discription,
         "created_by": createdBy,
         "poll_feild": pollFeild,
@@ -88,6 +95,7 @@ class PollData {
         "editable": editable,
         "reaction_counts": Map.from(reactionCounts).map((k, v) => MapEntry<String, dynamic>(k, v)),
         "expired": expired,
+        'creator_name': creatorName
     };
 
 }
@@ -96,6 +104,7 @@ class PollData {
   PollData copyWith({
     String? id,
     String? title,
+    String? userName,
     String? discription,
     String? createdBy,
     String? pollFeild,
@@ -107,10 +116,12 @@ class PollData {
     bool? editable,
     Map<String, num>? reactionCounts,
     bool? expired,
+    String? creatorName,
   }) {
     return PollData(
       id: id ?? this.id,
       title: title ?? this.title,
+      userName: userName ?? this.userName,
       discription: discription ?? this.discription,
       createdBy: createdBy ?? this.createdBy,
       pollFeild: pollFeild ?? this.pollFeild,
@@ -122,6 +133,7 @@ class PollData {
       editable: editable ?? this.editable,
       reactionCounts: reactionCounts ?? this.reactionCounts,
       expired: expired ?? this.expired,
+      creatorName: creatorName ?? this.creatorName
     );
   }
 }

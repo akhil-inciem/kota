@@ -28,6 +28,7 @@ class TherapistResultsScreen extends StatelessWidget {
               child: Obx(() {
                 final results = controller.filteredTherapistList;
                 return SearchResultTherapistWidget(
+                  controller: controller,
                   results: results.toList(),
                   onSearch: controller.filterTherapists,
                   onReset: () {

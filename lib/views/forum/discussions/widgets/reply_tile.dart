@@ -4,18 +4,22 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kota/controller/auth_controller.dart';
 import 'package:kota/model/forum_model.dart';
+import 'package:kota/views/forum/discussions/widgets/userOptions_bottomSheet.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../../../controller/forum_controller.dart';
 
 class ReplyTile extends StatelessWidget {
   final Replies reply;
+  final String threadId;
+  final String commentId;
 
-  ReplyTile({Key? key, required this.reply}) : super(key: key);
+  ReplyTile({Key? key, required this.reply,required this.threadId,required this.commentId}) : super(key: key);
   final authController = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
+    final userId = authController.userModel.value!.data.id;
     final ForumController _forumController = Get.find<ForumController>();
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 1.h),
@@ -36,18 +40,18 @@ class ReplyTile extends StatelessWidget {
                         height: 4.h,
                         fit: BoxFit.cover,
                         placeholder:
-                            (context, url) =>  SizedBox(
+                            (context, url) => SizedBox(
                               width: 2.h,
                               height: 2.h,
                               child: CircularProgressIndicator(strokeWidth: 2),
                             ),
                         errorWidget:
                             (context, url, error) =>
-                                 Icon(Icons.person, color: Colors.grey),
+                                Icon(Icons.person, color: Colors.grey),
                       ),
                     ),
                   )
-                  :  CircleAvatar(
+                  : CircleAvatar(
                     radius: 2.h,
                     child: Icon(Icons.person, color: Colors.white),
                     backgroundColor: Colors.grey,
@@ -74,13 +78,37 @@ class ReplyTile extends StatelessWidget {
                   ),
                 ],
               ),
+              // Spacer(),
+              // reply.userId == userId ? SizedBox.shrink():  IconButton(
+              //   icon: Icon(Icons.more_horiz_outlined),
+              //   onPressed: () {
+              //     showModalBottomSheet(
+              //       context: context,
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.vertical(
+              //           top: Radius.circular(20),
+              //         ),
+              //       ),
+              //       builder:
+              //           (_) => UserOptionsBottomSheet(
+              //             blockedUserName:
+              //                 "${reply.firstName ?? ""} ${reply.lastName ?? ""}",
+              //             blockedUserId: reply.userId!,
+              //             threadId: threadId,
+              //             commentId: commentId,
+              //             replyId: reply.id,
+              //             blockedUserType: '',
+              //           ),
+              //     );
+              //   },
+              // ),
             ],
           ),
-           SizedBox(height: 1.h),
+          SizedBox(height: 1.h),
           // Comment text
           buildRichTextWithMentions(reply.content),
 
-           SizedBox(height: 1.h),
+          SizedBox(height: 1.h),
           // Actions Row
           Row(
             children: [
@@ -90,7 +118,7 @@ class ReplyTile extends StatelessWidget {
                 },
                 child: Icon(
                   reply.isLiked! ? Icons.favorite : Icons.favorite_border,
-                  size: 18.sp,
+                  size: 17.sp,
                   color: reply.isLiked! ? Colors.red : Colors.black,
                 ),
               ),
@@ -110,11 +138,11 @@ class ReplyTile extends StatelessWidget {
                   children: [
                     Image.asset(
                       'assets/icons/reply.png',
-                      height: 2.h,
-                      width: 2.h,
+                      height: 1.5.h,
+                      width: 1.5.h,
                     ),
                     SizedBox(width: 1.5.w),
-                    Text('Reply', style: TextStyle(fontSize: 15.sp)),
+                    Text('Reply', style: TextStyle(fontSize: 14.sp)),
                   ],
                 ),
               ),
@@ -130,12 +158,14 @@ class ReplyTile extends StatelessWidget {
 
 class CommentTile extends StatelessWidget {
   final Comments comment;
+  final String threadId;
 
-  CommentTile({Key? key, required this.comment}) : super(key: key);
+  CommentTile({Key? key, required this.comment,required this.threadId}) : super(key: key);
   final authController = Get.find<AuthController>();
   @override
   Widget build(BuildContext context) {
     final ForumController _forumController = Get.find<ForumController>();
+    final userId = authController.userModel.value!.data.id;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 1.h),
       child: Column(
@@ -155,7 +185,7 @@ class CommentTile extends StatelessWidget {
                         height: 4.h,
                         fit: BoxFit.cover,
                         placeholder:
-                            (context, url) =>  SizedBox(
+                            (context, url) => SizedBox(
                               width: 2.h,
                               height: 2.h,
                               child: CircularProgressIndicator(strokeWidth: 2),
@@ -177,7 +207,7 @@ class CommentTile extends StatelessWidget {
                 children: [
                   Text(
                     '${comment.firstName} ${comment.lastName ?? ''}',
-                    style:  TextStyle(
+                    style: TextStyle(
                       fontSize: 15.sp,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
@@ -193,12 +223,35 @@ class CommentTile extends StatelessWidget {
                   ),
                 ],
               ),
+              // Spacer(),
+              // comment.userId == userId ? SizedBox.shrink(): IconButton(
+              //  icon: Icon(Icons.more_horiz_outlined),
+              //   onPressed: () {
+              //     showModalBottomSheet(
+              //       context: context,
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.vertical(
+              //           top: Radius.circular(20),
+              //         ),
+              //       ),
+              //       builder:
+              //           (_) => UserOptionsBottomSheet(
+              //             blockedUserName:
+              //                 "${comment.firstName ?? ""} ${comment.lastName ?? ""}",
+              //             blockedUserId: comment.userId!,
+              //             threadId: threadId,
+              //             commentId: comment.id,
+              //             blockedUserType: '',
+              //           ),
+              //     );
+              //   },
+              // ),
             ],
           ),
-           SizedBox(height: 1.h),
+          SizedBox(height: 1.h),
           // Comment text
           buildRichTextWithMentions(comment.content),
-           SizedBox(height: 1.h),
+          SizedBox(height: 1.h),
           // Actions Row
           Row(
             children: [
@@ -208,13 +261,13 @@ class CommentTile extends StatelessWidget {
                 },
                 child: Icon(
                   comment.isLiked! ? Icons.favorite : Icons.favorite_border,
-                  size: 18.sp,
+                  size: 17.sp,
                   color: comment.isLiked! ? Colors.red : Colors.black,
                 ),
               ),
               SizedBox(width: 1.w),
               if ((int.tryParse(comment.likeCount ?? '0') ?? 0) > 0)
-                Text(comment.likeCount!,style: TextStyle(fontSize: 15.sp),),
+                Text(comment.likeCount!, style: TextStyle(fontSize: 15.sp)),
               SizedBox(width: 2.h),
 
               GestureDetector(
@@ -228,8 +281,8 @@ class CommentTile extends StatelessWidget {
                   children: [
                     Image.asset(
                       'assets/icons/reply.png',
-                      height: 2.h,
-                      width: 2.h,
+                      height: 1.5.h,
+                      width: 1.5.h,
                     ),
                     SizedBox(width: 1.5.w),
                     Text('Reply', style: TextStyle(fontSize: 14.sp)),
@@ -266,8 +319,8 @@ RichText buildRichTextWithMentions(String? content) {
     spans.add(
       TextSpan(
         text: '$mentionText ',
-        style:  TextStyle(
-          fontSize: 16.sp,
+        style: TextStyle(
+          fontSize: 15.sp,
           color: Color(0xFF0A58C9),
           fontWeight: FontWeight.w600,
         ),
@@ -279,7 +332,7 @@ RichText buildRichTextWithMentions(String? content) {
       spans.add(
         TextSpan(
           text: remaining,
-          style:  TextStyle(fontSize: 16.sp, color: Colors.grey.shade800),
+          style: TextStyle(fontSize: 15.sp, color: Colors.grey.shade800),
         ),
       );
     }
@@ -288,15 +341,13 @@ RichText buildRichTextWithMentions(String? content) {
     spans.add(
       TextSpan(
         text: content,
-        style:  TextStyle(fontSize: 16.sp, color: Colors.grey.shade800),
+        style: TextStyle(fontSize: 16.sp, color: Colors.grey.shade800),
       ),
     );
   }
 
   return RichText(text: TextSpan(children: spans));
 }
-
-
 
 String formatDateTime(String? dateTimeStr) {
   if (dateTimeStr == null) return '';

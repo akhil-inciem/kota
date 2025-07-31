@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:kota/constants/colors.dart';
+import 'package:kota/controller/find_controller.dart';
 import 'package:kota/model/clinic_model.dart';
 import 'package:kota/model/therapist_model.dart';
 import 'package:kota/views/drawer/find/widgets/find_search.dart';
@@ -8,11 +10,13 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 
 class SearchResultTherapistWidget extends StatelessWidget {
   final List<TherapistDatum> results;
+  final FindController controller;
   final VoidCallback onReset;
   final ValueChanged<String> onSearch;
 
   const SearchResultTherapistWidget({
     super.key,
+    required this.controller,
     required this.results,
     required this.onReset,
     required this.onSearch,
@@ -31,11 +35,18 @@ class SearchResultTherapistWidget extends StatelessWidget {
             hintText: 'Search Therapist',
           ),
         ),
-        // Results or Empty Message
+
+        // Results or Loader
         Expanded(
-          child:
-              results.isEmpty
-                  ? const Center(
+          child: Obx(() {
+            if (controller.isTherapistLoading.value) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+
+            return results.isEmpty
+                ? const Center(
                     child: Text(
                       'No results available',
                       style: TextStyle(
@@ -44,7 +55,7 @@ class SearchResultTherapistWidget extends StatelessWidget {
                       ),
                     ),
                   )
-                  : ListView.builder(
+                : ListView.builder(
                     itemCount: results.length,
                     padding: EdgeInsets.symmetric(
                       horizontal: 5.w,
@@ -54,7 +65,8 @@ class SearchResultTherapistWidget extends StatelessWidget {
                       final therapist = results[index];
                       return TherapistTile(therapist: therapist);
                     },
-                  ),
+                  );
+          }),
         ),
       ],
     );
@@ -117,17 +129,18 @@ class TherapistTile extends StatelessWidget {
     );
   }
 }
-
 class SearchResultClinicWidget extends StatelessWidget {
   final List<Clinic> results;
   final VoidCallback onReset;
   final ValueChanged<String> onSearch;
+  final FindController controller;
 
   const SearchResultClinicWidget({
     super.key,
     required this.results,
     required this.onReset,
     required this.onSearch,
+    required this.controller,
   });
 
   @override
@@ -143,28 +156,33 @@ class SearchResultClinicWidget extends StatelessWidget {
           ),
         ),
         Expanded(
-          child:
-              results.isEmpty
-                  ? const Center(
-                    child: Text(
-                      'No results available',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  )
-                  : ListView.builder(
-                    itemCount: results.length,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 3.w,
-                      vertical: 1.h,
-                    ),
-                    itemBuilder: (context, index) {
-                      final result = results[index];
-                      return ClinicTile(clinic: result, index: index);
-                    },
+          child: Obx(() {
+            if (controller.isClinicLoading.value) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (controller.isClinicSearched.value && results.isEmpty) {
+              return const Center(
+                child: Text(
+                  'No results available',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
                   ),
+                ),
+              );
+            } else {
+              return ListView.builder(
+                itemCount: results.length,
+                padding: EdgeInsets.symmetric(
+                  horizontal: 3.w,
+                  vertical: 1.h,
+                ),
+                itemBuilder: (context, index) {
+                  final result = results[index];
+                  return ClinicTile(clinic: result, index: index);
+                },
+              );
+            }
+          }),
         ),
       ],
     );

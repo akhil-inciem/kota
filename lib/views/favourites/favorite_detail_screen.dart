@@ -258,26 +258,33 @@ class _FavoritesDetailScreenState extends State<FavoritesDetailScreen> {
   }
 
   Widget _profileRow() {
+    final hasAuthor = widget.item['author'] != null && widget.item['author'].isNotEmpty;
+
+    if (!hasAuthor) {
+      // If no author, return an empty SizedBox (nothing visible)
+      return const SizedBox.shrink();
+    }
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const CircleAvatar(
+        CircleAvatar(
           radius: 20,
-          backgroundImage: NetworkImage('https://i.pravatar.cc/300'),
+          backgroundImage: CachedNetworkImageProvider(widget.item['author']),
         ),
         const SizedBox(width: 15),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             Text(
-              'John Alexander',
-              style: TextStyle(
+              widget.item['author'] ?? "",
+              style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: Colors.black,
               ),
             ),
-            Text(
+            const Text(
               'President KOTA',
               style: TextStyle(
                 fontSize: 10,

@@ -12,6 +12,8 @@ class ApiEndpoints {
   static const String resetGuestPassword = '$baseUrl/news/reset_password_guest_user';
   static const String forgotupdateGuestPassword = '$baseUrl/news/change_password_api';
   static const String guestSignIn = '$baseUrl/news/guest-signin';
+  static const String eula ='$baseUrl/forums/updateAgreement';
+  static const String deleteUser = '$baseUrl/forums/deleteUser';
 
   //Discussions
   // Thread APIs
@@ -72,4 +74,8 @@ class ApiEndpoints {
   //Advertisement
   static const String advertisement = '$baseUrl/news/adds';
   static const String advertisementList = '$baseUrl/news/addsformvalues'; 
+
+  //Block & Report
+  static const String blockUser = '$baseUrl/forums/blockUser';
+  static const String flagUser = '$baseUrl/flag';
 }

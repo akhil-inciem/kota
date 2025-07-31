@@ -63,6 +63,7 @@ class FavoriteEvent {
         required this.createdAt,
         required this.document,
         required this.status,
+        required this.author,
         required this.feesPerSeat,
         required this.location,
         required this.descriptionLinks,
@@ -85,6 +86,7 @@ class FavoriteEvent {
     final String? image;
     final String? document;
     final String? status;
+    final String? author;
     final List<DescriptionLink>? descriptionLinks;
     final String? feesPerSeat;
     final String? location;
@@ -107,6 +109,7 @@ class FavoriteEvent {
             image: json["image"],
             document: json["document"],
             status: json["status"],
+            author: json['author'],
             feesPerSeat: json["fees_per_seat"],
             location: json["location"],
             createdAt: json["created_at"],
@@ -129,6 +132,7 @@ class FavoriteEvent {
         "event_end_date": eventEndDate?.toIso8601String(),
         "total_seats": totalSeats,
         "added_by": addedBy,
+        "author": author,
         "added_on": addedOn,
         "created_at": createdAt,
         "image": image,

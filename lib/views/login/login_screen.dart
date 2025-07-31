@@ -7,14 +7,14 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:kota/constants/colors.dart';
 import 'package:kota/controller/auth_controller.dart';
 import 'package:kota/views/base.dart';
+import 'package:kota/views/home/home_screen.dart';
+import 'package:kota/views/login/eula_screen.dart';
 import 'package:kota/views/login/guest_registration.dart';
 import 'package:kota/views/login/widgets/custom_button.dart';
 import 'package:kota/views/login/widgets/guest_member_dialogues.dart';
 import 'package:kota/views/login/widgets/labelled_textfield.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import 'forget_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -226,8 +226,16 @@ class _LoginScreenState extends State<LoginScreen>
                           email,
                           password,
                         );
+
                         if (success) {
-                          Get.offAll(BaseScreen());
+                          final isAgree =
+                              authController.userModel.value?.data.isAgree ??
+                              false;
+                          if (isAgree) {
+                            Get.offAll(BaseScreen());
+                          } else {
+                            Get.offAll(EulaScreen());
+                          }
                         }
                       }
                     },
@@ -242,15 +250,15 @@ class _LoginScreenState extends State<LoginScreen>
                       style: TextStyle(
                         color: AppColors.primaryText,
                         fontWeight: FontWeight.w500,
-                        fontSize: 12,
+                        fontSize: 14.sp,
                       ),
                       children: [
                         TextSpan(
                           text: 'Register Here',
                           style: TextStyle(
-                            color:  AppColors.primaryText,
+                            color: AppColors.primaryText,
                             fontWeight: FontWeight.w600,
-                            fontSize: 12,
+                            fontSize: 14.sp,
                             decoration: TextDecoration.underline,
                           ),
                           recognizer:
@@ -259,7 +267,10 @@ class _LoginScreenState extends State<LoginScreen>
                                   const url =
                                       'https://kbaiota.org/index/memberSignUp';
                                   if (await canLaunchUrl(Uri.parse(url))) {
-                                    await launchUrl(Uri.parse(url),mode: LaunchMode.externalApplication,);
+                                    await launchUrl(
+                                      Uri.parse(url),
+                                      mode: LaunchMode.inAppWebView,
+                                    );
                                   } else {
                                     throw 'Could not launch $url';
                                   }
@@ -276,6 +287,4 @@ class _LoginScreenState extends State<LoginScreen>
       ),
     );
   }
-
-  
 }
