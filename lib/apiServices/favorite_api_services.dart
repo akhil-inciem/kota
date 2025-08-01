@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
@@ -12,114 +13,117 @@ class FavoritesApiService {
 
   Future<FavoritesModel> fetchFavorites() async {
     final authController = getx.Get.find<AuthController>();
-      final userId = authController.userModel.value!.data.id;
-  try {
-    final response = await _dio.get(
-      ApiEndpoints.favorites,
-      queryParameters: {
-        'user_id': userId,
-      },
-    );
+    final userId = authController.userModel.value!.data.id;
+    try {
+      final response = await _dio.get(
+        ApiEndpoints.favorites,
+        queryParameters: {'user_id': userId},
+      );
 
-    if (response.statusCode == 200) {
-      final responseString = response.data.toString().trim();
-      final jsonString = jsonDecode(responseString);
-      print(jsonString['status']);
-      return FavoritesModel.fromJson(jsonString);
-    } else {
-      throw Exception("Failed to load favorites");
+      if (response.statusCode == 200) {
+        final responseString = response.data.toString().trim();
+        final jsonString = jsonDecode(responseString);
+        print(jsonString['status']);
+        return FavoritesModel.fromJson(jsonString);
+      } else {
+        throw Exception("Failed to load favorites");
+      }
+    } catch (e, st) {
+      print("Error in fetchFavorites: $e");
+      print(st);
+      rethrow;
     }
-  } catch (e, st) {
-    print("Error in fetchFavorites: $e");
-    print(st);
-    rethrow;
   }
-}
 
-   Future<void> sendNewsBookmarkStatusToApi(String id, bool status) async {
+  Future<void> sendNewsBookmarkStatusToApi(String id, bool status) async {
     final authController = getx.Get.find<AuthController>();
-      final userId = authController.userModel.value!.data.id;
-  try {
-    FormData formData = FormData.fromMap({
-      'user_id': userId,
-      'news_id': id,
-      'user_type' : authController.isGuest ? 1 : 0,
-      'badges' : 'news'
-    });
+    final userId = authController.userModel.value!.data.id;
+    try {
+      FormData formData = FormData.fromMap({
+        'user_id': userId,
+        'news_id': id,
+        'user_type': authController.isGuest ? 1 : 0,
+        'badges': 'news',
+      });
 
-    final response = await _dio.post(
-      ApiEndpoints.updateNewsFavorites,
-      data: formData,
-      options: Options(
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      ),
-    );
-    if (response.statusCode == 200) {
-  final data = response.data.toString().toLowerCase();
-  if (data.contains('removed')) {
-    // Show a snackbar using GetX or your preferred method
-    CustomSnackbars.success(
-      'This item has been removed from your favoruites.',
-      'Removed from Favourites',
-    );
-  } else {
-    CustomSnackbars.success(
-      'This item has been added to your favoruites.',
-      'Added to Favourites',
-    );
-  }
-} else {
-  print('Failed to update: ${response.statusCode}');
-}
-
-  } catch (e) {
-    print('Error sending bookmark status: $e');
-    rethrow;
-  }
-}
-Future<void> sendEventsBookmarkStatusToApi(String id, bool status) async {
-  final authController = getx.Get.find<AuthController>();
-      final userId = authController.userModel.value!.data.id;
-  try {
-    FormData formData = FormData.fromMap({
-      'user_id': userId,
-      'events_id': id,
-      'user_type' : authController.isGuest ? 1 : 0,
-      'badges' : 'events'
-    });
-
-    final response = await _dio.post(
-      ApiEndpoints.updateEventFavorites,
-      data: formData,
-      options: Options(
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      ),
-    );
-
-    if (response.statusCode == 200) {
-      final data = response.data.toString().toLowerCase();
-      if (data.contains('removed')) {
-    // Show a snackbar using GetX or your preferred method
-    CustomSnackbars.success(
-      'This item has been removed from your favoruites.',
-      'Removed from Favourites',
-    );
-  } else {
-    CustomSnackbars.success(
-      'This item has been added to your favoruites.',
-      'Added to Favourites',
-    );
-  }
-    } else {
-      print('Failed to update: ${response.statusCode}');
+      final response = await _dio.post(
+        ApiEndpoints.updateNewsFavorites,
+        data: formData,
+        options: Options(headers: {'Content-Type': 'multipart/form-data'}),
+      );
+      if (response.statusCode == 200) {
+        final data = response.data.toString().toLowerCase();
+        if (data.contains('removed')) {
+          DebouncedSnackbar.showSuccess(
+            'This item has been removed from your favoruites.',
+            'Removed from Favourites',
+          );
+        } else {
+          DebouncedSnackbar.showSuccess(
+            'This item has been added to your favoruites.',
+            'Added to Favourites',
+          );
+        }
+      } else {
+        print('Failed to update: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error sending bookmark status: $e');
+      rethrow;
     }
-  } catch (e) {
-    print('Error sending bookmark status: $e');
-    rethrow;
+  }
+
+  Future<void> sendEventsBookmarkStatusToApi(String id, bool status) async {
+    final authController = getx.Get.find<AuthController>();
+    final userId = authController.userModel.value!.data.id;
+    try {
+      FormData formData = FormData.fromMap({
+        'user_id': userId,
+        'events_id': id,
+        'user_type': authController.isGuest ? 1 : 0,
+        'badges': 'events',
+      });
+
+      final response = await _dio.post(
+        ApiEndpoints.updateEventFavorites,
+        data: formData,
+        options: Options(headers: {'Content-Type': 'multipart/form-data'}),
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data.toString().toLowerCase();
+        if (data.contains('removed')) {
+          DebouncedSnackbar.showSuccess(
+            'This item has been removed from your favoruites.',
+            'Removed from Favourites',
+          );
+        } else {
+          DebouncedSnackbar.showSuccess(
+            'This item has been added to your favoruites.',
+            'Added to Favourites',
+          );
+        }
+      } else {
+        print('Failed to update: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error sending bookmark status: $e');
+      rethrow;
+    }
   }
 }
+
+class DebouncedSnackbar {
+  static Timer? _debounceTimer;
+
+  static void showSuccess(
+    String message,
+    String title, {
+    Duration delay = const Duration(milliseconds: 500),
+  }) {
+    _debounceTimer?.cancel(); // cancel any existing scheduled snackbar
+    _debounceTimer = Timer(delay, () {
+      CustomSnackbars.success(message, title);
+    });
+  }
 }

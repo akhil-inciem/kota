@@ -160,15 +160,19 @@ class _ForumListState extends State<ForumList> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-  (() {
-    final fullName = '${item.firstName} ${item.lastName ?? ''}'.trim();
-    return fullName.toLowerCase() == 'guest' ? 'Deleted User' : fullName;
-  })(),
-  style: TextStyle(
-    fontSize: 15.sp,
-    fontWeight: FontWeight.w600,
-  ),
-),
+                                      (() {
+                                        final fullName =
+                                            '${item.firstName} ${item.lastName ?? ''}'
+                                                .trim();
+                                        return fullName.toLowerCase() == 'guest'
+                                            ? 'Deleted User'
+                                            : fullName;
+                                      })(),
+                                      style: TextStyle(
+                                        fontSize: 15.sp,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
                                     Text(
                                       timeAgo(item.createdAt!),
                                       style: TextStyle(
@@ -180,35 +184,35 @@ class _ForumListState extends State<ForumList> {
                                   ],
                                 ),
                               ),
-                              // Spacer(),
-                              // (authController.isGuest
-                              //         ? item.guestUserId == userId
-                              //         : item.createdId == userId)
-                              //     ? SizedBox.shrink()
-                              //     : IconButton(
-                              //       icon: Icon(Icons.more_horiz_outlined),
-                              //       onPressed: () {
-                              //         showModalBottomSheet(
-                              //           context: context,
-                              //           shape: RoundedRectangleBorder(
-                              //             borderRadius: BorderRadius.vertical(
-                              //               top: Radius.circular(20),
-                              //             ),
-                              //           ),
-                              //           builder:
-                              //               (_) => UserOptionsBottomSheet(
-                              //                 threadId: item.id,
-                              //                 blockedUserName:
-                              //                     "${item.firstName ?? ""} ${item.lastName ?? ""}",
-                              //                 blockedUserId:
-                              //                     item.userType == 'guest'
-                              //                         ? item.guestUserId
-                              //                         : item.createdId,
-                              //                 blockedUserType: item.userType,
-                              //               ),
-                              //         );
-                              //       },
-                              //     ),
+                              Spacer(),
+                              (authController.isGuest
+                                      ? item.guestUserId == userId
+                                      : item.createdId == userId)
+                                  ? SizedBox.shrink()
+                                  : IconButton(
+                                    icon: Icon(Icons.more_horiz_outlined,size: 20.sp,),
+                                    onPressed: () {
+                                      showModalBottomSheet(
+                                        context: context,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(20),
+                                          ),
+                                        ),
+                                        builder:
+                                            (_) => UserOptionsBottomSheet(
+                                              threadId: item.id,
+                                              blockedUserName:
+                                                  "${item.firstName ?? ""} ${item.lastName ?? ""}",
+                                              blockedUserId:
+                                                  item.userType == 'guest'
+                                                      ? item.guestUserId
+                                                      : item.createdId,
+                                              blockedUserType: item.userType,
+                                            ),
+                                      );
+                                    },
+                                  ),
                             ],
                           ),
                           SizedBox(height: 1.5.h),

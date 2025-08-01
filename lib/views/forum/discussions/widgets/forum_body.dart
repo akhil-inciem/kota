@@ -131,8 +131,8 @@ class _ForumPostBodyState extends State<ForumPostBody> {
               },
             ),
           ),
-          const SizedBox(height: 10),
-          Center(
+           SizedBox(height: 1.h),
+          widget.imageUrls.length < 2 ? SizedBox.shrink() : Center(
             child: SmoothPageIndicator(
               controller: _pageController,
               count: widget.imageUrls.length,
@@ -143,9 +143,8 @@ class _ForumPostBodyState extends State<ForumPostBody> {
               ),
             ),
           ),
-          const SizedBox(height: 16),
+           SizedBox(height: 1.5.h),
         ],
-
         // Like, Comment, Share Row
         Row(
           children: [

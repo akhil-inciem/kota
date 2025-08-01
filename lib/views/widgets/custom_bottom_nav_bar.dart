@@ -5,7 +5,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 class CustomBottomNavBar extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onTap;
-  final int newUpdatesCount; // pass the count instead of boolean
+  final int newUpdatesCount; 
 
 
   const CustomBottomNavBar({

@@ -813,40 +813,44 @@ bool _hasThreadsDataChanged(List<ForumData> newData) {
     }
   }
 
-  Future<void> flagUser({
-    required String blockedUserId,
-    required String blockedUsertype,
-    required String userId,
-    required String userType,
-    String pollId = '',
-    String threadId = '',
-    String commentId = '',
-    String replyId = '',
-    required String reason,
-    String additionalDetails = '',
-  }) async {
-    isReportSubmitting = true;
+  Future<String?> flagUser({
+  required String blockedUserId,
+  required String blockedUsertype,
+  required String userId,
+  required String userType,
+  String pollId = '',
+  String threadId = '',
+  String commentId = '',
+  String replyId = '',
+  required String reason,
+  String additionalDetails = '',
+}) async {
+  isReportSubmitting = true;
+  update();
+  try {
+    final result = await _reportApiServices.flagUser(
+      blockedUserId: blockedUserId,
+      blockedUsertype: blockedUsertype,
+      userId: userId,
+      pollId: pollId,
+      userType: userType,
+      threadId: threadId,
+      commentId: commentId,
+      replyId: replyId,
+      reason: reason,
+      additionalDetails: additionalDetails,
+    );
+
+    return result; // 🟢 return the result to the UI if needed
+  } catch (e) {
+    CustomSnackbars.failure("Failed to flag user: $e", "Error");
+    return null;
+  } finally {
+    isReportSubmitting = false;
     update();
-    try {
-      await _reportApiServices.flagUser(
-        blockedUserId: blockedUserId,
-        blockedUsertype: blockedUsertype,
-        userId: userId,
-        pollId: pollId,
-        userType: userType,
-        threadId: threadId,
-        commentId: commentId,
-        replyId: replyId,
-        reason: reason,
-        additionalDetails: additionalDetails,
-      );
-    } catch (e) {
-      CustomSnackbars.failure( "Failed to flag user: $e","Error",);
-    } finally {
-      isReportSubmitting = false;
-      update();
-    }
   }
+}
+
 
   @override
   void onClose() {

@@ -40,63 +40,59 @@ class DrawerPage extends StatelessWidget {
                   ViewProfileItem(),
                   SizedBox(height: 0.5.h),
                   ...[
-                        DrawerItem(
-                          icon: 'assets/icons/vision&mission.png',
-                          title: 'Vision & Mission',
-                          onPressed: () => Get.to(() => MissionPage()),
-                        ),
-                        DrawerItem(
-                          icon: 'assets/icons/executives.png',
-                          title: 'KOTA Executives',
-                          onPressed: () => Get.to(() => ExecutivePage()),
-                        ),
-                        DrawerItem(
-                          icon: 'assets/icons/executives.png',
-                          title: 'OT Colleges',
-                          onPressed: () => Get.to(() => CollegesScreen()),
-                        ),
-                        DrawerItem(
-                          icon: 'assets/icons/contct_us.png',
-                          title: 'Contact Us',
-                          onPressed: () => Get.to(() => ContactUsScreen()),
-                        ),
-                        DrawerItem(
-                          icon: 'assets/icons/faq.png',
-                          title: 'FAQ',
-                          onPressed: () => Get.to(() => FaqScreen()),
-                        ),
-                        DrawerItem(
-                          icon: 'assets/icons/find.png',
-                          title: 'Find',
-                          onPressed: () => Get.to(() => FindScreen()),
-                        ),
-                        // DrawerItem(
-                        //   icon: 'assets/icons/delete.png',
-                        //   title: 'Delete Account',
-                        //   onPressed: () {
-                        //     Get.dialog(
-                        //       DeleteAccountDialog(
-                        //         authController: authController,
-                        //       ),
-                        //       barrierDismissible: false,
-                        //     );
-                        //   },
-                        // ),
-                        DrawerItem(
-                          icon: 'assets/icons/logout.png',
-                          title: 'Logout',
-                          onPressed: () {
-                            Get.dialog(
-                              LogoutConfirmationDialog(
-                                authController: authController,
-                              ),
-                              barrierDismissible: false,
-                            );
-                          },
-                        ),
-                      ]
-                      .expand((item) => [item, SizedBox(height: 1.h)])
-                      .toList(), 
+                    DrawerItem(
+                      icon: 'assets/icons/vision&mission.png',
+                      title: 'Vision & Mission',
+                      onPressed: () => Get.to(() => MissionPage()),
+                    ),
+                    DrawerItem(
+                      icon: 'assets/icons/executives.png',
+                      title: 'KOTA Executives',
+                      onPressed: () => Get.to(() => ExecutivePage()),
+                    ),
+                    DrawerItem(
+                      icon: 'assets/icons/executives.png',
+                      title: 'OT Colleges',
+                      onPressed: () => Get.to(() => CollegesScreen()),
+                    ),
+                    DrawerItem(
+                      icon: 'assets/icons/contct_us.png',
+                      title: 'Contact Us',
+                      onPressed: () => Get.to(() => ContactUsScreen()),
+                    ),
+                    DrawerItem(
+                      icon: 'assets/icons/faq.png',
+                      title: 'FAQ',
+                      onPressed: () => Get.to(() => FaqScreen()),
+                    ),
+                    DrawerItem(
+                      icon: 'assets/icons/find.png',
+                      title: 'Find',
+                      onPressed: () => Get.to(() => FindScreen()),
+                    ),
+                    DrawerItem(
+                      icon: 'assets/icons/delete.png',
+                      title: 'Delete Account',
+                      onPressed: () {
+                        Get.dialog(
+                          DeleteAccountDialog(authController: authController),
+                          barrierDismissible: false,
+                        );
+                      },
+                    ),
+                    DrawerItem(
+                      icon: 'assets/icons/logout.png',
+                      title: 'Logout',
+                      onPressed: () {
+                        Get.dialog(
+                          LogoutConfirmationDialog(
+                            authController: authController,
+                          ),
+                          barrierDismissible: false,
+                        );
+                      },
+                    ),
+                  ].expand((item) => [item, SizedBox(height: 1.h)]).toList(),
                 ],
               ),
             ),

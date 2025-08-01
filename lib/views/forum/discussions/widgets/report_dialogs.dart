@@ -131,7 +131,10 @@ class BlockDialog extends StatelessWidget {
                         blockedUserId: blockedUserId,
                         blockedUserType: blockedUsertype,
                         userId: authController.userModel.value!.data.id,
-                        userType: authController.userModel.value!.data.isGuest ? "guest" : "member",
+                        userType:
+                            authController.userModel.value!.data.isGuest
+                                ? "guest"
+                                : "member",
                       );
                       Get.back();
                       CustomSnackbars.success(
@@ -162,7 +165,7 @@ class ReportDialog extends StatelessWidget {
   final String? commentId;
   final String? replyId;
 
-   ReportDialog({
+  ReportDialog({
     Key? key,
     this.userAvatar,
     this.threadId,
@@ -432,11 +435,14 @@ class ReportDialog extends StatelessWidget {
                 controller.selectedReason.isEmpty
                     ? null
                     : () async {
-                      await controller.flagUser(
+                      final result = await controller.flagUser(
                         blockedUserId: blockedUserId,
                         blockedUsertype: blockedUsertype,
                         userId: authController.userModel.value!.data.id,
-                        userType: authController.userModel.value!.data.isGuest ? "guest" : "member",
+                        userType:
+                            authController.userModel.value!.data.isGuest
+                                ? "guest"
+                                : "member",
                         pollId: pollId ?? "",
                         threadId: threadId ?? '',
                         commentId: commentId ?? '',
@@ -445,9 +451,22 @@ class ReportDialog extends StatelessWidget {
                         additionalDetails:
                             controller.detailsController.text.trim(),
                       );
+
                       Get.back();
-                      CustomSnackbars.success("User has been flagged for review","Reported");
+
+                      if (result != null && result.contains('already')) {
+                        CustomSnackbars.failure(
+                          "You’ve already reported this item.",
+                          "Already Reported",
+                        );
+                      } else {
+                        CustomSnackbars.success(
+                          "User has been flagged for review",
+                          "Reported",
+                        );
+                      }
                     },
+
             text: "Submit Report",
           ),
         ),

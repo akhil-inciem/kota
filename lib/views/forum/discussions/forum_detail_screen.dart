@@ -151,32 +151,32 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                                 ),
                               ],
                             ),
-                            // Spacer(),
-                            // (authController.isGuest
-                            //           ? item.guestUserId == userId
-                            //           : item.createdId == userId) ? SizedBox.shrink() : IconButton(
-                            //   icon: Icon(Icons.more_horiz_outlined),
-                            //   onPressed: () {
-                            //     showModalBottomSheet(
-                            //       context: context,
-                            //       shape: RoundedRectangleBorder(
-                            //         borderRadius: BorderRadius.vertical(
-                            //           top: Radius.circular(20),
-                            //         ),
-                            //       ),
-                            //       builder:
-                            //           (_) => UserOptionsBottomSheet(
-                            //             blockedUserName:
-                            //                 "${item.firstName ?? ""} ${item.lastName ?? ""}",
-                            //             blockedUserId: item.userType == 'guest'
-                            //                           ? item.guestUserId
-                            //                           : item.createdId,
-                            //             threadId: item.id,
-                            //             blockedUserType: "",
-                            //           ),
-                            //     );
-                            //   },
-                            // ),
+                            Spacer(),
+                            (authController.isGuest
+                                      ? item.guestUserId == userId
+                                      : item.createdId == userId) ? SizedBox.shrink() : IconButton(
+                              icon: Icon(Icons.more_horiz_outlined,size: 20.sp,),
+                              onPressed: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(20),
+                                    ),
+                                  ),
+                                  builder:
+                                      (_) => UserOptionsBottomSheet(
+                                        blockedUserName:
+                                            "${item.firstName ?? ""} ${item.lastName ?? ""}",
+                                        blockedUserId: item.userType == 'guest'
+                                                      ? item.guestUserId
+                                                      : item.createdId,
+                                        threadId: item.id,
+                                        blockedUserType: "",
+                                      ),
+                                );
+                              },
+                            ),
                           ],
                         ),
                       ),

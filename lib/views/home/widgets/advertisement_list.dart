@@ -71,11 +71,12 @@ class _AdvertisementListState extends State<AdvertisementList> {
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 3.w),
         child: SizedBox(
-          height: 22.h, // total height including PageView and dots
+          height: 24.h, // total height including PageView and dots
           child: Column(
             children: [
+              SizedBox(height: 1.5.h,),
               SizedBox(
-                height: 20.5.h,
+                height: 21.h,
                 child: ScrollConfiguration(
                   behavior: ScrollConfiguration.of(context).copyWith(
                     scrollbars: false,

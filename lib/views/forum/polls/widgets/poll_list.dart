@@ -144,37 +144,53 @@ class PollCard extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Text(
-                  poll.title ?? "",
-                  maxLines: 2,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16.sp,
-                    color: Colors.black,
-                    
-                  ),
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                    // Text(
+                    //   poll.creatorName ?? "",
+                    //   maxLines: 2,
+                    //   style: TextStyle(
+                    //     fontWeight: FontWeight.normal,
+                    //     fontSize: 14.sp,
+                    //     fontStyle: FontStyle.italic,
+                    //     color: Colors.black,
+                        
+                    //   ),
+                    // ),
+                    // SizedBox(height: 1.h),
+                    Text(
+                      poll.title ?? "",
+                      maxLines: 2,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16.sp,
+                        color: Colors.black,
+                        
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              // poll.createdBy == userId ? SizedBox.shrink() : IconButton(
-              //   onPressed: () {
-              //     showModalBottomSheet(
-              //       context: context,
-              //       shape: RoundedRectangleBorder(
-              //         borderRadius: BorderRadius.vertical(
-              //           top: Radius.circular(20),
-              //         ),
-              //       ),
-              //       builder:
-              //           (_) => UserOptionsBottomSheet(
-              //             blockedUserType: "member",
-              //             blockedUserId: poll.createdBy ?? "",
-              //             blockedUserName: poll.creatorName ?? "",
-              //             pollId: poll.id,
-              //           ),
-              //     );
-              //   },
-              //   icon: Icon(Icons.more_horiz_outlined),
-              // ),
+              poll.createdBy == userId ? SizedBox.shrink() : IconButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20),
+                      ),
+                    ),
+                    builder:
+                        (_) => UserOptionsBottomSheet(
+                          blockedUserType: "member",
+                          blockedUserId: poll.createdBy ?? "",
+                          blockedUserName: poll.creatorName ?? "",
+                          pollId: poll.id,
+                        ),
+                  );
+                },
+                icon: Icon(Icons.more_horiz_outlined,size: 20.sp,),
+              ),
             ],
           ),
           SizedBox(height: 1.5.h),

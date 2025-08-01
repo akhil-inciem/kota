@@ -37,7 +37,7 @@ class CustomCalendar extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 3.w),
             child: TableCalendar(
-  rowHeight: 5.5.h, // 👈 Responsive row height
+  rowHeight: 5.h, // 👈 Responsive row height
   daysOfWeekVisible: false,
   headerVisible: false,
   calendarStyle: CalendarStyle(
@@ -109,7 +109,6 @@ class CustomCalendar extends StatelessWidget {
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 2),
                     Text(
                       '${date.day}',
                       style: TextStyle(

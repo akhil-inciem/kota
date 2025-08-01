@@ -430,7 +430,7 @@ Widget _description(NewsDatum item) {
     },
     onLinkTap: (String? url, Map<String, String> attributes, dom.Element? element) {
       if (url != null) {
-        launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+        launchUrl(Uri.parse(url), mode: LaunchMode.inAppWebView);
       }
     },
   );

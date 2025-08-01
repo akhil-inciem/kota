@@ -48,11 +48,6 @@ class _FavoritesDetailScreenState extends State<FavoritesDetailScreen> {
     _isSharing = false;
   }
 
-  String _htmlToPlainText(String htmlString) {
-    final document = html_parser.parse(htmlString);
-    return document.body?.text.trim() ?? '';
-  }
-
   @override
   Widget build(BuildContext context) {
     final imageUrl = widget.item["image"];
@@ -328,7 +323,7 @@ class _FavoritesDetailScreenState extends State<FavoritesDetailScreen> {
     },
     onLinkTap: (String? url, Map<String, String> attributes, dom.Element? element) {
       if (url != null) {
-        launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+        launchUrl(Uri.parse(url), mode: LaunchMode.inAppWebView);
       }
     },
   );

@@ -53,8 +53,8 @@ class _EventCalendarTabState extends State<EventCalendarTab> {
             ],
           ),
           DraggableScrollableSheet(
-            initialChildSize: 0.43,
-            minChildSize: 0.43,
+            initialChildSize: 0.40,
+            minChildSize: 0.40,
             maxChildSize: 1,
             builder: (context, scrollController) {
               return ValueListenableBuilder<double>(

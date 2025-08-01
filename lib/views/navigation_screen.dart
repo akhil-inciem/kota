@@ -56,7 +56,7 @@ class _InitialNavigationScreenState extends State<InitialNavigationScreen> {
     final urlString = uri.toString();
 
     if (urlString.contains('index/memberSignUp')) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
+      await launchUrl(uri, mode: LaunchMode.inAppWebView);
       _navigating = false;
       return;
     }

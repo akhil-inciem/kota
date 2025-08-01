@@ -231,11 +231,11 @@ class _LoginScreenState extends State<LoginScreen>
                           final isAgree =
                               authController.userModel.value?.data.isAgree ??
                               false;
-                          // if (isAgree) {
+                          if (isAgree) {
                             Get.offAll(BaseScreen());
-                          // } else {
-                          //   Get.offAll(EulaScreen());
-                          // }
+                          } else {
+                            Get.offAll(EulaScreen());
+                          }
                         }
                       }
                     },
@@ -259,7 +259,7 @@ class _LoginScreenState extends State<LoginScreen>
                             color: AppColors.primaryText,
                             fontWeight: FontWeight.w600,
                             fontSize: 14.sp,
-                            decoration: TextDecoration.underline,
+                            decoration: TextDecoration.underline,  
                           ),
                           recognizer:
                               TapGestureRecognizer()
