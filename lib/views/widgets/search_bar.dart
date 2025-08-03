@@ -32,7 +32,7 @@ class CustomSearchBar extends StatelessWidget {
                 hintStyle: TextStyle(fontSize: 16.sp),
                 prefixIcon: Padding(
                   padding: EdgeInsets.all(1.5.h), // Adjust for better alignment
-                  child: Image.asset('assets/icons/search.png',height: 2.5.h,),
+                  child: Image.asset('assets/icons/search.png',height: 2.h,),
                 ),
                 filled: true,
                 fillColor: Colors.white,

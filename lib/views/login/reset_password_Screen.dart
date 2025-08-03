@@ -36,7 +36,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       CustomSnackbars.success('Password updated', 'Success');
       Get.offAll(LoginScreen());
     } else {
-      CustomSnackbars.failure('Password reset failed', 'Error');
+      CustomSnackbars.failure('Password reset failed', 'Failed');
     }
   }
 

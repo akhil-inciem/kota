@@ -52,17 +52,17 @@
 
     <data
         android:scheme="https"
-        android:host="dev.kbaiota.org"
+        android:host="kbaiota.org"
         android:path="/index/newsDetails" />
 
     <data
         android:scheme="https"
-        android:host="dev.kbaiota.org"
+        android:host="kbaiota.org"
         android:path="/index/eventdetails" />
         
     <data
         android:scheme="https"
-        android:host="dev.kbaiota.org"
+        android:host="kbaiota.org"
         android:path="/index/forumDetails" />
 </intent-filter>
 

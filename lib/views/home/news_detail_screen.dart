@@ -45,12 +45,6 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
     _isSharing = false;
   }
 
-String getShareUrl(String newsId) {
-  return Platform.isIOS
-      ? "https://dev.kbaiota.org/news/$newsId"  // iOS: no question mark
-      : "https://dev.kbaiota.org/?news/$newsId"; // Android: with question mark
-}
-
   @override
   void initState() {
     super.initState();
@@ -215,7 +209,7 @@ String getShareUrl(String newsId) {
 
   Widget _dateAndIcons(NewsDatum item) {
     final title = item.newsTitle ?? 'Check this out!';
-    final url = "https://dev.kbaiota.org/index/newsDetails?newsId=${item.newsId}";
+    final url = "https://kbaiota.org/index/newsDetails?newsId=${item.newsId}";
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

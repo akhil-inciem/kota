@@ -99,7 +99,7 @@ class _FavoriteListState extends State<FavoriteList> {
                               children: [
                                 Row(
                                   children: [
-                                    Container(
+                                    item['badge'] == "" ? SizedBox.shrink(): Container(
                                       padding: EdgeInsets.symmetric(
                                         horizontal: 2.w,
                                         vertical: 0.5.h,

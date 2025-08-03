@@ -48,7 +48,7 @@ class _ChangePasswordWidgetState extends State<ChangePasswordWidget>
     } else {
       CustomSnackbars.failure(
         'Failed to send reset link. Please try again.',
-        'Error',
+        'Failed',
       );
     }
     print('Submitted email: $email');

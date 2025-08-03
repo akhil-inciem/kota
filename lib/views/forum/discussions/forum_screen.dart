@@ -40,7 +40,7 @@ class _ForumScreenState extends State<ForumScreen> {
   },
 ),
 
-        SizedBox(height: 1.h),
+        SizedBox(height: 2.h),
 
         // If not guest, show tabs
         if (!isGuest)

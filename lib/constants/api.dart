@@ -1,6 +1,6 @@
 class ApiEndpoints {
   // Base URL
-  static const String baseUrl = 'https://dev.kbaiota.org/api';
+  static const String baseUrl = 'https://kbaiota.org/api';
 
   // Auth
   static const String login = '$baseUrl/news/login';

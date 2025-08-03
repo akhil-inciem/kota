@@ -59,7 +59,7 @@ class _ForumListState extends State<ForumList> {
           child: ListView(
             physics: const AlwaysScrollableScrollPhysics(),
             children: [
-              SizedBox(height: 20.h), // add space to allow pull
+              SizedBox(height: 24.h), // add space to allow pull
               Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -69,7 +69,7 @@ class _ForumListState extends State<ForumList> {
                       height: 8.h,
                       width: 8.h,
                     ),
-                    const SizedBox(height: 12),
+                     SizedBox(height: 1.h),
                     Text(
                       "No Discussions Available",
                       style: TextStyle(fontSize: 18.sp, color: Colors.black),

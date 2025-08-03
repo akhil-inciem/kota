@@ -71,10 +71,10 @@ class _AdvertisementListState extends State<AdvertisementList> {
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 3.w),
         child: SizedBox(
-          height: 24.h, // total height including PageView and dots
+          height: 24.h, 
           child: Column(
             children: [
-              SizedBox(height: 1.5.h,),
+              SizedBox(height: 1.h,),
               SizedBox(
                 height: 21.h,
                 child: ScrollConfiguration(
@@ -82,7 +82,7 @@ class _AdvertisementListState extends State<AdvertisementList> {
                     scrollbars: false,
                     overscroll: false,
                     physics:
-                        const ClampingScrollPhysics(), // disables iOS bouncing
+                        const ClampingScrollPhysics(), 
                   ),
                   child: PageView.builder(
                     key: PageStorageKey('advertisement_page_view'),
@@ -108,7 +108,7 @@ class _AdvertisementListState extends State<AdvertisementList> {
                         duration: const Duration(milliseconds: 500),
                         margin: EdgeInsets.symmetric(horizontal: 1.w),
                         width: isActive ? 3.w : 2.w,
-                        height: 1.h,
+                        height: 0.5.h,
                         decoration: BoxDecoration(
                           color: isActive ? Colors.black : Colors.grey,
                           borderRadius: BorderRadius.circular(1.w),
@@ -168,7 +168,7 @@ class ShimmerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(2.w),
+      padding: EdgeInsets.symmetric(horizontal:2.w,vertical: 5.w),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(3.w),
         child: Shimmer.fromColors(

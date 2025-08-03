@@ -218,20 +218,21 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<bool> guestResetPassword({
-    required String email,
-    required String oldPassword,
-    required String newPassword,
-  }) async {
-    try {
-      // Replace with your actual API logic
-      await _authService.resetGuestPassword(email, oldPassword, newPassword);
-      return true;
-    } catch (e) {
-      print("Guest password reset error: $e");
-      return false;
-    }
+  Future<String> guestResetPassword({
+  required String email,
+  required String oldPassword,
+  required String newPassword,
+}) async {
+  try {
+    // Assuming resetGuestPassword returns a String message
+    final result = await _authService.resetGuestPassword(email, oldPassword, newPassword);
+    return result; // return API message like "Password reset successfully" or failure message
+  } catch (e) {
+    print("Guest password reset error: $e");
+    return "Error resetting password: $e";
   }
+}
+
 
   Future<bool> verifyOtp(String otp) async {
     if (guestId.value == "") {

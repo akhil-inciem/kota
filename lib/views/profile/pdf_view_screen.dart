@@ -46,7 +46,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
           'Saved to downloads',
         );
       } else {
-        CustomSnackbars.failure('Failed to download PDF.', 'Error');
+        CustomSnackbars.failure('Failed to download PDF.', 'Failed');
       }
     } catch (e) {
       CustomSnackbars.failure('An error occurred.', 'Download failed');

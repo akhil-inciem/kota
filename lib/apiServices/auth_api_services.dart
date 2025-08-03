@@ -153,34 +153,34 @@ Future<bool> forgotupdateGuestPassword({
 
 
 
-  Future<void> resetGuestPassword(String email,String oldPassword,String newPassword) async {
-    try {
-      FormData formData = FormData.fromMap({
+  Future<String> resetGuestPassword(String email, String oldPassword, String newPassword) async {
+  try {
+    FormData formData = FormData.fromMap({
       'mail_id': email,
       'previous_password': oldPassword,
-      'new_password':newPassword
+      'new_password': newPassword,
     });
 
-      final response = await _dio.post(
-        ApiEndpoints.resetGuestPassword,
-        data: formData
-      );
+    final response = await _dio.post(
+      ApiEndpoints.resetGuestPassword,
+      data: formData,
+    );
 
-      if (response.statusCode == 200) {
-        final decoded = jsonDecode(response.data);
-    if (decoded['status'] == true) {
-      // Success block
+    if (response.statusCode == 200) {
+      final decoded = jsonDecode(response.data);
+      if (decoded['status'] == true) {
+        return decoded['message'] ?? "Password reset successfully.";
+      } else {
+        return decoded['message'] ?? "Password reset failed.";
+      }
     } else {
-      throw Exception('Mail failed: ${decoded['message'] ?? 'Unknown error'}');
+      return "Server returned status code: ${response.statusCode}";
     }
-}
-
-    } catch (e) {
-      print("ssss$e");
-      throw Exception('Mail failed: $e');
-    }
+  } catch (e) {
+    print("Error in resetGuestPassword: $e");
+    return "Exception occurred: $e";
   }
-
+}
 
   Future<GuestModel> register({
     required String fullName,

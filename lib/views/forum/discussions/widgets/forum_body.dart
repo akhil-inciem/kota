@@ -41,13 +41,6 @@ class ForumPostBody extends StatefulWidget {
 class _ForumPostBodyState extends State<ForumPostBody> {
   final PageController _pageController = PageController();
   final ForumController controller = Get.find<ForumController>();
-
-  // String getForumShareUrl(String forumId) {
-  //   return Platform.isIOS
-  //       ? "https://dev.kbaiota.org/forum/$forumId"
-  //       : "https://dev.kbaiota.org/?forum/$forumId";
-  // }
-
   bool _isSharing = false;
 
   void _handleShare() async {
@@ -59,7 +52,7 @@ class _ForumPostBodyState extends State<ForumPostBody> {
     final params = ShareParams(
       title: title,
       uri: Uri.parse(
-        "https://dev.kbaiota.org/index/forumDetails?forumId=${widget.id}",
+        "https://kbaiota.org/index/forumDetails?forumId=${widget.id}",
       ),
     );
     SharePlus.instance.share(params);

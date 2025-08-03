@@ -43,15 +43,19 @@ class _GuestResetPasswordScreenState extends State<GuestResetPasswordScreen> {
 
   authController.isLoading.value = false;
 
-  if (success) {
-    CustomSnackbars.success('Password changed successfully', 'Success');
-    _oldPasswordController.clear();
-    _newPasswordController.clear();
-    _confirmPasswordController.clear();
-     Navigator.pop(context);
-  } else {
-    CustomSnackbars.failure('Failed to reset password. Try again.', 'Error');
-  }
+  final msg = success.toLowerCase();
+
+if (msg.contains("updated") || msg.contains("success")) {
+  CustomSnackbars.success('Password changed successfully', 'Success');
+  _oldPasswordController.clear();
+  _newPasswordController.clear();
+  _confirmPasswordController.clear();
+  Navigator.pop(context);
+} else if (msg.contains("incorrect") || msg.contains("wrong")) {
+  CustomSnackbars.failure('Previous password is incorrect.', 'Error');
+} else {
+  CustomSnackbars.failure('Failed to reset password. Try again.', 'Error');
+}
 }
 
 

@@ -243,7 +243,7 @@ class _UpdatesScreenState extends State<UpdatesScreen>
                                         Center(
                                           child: Padding(
                                             padding: EdgeInsets.only(
-                                              top: 25.h,
+                                              top: 24.h,
                                             ),
                                             child: Column(
                                               mainAxisSize: MainAxisSize.min,
@@ -251,15 +251,15 @@ class _UpdatesScreenState extends State<UpdatesScreen>
                                                 Icon(
                                                   Icons
                                                       .notifications_off_outlined,
-                                                  size: 30
+                                                  size: 25
                                                       .sp, // You can adjust size as needed
                                                   color: Colors.grey,
                                                 ),
-                                                SizedBox(height: 2.h),
+                                                SizedBox(height: 4.h),
                                                 Text(
                                                   "No notifications available",
                                                   style: TextStyle(
-                                                    fontSize: 18,
+                                                    fontSize: 18.sp,
                                                     color: Colors.black,
                                                   ),
                                                 ),

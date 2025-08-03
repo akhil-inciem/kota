@@ -91,7 +91,7 @@ final filteredClinicList = <Clinic>[].obs;
     print("Therapist fetch failed: $e");
     CustomSnackbars.failure(
       "Unable to fetch therapists at the moment. Please try again later.",
-      "Error",
+      "Unable to Fetch",
     );
   } finally {
     isTherapistLoading.value = false;
@@ -111,7 +111,7 @@ void searchClinic({required bool isGov}) async {
   } catch (e) {
     CustomSnackbars.failure(
       "Failed to fetch clinic results. Please try again.",
-      "Error",
+      "Unable to Fetch",
     );
   } finally {
     isClinicLoading.value = false;

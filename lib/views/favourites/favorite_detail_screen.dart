@@ -40,7 +40,7 @@ class _FavoritesDetailScreenState extends State<FavoritesDetailScreen> {
     final title = widget.item['title'] ?? 'Check this out!';
     final params = ShareParams(
       title: title,
-      uri: Uri.parse("https://dev.kbaiota.org/?favourites"),
+      uri: Uri.parse("https://kbaiota.org/?favourites"),
     );
     SharePlus.instance.share(params);
 

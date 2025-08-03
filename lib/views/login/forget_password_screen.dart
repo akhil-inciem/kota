@@ -44,7 +44,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       } else {
         CustomSnackbars.failure(
           'Failed to send OTP. Please try again.',
-          'Error',
+          'Failed',
         );
       }
     } else {
@@ -61,7 +61,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       } else {
         CustomSnackbars.failure(
           'Failed to send reset link. Please try again.',
-          'Error',
+          'Failed',
         );
       }
     }

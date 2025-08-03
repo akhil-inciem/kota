@@ -809,7 +809,7 @@ bool _hasThreadsDataChanged(List<ForumData> newData) {
         blockedUserType: blockedUserType,
       );
     } catch (e) {
-      CustomSnackbars.failure("Error", "Failed to block user: $e");
+      CustomSnackbars.failure("Failed", "Failed to block user: $e");
     }
   }
 
