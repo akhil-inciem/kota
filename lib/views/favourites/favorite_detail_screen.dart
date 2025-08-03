@@ -80,6 +80,21 @@ class _FavoritesDetailScreenState extends State<FavoritesDetailScreen> {
                         fit: BoxFit.cover,
                       ),
             ),
+             Container(
+                    height: 40.h,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.black.withOpacity(0.8),
+                          Colors.transparent,
+                          Colors.transparent,
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                    ),
+                  ),
             // Draggable Scrollable Sheet
             NotificationListener<DraggableScrollableNotification>(
               onNotification: (notification) {
@@ -161,26 +176,22 @@ class _FavoritesDetailScreenState extends State<FavoritesDetailScreen> {
 
             // Back button (Optional: if you want it floating)
             ValueListenableBuilder<double>(
-              valueListenable: extentNotifier,
-              builder: (context, extent, _) {
-                double percentage = ((extent - 0.6) / (1.0 - 0.6)).clamp(
-                  0.0,
-                  1.0,
-                );
-                Color? iconColor =
-                    percentage < 0.2
-                        ? Colors.white
-                        : AppColors
-                            .primaryColor; // 👈 You can adjust 0.2 threshold
-
-                return Positioned(
-                  top: 1.h,
-                  left: 0,
-                  right: 10,
-                  child: TopBar(title: "", onTap: () => Get.back()),
-                );
-              },
-            ),
+                valueListenable: extentNotifier,
+                builder: (context, extent, _) {
+                  Color iconColor =
+                      extent < 0.7 ? Colors.white : AppColors.primaryColor;
+                  return Positioned(
+                    top: 1.h,
+                    left: 0,
+                    right: 10,
+                    child: TopBar(
+                      title: "",
+                      onTap: () => Get.back(),
+                      iconColor: iconColor,
+                    ),
+                  );
+                },
+              ),
           ],
         ),
       ),

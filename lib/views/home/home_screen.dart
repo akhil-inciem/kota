@@ -69,8 +69,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
               Positioned.fill(
                 child: DraggableScrollableSheet(
-                  initialChildSize: 0.64,
-                  minChildSize: 0.64,
+                  initialChildSize: 0.65,
+                  minChildSize: 0.65,
                   maxChildSize: 1.0,
                   builder: (
                     BuildContext context,

@@ -116,9 +116,22 @@ class _ForumPostBodyState extends State<ForumPostBody> {
                     fit: BoxFit.contain,
                     placeholder:
                         (context, url) => Container(color: Colors.grey[300]),
-                    errorWidget:
-                        (context, url, error) =>
-                            Icon(Icons.person, size: 24.sp, color: Colors.grey),
+                   errorWidget: (context, url, error) => Container(
+  color: Colors.grey[200],
+  alignment: Alignment.center,
+  child: Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Icon(Icons.broken_image, size: 36.sp, color: Colors.grey),
+      SizedBox(height: 0.5.h),
+      Text(
+        'Image not available',
+        style: TextStyle(fontSize: 10.sp, color: Colors.grey),
+      ),
+    ],
+  ),
+),
+
                   ),
                 );
               },
