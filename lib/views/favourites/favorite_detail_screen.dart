@@ -33,20 +33,20 @@ class _FavoritesDetailScreenState extends State<FavoritesDetailScreen> {
 
   bool _isSharing = false;
 
-  void _handleShare() async {
-    if (_isSharing) return; // Prevent repeated taps
+  // void _handleShare() async {
+  //   if (_isSharing) return; // Prevent repeated taps
 
-    _isSharing = true;
-    final title = widget.item['title'] ?? 'Check this out!';
-    final params = ShareParams(
-      title: title,
-      uri: Uri.parse("https://kbaiota.org/?favourites"),
-    );
-    SharePlus.instance.share(params);
+  //   _isSharing = true;
+  //   final title = widget.item['title'] ?? 'Check this out!';
+  //   final params = ShareParams(
+  //     title: title,
+  //     uri: Uri.parse("https://kbaiota.org/?favourites"),
+  //   );
+  //   SharePlus.instance.share(params);
 
-    await Future.delayed(const Duration(milliseconds: 200));
-    _isSharing = false;
-  }
+  //   await Future.delayed(const Duration(milliseconds: 200));
+  //   _isSharing = false;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -80,21 +80,21 @@ class _FavoritesDetailScreenState extends State<FavoritesDetailScreen> {
                         fit: BoxFit.cover,
                       ),
             ),
-             Container(
-                    height: 40.h,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.black.withOpacity(0.8),
-                          Colors.transparent,
-                          Colors.transparent,
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                      ),
-                    ),
-                  ),
+            Container(
+              height: 40.h,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.black.withOpacity(0.8),
+                    Colors.transparent,
+                    Colors.transparent,
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+            ),
             // Draggable Scrollable Sheet
             NotificationListener<DraggableScrollableNotification>(
               onNotification: (notification) {
@@ -176,22 +176,22 @@ class _FavoritesDetailScreenState extends State<FavoritesDetailScreen> {
 
             // Back button (Optional: if you want it floating)
             ValueListenableBuilder<double>(
-                valueListenable: extentNotifier,
-                builder: (context, extent, _) {
-                  Color iconColor =
-                      extent < 0.7 ? Colors.white : AppColors.primaryColor;
-                  return Positioned(
-                    top: 1.h,
-                    left: 0,
-                    right: 10,
-                    child: TopBar(
-                      title: "",
-                      onTap: () => Get.back(),
-                      iconColor: iconColor,
-                    ),
-                  );
-                },
-              ),
+              valueListenable: extentNotifier,
+              builder: (context, extent, _) {
+                Color iconColor =
+                    extent < 0.7 ? Colors.white : AppColors.primaryColor;
+                return Positioned(
+                  top: 1.h,
+                  left: 0,
+                  right: 10,
+                  child: TopBar(
+                    title: "",
+                    onTap: () => Get.back(),
+                    iconColor: iconColor,
+                  ),
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -225,29 +225,29 @@ class _FavoritesDetailScreenState extends State<FavoritesDetailScreen> {
             ],
           ),
         ),
-        Row(
-          children: [
-            GestureDetector(
-              onTap: _handleShare,
-              child: Image.asset(
-                'assets/icons/share.png',
-                height: 2.5.h,
-                width: 2.5.h, // use 2.h for both to maintain aspect ratio
-              ),
-            ),
-            SizedBox(width: 3.w),
-            // GestureDetector(
-            //     onTap: () => homeController.toggleBookmark(widget.item[""]),
-            //     child: Image.asset(
-            //      isBookmarked
-            //           ? 'assets/icons/saved.png'
-            //           : 'assets/icons/favorites_unselected.png',
-            //       height: 2.5.h,
-            //       width: 2.5.h,
-            //     ),
-            //   )
-          ],
-        ),
+        // Row(
+        //   children: [
+        //     GestureDetector(
+        //       onTap: _handleShare,
+        //       child: Image.asset(
+        //         'assets/icons/share.png',
+        //         height: 2.5.h,
+        //         width: 2.5.h, // use 2.h for both to maintain aspect ratio
+        //       ),
+        //     ),
+        //     SizedBox(width: 3.w),
+        // GestureDetector(
+        //     onTap: () => homeController.toggleBookmark(widget.item[""]),
+        //     child: Image.asset(
+        //      isBookmarked
+        //           ? 'assets/icons/saved.png'
+        //           : 'assets/icons/favorites_unselected.png',
+        //       height: 2.5.h,
+        //       width: 2.5.h,
+        //     ),
+        //   )
+        //   ],
+        // ),
       ],
     );
   }
@@ -264,7 +264,8 @@ class _FavoritesDetailScreenState extends State<FavoritesDetailScreen> {
   }
 
   Widget _profileRow() {
-    final hasAuthor = widget.item['author'] != null && widget.item['author'].isNotEmpty;
+    final hasAuthor =
+        widget.item['author'] != null && widget.item['author'].isNotEmpty;
 
     if (!hasAuthor) {
       // If no author, return an empty SizedBox (nothing visible)
@@ -308,70 +309,74 @@ class _FavoritesDetailScreenState extends State<FavoritesDetailScreen> {
     String formattedDescription = widget.item['description'] ?? '';
 
     // Replace placeholders with actual HTML links
-  for (var link in widget.item['descriptionLinks'] ?? []) {
-    if (link.placeholder != null && link.url != null && link.label != null) {
-      formattedDescription = formattedDescription.replaceAll(
-        link.placeholder!,
-        '<a href="${link.url}">${link.label}</a>',
-      );
-    }
-  }
-
-  // Replace \n and \t with <br> or just \n with <br>
-  formattedDescription = formattedDescription.replaceAll(RegExp(r'[\n\t]+'), '<br>');
-
-  return Html(
-    data: formattedDescription,
-    style: {
-      "*": Style(
-        fontSize: FontSize(15.sp),
-        color: Colors.black54,
-      ),
-      "a": Style(
-      color: AppColors.primaryColor, // Set link color
-      textDecoration: TextDecoration.underline, // Optional: add underline
-    ),
-    },
-    onLinkTap: (String? url, Map<String, String> attributes, dom.Element? element) {
-      if (url != null) {
-        launchUrl(Uri.parse(url), mode: LaunchMode.inAppWebView);
+    for (var link in widget.item['descriptionLinks'] ?? []) {
+      if (link.placeholder != null && link.url != null && link.label != null) {
+        formattedDescription = formattedDescription.replaceAll(
+          link.placeholder!,
+          '<a href="${link.url}">${link.label}</a>',
+        );
       }
-    },
-  );
+    }
+
+    // Replace \n and \t with <br> or just \n with <br>
+    formattedDescription = formattedDescription.replaceAll(
+      RegExp(r'[\n\t]+'),
+      '<br>',
+    );
+
+    return Html(
+      data: formattedDescription,
+      style: {
+        "*": Style(fontSize: FontSize(15.sp), color: Colors.black54),
+        "a": Style(
+          color: AppColors.primaryColor, // Set link color
+          textDecoration: TextDecoration.underline, // Optional: add underline
+        ),
+      },
+      onLinkTap: (
+        String? url,
+        Map<String, String> attributes,
+        dom.Element? element,
+      ) {
+        if (url != null) {
+          launchUrl(Uri.parse(url), mode: LaunchMode.inAppWebView);
+        }
+      },
+    );
   }
-//   Widget _description(NewsDatum item) {
-//   String formattedDescription = item.newsDescription ?? '';
+  //   Widget _description(NewsDatum item) {
+  //   String formattedDescription = item.newsDescription ?? '';
 
-//   // Replace placeholders with actual HTML links
-//   for (var link in item.descriptionLinks ?? []) {
-//     if (link.placeholder != null && link.url != null && link.label != null) {
-//       formattedDescription = formattedDescription.replaceAll(
-//         link.placeholder!,
-//         '<a href="${link.url}">${link.label}</a>',
-//       );
-//     }
-//   }
+  //   // Replace placeholders with actual HTML links
+  //   for (var link in item.descriptionLinks ?? []) {
+  //     if (link.placeholder != null && link.url != null && link.label != null) {
+  //       formattedDescription = formattedDescription.replaceAll(
+  //         link.placeholder!,
+  //         '<a href="${link.url}">${link.label}</a>',
+  //       );
+  //     }
+  //   }
 
-//   // Replace \n and \t with <br> or just \n with <br>
-//   formattedDescription = formattedDescription.replaceAll(RegExp(r'[\n\t]+'), '<br>');
+  //   // Replace \n and \t with <br> or just \n with <br>
+  //   formattedDescription = formattedDescription.replaceAll(RegExp(r'[\n\t]+'), '<br>');
 
-//   return Html(
-//     data: formattedDescription,
-//     style: {
-//       "*": Style(
-//         fontSize: FontSize(15.sp),
-//         color: Colors.black54,
-//       ),
-//       "a": Style(
-//       color: AppColors.primaryColor, // Set link color
-//       textDecoration: TextDecoration.underline, // Optional: add underline
-//     ),
-//     },
-//     onLinkTap: (String? url, Map<String, String> attributes, dom.Element? element) {
-//       if (url != null) {
-//         launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-//       }
-//     },
-//   );
-// }
+  //   return Html(
+  //     data: formattedDescription,
+  //     style: {
+  //       "*": Style(
+  //         fontSize: FontSize(15.sp),
+  //         color: Colors.black54,
+  //       ),
+  //       "a": Style(
+  //       color: AppColors.primaryColor, // Set link color
+  //       textDecoration: TextDecoration.underline, // Optional: add underline
+  //     ),
+  //     },
+  //     onLinkTap: (String? url, Map<String, String> attributes, dom.Element? element) {
+  //       if (url != null) {
+  //         launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+  //       }
+  //     },
+  //   );
+  // }
 }

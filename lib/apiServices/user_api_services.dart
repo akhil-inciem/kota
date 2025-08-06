@@ -50,7 +50,7 @@ class UserApiService {
         'user_id': userId,
         'is_guest': authController.isGuest ? '1' : '0',
         if (authController.isGuest)
-          'full_name': firstName
+          'first_name': firstName
         else ...{
           'first_name': firstName,
           'last_name': lastName,

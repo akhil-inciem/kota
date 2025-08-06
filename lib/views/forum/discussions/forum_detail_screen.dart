@@ -153,30 +153,36 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                             ),
                             Spacer(),
                             (authController.isGuest
-                                      ? item.guestUserId == userId
-                                      : item.createdId == userId) ? SizedBox.shrink() : IconButton(
-                              icon: Icon(Icons.more_horiz_outlined,size: 20.sp,),
-                              onPressed: () {
-                                showModalBottomSheet(
-                                  context: context,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(20),
-                                    ),
+                                    ? item.guestUserId == userId
+                                    : item.createdId == userId)
+                                ? SizedBox.shrink()
+                                : IconButton(
+                                  icon: Icon(
+                                    Icons.more_horiz_outlined,
+                                    size: 20.sp,
                                   ),
-                                  builder:
-                                      (_) => UserOptionsBottomSheet(
-                                        blockedUserName:
-                                            "${item.firstName ?? ""} ${item.lastName ?? ""}",
-                                        blockedUserId: item.userType == 'guest'
-                                                      ? item.guestUserId
-                                                      : item.createdId,
-                                        threadId: item.id,
-                                        blockedUserType: "",
+                                  onPressed: () {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(20),
+                                        ),
                                       ),
-                                );
-                              },
-                            ),
+                                      builder:
+                                          (_) => UserOptionsBottomSheet(
+                                            blockedUserName:
+                                                "${item.firstName ?? ""} ${item.lastName ?? ""}",
+                                            blockedUserId:
+                                                item.userType == 'guest'
+                                                    ? item.guestUserId
+                                                    : item.createdId,
+                                            threadId: item.id,
+                                            blockedUserType: "",
+                                          ),
+                                    );
+                                  },
+                                ),
                           ],
                         ),
                       ),
@@ -236,6 +242,7 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
 
     return Obx(() {
       final user = userController.user.value;
+      final isGuest = authController.isGuest;
       final isReply = controller.isReplying.value;
       final isSending = controller.isPosting.value;
       final canSend = controller.commentText.isNotEmpty && !isSending;
@@ -244,8 +251,14 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
       final authorLastName = controller.singleThread.value?.lastName ?? '';
       final authorName = '$authorFirstName $authorLastName'.trim();
 
-      // Mention only once
+      final isAuthor =
+          isGuest
+              ? controller.singleThread.value?.guestUserId == user?.id
+              : controller.singleThread.value?.createdId == user?.id;
+
+      // Mention only once if not author
       if (!isReply &&
+          !isAuthor &&
           controller.commentController.text.isEmpty &&
           authorName.isNotEmpty &&
           !controller.hasInsertedMention.value) {

@@ -36,50 +36,50 @@ class _IdCardWidgetState extends State<IdCardWidget> {
   }
 
   @override
-Widget build(BuildContext context) {
-  return Padding(
-    padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
-    child: Column(
-      children: [
-        RepaintBoundary(
-          key: _cardKey,
-          child: Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(2.w),
-            ),
-            child: _buildCardContent(),
-          ),
-        ),
-        SizedBox(height: 2.h),
-        Align(
-          alignment: Alignment.centerRight,
-          child: ElevatedButton.icon(
-            onPressed: _downloadCard,
-            icon: Icon(Icons.download, color: Colors.black, size: 2.2.h),
-            label: Text(
-              "Download ID Card",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w500,
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
+      child: Column(
+        children: [
+          RepaintBoundary(
+            key: _cardKey,
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(2.w),
               ),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              elevation: 2,
-              padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.2.h),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(1.w),
-              ),
+              child: _buildCardContent(),
             ),
           ),
-        ),
-      ],
-    ),
-  );
-}
+          SizedBox(height: 0.5.h),
+          Align(
+            alignment: Alignment.centerRight,
+            child: ElevatedButton.icon(
+              onPressed: _downloadCard,
+              icon: Icon(Icons.download, color: Colors.black, size: 2.2.h),
+              label: Text(
+                "Download ID Card",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                elevation: 2,
+                padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.5.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(1.w),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _buildCardContent() {
     return Column(
@@ -88,11 +88,20 @@ Widget build(BuildContext context) {
         Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            color: Colors.white,
+            image: DecorationImage(
+              image: AssetImage(
+                'assets/images/kota_card_bg.png',
+              ),
+              fit: BoxFit.cover,
+              // colorFilter: ColorFilter.mode(
+              //   Colors.black.withOpacity(0.5),
+              //   BlendMode.dstATop,
+              // ),
+            ),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Padding(
-            padding: EdgeInsets.all(4.w), // slightly reduced padding inside
+            padding: EdgeInsets.all(4.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -119,12 +128,11 @@ Widget build(BuildContext context) {
                     Flexible(
                       flex: 2, // smaller flex than right side
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(15.sp),
                         child: Container(
                           width: 30.w, // define width explicitly
                           height: 18.h, // define height explicitly
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
                             color: Colors.grey.shade300,
                           ),
                           clipBehavior: Clip.hardEdge,
@@ -193,7 +201,7 @@ Widget build(BuildContext context) {
                               "SECRETARY, KOTA",
                               style: TextStyle(
                                 fontSize: 11.sp,
-                                color: Colors.grey.shade600,
+                                color: Colors.white,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 1.2,
                               ),
@@ -212,7 +220,6 @@ Widget build(BuildContext context) {
     );
   }
 
-
   Widget _buildLabelValue({
     required String label,
     required String value,
@@ -228,7 +235,7 @@ Widget build(BuildContext context) {
           label.toUpperCase(),
           style: TextStyle(
             fontSize: labelFontSize.sp,
-            color: Colors.grey.shade700,
+            color: Colors.white,
             fontWeight: FontWeight.w600,
             letterSpacing: 1.2,
           ),
@@ -241,13 +248,14 @@ Widget build(BuildContext context) {
           style: TextStyle(
             fontSize: valueFontSize,
             fontWeight: isBoldValue ? FontWeight.w700 : FontWeight.w500,
-            color: Colors.black87,
+            color: Colors.white,
             height: 1.3,
           ),
         ),
       ],
     );
   }
+
   Future<void> _downloadCard() async {
     try {
       RenderRepaintBoundary boundary =
@@ -290,11 +298,10 @@ Widget build(BuildContext context) {
 class SignaturePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final paint =
-        Paint()
-          ..color = Colors.black54
-          ..strokeWidth = 2.0
-          ..style = PaintingStyle.stroke;
+    final paint = Paint()
+      ..color = Colors.white
+      ..strokeWidth = 2.0
+      ..style = PaintingStyle.stroke;
 
     final path = Path();
     // Simple signature-like curve
@@ -318,3 +325,4 @@ class SignaturePainter extends CustomPainter {
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
+

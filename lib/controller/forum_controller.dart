@@ -582,13 +582,14 @@ bool _hasThreadsDataChanged(List<ForumData> newData) {
         allowMultiple: allowMultiple.value,
       );
 
-      Get.snackbar('Success', 'Poll created successfully');
       // Optionally clear the form after success
       pollTitleController.clear();
       pollDescriptionController.clear();
       pollExpiryDate.value = null;
       pollFields.clear();
       allowMultiple.value = false;
+      Get.back();
+      CustomSnackbars.success('Poll created successfully','Success');
     } catch (e) {
       CustomSnackbars.oops("Poll creation failed", "Oops");
     } finally {

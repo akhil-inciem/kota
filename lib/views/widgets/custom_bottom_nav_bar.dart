@@ -136,7 +136,3 @@ class CustomBottomNavBar extends StatelessWidget {
 
   }
 }
-
-
-          // if (isUpdatesTab)
-          //  
